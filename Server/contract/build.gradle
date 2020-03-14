@@ -1,0 +1,38 @@
+//Project Repositories (Where we get the plugins and dependencies)
+
+
+//Plugin for protobuff based code gen
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.8.8'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+//GRPC Dependencies for Protobuff Code generation
+dependencies {
+    implementation 'io.grpc:grpc-netty-shaded:1.28.0'
+    implementation 'io.grpc:grpc-protobuf:1.28.0'
+    implementation 'io.grpc:grpc-stub:1.28.0'
+    compileOnly 'javax.annotation:javax.annotation-api:1.2'
+}
+
+//Make protobuff look in src/main/proto
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.11.0"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.28.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}

@@ -1,0 +1,16 @@
+syntax  = "proto3";
+package foodist.grpc.server;
+
+service HelloWorldService {
+    rpc HelloWorld(HelloWorldRequest) returns (HelloWorldReply);
+}
+
+message HelloWorldReply {
+    string reply = 1;
+}
+
+message HelloWorldRequest {
+    string request = 1;
+}
+
+
