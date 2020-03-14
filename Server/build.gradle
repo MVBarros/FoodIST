@@ -1,9 +1,0 @@
-allprojects {
-    repositories {
-        mavenCentral()
-    }
-
-
-    //So intellij can work with graddle
-    apply plugin: 'idea'
-}

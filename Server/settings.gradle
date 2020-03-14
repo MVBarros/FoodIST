@@ -1,4 +1,0 @@
-include ':contract', ':server'
-
-rootProject.name = 'server'
-
