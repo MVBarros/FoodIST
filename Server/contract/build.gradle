@@ -13,7 +13,7 @@ repositories {
 
 //GRPC Dependencies for Protobuff Code generation
 dependencies {
-    implementation 'io.grpc:grpc-netty-shaded:1.28.0'
+    implementation 'io.grpc:grpc-netty-shaded:1.28.0' //Netty Shaded needed to start server
     implementation 'io.grpc:grpc-protobuf:1.28.0'
     implementation 'io.grpc:grpc-stub:1.28.0'
     compileOnly 'javax.annotation:javax.annotation-api:1.3.2'

@@ -1,11 +1,15 @@
 plugins {
     id 'java'
     id  'application'
+
 }
 
 dependencies {
+    compileOnly "javax.annotation:javax.annotation-api:1.3.2"
+    implementation "io.grpc:grpc-protobuf:1.28.0"
     implementation 'io.grpc:grpc-netty-shaded:1.28.0' //Netty Shaded needed to start server
-    compile project(':contract') //Server depends on contract
+    implementation "io.grpc:grpc-stub:1.28.0"
+    implementation project(':contract') //Server depends on contract
 }
 
 //Configure application plugin

@@ -1,5 +1,5 @@
 syntax  = "proto3";
-package foodist.grpc.server;
+package foodist.grpc.contract.server;
 
 service HelloWorldService {
     rpc HelloWorld(HelloWorldRequest) returns (HelloWorldReply);
