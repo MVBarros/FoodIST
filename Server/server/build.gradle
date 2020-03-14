@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id  'application'
+}
+
+dependencies {
+    implementation 'io.grpc:grpc-netty-shaded:1.28.0' //Netty Shaded needed to start server
+    compile project(':contract') //Server depends on contract
+}
+
+//Configure application plugin
+application {
+    mainClassName = "foodist.server.FoodServer"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
