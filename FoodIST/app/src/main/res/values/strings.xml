@@ -9,7 +9,7 @@
     <string name="visitor">Visitor</string>
     <string name="dish_name">Dish Name</string>
     <string name="cost">Cost</string>
-    <string name="add_food">Add Food</string>
+    <string name="add_food">Add Photo</string>
     <string name="add_menu">Add Menu</string>
     <string name="menu_photos">Menu Photos</string>
 </resources>
