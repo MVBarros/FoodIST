@@ -6,4 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".FoodServiceActivity">
 
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="601dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="1dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/foodServiceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Bar Vermelho"
+            android:textSize="30sp" />
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="204dp" />
+
+        <TextView
+            android:id="@+id/openingTimes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Monday-Friday: 8:00 - 23:00"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/queueTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current Queue Time: 5:00 minutes"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/menus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Menus"
+                android:textSize="30sp" />
+
+            <LinearLayout
+                android:id="@+id/menu0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/menu0Food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:text="Tosta Mista"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/menu0Cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="10.00€"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,7 +35,15 @@
             android:id="@+id/foodServices"
             android:layout_width="match_parent"
             android:layout_height="480dp"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/foodService0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bar Vermelho"
+                android:textSize="20sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

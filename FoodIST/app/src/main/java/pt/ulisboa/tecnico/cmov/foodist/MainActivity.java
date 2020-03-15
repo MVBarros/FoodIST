@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         Button userProfileButton = (Button) findViewById(R.id.userProfile);
         Button changeCampusButton = (Button) findViewById(R.id.changeCampus);
 
+        TextView foodService = (TextView) findViewById(R.id.foodService0);
+
         //While in testing, intent can have message null
         if(campus != null){
             TextView textView = (TextView) findViewById(R.id.currentCampus);
@@ -42,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        foodService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 
