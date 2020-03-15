@@ -40,14 +40,14 @@
             android:contentDescription="@string/menu_photos" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/add_photo_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
             android:text="@string/add_food" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/add_menu_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
