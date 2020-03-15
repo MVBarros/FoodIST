@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">FoodIST</string>
+    <string name="username">Username</string>
+    <string name="user_photo">User Photo</string>
+    <string name="position">Position</string>
+    <string name="student">Student</string>
+    <string name="professor">Professor</string>
+    <string name="staff">Staff</string>
+    <string name="visitor">Visitor</string>
+    <string name="dish_name">Dish Name</string>
+    <string name="cost">Cost</string>
+    <string name="add_food">Add Photo</string>
+    <string name="add_menu">Add Menu</string>
+    <string name="menu_photos">Menu Photos</string>
 </resources>
