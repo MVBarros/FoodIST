@@ -6,4 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".AddMenuActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginTop="30dp"
+            android:hint="@string/dish_name" />
+
+        <EditText
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/cost"
+            android:layout_marginTop="30dp"
+            android:text=""
+            android:inputType="numberDecimal"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_height="260dp"
+            android:layout_margin="20dp"/>
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:text="@string/add_photos" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:text="@string/done" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
