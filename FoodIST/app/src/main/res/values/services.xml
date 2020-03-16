@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="Taguspark">
+        <item>Bar Vermelho</item>
+        <item>Bar Azul</item>
+        <item>Cantina</item>
+    </array>
+    <array name="Alameda">
+        <item>Civil</item>
+        <item>Cantina</item>
+        <item>Outros não sei tenho de pesquisar</item>
+    </array>
+</resources>

@@ -25,7 +25,7 @@
             android:layout_marginEnd="121dp"
             android:layout_marginRight="121dp"
             android:gravity="center"
-            android:text="CurrentCampus"
+            android:text=""
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,41 +37,14 @@
             android:layout_height="480dp"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/foodService0"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/foodService0Name"
+
+                <ListView
+                    android:id="@+id/foodServiceList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Bar Vermelho"
                     android:textSize="20sp" />
 
-                <LinearLayout
-                    android:id="@+id/foodService0Info"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/foodService0Distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Distance: 1.5 Km" />
-
-                    <TextView
-                        android:id="@+id/foodService0Time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:text="Queue Time: 5 min" />
-                </LinearLayout>
-            </LinearLayout>
 
         </LinearLayout>
 
