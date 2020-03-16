@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import pt.ulisboa.tecnico.cmov.foodist.settings.GlobalSettingsConstants;
 
 public class MainActivity extends AppCompatActivity {
 
