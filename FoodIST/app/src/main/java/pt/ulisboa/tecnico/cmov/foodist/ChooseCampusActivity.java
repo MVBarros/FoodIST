@@ -9,6 +9,7 @@ import android.widget.Button;
 
 public class ChooseCampusActivity extends AppCompatActivity {
     public static final String CAMPUS = "pt.ulisboa.tecnico.cmov.foodlist.MESSAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +22,7 @@ public class ChooseCampusActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
-                intent.putExtra(CAMPUS,"Taguspark");
+                intent.putExtra(CAMPUS, getString(R.string.campus_taguspark));
                 startActivity(intent);
             }
         });
@@ -30,7 +31,7 @@ public class ChooseCampusActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
-                intent.putExtra(CAMPUS,"Alameda");
+                intent.putExtra(CAMPUS, getString(R.string.campus_alameda));
                 startActivity(intent);
             }
         });
