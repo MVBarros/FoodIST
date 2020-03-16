@@ -10,6 +10,6 @@ message PingResponse {
     string pong = 1;
 }
 
-service PingService {
+service FoodISTService {
     rpc ping(PingRequest) returns (PingResponse);
 }

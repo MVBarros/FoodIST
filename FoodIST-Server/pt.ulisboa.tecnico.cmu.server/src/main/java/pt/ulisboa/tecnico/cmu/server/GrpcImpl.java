@@ -10,7 +10,7 @@ import pt.ulisboa.tecnico.cmu.protocol.*;
 public class GrpcImpl {
 	
 	public void execute() {
-		Server server = ServerBuilder.forPort(8080).addService(new PingServiceImpl()).build();
+		Server server = ServerBuilder.forPort(8080).addService(new FoodISTServerImpl()).build();
 		
         System.out.println("Starting server...");
         

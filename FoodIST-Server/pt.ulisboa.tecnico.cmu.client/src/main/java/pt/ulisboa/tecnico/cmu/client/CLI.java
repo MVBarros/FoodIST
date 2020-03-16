@@ -3,9 +3,10 @@ package pt.ulisboa.tecnico.cmu.client;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import java.util.Scanner;
+
+import pt.ulisboa.tecnico.cmu.protocol.FoodISTServiceGrpc;
 import pt.ulisboa.tecnico.cmu.protocol.PingRequest;
 import pt.ulisboa.tecnico.cmu.protocol.PingResponse;
-import pt.ulisboa.tecnico.cmu.protocol.PingServiceGrpc;
 
 public class CLI {
 	
@@ -24,7 +25,7 @@ public class CLI {
 	    
 	    	switch(command) {
 			case PING:
-		        PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel);        
+		        FoodISTServiceGrpc.FoodISTServiceBlockingStub stub = FoodISTServiceGrpc.newBlockingStub(channel);        
 		        System.out.println("Ping message sent to server!");                
 		        PingResponse response = stub.ping(PingRequest.newBuilder().setPing("ping").build());        
 		        System.out.println("Response received from server: " + response.getPong());		        

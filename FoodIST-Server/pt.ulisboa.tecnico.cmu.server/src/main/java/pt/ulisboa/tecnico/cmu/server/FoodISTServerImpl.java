@@ -1,9 +1,11 @@
-package pt.ulisboa.tecnico.cmu.protocol;
+package pt.ulisboa.tecnico.cmu.server;
 
 import io.grpc.stub.StreamObserver;
-import pt.ulisboa.tecnico.cmu.protocol.PingServiceGrpc.PingServiceImplBase;
+import pt.ulisboa.tecnico.cmu.protocol.FoodISTServiceLibrary;
+import pt.ulisboa.tecnico.cmu.protocol.PingRequest;
+import pt.ulisboa.tecnico.cmu.protocol.PingResponse;
 
-public class PingServiceImpl extends PingServiceImplBase {
+public class FoodISTServerImpl extends FoodISTServiceLibrary {
 	
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {    	
@@ -14,4 +16,5 @@ public class PingServiceImpl extends PingServiceImplBase {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+    
 }
