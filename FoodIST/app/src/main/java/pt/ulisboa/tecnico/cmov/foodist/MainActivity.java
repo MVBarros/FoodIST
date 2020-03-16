@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Button userProfileButton = (Button) findViewById(R.id.userProfile);
         Button changeCampusButton = (Button) findViewById(R.id.changeCampus);
 
-        TextView foodService = (TextView) findViewById(R.id.foodService0);
+        LinearLayout foodService0 = (LinearLayout) findViewById(R.id.foodService0);
 
         //While in testing, intent can have message null
         if(campus != null){
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        foodService.setOnClickListener(new View.OnClickListener() {
+        foodService0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
