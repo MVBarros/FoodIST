@@ -7,7 +7,7 @@
     tools:context=".ProfileActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/profilePicture"
         android:layout_width="214dp"
         android:layout_height="196dp"
         android:layout_marginTop="81dp"
@@ -25,7 +25,7 @@
         >
 
         <EditText
-            android:id="@+id/textView"
+            android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -34,39 +34,40 @@
             android:autofillHints="" />
 
         <RadioGroup
+            android:id="@+id/universityStatus"
             android:layout_width="291dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginStart="60dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginStart="60dp">
+            android:layout_marginTop="30dp">
 
             <RadioButton
                 android:id="@+id/radioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/student" />
+                android:text="@string/student"
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/radioButton2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/professor" />
+                android:text="@string/professor"
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/radioButton3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/staff" />
+                android:text="@string/staff"
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/radioButton4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/visitor" />
+                android:text="@string/visitor"
+                android:textSize="20sp" />
         </RadioGroup>
 
 

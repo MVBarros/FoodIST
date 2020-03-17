@@ -18,4 +18,6 @@
     <string name="global_preferences_location">global_preferences</string>
     <string name="campus_taguspark">Taguspark</string>
     <string name="campus_alameda">Alameda</string>
+    <!-- Profile variables -->
+    <string name="profile_file">profile</string>
 </resources>
