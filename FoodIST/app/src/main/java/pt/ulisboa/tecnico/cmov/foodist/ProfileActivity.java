@@ -80,7 +80,6 @@ public class ProfileActivity extends AppCompatActivity {
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (galleryPermission != PackageManager.PERMISSION_GRANTED){
-            //May need to add Manifest.permission.Write_External_Storage
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
         }
         else{
@@ -91,7 +90,6 @@ public class ProfileActivity extends AppCompatActivity {
     private void askCameraPermission() {
         int cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (cameraPermission != PackageManager.PERMISSION_GRANTED){
-            //May need to add Manifest.permission.Write_External_Storage
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_FROM_CAMERA);
         }
         else{
@@ -105,25 +103,12 @@ public class ProfileActivity extends AppCompatActivity {
             galleryintent.setType("image/*");
 
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    //TODO - What to do in case of photo failure?
-                }
-
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(this,"pt.ulisboa.tecnico.cmov.foodist.provider", photoFile);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                }
 
                 Intent chooser = new Intent(Intent.ACTION_CHOOSER);
                 chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
                 chooser.putExtra(Intent.EXTRA_TITLE, "Select from:");
 
-                Intent[] intentArray = { cameraIntent };
+                Intent[] intentArray = { createCameraIntent() };
                 chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
                 startActivityForResult(chooser, REQUEST_PIC);
             }
@@ -133,22 +118,29 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    //TODO - What to do in case of photo failure?
-                }
+                startActivityForResult(createCameraIntent(), CAMERA_PIC);
 
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(this,"pt.ulisboa.tecnico.cmov.foodist.provider", photoFile);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(cameraIntent, CAMERA_PIC);
-                }
             }
         }
+    }
+
+    public Intent createCameraIntent(){
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            //TODO - What to do in case of photo failure?
+        }
+
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(this,"pt.ulisboa.tecnico.cmov.foodist.provider", photoFile);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        }
+
+        return cameraIntent;
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
