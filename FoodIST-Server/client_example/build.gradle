@@ -48,4 +48,4 @@ run{
     standardInput = System.in
 }
 
-mainClassName = 'pt.ulisboa.tecnico.cmu.client.Main'
+mainClassName = 'pt.ulisboa.tecnico.cmov.client.Main'

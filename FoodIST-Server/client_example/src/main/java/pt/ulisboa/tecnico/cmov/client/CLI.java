@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.client;
+package pt.ulisboa.tecnico.cmov.client;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -6,12 +6,12 @@ import io.grpc.ManagedChannelBuilder;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import pt.ulisboa.tecnico.cmu.protocol.DummyArray;
-import pt.ulisboa.tecnico.cmu.protocol.DummySend;
-import pt.ulisboa.tecnico.cmu.protocol.DummySummary;
-import pt.ulisboa.tecnico.cmu.protocol.FoodISTServiceGrpc;
-import pt.ulisboa.tecnico.cmu.protocol.PingRequest;
-import pt.ulisboa.tecnico.cmu.protocol.PingResponse;
+import pt.ulisboa.tecnico.cmov.protocol.DummyArray;
+import pt.ulisboa.tecnico.cmov.protocol.DummySend;
+import pt.ulisboa.tecnico.cmov.protocol.DummySummary;
+import pt.ulisboa.tecnico.cmov.protocol.FoodISTServiceGrpc;
+import pt.ulisboa.tecnico.cmov.protocol.PingRequest;
+import pt.ulisboa.tecnico.cmov.protocol.PingResponse;
 
 public class CLI {
 	
@@ -23,7 +23,7 @@ public class CLI {
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8080).usePlaintext().build();
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println("Dummy CMU Client Command Line Interface");			   
+		System.out.println("Dummy cmov Client Command Line Interface");			   
 				
 		while(true) {		
 			System.out.print("Enter your command to be run on the server: ");

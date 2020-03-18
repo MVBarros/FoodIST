@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>pt.ulisboa.tecnico.cmu.server</name>
-	<comment>Project pt.ulisboa.tecnico.cmu.server created by Buildship.</comment>
+	<name>pt.ulisboa.tecnico.cmov.server</name>
+	<comment>Project pt.ulisboa.tecnico.cmov.server created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

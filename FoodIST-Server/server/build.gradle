@@ -44,4 +44,4 @@ dependencies {
 	compile group: 'io.grpc', name: 'grpc-stub', version: '1.28.0'	 
 }
 
-mainClassName = 'pt.ulisboa.tecnico.cmu.server.Main'
+mainClassName = 'pt.ulisboa.tecnico.cmov.server.Main'

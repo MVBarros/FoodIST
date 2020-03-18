@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.server;
+package pt.ulisboa.tecnico.cmov.server;
 
 public class Main {
 	

@@ -1,11 +1,11 @@
-package pt.ulisboa.tecnico.cmu.server;
+package pt.ulisboa.tecnico.cmov.server;
 
 import java.io.IOException;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
-import pt.ulisboa.tecnico.cmu.protocol.*;
+import pt.ulisboa.tecnico.cmov.protocol.*;
 
 public class GrpcImpl {
 	

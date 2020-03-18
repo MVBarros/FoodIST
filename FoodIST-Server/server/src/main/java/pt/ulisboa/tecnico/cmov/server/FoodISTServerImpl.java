@@ -1,14 +1,14 @@
-package pt.ulisboa.tecnico.cmu.server;
+package pt.ulisboa.tecnico.cmov.server;
 
 import java.util.List;
 
 import io.grpc.stub.StreamObserver;
-import pt.ulisboa.tecnico.cmu.protocol.DummyArray;
-import pt.ulisboa.tecnico.cmu.protocol.DummySend;
-import pt.ulisboa.tecnico.cmu.protocol.DummySummary;
-import pt.ulisboa.tecnico.cmu.protocol.FoodISTServiceLibrary;
-import pt.ulisboa.tecnico.cmu.protocol.PingRequest;
-import pt.ulisboa.tecnico.cmu.protocol.PingResponse;
+import pt.ulisboa.tecnico.cmov.protocol.DummyArray;
+import pt.ulisboa.tecnico.cmov.protocol.DummySend;
+import pt.ulisboa.tecnico.cmov.protocol.DummySummary;
+import pt.ulisboa.tecnico.cmov.protocol.FoodISTServiceLibrary;
+import pt.ulisboa.tecnico.cmov.protocol.PingRequest;
+import pt.ulisboa.tecnico.cmov.protocol.PingResponse;
 
 public class FoodISTServerImpl extends FoodISTServiceLibrary {
 	

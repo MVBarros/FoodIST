@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.client;
+package pt.ulisboa.tecnico.cmov.client;
 
 public class Main {
 

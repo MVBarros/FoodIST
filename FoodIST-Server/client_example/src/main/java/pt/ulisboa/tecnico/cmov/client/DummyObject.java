@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmu.client;
+package pt.ulisboa.tecnico.cmov.client;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;

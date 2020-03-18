@@ -1,7 +1,7 @@
-package pt.ulisboa.tecnico.cmu.protocol;
+package pt.ulisboa.tecnico.cmov.protocol;
 
 import io.grpc.stub.StreamObserver;
-import pt.ulisboa.tecnico.cmu.protocol.FoodISTServiceGrpc.FoodISTServiceImplBase;
+import pt.ulisboa.tecnico.cmov.protocol.FoodISTServiceGrpc.FoodISTServiceImplBase;
 
 public abstract class FoodISTServiceLibrary extends FoodISTServiceImplBase {
 	
