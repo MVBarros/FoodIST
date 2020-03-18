@@ -29,7 +29,7 @@ dependencies {
     implementation 'com.google.guava:guava:26.0-jre'
     
     // Add the protocol dependency
-    compile files('../pt.ulisboa.tecnico.cmu.protocol/build/libs/pt.ulisboa.tecnico.cmu.protocol.jar')
+    compile files('../protocol/build/libs/protocol.jar')
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
