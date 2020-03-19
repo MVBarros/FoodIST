@@ -119,6 +119,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         }
+        //TODO MAKE TOAST SAYING NO PREMISSIONS
     }
 
     public Intent createCameraIntent() {
