@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +18,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private FusedLocationProviderClient fusedLocationClient;
+
+
     private static final String TAG = "TAG_MainActivity";
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
+    private static final int INTERNET_REQUEST_CODE = 2;
 
     public ArrayAdapter<String> adapter;
 
@@ -31,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         Button userProfileButton = findViewById(R.id.userProfile);
@@ -78,14 +91,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+
     private void askPhonePermission() {
         int hasPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if (hasPhonePermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
         } else {
-            guessCampusFromLocation();
+            askInternetAccess();
         }
-
     }
 
     @Override
@@ -93,10 +108,24 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PHONE_LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "phone location permission granted");
+                askInternetAccess();
+            } else {
+                //TODO INFORM USER BY TOAST
+                Log.d(TAG, "phone location permission NOT granted");
+                //Ask campus manually
+                Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        }
+        else if(requestCode == INTERNET_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Internet permission granted");
                 guessCampusFromLocation();
             } else {
+                //TODO INFORM USER BY TOAST
                 Log.d(TAG, "phone location permission NOT granted");
-                //Ask permission manually
+                //Ask campus manually
                 Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
                 finish();
                 startActivity(intent);
@@ -104,10 +133,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void guessCampusFromLocation() {
-        //TODO Try and guess campus from location value
-        setCampus(getString(R.string.campus_taguspark));
+    private void askInternetAccess() {
+        int hasPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
+        if (hasPhonePermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
+        }
+        else {
+            guessCampusFromLocation();
+        }
     }
+
+    private void guessCampusFromLocation() {
+        final double[] coords = new double[2];
+
+        try {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                coords[0] = location.getLatitude();
+                                coords[1] = location.getLatitude();
+                            }
+                        }
+                    }).wait();
+        } catch (InterruptedException e) {
+            //TODO
+            e.printStackTrace();
+            return;
+        }
+        String common = "http://maps.googleapis.com/maps/api/directions/json?origin=";
+        String myCoords = String.format("%f,%f", coords[0], coords[1]);
+        String destination = "Instituto+Superior+Técnico";
+        String apiKey = getString(R.string.map_api_key);
+
+        String url = common + myCoords + "&destination=" + destination + "&key=" + apiKey;
+
+    }
+
 
     private void setCampus(String campus) {
         //Update Interface

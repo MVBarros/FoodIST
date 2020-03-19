@@ -20,4 +20,5 @@
     <string name="campus_alameda">Alameda</string>
     <!-- Profile variables -->
     <string name="profile_file">profile</string>
+    <string name="map_api_key">AIzaSyCaitupWBgZRJKNMRYRJJLKu23qtzpYmEI</string>
 </resources>
