@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                intent.putExtra("Service Name", adapter.getItem(position));
                 startActivity(intent);
             }
         });
