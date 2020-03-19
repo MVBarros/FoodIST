@@ -27,10 +27,10 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
-    
-    // Add the protocol dependency
-    compile files('../protocol/build/libs/protocol.jar')
 
+	// Add the protocol dependency
+    compile files('../protocol/build/libs/protocol.jar')
+    
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
@@ -44,4 +44,8 @@ dependencies {
 	compile group: 'io.grpc', name: 'grpc-stub', version: '1.28.0'	 
 }
 
-mainClassName = 'pt.ulisboa.tecnico.cmov.server.Main'
+run{
+    standardInput = System.in
+}
+
+mainClassName = 'pt.ulisboa.tecnico.cmov.client.Main'

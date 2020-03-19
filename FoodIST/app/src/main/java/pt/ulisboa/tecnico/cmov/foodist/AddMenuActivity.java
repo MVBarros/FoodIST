@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class AddMenuActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_GALLERY = 1;

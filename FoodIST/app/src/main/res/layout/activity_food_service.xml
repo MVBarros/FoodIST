@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Bar Vermelho"
+            android:text=""
             android:textSize="30sp" />
 
         <com.google.android.gms.maps.MapView

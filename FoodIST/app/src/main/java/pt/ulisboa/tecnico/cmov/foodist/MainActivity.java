@@ -1,9 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,13 +7,15 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -57,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.foodServiceList);
         adapter = new ArrayAdapter<>(this,
-                                        android.R.layout.simple_list_item_1, new ArrayList<String>());
+                android.R.layout.simple_list_item_1, new ArrayList<String>());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                intent.putExtra("Service Name", adapter.getItem(position));
                 startActivity(intent);
             }
         });

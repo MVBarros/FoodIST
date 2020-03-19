@@ -9,7 +9,6 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java'
-    id 'application'
     id 'java-library'
     id "com.google.protobuf" version "0.8.10"
 }
@@ -27,9 +26,6 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:26.0-jre'
-    
-    // Add the protocol dependency
-    compile files('../protocol/build/libs/protocol.jar')
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
@@ -44,4 +40,28 @@ dependencies {
 	compile group: 'io.grpc', name: 'grpc-stub', version: '1.28.0'	 
 }
 
-mainClassName = 'pt.ulisboa.tecnico.cmov.server.Main'
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:3.11.0"
+  }
+  plugins {
+    grpc {
+      artifact = "io.grpc:protoc-gen-grpc-java:1.28.0"
+    }
+  }
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {}
+    }
+  }
+}
+
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
