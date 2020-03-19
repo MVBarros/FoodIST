@@ -1,2 +1,3 @@
 rootProject.name='FoodIST'
 include ':app'
+include ':protocol'

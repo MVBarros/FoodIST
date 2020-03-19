@@ -1,0 +1,29 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package pt.ulisboa.tecnico.cmov.protocol;
+
+message PingRequest {
+    string ping = 1;
+}
+
+message PingResponse {
+    string pong = 1;
+}
+
+message DummySend {
+	string dummy_string = 1;
+	repeated DummyArray arrayContent = 2;
+}
+
+message DummySummary {
+	string summary = 1;
+}
+
+message DummyArray {
+	string dummy_content = 1; 
+}
+
+service FoodISTService {
+    rpc ping(PingRequest) returns (PingResponse);
+    rpc dummy(DummySend) returns (DummySummary);
+}

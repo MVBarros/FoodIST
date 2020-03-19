@@ -25,7 +25,7 @@ public class CommunicationTask extends AsyncTask<Void, Void, Void> {
             case PING:
                 ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8080).usePlaintext().build();
                 FoodISTServiceGrpc.FoodISTServiceBlockingStub stub = FoodISTServiceGrpc.newBlockingStub(channel);
-                //PingResponse response = stub.ping(PingRequest.newBuilder().setPing("ping").build());
+                PingResponse response = stub.ping(PingRequest.newBuilder().setPing("ping").build());
                 channel.shutdown();
             default:
                 System.out.println("That command does not exist...");
