@@ -42,6 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private String imageFilePath = null;
 
+    private int photoView = R.id.profilePicture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +201,7 @@ public class ProfileActivity extends AppCompatActivity {
         String absoluteFilePath = cursor.getString(columnIndex);
         cursor.close();
 
-        ImageView profile = (ImageView) findViewById(R.id.profilePicture);
+        ImageView profile = (ImageView) findViewById(photoView);
         profile.setImageBitmap(BitmapFactory.decodeFile(absoluteFilePath));
 
         //Save path for future reference
@@ -208,7 +210,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void cameraReturn(SharedPreferences.Editor editor, Intent data){
-        ImageView profilePicture = (ImageView) findViewById(R.id.profilePicture);
+        ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
         profilePicture.setImageBitmap(photo);
@@ -218,7 +220,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data){
-        ImageView profilePicture = (ImageView) findViewById(R.id.profilePicture);
+        ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
 
@@ -246,7 +248,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getPreferences(){
-        Log.d(TAG, "FIND ME");
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
 
@@ -256,7 +257,6 @@ public class ProfileActivity extends AppCompatActivity {
         String profilePicturePath = pref.getString(getString(R.string.user_photo), null);
 
         if(profilePicturePath != null){
-            Log.d(TAG, "I enter here no?");
             Bitmap photo = BitmapFactory.decodeFile(profilePicturePath);
             profilePicture.setImageBitmap(photo);
         }
