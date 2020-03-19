@@ -1,12 +1,12 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class FoodServiceActivity extends AppCompatActivity {
 
