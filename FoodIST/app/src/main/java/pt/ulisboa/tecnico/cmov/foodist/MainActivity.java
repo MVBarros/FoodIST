@@ -26,6 +26,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -145,30 +147,31 @@ public class MainActivity extends AppCompatActivity {
     private void guessCampusFromLocation() {
         final double[] coords = new double[2];
 
-        try {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                coords[0] = location.getLatitude();
-                                coords[1] = location.getLatitude();
-                            }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            coords[0] = location.getLatitude();
+                            coords[1] = location.getLongitude();
                         }
-                    }).wait();
-        } catch (InterruptedException e) {
-            //TODO
-            e.printStackTrace();
-            return;
-        }
-        String common = "http://maps.googleapis.com/maps/api/directions/json?origin=";
-        String myCoords = String.format("%f,%f", coords[0], coords[1]);
-        String destination = "Instituto+Superior+Técnico";
-        String apiKey = getString(R.string.map_api_key);
+                        String common = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
+                        String myCoords = String.format("%f,%f", coords[0], coords[1]);
+                        Log.d("LOCATION", "Coords: " + myCoords);
+                        String destination = "Instituto+Superior+Técnico";
+                        String apiKey = getString(R.string.map_api_key);
 
-        String url = common + myCoords + "&destination=" + destination + "&key=" + apiKey;
+                        String urlAlameda = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
 
+                        destination = "Instituto+Superior+Técnico+-+Taguspark";
+
+                        String urlTagus = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
+
+
+                        new GuessCampusTask().execute(urlAlameda, urlTagus);
+                    }
+                });
     }
 
 
