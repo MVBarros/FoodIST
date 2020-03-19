@@ -32,11 +32,11 @@
             />
 
         <ImageView
+            android:id="@+id/dishView"
             android:layout_width="match_parent"
-            android:src="@drawable/ic_launcher_background"
             android:layout_height="0dp"
             android:layout_weight="12"
-            />
+            android:src="@drawable/ic_launcher_background" />
 
         <Button
             android:id="@+id/add_new_menu_photo_button"

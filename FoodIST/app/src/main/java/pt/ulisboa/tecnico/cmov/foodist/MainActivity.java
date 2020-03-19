@@ -55,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button buttonTest = findViewById(R.id.grpcTest);
+        buttonTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CommunicationTestActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Button changeCampusButton = findViewById(R.id.changeCampus);
         changeCampusButton.setOnClickListener(new View.OnClickListener() {

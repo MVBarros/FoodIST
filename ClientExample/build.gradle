@@ -34,7 +34,7 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
-    // https://mvnrepository.com/artifact/io.grpc/grpc-netty
+   // https://mvnrepository.com/artifact/io.grpc/grpc-netty
 	compile group: 'io.grpc', name: 'grpc-netty', version: '1.28.0'    
 	
 	// https://mvnrepository.com/artifact/io.grpc/grpc-protobuf
