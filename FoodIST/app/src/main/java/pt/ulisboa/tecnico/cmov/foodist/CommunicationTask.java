@@ -1,5 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist;
-
+/*
 import android.os.AsyncTask;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -8,6 +8,7 @@ import io.grpc.ManagedChannelBuilder;
 import pt.ulisboa.tecnico.cmov.protocol.FoodISTServiceGrpc;
 import pt.ulisboa.tecnico.cmov.protocol.PingRequest;
 import pt.ulisboa.tecnico.cmov.protocol.PingResponse;
+
 
 public class CommunicationTask extends AsyncTask<Void, Void, Void> {
 
@@ -38,4 +39,4 @@ public class CommunicationTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
     }
-}
+}*/

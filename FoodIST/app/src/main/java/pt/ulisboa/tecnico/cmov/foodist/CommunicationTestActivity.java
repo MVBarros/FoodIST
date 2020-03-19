@@ -1,5 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist;
-
+/*
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -23,4 +23,4 @@ public class CommunicationTestActivity extends AppCompatActivity {
             }
         });
     }
-}
+}*/
