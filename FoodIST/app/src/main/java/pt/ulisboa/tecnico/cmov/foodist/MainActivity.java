@@ -22,9 +22,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
 
@@ -92,15 +90,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private void askPhonePermission() {
         int hasPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if (hasPhonePermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
         } else {
-            askInternetAccess();
+            guessCampusFromLocation();
         }
     }
 
@@ -109,40 +104,15 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PHONE_LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "phone location permission granted");
-                askInternetAccess();
-            } else {
-                //TODO INFORM USER BY TOAST
-                Log.d(TAG, "phone location permission NOT granted");
-                //Ask campus manually
-                Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
-                finish();
-                startActivity(intent);
-            }
-        }
-        else if(requestCode == INTERNET_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "Internet permission granted");
                 guessCampusFromLocation();
             } else {
                 //TODO INFORM USER BY TOAST
                 Log.d(TAG, "phone location permission NOT granted");
-                //Ask campus manually
-                Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
-                finish();
-                startActivity(intent);
+                askCampus();
             }
         }
     }
 
-    private void askInternetAccess() {
-        int hasPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
-        if (hasPhonePermission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
-        }
-        else {
-            guessCampusFromLocation();
-        }
-    }
 
     private void guessCampusFromLocation() {
         final double[] coords = new double[2];
@@ -163,19 +133,16 @@ public class MainActivity extends AppCompatActivity {
                         String apiKey = getString(R.string.map_api_key);
 
                         String urlAlameda = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
-
                         destination = "Instituto+Superior+Técnico+-+Taguspark";
-
                         String urlTagus = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
 
-
-                        new GuessCampusTask().execute(urlAlameda, urlTagus);
+                        new GuessCampusTask(MainActivity.this).execute(urlAlameda, urlTagus);
                     }
                 });
     }
 
 
-    private void setCampus(String campus) {
+    public void setCampus(String campus) {
         //Update Interface
         TextView textView = findViewById(R.id.currentCampus);
         textView.setText(campus);
@@ -194,5 +161,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.global_preferences_file), 0).edit();
         editor.putString(getString(R.string.global_preferences_location), campus);
         editor.apply();
+    }
+
+    public void askCampus() {
+        Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
+        finish();
+        startActivity(intent);
     }
 }

@@ -13,17 +13,36 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+
 
 public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
+
+
+    private WeakReference<MainActivity> mainActivity;
+
+    public GuessCampusTask(MainActivity mainActivity) {
+        this.mainActivity = new WeakReference<>(mainActivity);
+    }
+
+    private static final int NUMBER_CAMPUS = 2;
+    private static final int ALAMEDA = 0;
+    private static final int TAGUSPARK = 1;
     @Override
     protected JSONObject[] doInBackground(String... strings) {
-        JSONObject[] res = new JSONObject[2];
+
+        if (strings.length != NUMBER_CAMPUS) {
+            return null;
+        }
+
+        JSONObject[] res = new JSONObject[NUMBER_CAMPUS];
         try {
             String response;
-            for (int i = 0; i < 2; ++i) {
+            for (int i = 0; i < NUMBER_CAMPUS; ++i) {
                 URL url = new URL(strings[i]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
@@ -49,7 +68,7 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
             return;
         }
         try {
-            for(int i = 0; i < 2; ++i) {
+            for(int i = 0; i < NUMBER_CAMPUS; ++i) {
                 JSONArray array = object[i].getJSONArray("rows");
                 JSONObject obj = array.getJSONObject(0);
                 array = obj.getJSONArray("elements");
@@ -58,8 +77,19 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
                 int distance = obj.getInt("value");
                 Log.d("LOCATION", "Distance to alameda: " + distance);
                 if (distance < 2000) {
-                    Log.d("LOCATION", "Location should be: ".concat(i == 0 ? "Alameda" : "TagusPark"));
+                    Log.d("LOCATION", "Location should be: ".concat(i == ALAMEDA ? "Alameda" : "TagusPark"));
+                    if (mainActivity != null) {
+                        mainActivity.get().setCampus(i == ALAMEDA ? "Alameda" : "TagusPark");
+                        return;
+                    }
+                    else {
+                        return;
+                    }
                 }
+            }
+            //Could not infer campus
+            if (mainActivity != null) {
+                mainActivity.get().askCampus();
             }
 
         } catch (JSONException e) {
