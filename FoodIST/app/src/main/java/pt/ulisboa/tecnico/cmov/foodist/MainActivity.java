@@ -1,16 +1,20 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Testing Purposes Only
+        /*
         GlobalStatus globalVariable = (GlobalStatus) getApplicationContext();
 
         String reply = globalVariable.getStub().helloWorld(Contract.HelloWorldRequest
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .build()).getReply();
 
         Log.d("REPLY", reply);
+        */
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -76,25 +82,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        ListView listView = findViewById(R.id.foodServiceList);
-        adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, new ArrayList<String>());
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-                intent.putExtra("Service Name", adapter.getItem(position));
-                startActivity(intent);
-            }
-        });
-
         Intent intent = getIntent();
         String campus = intent.getStringExtra(ChooseCampusActivity.CAMPUS);
 
         if (campus != null) {
             //Know Current Location from previous user choice
+
             setCampus(campus);
         } else {
             askPhonePermission();
@@ -166,8 +159,35 @@ public class MainActivity extends AppCompatActivity {
         } else {
             services = getResources().getStringArray(R.array.Taguspark);
         }
-        adapter.clear();
-        adapter.addAll(services);
+
+        for(String str : services){
+
+            String[] info = str.split(" ");
+            LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = vi.inflate(R.layout.food_service, null);
+
+            TextView name = v.findViewById(R.id.foodServiceName);
+            TextView distance = v.findViewById(R.id.distance);
+            TextView queue = v.findViewById(R.id.queueTime);
+
+            name.setText(info[1]);
+            distance.setText(String.format("Distance: %s", info[2]));
+            queue.setText(String.format("Waiting: %s", info[3]));
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                    TextView name = v.findViewById(R.id.foodServiceName);
+
+                    intent.putExtra("Service Name", name.getText());
+                    startActivity(intent);
+                }
+            });
+
+            ViewGroup foodServiceList = findViewById(R.id.foodServices);
+            foodServiceList.addView(v);
+        }
 
         //Save preferences for later
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.global_preferences_file), 0).edit();

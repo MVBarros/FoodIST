@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="Taguspark">
-        <item>Bar Vermelho</item>
-        <item>Bar Azul</item>
-        <item>Cantina</item>
+        <item>
+            <name>BarVermelho</name>
+            <distance>10km</distance>
+            <time>5min</time>
+        </item>
+        <item>
+            <name>BarAzul</name>
+            <distance>10km</distance>
+            <time>5min</time>
+        </item>
+
+        <item>
+            <name>Cantina</name>
+            <distance>10km</distance>
+            <time>5min</time>
+        </item>
     </array>
     <array name="Alameda">
-        <item>Civil</item>
-        <item>Cantina</item>
-        <item>Outros não sei tenho de pesquisar</item>
+        <item>
+            <name>Civil</name>
+            <distance>10km</distance>
+            <time>5 min</time>
+        </item>
+        <item>
+            <name>Cantina</name>
+            <distance>10km</distance>
+            <time>5 min</time>
+        </item>
+    </array>
+
+    <array name="BarVermelho">
+        <item>10km</item>
+        <item>5 min</item>
     </array>
 </resources>
