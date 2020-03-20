@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;

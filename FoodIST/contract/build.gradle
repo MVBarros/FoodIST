@@ -1,7 +1,7 @@
 plugins {
     id 'java' //protobuff needs java plugin to generate code
     id 'com.google.protobuf' //Define project as a protobuff project
-
+    id 'idea'
 }
 
 def grpcVersion = '1.28.0'
