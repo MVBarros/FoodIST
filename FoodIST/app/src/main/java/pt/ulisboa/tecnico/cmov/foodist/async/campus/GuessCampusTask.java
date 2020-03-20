@@ -74,6 +74,7 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
                 array = obj.getJSONArray("elements");
                 obj = array.getJSONObject(0);
                 obj = obj.getJSONObject("distance");
+
                 int distance = obj.getInt("value");
                 Log.d("LOCATION", "Distance to alameda: " + distance);
                 if (distance < 2000) {
@@ -89,10 +90,16 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
             }
             //Could not infer campus
             if (mainActivity != null) {
+
                 mainActivity.get().askCampus();
             }
 
         } catch (JSONException e) {
+            //No path to a campus
+            if (mainActivity != null) {
+
+                mainActivity.get().askCampus();
+            }
             e.printStackTrace();
         }
     }
