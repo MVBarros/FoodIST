@@ -7,18 +7,12 @@ targetCompatibility = 11
 
 mainClassName = 'foodist.server.Main'
 
-
-def grpc_version = "1.28.0"
-def annotation_version = "1.3.2"
-
+def grpcVersion = '1.28.0'
 
 dependencies {
-    implementation "io.grpc:grpc-netty:${grpc_version}"
     implementation project(':contract')
-    implementation "io.grpc:grpc-okhttp:${grpc_version}" // CURRENT_GRPC_VERSION
-    implementation "io.grpc:grpc-protobuf-lite:${grpc_version}" // CURRENT_GRPC_VERSION
-    implementation "io.grpc:grpc-stub:${grpc_version}" // CURRENT_GRPC_VERSION
-    implementation "javax.annotation:javax.annotation-api:${annotation_version}"
+    implementation "io.grpc:grpc-netty-shaded:${grpcVersion}" //Need netty-shaded to launch the server
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
 }
 
 task startServer(type: JavaExec) {

@@ -1,6 +1,5 @@
 allprojects {
-
-    repositories {
+	repositories {
 		mavenCentral()
 	}
 	version = '1.0'
@@ -11,5 +10,6 @@ allprojects {
 
 	dependencies {
 		implementation "io.grpc:grpc-stub:${grpcVersion}" //Need grpc-stub to generate protobuff code
+
 	}
 }
