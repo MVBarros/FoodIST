@@ -22,17 +22,12 @@
         <item>
             <name>Civil</name>
             <distance>10km</distance>
-            <time>5 min</time>
+            <time>5min</time>
         </item>
         <item>
             <name>Cantina</name>
             <distance>10km</distance>
-            <time>5 min</time>
+            <time>5min</time>
         </item>
-    </array>
-
-    <array name="BarVermelho">
-        <item>10km</item>
-        <item>5 min</item>
     </array>
 </resources>
