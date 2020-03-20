@@ -1,5 +1,15 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.12'
+  }
+}
+
 plugins {
-    id 'com.google.protobuf' version '0.8.8' //Define project as a protobuff project
+    id 'java' //protobuff needs java plugin to generate code
+    id 'com.google.protobuf' version '0.8.3'//Define project as a protobuff project
 }
 
 def grpcVersion = '1.28.0'
@@ -7,8 +17,10 @@ def protobufVersion = '3.11.0'
 def protocVersion = protobufVersion
 
 dependencies {
-    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-okhttp:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf-lite:${grpcVersion}"
     implementation "javax.annotation:javax.annotation-api:1.2"
+    implementation "io.grpc:grpc-stub:${grpcVersion}" //Need grpc-stub to generate protobuff code
 }
 
 //Define protobuf behaviour
@@ -18,8 +30,15 @@ protobuf {
         grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
     }
     generateProtoTasks {
-        all()*.plugins { grpc {} }
-    }
+         all().each { task ->
+            task.builtins {
+                java { option 'lite' }
+            }
+            task.plugins {
+                grpc { // Options added to --grpc_out
+                    option 'lite' }
+            }
+	} 
+   }
 }
-
 

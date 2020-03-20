@@ -2,7 +2,7 @@ package foodist.server;
 
 import io.grpc.BindableService;
 import io.grpc.Server;
-import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+import io.grpc.ServerBuilder;
 import foodist.server.service.ServiceImplementation;
 
 import java.io.IOException;
@@ -16,15 +16,15 @@ public class Main {
         final BindableService bindableService = new ServiceImplementation();
         int port = Integer.parseInt(args[0]);
         
-        Server server = NettyServerBuilder
+        Server server = ServerBuilder
                 .forPort(port)
                 .addService(bindableService)
                 .build();
 
         System.out.println("Server Starting");
         server.start();
-
-        System.out.println("Server Started, terminate with Ctrl+C");
+        
+        System.out.println("Server Started at port " + port);
         server.awaitTermination();
     }
 }

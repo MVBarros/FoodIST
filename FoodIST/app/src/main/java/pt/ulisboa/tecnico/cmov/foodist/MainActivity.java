@@ -24,8 +24,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
-
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +44,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Testing Purposes Only
+        GlobalStatus globalVariable = (GlobalStatus) getApplicationContext();
+
+        String reply = globalVariable.getStub().helloWorld(Contract.HelloWorldRequest
+                .newBuilder()
+                .setRequest("Hello World Request")
+                .build()).getReply();
+
+        Log.d("REPLY", reply);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
