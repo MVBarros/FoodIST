@@ -1,0 +1,5 @@
+syntax = "proto3";
+package foodist.server.grpc.contract;
+
+service FoodISTServerService {
+}

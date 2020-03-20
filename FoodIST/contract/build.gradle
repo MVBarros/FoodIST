@@ -1,0 +1,37 @@
+plugins {
+    id 'java' //protobuff needs java plugin to generate code
+    id 'com.google.protobuf' //Define project as a protobuff project
+
+}
+
+def grpcVersion = '1.28.0'
+def protobufVersion = '3.11.0'
+def protocVersion = protobufVersion
+
+dependencies {
+    implementation "io.grpc:grpc-okhttp:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf-lite:${grpcVersion}"
+    implementation "javax.annotation:javax.annotation-api:1.2"
+    implementation "io.grpc:grpc-stub:${grpcVersion}" //Need grpc-stub to generate protobuff code
+}
+
+//Define protobuf behaviour
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+    }
+    generateProtoTasks {
+         all().each { task ->
+            task.builtins {
+                java { option 'lite' }
+            }
+            task.plugins {
+                grpc { // Options added to --grpc_out
+                    option 'lite' }
+            }
+	} 
+   }
+}
+
+
