@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(String str : services){
 
-            String[] info = str.split(" ");
+            String[] info = str.split("/");
             LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = vi.inflate(R.layout.food_service, null);
 

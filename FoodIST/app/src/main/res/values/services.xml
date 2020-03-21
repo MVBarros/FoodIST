@@ -2,32 +2,32 @@
 <resources>
     <array name="Taguspark">
         <item>
-            <name>BarVermelho</name>
-            <distance>10km</distance>
-            <time>5min</time>
+            <name>/Bar Vermelho</name>
+            <distance>/10km</distance>
+            <time>/5min</time>
         </item>
         <item>
-            <name>BarAzul</name>
-            <distance>10km</distance>
-            <time>5min</time>
+            <name>/Bar Azul</name>
+            <distance>/10km</distance>
+            <time>/5min</time>
         </item>
 
         <item>
-            <name>Cantina</name>
-            <distance>10km</distance>
-            <time>5min</time>
+            <name>/Cantina</name>
+            <distance>/10km</distance>
+            <time>/5min</time>
         </item>
     </array>
     <array name="Alameda">
         <item>
-            <name>Civil</name>
-            <distance>10km</distance>
-            <time>5min</time>
+            <name>/Civil</name>
+            <distance>/10km</distance>
+            <time>/5min</time>
         </item>
         <item>
-            <name>Cantina</name>
-            <distance>10km</distance>
-            <time>5min</time>
+            <name>/Cantina</name>
+            <distance>/10km</distance>
+            <time>/5min</time>
         </item>
     </array>
 </resources>

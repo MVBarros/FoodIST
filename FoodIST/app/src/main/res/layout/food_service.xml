@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/foodService"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:layout_editor_absoluteY="131dp"
+    android:background="?android:attr/selectableItemBackground"
+    >
+
+    <TextView
+        android:id="@+id/foodServiceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Name"
+        android:textSize="25sp" />
 
     <LinearLayout
-        android:id="@+id/foodService"
+        android:id="@+id/information"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/foodServiceName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Name"
-            android:textSize="25sp" />
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Tosta Mista"
+            android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/information"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/queueTime"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="10.00€"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/distance"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:text="Tosta Mista"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/queueTime"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="10.00€"
-                android:textSize="20sp" />
-
-        </LinearLayout>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
