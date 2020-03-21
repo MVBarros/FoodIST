@@ -1,14 +1,49 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 package foodist.server.grpc.contract;
 
-message HelloWorldRequest {
-	string request = 1;
+
+message AddMenuRequest {
+    string foodService = 1;
+    string name = 2;
+    double price = 3;
 }
 
-message HelloWorldReply {
-	string reply = 1;
+message AddPhotoRequest {
+    int32 sequenceNumber = 1;
+    bytes content = 2;
+    string foodService = 3;
+    string name = 4;
+}
+
+message DownloadPhotoReply {
+    bytes content = 1;
+    int32 sequenceNumber = 2;
+}
+
+message DownloadPhotoRequest {
+    string photoId = 1;
+}
+
+message ListMenuRequest {
+    string foodService = 1;
+}
+
+message ListMenuReply {
+    repeated Menu menus = 1;
+}
+
+message Menu {
+    string name = 2;
+    double price = 3;
+    repeated string photoId = 4;
 }
 
 service FoodISTServerService {
-	rpc HelloWorld(HelloWorldRequest) returns (HelloWorldReply);
+    rpc listMenu(ListMenuRequest) returns(ListMenuReply);
+    rpc addMenu(AddMenuRequest) returns (google.protobuf.Empty);
+    rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
+    rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
 }
+
+

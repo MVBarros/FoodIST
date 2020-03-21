@@ -1,18 +1,33 @@
 package foodist.server.service;
 
-import foodist.server.grpc.contract.Contract.HelloWorldReply;
+import com.google.protobuf.Empty;
+import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
-import foodist.server.grpc.contract.Contract.HelloWorldRequest;
 import io.grpc.stub.StreamObserver;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
-    
+
     @Override
-    public void helloWorld(HelloWorldRequest request, StreamObserver<HelloWorldReply> responseObserver) {
-        System.out.println("Received Hello World Request");
-        String message = request.getRequest();
-        message.concat(" received!");
-        responseObserver.onNext(HelloWorldReply.newBuilder().setReply(message).build());
-        responseObserver.onCompleted();
+    public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
+        //TODO
+        super.listMenu(request, responseObserver);
+    }
+
+    @Override
+    public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
+        //TODO
+        super.addMenu(request, responseObserver);
+    }
+
+    @Override
+    public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
+        //TODO
+        return super.addPhoto(responseObserver);
+    }
+
+    @Override
+    public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
+        //TODO
+        super.downloadPhoto(request, responseObserver);
     }
 }
