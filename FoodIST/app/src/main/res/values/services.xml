@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="Taguspark">
-        <item>
-            <name>/Bar Vermelho</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-        </item>
-        <item>
-            <name>/Bar Azul</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-        </item>
+        <item>@array/BarVermelho</item>
+        <item>@array/BarAzul</item>
+        <item>@array/Cantina</item>
+    </array>
 
-        <item>
-            <name>/Cantina</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-        </item>
-    </array>
     <array name="Alameda">
-        <item>
-            <name>/Civil</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-        </item>
-        <item>
-            <name>/Cantina</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-        </item>
+        <item>@array/Civil</item>
+        <item>@array/Cantina</item>
     </array>
+
+    <string-array name="BarVermelho">
+        <item>Bar Vermelho</item>
+        <item>10 km</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="BarAzul">
+        <item>Bar Azul</item>
+        <item>10 km</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="Cantina">
+        <item>Cantina</item>
+        <item>10 km</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="Civil">
+        <item>Civil</item>
+        <item>10km</item>
+        <item>5min</item>
+    </string-array>
 </resources>
