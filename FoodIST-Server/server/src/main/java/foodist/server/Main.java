@@ -4,6 +4,7 @@ import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import foodist.server.service.ServiceImplementation;
+import foodist.server.util.PhotoBuilder;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ public class Main {
             System.out.println("Usage: [prog] port");
             return;
         }
+        new PhotoBuilder().store("pila", "pila");
         final BindableService bindableService = new ServiceImplementation();
         int port = Integer.parseInt(args[0]);
         
