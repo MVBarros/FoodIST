@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,18 +50,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Testing Purposes Only
-        /*
-        GlobalStatus globalVariable = (GlobalStatus) getApplicationContext();
-
-        String reply = globalVariable.getStub().helloWorld(Contract.HelloWorldRequest
-                .newBuilder()
-                .setRequest("Hello World Request")
-                .build()).getReply();
-
-        Log.d("REPLY", reply);
-        */
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -130,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
                         if (location != null) {
                             coords[0] = location.getLatitude();
                             coords[1] = location.getLongitude();
+                        }
+                        else {
+                            //TODO Warn user that we could not get location
+                            askCampus();
                         }
                         String common = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
                         String myCoords = String.format("%f,%f", coords[0], coords[1]);
