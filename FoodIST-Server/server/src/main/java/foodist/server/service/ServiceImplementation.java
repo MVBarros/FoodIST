@@ -1,12 +1,17 @@
 package foodist.server.service;
 
+import java.util.HashMap;
+
 import com.google.protobuf.Empty;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
+import foodist.server.util.Menu;
 import io.grpc.stub.StreamObserver;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
-
+	
+	private HashMap<String, Menu> menusHashMap = new HashMap<String, Menu>();
+	
     @Override
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
         //TODO
@@ -15,13 +20,18 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
-        //TODO
-        super.addMenu(request, responseObserver);
-    }
+        String foodService = request.getFoodService();
+        
+        String menuName = request.getName();
+        double menuPrice = request.getPrice();
+        
+        Menu addedMenu = new Menu(menuName, menuPrice);    
+        
+        this.menusHashMap.put(foodService, addedMenu);       
+    }    
 
     @Override
     public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
-        //TODO
         return super.addPhoto(responseObserver);
     }
 
@@ -30,4 +40,5 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         //TODO
         super.downloadPhoto(request, responseObserver);
     }
+    
 }
