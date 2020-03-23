@@ -1,152 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="Taguspark">
-        <item>
-            <name>/Red Bar</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.736550</latitude>
-            <longtude>/-9.302204</longtude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions />
-        </item>
-        <item>
-            <name>/Green Bar</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.738042</latitude>
-            <longitude>/-9.303060</longitude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions />
-        </item>
-        <item>
-            <name>/Cantina</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.737928</latitude>
-            <longitude>/-9.303269</longitude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions>
-                <item>Staff</item>
-                <item>Visitor</item>
-            </restrictions>
-        </item>
-        <item>
-        <name>/Maquinas de Venda Automática</name>
-        <distance>/10km</distance>
-        <time>/5min</time>
-        <latitude>/38.737129</latitude>
-        <longitude>/-9.303140</longitude>
-        <hours>
-            <monday>00:00-23:59</monday>
-            <tuesday>00:00-23:59</tuesday>
-            <wednesday>00:00-23:59</wednesday>
-            <thursday>00:00-23:59</thursday>
-            <sunday>00:00-23:59</sunday>
-        </hours>
-        <restrictions />
-        </item>
+        <item>@array/BarVermelho</item>
+        <item>@array/BarAzul</item>
+        <item>@array/Cantina</item>
     </array>
-    <array name="Alameda">
-        <item>
-            <name>/Cantina de Civil</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.737756</latitude>
-            <longitude>/-9.140465</longitude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions>
-                <item>Staff</item>
-                <item>Visitor</item>
-            </restrictions>
-        </item>
-        <item>
-            <name>/Bar de Civil</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.737075</latitude>
-            <longitude>/-9.140010</longitude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions />
-        </item>
-        <item>
-            <name>/Cantina</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.736380</latitude>
-            <longitude>/-9.136987</longitude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions>
-                <item>Staff</item>
-                <item>Visitor</item>
-            </restrictions>
-        </item>
-        <item>
-            <name>/Maquina de Venda Automática</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.736261</latitude>
-            <longitude>/-9.137836</longitude>
-            <hours>
-                <monday>00:00-23:59</monday>
-                <tuesday>00:00-23:59</tuesday>
-                <wednesday>00:00-23:59</wednesday>
-                <thursday>00:00-23:59</thursday>
-                <sunday>00:00-23:59</sunday>
-            </hours>
-            <restrictions />
-        </item>
-        <item>
-            <name>/Bar do Pavilhão Central</name>
-            <distance>/10km</distance>
-            <time>/5min</time>
-            <latitude>/38.736624</latitude>
-            <longitude>/-9.139594</longitude>
-            <hours>
-                <monday>09:00-18:00</monday>
-                <tuesday>09:00-18:00</tuesday>
-                <wednesday>09:00-18:00</wednesday>
-                <thursday>09:00-18:00</thursday>
-                <sunday>09:00-18:00</sunday>
-            </hours>
-            <restrictions />
-        </item>
 
+    <array name="Alameda">
+        <item>@array/Civil</item>
+        <item>@array/Cantina</item>
     </array>
+
+    <string-array name="BarVermelho">
+        <item>Bar Vermelho</item>
+        <item>10 km</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="BarAzul">
+        <item>Bar Azul</item>
+        <item>10 km</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="Cantina">
+        <item>Cantina</item>
+        <item>10 km</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="Civil">
+        <item>Civil</item>
+        <item>10km</item>
+        <item>5min</item>
+    </string-array>
 </resources>

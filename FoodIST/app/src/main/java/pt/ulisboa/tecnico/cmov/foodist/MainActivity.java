@@ -5,19 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.content.res.XmlResourceParser;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,11 +25,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.util.ArrayList;
-
-import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -147,40 +140,47 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(campus);
 
         //Update Food Services List
-        String[] services;
+        Resources res = getResources();
+        TypedArray services;
         if (campus.equals(getString(R.string.campus_alameda))) {
-            services = getResources().getStringArray(R.array.Alameda);
+            services = getResources().obtainTypedArray(R.array.Alameda);
         } else {
-            services = getResources().getStringArray(R.array.Taguspark);
+            services = getResources().obtainTypedArray(R.array.Taguspark);
         }
 
-        for(String str : services){
+        for(int i = 0; i < services.length(); i++){
+            //Gets index of array
+            int id = services.getResourceId(i, 0);
+            if(id != 0){
+                //number of info
+                String[] info = new String[3];
+                info = res.getStringArray(id);
 
-            String[] info = str.split("/");
-            LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = vi.inflate(R.layout.food_service, null);
+                LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.food_service, null);
 
-            TextView name = v.findViewById(R.id.foodServiceName);
-            TextView distance = v.findViewById(R.id.distance);
-            TextView queue = v.findViewById(R.id.queueTime);
+                TextView name = v.findViewById(R.id.foodServiceName);
+                TextView distance = v.findViewById(R.id.distance);
+                TextView queue = v.findViewById(R.id.queueTime);
 
-            name.setText(info[1]);
-            distance.setText(String.format("Distance: %s", info[2]));
-            queue.setText(String.format("Waiting: %s", info[3]));
+                name.setText(info[0]);
+                distance.setText(String.format("Distance: %s", info[1]));
+                queue.setText(String.format("Waiting: %s", info[2]));
 
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-                    TextView name = v.findViewById(R.id.foodServiceName);
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                        TextView name = v.findViewById(R.id.foodServiceName);
 
-                    intent.putExtra("Service Name", name.getText());
-                    startActivity(intent);
-                }
-            });
+                        intent.putExtra("Service Name", name.getText());
+                        startActivity(intent);
+                    }
+                });
 
-            ViewGroup foodServiceList = findViewById(R.id.foodServices);
-            foodServiceList.addView(v);
+                ViewGroup foodServiceList = findViewById(R.id.foodServices);
+                foodServiceList.addView(v);
+            }
         }
 
         //Save preferences for later
