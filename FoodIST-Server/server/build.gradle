@@ -9,10 +9,20 @@ mainClassName = 'foodist.server.Main'
 
 def grpcVersion = '1.28.0'
 
-dependencies {
+dependencies {	
     implementation project(':contract')
     implementation "io.grpc:grpc-netty-shaded:${grpcVersion}" //Need netty-shaded to launch the server
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    
+    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
+    testImplementation 'junit:junit:4.12'	   
+    testImplementation "org.mockito:mockito-core:2.28.2"
+}
+
+test {
+    useJUnit()
+
+    maxHeapSize = '1G'
 }
 
 task startServer(type: JavaExec) {
