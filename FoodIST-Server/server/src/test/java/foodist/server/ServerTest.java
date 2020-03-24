@@ -48,7 +48,11 @@ public class ServerTest {
   /**
    * This rule manages automatic graceful shutdown for the registered servers and channels at the
    * end of test.
-   */
+   */  
+  private static final String TEST_FOODSERVICE = "Testbar";
+  private static final String TEST_MENU = "Chourico.jpg";
+  private static final String TEST_PHOTO = "photos/test/chourico.jpg";
+  private static final double TEST_PRICE = 1.50;
   @Rule
   public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
@@ -142,7 +146,7 @@ public class ServerTest {
         			  @Override
         		      public void onCompleted() {
         	              try {
-        	                  responseObserver.onNext(Empty.newBuilder().build());        	                  
+        	                  responseObserver.onNext(Empty.newBuilder().build());    
         	                  PhotoBuilder.store(foodService, name, photo);
         	                  responseObserver.onCompleted();
         	              } catch (StatusRuntimeException e) {
@@ -186,7 +190,7 @@ public class ServerTest {
 		  }
 	  }
 	  
-	  void addPhoto() {
+	  void addPhoto(String photoName, String photoFoodService, String photoPath) {
 			AddPhotoRequest.Builder addPhotoRequest = AddPhotoRequest.newBuilder();
 			
 			final CountDownLatch finishLatch = new CountDownLatch(1);
@@ -213,17 +217,17 @@ public class ServerTest {
 	        FoodISTServerServiceGrpc.FoodISTServerServiceStub foodISTServerServiceStub = FoodISTServerServiceGrpc.newStub(channel);			        
 	        StreamObserver<Contract.AddPhotoRequest> requestObserver = foodISTServerServiceStub.addPhoto(responseObserver);
 	        byte[] data = new byte[1024 * 1024];
-	        String filename = "photos/chourico.jpg";
-	        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(filename))) {
+
+	        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(photoPath))) {
 	            int numRead;
 	            //Send file chunks to server
 	            while ((numRead = in.read(data)) >= 0) {
 	            	Contract.AddPhotoRequest.Builder addPhotoRequestBuilder = Contract.AddPhotoRequest.newBuilder();
 	                
 	            	addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
-	            	addPhotoRequestBuilder.setName("chourico");
+	            	addPhotoRequestBuilder.setName(photoName);
 	            	addPhotoRequestBuilder.setSequenceNumber(sequence);
-	            	addPhotoRequestBuilder.setFoodService("test");
+	            	addPhotoRequestBuilder.setFoodService(photoFoodService);
 	                requestObserver.onNext(addPhotoRequestBuilder.build());
 	                sequence++;
 	            }
@@ -234,7 +238,7 @@ public class ServerTest {
 	            finishLatch.await();
 
 	        } catch (FileNotFoundException e) {
-	            System.out.println(String.format("File with filename: %s not found.", filename));
+	            System.out.println(String.format("File with filename: %s not found.", photoPath));
 	        } catch (IOException | InterruptedException e) {
 	            //Should Never Happen
 	            System.exit(1);
@@ -260,7 +264,7 @@ public class ServerTest {
     // Create a HelloWorldClient using the in-process channel;
     client = new Client(channel);
     
-    client.addMenu("Redbar", "chourico", 4.50);    
+    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);    
   }
 
   /**
@@ -270,9 +274,9 @@ public class ServerTest {
   @Test
   public void greet_messageDeliveredToServer() {
     //ArgumentCaptor<ListMenuRequest> requestCaptor = ArgumentCaptor.forClass(ListMenuRequest.class);
-
-    client.listMenu("Redbar");   
-    client.addPhoto();
+	
+    client.listMenu(TEST_FOODSERVICE);   
+    client.addPhoto(TEST_MENU, TEST_FOODSERVICE, TEST_PHOTO);
     /*verify(serviceImpl).listMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<ListMenuRequest>>any());
     assertEquals("test name", requestCaptor.getValue().getName());*/
   }
