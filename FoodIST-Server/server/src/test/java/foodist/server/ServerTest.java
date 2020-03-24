@@ -15,8 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.ServerBuilder;
 import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -41,6 +43,7 @@ import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
+import foodist.server.service.ServiceImplementation;
 import foodist.server.util.PhotoBuilder;
 
 @RunWith(JUnit4.class)
@@ -48,115 +51,19 @@ public class ServerTest {
   /**
    * This rule manages automatic graceful shutdown for the registered servers and channels at the
    * end of test.
-   */  
+   */
+	private static final int TEST_PORT = 8080;
+	private static final double TEST_PRICE = 1.50;
+	
   private static final String TEST_FOODSERVICE = "Testbar";
   private static final String TEST_MENU = "Chourico.jpg";
   private static final String TEST_PHOTO = "photos/test/chourico.jpg";
-  private static final double TEST_PRICE = 1.50;
+  
   @Rule
   public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
-  private final FoodISTServerServiceGrpc.FoodISTServerServiceImplBase serviceImpl =
-      mock(FoodISTServerServiceGrpc.FoodISTServerServiceImplBase.class, delegatesTo(
-          new FoodISTServerServiceGrpc.FoodISTServerServiceImplBase() {
-        	  private HashMap<String, List<Menu>> menusHashMap = new HashMap<String, List<Menu>>();
-        	  
-        	  @Override
-        	  public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
-        	      String foodService = request.getFoodService();                
-        	        
-        	      List<Menu> menuList = menusHashMap.get(foodService);
-        	        
-        	      ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
-        	        
-        	      for(Menu m : menuList) {
-        	    	System.out.println("#%" + m.getName());
-        	        listMenuReplyBuilder.addMenus(m);        	
-        	      }
-        	        
-        	      ListMenuReply listMenuReply = listMenuReplyBuilder.build();        
-        	      responseObserver.onNext(listMenuReply);
-        	      responseObserver.onCompleted();   
-        	  }
-        	  
-        	  @Override
-        	  public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
-        		  Menu.Builder menuBuilder = Menu.newBuilder();
-        	    	
-        	      String foodService = request.getFoodService();                     
-        	      menuBuilder.setName(request.getName());
-        	      menuBuilder.setPrice(request.getPrice());
-        	      //menuBuilder.setPhotoId(index, value);
-        	      Menu menu = menuBuilder.build();
-        	        
-        	      System.out.println(request.getName() + ":" + request.getPrice());
-        	      List<Menu> menuList = this.menusHashMap.get(foodService);
-        	      
-        	      if(menuList!=null) {
-        	    	  menuList.add(menu);
-        	    	  this.menusHashMap.put(foodService, menuList);         
-        	      } 
-        	      else {
-        	    	  List<Menu> new_MenuList = new ArrayList<Menu>();
-        	    	  new_MenuList.add(menu);
-        	    	  this.menusHashMap.put(foodService, new_MenuList);         
-        	      } 
-        	      
-        	      responseObserver.onNext(null);
-        	      responseObserver.onCompleted();   
-        	  }   
-        	  
-        	  @Override
-        	  public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
-        	   	return new StreamObserver<Contract.AddPhotoRequest>() {    		
-        	          private int counter = 0;
-        	          private ByteString photo = ByteString.copyFrom(new byte[]{});
-        	          private String name;
-        	          private String foodService;
-        	          private final Object lock = new Object();
-
-        	    		
-        	          @Override
-        			  public void onNext(AddPhotoRequest value) {
-        	              //Synchronize onNext calls by sequence
-        	              synchronized (lock) {
-        	                  while (counter != value.getSequenceNumber()) {
-        	                      try {
-        	                          lock.wait();
-        	                      } catch (InterruptedException e) {
-        	                          //Should never happen
-        	                      }
-        	                  }
-        	                  //Renew Lease
-        	                  if (counter == 0) {
-        	                      name = value.getName();
-        	                      foodService = value.getFoodService();
-        	                  }
-        	                  photo = photo.concat(value.getContent());
-        	                  counter++;
-        	                  lock.notify();
-        	              }				
-        	          }
-
-        			  @Override
-        			  public void onError(Throwable t) {
-        			    responseObserver.onError(t);				
-        			  }
-
-        			  @Override
-        		      public void onCompleted() {
-        	              try {
-        	                  responseObserver.onNext(Empty.newBuilder().build());    
-        	                  PhotoBuilder.store(foodService, name, photo);
-        	                  responseObserver.onCompleted();
-        	              } catch (StatusRuntimeException e) {
-        	                  throw new IllegalArgumentException(e.getMessage());
-        	              }
-        			  }  
-        	      };
-        	  }
-          }));
-
+  
+  private final BindableService bindableService = new ServiceImplementation();
+  
   class Client {
 	  FoodISTServerServiceBlockingStub stub;
 	  ManagedChannel channel;
@@ -252,14 +159,14 @@ public class ServerTest {
   public void setUp() throws Exception {
     // Generate a unique in-process server name.
 	String serverName = InProcessServerBuilder.generateName();
-        
+	
+	final BindableService bindableService = new ServiceImplementation();
     // Create a server, add service, start, and register for automatic graceful shutdown.
-    grpcCleanup.register(InProcessServerBuilder
-        .forName(serverName).directExecutor().addService(serviceImpl).build().start());
+	
+	grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 
     // Create a client channel and register for automatic graceful shutdown.
-    ManagedChannel channel = grpcCleanup.register(
-        InProcessChannelBuilder.forName(serverName).directExecutor().build());
+    ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     // Create a HelloWorldClient using the in-process channel;
     client = new Client(channel);
