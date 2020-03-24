@@ -14,7 +14,7 @@ public class Main {
             System.out.println("Usage: [prog] port");
             return;
         }
-        new PhotoBuilder().store("pila", "pila");
+        
         final BindableService bindableService = new ServiceImplementation();
         int port = Integer.parseInt(args[0]);
         
