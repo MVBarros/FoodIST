@@ -106,7 +106,7 @@ public class ServerTest {
         	  public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
         	   	return new StreamObserver<Contract.AddPhotoRequest>() {    		
         	          private int counter = 0;
-        	          private ByteString file = ByteString.copyFrom(new byte[]{});
+        	          private ByteString photo = ByteString.copyFrom(new byte[]{});
         	          private String name;
         	          private String foodService;
         	          private final Object lock = new Object();
@@ -128,7 +128,7 @@ public class ServerTest {
         	                      name = value.getName();
         	                      foodService = value.getFoodService();
         	                  }
-        	                  file = file.concat(value.getContent());
+        	                  photo = photo.concat(value.getContent());
         	                  counter++;
         	                  lock.notify();
         	              }				
@@ -142,8 +142,8 @@ public class ServerTest {
         			  @Override
         		      public void onCompleted() {
         	              try {
-        	                  responseObserver.onNext(Empty.newBuilder().build());
-        	                  PhotoBuilder.store(foodService, name);
+        	                  responseObserver.onNext(Empty.newBuilder().build());        	                  
+        	                  PhotoBuilder.store(foodService, name, photo);
         	                  responseObserver.onCompleted();
         	              } catch (StatusRuntimeException e) {
         	                  throw new IllegalArgumentException(e.getMessage());
@@ -239,13 +239,6 @@ public class ServerTest {
 	            //Should Never Happen
 	            System.exit(1);
 	        }
-			/*byte[] a = new byte[8];
-			ByteString byteString = new String("ola").to
-			addPhotoRequest.setContent(a);
-			addPhotoRequest.setFoodService("Redbar");
-			addPhotoRequest.setName("chourico");
-			addPhotoRequest.setSequenceNumber(0);
-			break;*/
 	  }
   }
   

@@ -1,20 +1,24 @@
 package foodist.server.util;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Properties;
 
 import com.google.protobuf.ByteString;
 
 public class PhotoBuilder {
 	
-	public static void store(String foodService, String name) {	    	    
+	public static void store(String foodService, String name, ByteString photo) {	    	    
 		String path;
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		stringBuilder.append("/").append(foodService).append("/");
+		
 		
 		path = stringBuilder.toString();
 	    File directory = new File(path);
@@ -22,12 +26,11 @@ public class PhotoBuilder {
 	        directory.mkdir();	        
 	    }
 
-	    File file = new File(path + "/" + name);
 	    try{
-	        FileWriter fw = new FileWriter("photos/test/chourico.jpg");
-	        BufferedWriter bw = new BufferedWriter(fw);
-	        bw.write("asdasd");
-	        bw.close();
+	        FileOutputStream out=new FileOutputStream("photos/test/chourico1.jpg");
+	        System.out.println(photo.toByteArray().toString());
+	        out.write(photo.toByteArray());
+	        out.close();
 	    }
 	    catch (IOException e){
 	        e.printStackTrace();
