@@ -19,7 +19,7 @@ public class ServerTest {
 	private static final double TEST_PRICE = 1.50;
 	
 	private static final String TEST_FOODSERVICE = "Testbar";
-	private static final String TEST_MENU = "Chourico.jpg";
+	private static final String TEST_MENU = "Chourico";
 	private static final String TEST_PHOTO = "photos/test/chourico.jpg";
   
 	@Rule
@@ -43,8 +43,8 @@ public class ServerTest {
   	public void greet_messageDeliveredToServer() {
 	  	//ArgumentCaptor<ListMenuRequest> requestCaptor = ArgumentCaptor.forClass(ListMenuRequest.class);
 	
+		client.addPhoto(TEST_MENU, TEST_FOODSERVICE, TEST_PHOTO);
 	  	client.listMenu(TEST_FOODSERVICE);   
-	  	client.addPhoto(TEST_MENU, TEST_FOODSERVICE, TEST_PHOTO);
 	  	/*verify(serviceImpl).listMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<ListMenuRequest>>any());
 		assertEquals("test name", requestCaptor.getValue().getName());*/
   	}

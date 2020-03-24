@@ -47,14 +47,14 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     @Override
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
 		String foodService = request.getFoodService();                
-		
+
 		List<Menu> menuList = menusHashMap.get(foodService);
 		    
 		ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
 		    
-		for(Menu m : menuList) {
-			System.out.println("#%" + m.getName());
-			listMenuReplyBuilder.addMenus(m);        	
+		for(Menu m : menuList) {			
+			Menu menu = MenuUtils.fetchMenuPhotos(foodService, m.getName(), m.getPrice());
+			listMenuReplyBuilder.addMenus(menu);        	
 		}
 		    
 		ListMenuReply listMenuReply = listMenuReplyBuilder.build();        
@@ -103,7 +103,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     		public void onCompleted() {
     			try {
     				responseObserver.onNext(Empty.newBuilder().build());    
-    				MenuUtils.addPhotoToMenu(foodService, menuName, photoByteString, menusHashMap);
+    				MenuUtils.addPhotoToMenu(foodService, menuName, photoByteString);
     				responseObserver.onCompleted();
     			} catch (StatusRuntimeException e) {
     				throw new IllegalArgumentException(e.getMessage());

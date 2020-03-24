@@ -53,7 +53,9 @@ class Client {
 		List<Menu> list = listMenuReply.getMenusList();
 	  
 		for(Menu m : list) {
+			System.out.println("List menus");
 			System.out.println(m.getName());
+			System.out.println(m.getPhotoIdCount());
 		}
 	}
   
