@@ -24,7 +24,7 @@ public class PhotoBuilder {
 
 	    File file = new File(path + "/" + name);
 	    try{
-	        FileWriter fw = new FileWriter("./");
+	        FileWriter fw = new FileWriter("photos/test/chourico.jpg");
 	        BufferedWriter bw = new BufferedWriter(fw);
 	        bw.write("asdasd");
 	        bw.close();

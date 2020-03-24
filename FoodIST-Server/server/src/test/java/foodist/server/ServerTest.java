@@ -5,12 +5,19 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -23,15 +30,18 @@ import org.junit.runners.JUnit4;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
+import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
+import foodist.server.util.PhotoBuilder;
 
 @RunWith(JUnit4.class)
 public class ServerTest { 
@@ -91,6 +101,56 @@ public class ServerTest {
         	      responseObserver.onNext(null);
         	      responseObserver.onCompleted();   
         	  }   
+        	  
+        	  @Override
+        	  public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
+        	   	return new StreamObserver<Contract.AddPhotoRequest>() {    		
+        	          private int counter = 0;
+        	          private ByteString file = ByteString.copyFrom(new byte[]{});
+        	          private String name;
+        	          private String foodService;
+        	          private final Object lock = new Object();
+
+        	    		
+        	          @Override
+        			  public void onNext(AddPhotoRequest value) {
+        	              //Synchronize onNext calls by sequence
+        	              synchronized (lock) {
+        	                  while (counter != value.getSequenceNumber()) {
+        	                      try {
+        	                          lock.wait();
+        	                      } catch (InterruptedException e) {
+        	                          //Should never happen
+        	                      }
+        	                  }
+        	                  //Renew Lease
+        	                  if (counter == 0) {
+        	                      name = value.getName();
+        	                      foodService = value.getFoodService();
+        	                  }
+        	                  file = file.concat(value.getContent());
+        	                  counter++;
+        	                  lock.notify();
+        	              }				
+        	          }
+
+        			  @Override
+        			  public void onError(Throwable t) {
+        			    responseObserver.onError(t);				
+        			  }
+
+        			  @Override
+        		      public void onCompleted() {
+        	              try {
+        	                  responseObserver.onNext(Empty.newBuilder().build());
+        	                  PhotoBuilder.store(foodService, name);
+        	                  responseObserver.onCompleted();
+        	              } catch (StatusRuntimeException e) {
+        	                  throw new IllegalArgumentException(e.getMessage());
+        	              }
+        			  }  
+        	      };
+        	  }
           }));
 
   class Client {
@@ -125,6 +185,68 @@ public class ServerTest {
 			  System.out.println(m.getName());
 		  }
 	  }
+	  
+	  void addPhoto() {
+			AddPhotoRequest.Builder addPhotoRequest = AddPhotoRequest.newBuilder();
+			
+			final CountDownLatch finishLatch = new CountDownLatch(1);
+	        int sequence = 0;
+	        
+	        StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
+	            @Override
+	            public void onNext(Empty empty) {
+	            }
+
+	            @Override
+	            public void onError(Throwable throwable) {
+	                System.out.println("Error uploading file, does that file already exist?" + throwable.getMessage());
+	                finishLatch.countDown();
+	            }
+
+	            @Override
+	            public void onCompleted() {
+	                System.out.println("File uploaded successfully");
+	                finishLatch.countDown();
+	            }
+	        };
+	        
+	        FoodISTServerServiceGrpc.FoodISTServerServiceStub foodISTServerServiceStub = FoodISTServerServiceGrpc.newStub(channel);			        
+	        StreamObserver<Contract.AddPhotoRequest> requestObserver = foodISTServerServiceStub.addPhoto(responseObserver);
+	        byte[] data = new byte[1024 * 1024];
+	        String filename = "photos/chourico.jpg";
+	        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(filename))) {
+	            int numRead;
+	            //Send file chunks to server
+	            while ((numRead = in.read(data)) >= 0) {
+	            	Contract.AddPhotoRequest.Builder addPhotoRequestBuilder = Contract.AddPhotoRequest.newBuilder();
+	                
+	            	addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
+	            	addPhotoRequestBuilder.setName("chourico");
+	            	addPhotoRequestBuilder.setSequenceNumber(sequence);
+	            	addPhotoRequestBuilder.setFoodService("test");
+	                requestObserver.onNext(addPhotoRequestBuilder.build());
+	                sequence++;
+	            }
+
+	            requestObserver.onCompleted();
+
+	            //Wait for server to finish saving file to Database
+	            finishLatch.await();
+
+	        } catch (FileNotFoundException e) {
+	            System.out.println(String.format("File with filename: %s not found.", filename));
+	        } catch (IOException | InterruptedException e) {
+	            //Should Never Happen
+	            System.exit(1);
+	        }
+			/*byte[] a = new byte[8];
+			ByteString byteString = new String("ola").to
+			addPhotoRequest.setContent(a);
+			addPhotoRequest.setFoodService("Redbar");
+			addPhotoRequest.setName("chourico");
+			addPhotoRequest.setSequenceNumber(0);
+			break;*/
+	  }
   }
   
   private Client client;
@@ -156,7 +278,8 @@ public class ServerTest {
   public void greet_messageDeliveredToServer() {
     //ArgumentCaptor<ListMenuRequest> requestCaptor = ArgumentCaptor.forClass(ListMenuRequest.class);
 
-    client.listMenu("Redbar");    
+    client.listMenu("Redbar");   
+    client.addPhoto();
     /*verify(serviceImpl).listMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<ListMenuRequest>>any());
     assertEquals("test name", requestCaptor.getValue().getName());*/
   }

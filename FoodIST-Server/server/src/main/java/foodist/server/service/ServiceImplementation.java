@@ -65,55 +65,12 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	      responseObserver.onCompleted();      
     }    
 
-    @Override
+    /*@Override
     public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
     	return new StreamObserver<Contract.AddPhotoRequest>() {    		
-            private int counter = 0;
-            private ByteString file = ByteString.copyFrom(new byte[]{});
-            private String name;
-            private String foodService;
-            private final Object lock = new Object();
-
     		
-			@Override
-			public void onNext(AddPhotoRequest value) {
-                //Synchronize onNext calls by sequence
-                synchronized (lock) {
-                    while (counter != value.getSequenceNumber()) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            //Should never happen
-                        }
-                    }
-                    //Renew Lease
-                    if (counter == 0) {
-                        name = value.getName();
-                        foodService = value.getFoodService();
-                    }
-                    file = file.concat(value.getContent());
-                    counter++;
-                    lock.notify();
-                }				
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				responseObserver.onError(t);				
-			}
-
-			@Override
-			public void onCompleted() {
-                try {
-                    responseObserver.onNext(Empty.newBuilder().build());
-                    PhotoBuilder.store(foodService, name);
-                    responseObserver.onCompleted();
-                } catch (StatusRuntimeException e) {
-                    throw new IllegalArgumentException(e.getMessage());
-                }
-			}  
     	};
-    }
+    }*/
 
     @Override
     public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
