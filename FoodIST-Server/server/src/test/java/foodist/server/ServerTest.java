@@ -29,26 +29,24 @@ public class ServerTest {
 	final BindableService bindableService = new ServiceImplementation();
 
 	@Before
-	public void setUp() throws Exception {
-    
+	public void setUp() throws Exception {   
 		String serverName = InProcessServerBuilder.generateName();
-	
-		  
-		
+
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    
     	client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);    
-  }
+	}
 
-  @Test
-  public void greet_messageDeliveredToServer() {
-    //ArgumentCaptor<ListMenuRequest> requestCaptor = ArgumentCaptor.forClass(ListMenuRequest.class);
+	@Test
+  	public void greet_messageDeliveredToServer() {
+	  	//ArgumentCaptor<ListMenuRequest> requestCaptor = ArgumentCaptor.forClass(ListMenuRequest.class);
 	
-    client.listMenu(TEST_FOODSERVICE);   
-    client.addPhoto(TEST_MENU, TEST_FOODSERVICE, TEST_PHOTO);
-    /*verify(serviceImpl).listMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<ListMenuRequest>>any());
-    assertEquals("test name", requestCaptor.getValue().getName());*/
-  }
+	  	client.listMenu(TEST_FOODSERVICE);   
+	  	client.addPhoto(TEST_MENU, TEST_FOODSERVICE, TEST_PHOTO);
+	  	/*verify(serviceImpl).listMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<ListMenuRequest>>any());
+		assertEquals("test name", requestCaptor.getValue().getName());*/
+  	}
+  
 }

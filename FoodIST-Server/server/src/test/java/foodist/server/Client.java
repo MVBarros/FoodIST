@@ -38,7 +38,7 @@ class Client {
 	  
 		addMenuBuilder.setFoodService(foodService);
 		addMenuBuilder.setName(name);
-		addMenuBuilder.setPrice(price);					
+		addMenuBuilder.setPrice(price);				
 	  
 		AddMenuRequest addMenuRequestExample = addMenuBuilder.build();
 		
@@ -57,7 +57,7 @@ class Client {
 		}
 	}
   
-	void addPhoto(String photoName, String photoFoodService, String photoPath) {
+	void addPhoto(String menuName, String photoFoodService, String photoPath) {
 		
 		final CountDownLatch finishLatch = new CountDownLatch(1);
         int sequence = 0;
@@ -95,7 +95,7 @@ class Client {
             	Contract.AddPhotoRequest.Builder addPhotoRequestBuilder = Contract.AddPhotoRequest.newBuilder();
                 
             	addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
-            	addPhotoRequestBuilder.setName(photoName);
+            	addPhotoRequestBuilder.setName(menuName);
             	addPhotoRequestBuilder.setSequenceNumber(sequence);
             	addPhotoRequestBuilder.setFoodService(photoFoodService);
             	

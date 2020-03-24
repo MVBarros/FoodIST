@@ -4,7 +4,6 @@ import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import foodist.server.service.ServiceImplementation;
-import foodist.server.util.PhotoBuilder;
 
 import java.io.IOException;
 
@@ -18,10 +17,7 @@ public class Main {
         final BindableService bindableService = new ServiceImplementation();
         int port = Integer.parseInt(args[0]);
         
-        Server server = ServerBuilder
-                .forPort(port)
-                .addService(bindableService)
-                .build();
+        Server server = ServerBuilder.forPort(port).addService(bindableService).build();
 
         System.out.println("Server Starting");
         server.start();

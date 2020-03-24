@@ -1,50 +1,23 @@
 package foodist.server.service;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
-
 import foodist.server.grpc.contract.Contract;
-import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
-import foodist.server.util.PhotoBuilder;
+import foodist.server.util.MenuUtils;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	
 	private HashMap<String, List<Menu>> menusHashMap = new HashMap<String, List<Menu>>();
 	
-    @Override
-    public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
-		String foodService = request.getFoodService();                
-		
-		List<Menu> menuList = menusHashMap.get(foodService);
-		    
-		ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
-		    
-		for(Menu m : menuList) {
-			System.out.println("#%" + m.getName());
-			listMenuReplyBuilder.addMenus(m);        	
-		}
-		    
-		ListMenuReply listMenuReply = listMenuReplyBuilder.build();        
-		responseObserver.onNext(listMenuReply);
-		responseObserver.onCompleted();  
-    }
-
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
     	Menu.Builder menuBuilder = Menu.newBuilder();
@@ -52,7 +25,6 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	    String foodService = request.getFoodService();                     
 	    menuBuilder.setName(request.getName());
 	    menuBuilder.setPrice(request.getPrice());
-	    //menuBuilder.setPhotoId(index, value);
 	    Menu menu = menuBuilder.build();
 	        
 	    System.out.println(request.getName() + ":" + request.getPrice());
@@ -70,14 +42,32 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	      
 	    responseObserver.onNext(null);
 	    responseObserver.onCompleted();      
-    }    
+    }  
+    
+    @Override
+    public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
+		String foodService = request.getFoodService();                
+		
+		List<Menu> menuList = menusHashMap.get(foodService);
+		    
+		ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
+		    
+		for(Menu m : menuList) {
+			System.out.println("#%" + m.getName());
+			listMenuReplyBuilder.addMenus(m);        	
+		}
+		    
+		ListMenuReply listMenuReply = listMenuReplyBuilder.build();        
+		responseObserver.onNext(listMenuReply);
+		responseObserver.onCompleted();  
+    } 
 
     @Override
 	public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
     	return new StreamObserver<Contract.AddPhotoRequest>() {    		
     		private int counter = 0;
-    		private ByteString photo = ByteString.copyFrom(new byte[]{});
-    		private String name;
+    		private ByteString photoByteString = ByteString.copyFrom(new byte[]{});
+    		private String menuName;
     		private String foodService;
     		private final Object lock = new Object();
 
@@ -95,10 +85,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     				}
     				//Renew Lease
     				if (counter == 0) {
-    					name = value.getName();
+    					menuName = value.getName();
     					foodService = value.getFoodService();
     				}
-    				photo = photo.concat(value.getContent());
+    				photoByteString = photoByteString.concat(value.getContent());
     				counter++;
     				lock.notify();
     			}				
@@ -113,7 +103,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     		public void onCompleted() {
     			try {
     				responseObserver.onNext(Empty.newBuilder().build());    
-    				PhotoBuilder.store(foodService, name, photo);
+    				MenuUtils.addPhotoToMenu(foodService, menuName, photoByteString, menusHashMap);
     				responseObserver.onCompleted();
     			} catch (StatusRuntimeException e) {
     				throw new IllegalArgumentException(e.getMessage());
