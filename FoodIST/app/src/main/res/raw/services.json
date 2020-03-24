@@ -1,0 +1,142 @@
+{
+  "TagusPark": [
+    {
+      "name": "Red Bar",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.736550,
+      "longitude": -9.302204,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": []
+    },
+    {
+      "name": "Green Bar",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.738042,
+      "longitude": -9.303060,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": []
+    },
+    {
+      "name": "Cantina",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.737928,
+      "longitude": -9.303269,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": ["Staff", "Visitor"]
+    },
+    {
+      "name": "Maquinas de Venda Automática",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.737129,
+      "longitude": -9.303140,
+      "hours": {
+        "monday": "00:00-23:59",
+        "tuesday": "00:00-23:59",
+        "wednesday": "00:00-23:59",
+        "thursday": "00:00-23:59",
+        "sunday": "00:00-23:59"
+      },
+      "restrictions": []
+    }
+  ],
+  "Alameda": [
+    {
+      "name": "Cantina de Civil",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.737756,
+      "longitude": -9.140465,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": ["Staff", "Visitor"]
+
+    },
+    {
+      "name": "Bar de Civil",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.737075,
+      "longitude": -9.140010,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": []
+    },
+    {
+      "name": "Cantina",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.736380,
+      "longitude": -9.136987,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": ["Staff", "Visitor"]
+    },
+    {
+      "name": "Maquina de Venda Automática",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.736261,
+      "longitude": -9.137836,
+      "hours": {
+        "monday": "00:00-23:59",
+        "tuesday": "00:00-23:59",
+        "wednesday": "00:00-23:59",
+        "thursday": "00:00-23:59",
+        "sunday": "00:00-23:59"
+      },
+      "restrictions": []
+    },
+    {
+      "name": "Bar do Pavilhão Central",
+      "distance": "10km",
+      "time": "5min",
+      "latitude": 38.736624,
+      "longitude": -9.139594,
+      "hours": {
+        "monday": "09:00-18:00",
+        "tuesday": "09:00-18:00",
+        "wednesday": "09:00-18:00",
+        "thursday": "09:00-18:00",
+        "sunday": "09:00-18:00"
+      },
+      "restrictions": []
+    }
+  ]
+}

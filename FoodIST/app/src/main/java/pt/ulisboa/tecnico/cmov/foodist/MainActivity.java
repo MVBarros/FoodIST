@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -25,19 +24,22 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
+
+import pt.ulisboa.tecnico.cmov.foodist.async.campus.FoodServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
+import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
+import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServiceResource;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;
 
-
     private static final String TAG = "TAG_MainActivity";
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
-    private static final int INTERNET_REQUEST_CODE = 2;
-
-    public ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "phone location permission granted");
                 guessCampusFromLocation();
             } else {
-                //TODO INFORM USER BY TOAST
+                Toast.makeText(getApplicationContext(), "Location not granted, enter location manually", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "phone location permission NOT granted");
                 askCampus();
             }
@@ -113,13 +115,12 @@ public class MainActivity extends AppCompatActivity {
                         if (location != null) {
                             coords[0] = location.getLatitude();
                             coords[1] = location.getLongitude();
-                        }
-                        else {
-                            //TODO Warn user that we could not get location
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Could not get location, please select campus", Toast.LENGTH_SHORT).show();
                             askCampus();
                         }
                         String common = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
-                        String myCoords = String.format("%f,%f", coords[0], coords[1]);
+                        String myCoords = String.format(Locale.ENGLISH, "%f,%f", coords[0], coords[1]);
                         Log.d("LOCATION", "Coords: " + myCoords);
                         String destination = "Instituto+Superior+Técnico";
                         String apiKey = getString(R.string.map_api_key);
@@ -139,49 +140,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.currentCampus);
         textView.setText(campus);
 
-        //Update Food Services List
-        Resources res = getResources();
-        TypedArray services;
-        if (campus.equals(getString(R.string.campus_alameda))) {
-            services = getResources().obtainTypedArray(R.array.Alameda);
-        } else {
-            services = getResources().obtainTypedArray(R.array.Taguspark);
-        }
-
-        for(int i = 0; i < services.length(); i++){
-            //Gets index of array
-            int id = services.getResourceId(i, 0);
-            if(id != 0){
-                //number of info
-                String[] info = new String[3];
-                info = res.getStringArray(id);
-
-                LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v = vi.inflate(R.layout.food_service, null);
-
-                TextView name = v.findViewById(R.id.foodServiceName);
-                TextView distance = v.findViewById(R.id.distance);
-                TextView queue = v.findViewById(R.id.queueTime);
-
-                name.setText(info[0]);
-                distance.setText(String.format("Distance: %s", info[1]));
-                queue.setText(String.format("Waiting: %s", info[2]));
-
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-                        TextView name = v.findViewById(R.id.foodServiceName);
-
-                        intent.putExtra("Service Name", name.getText());
-                        startActivity(intent);
-                    }
-                });
-
-                ViewGroup foodServiceList = findViewById(R.id.foodServices);
-                foodServiceList.addView(v);
-            }
-        }
+        loadServices(campus);
 
         //Save preferences for later
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.global_preferences_file), 0).edit();
@@ -189,9 +148,48 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    public void writeServicesToUI(List<FoodService> services) {
+        for (FoodService service : services) {
+            //number of info
+            String[] info = new String[]{service.getName(), service.getDistance(), service.getTime()};
+
+            LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = vi.inflate(R.layout.food_service, null);
+
+            TextView name = v.findViewById(R.id.foodServiceName);
+            TextView distance = v.findViewById(R.id.distance);
+            TextView queue = v.findViewById(R.id.queueTime);
+
+            name.setText(info[0]);
+            distance.setText(String.format("Distance: %s", info[1]));
+            queue.setText(String.format("Waiting: %s", info[2]));
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                    TextView name = v.findViewById(R.id.foodServiceName);
+
+                    intent.putExtra("Service Name", name.getText());
+                    startActivity(intent);
+                }
+            });
+
+            ViewGroup foodServiceList = findViewById(R.id.foodServices);
+            foodServiceList.addView(v);
+        }
+    }
+
+
     public void askCampus() {
         Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
         finish();
         startActivity(intent);
+    }
+
+    public void loadServices(String campus) {
+        InputStream is = getResources().openRawResource(R.raw.services);
+        FoodServiceResource resource = new FoodServiceResource(is, campus);
+        new FoodServiceParsingTask(MainActivity.this).execute(resource);
     }
 }

@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.foodist.async.campus;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +19,7 @@ import java.net.URL;
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
 
 
-public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
+public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
 
 
     private WeakReference<MainActivity> mainActivity;
@@ -31,15 +30,17 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
 
     private static final int NUMBER_CAMPUS = 2;
     private static final int ALAMEDA = 0;
-    private static final int TAGUSPARK = 1;
+
+    private static final String TAG = "LOCATION-TASK";
+
     @Override
-    protected JSONObject[] doInBackground(String... strings) {
+    protected int[] doInBackground(String... strings) {
 
         if (strings.length != NUMBER_CAMPUS) {
             return null;
         }
 
-        JSONObject[] res = new JSONObject[NUMBER_CAMPUS];
+        JSONObject[] object = new JSONObject[NUMBER_CAMPUS];
         try {
             String response;
             for (int i = 0; i < NUMBER_CAMPUS; ++i) {
@@ -51,24 +52,11 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
                 } finally {
                     urlConnection.disconnect();
                 }
-                JSONObject object = new JSONObject(response);
-                res[i] = object;
+                object[i] = new JSONObject(response);
             }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return res;
-    }
+            int[] res = new int[NUMBER_CAMPUS];
 
-
-    @Override
-    protected void onPostExecute(JSONObject[] object) {
-        if (object == null) {
-            return;
-        }
-        try {
-            for(int i = 0; i < NUMBER_CAMPUS; ++i) {
+            for (int i = 0; i < NUMBER_CAMPUS; ++i) {
                 JSONArray array = object[i].getJSONArray("rows");
                 JSONObject obj = array.getJSONObject(0);
                 array = obj.getJSONArray("elements");
@@ -76,32 +64,37 @@ public class GuessCampusTask extends AsyncTask<String, Integer, JSONObject[]> {
                 obj = obj.getJSONObject("distance");
 
                 int distance = obj.getInt("value");
-                Log.d("LOCATION", "Distance to alameda: " + distance);
-                if (distance < 2000) {
-                    Log.d("LOCATION", "Location should be: ".concat(i == ALAMEDA ? "Alameda" : "TagusPark"));
-                    if (mainActivity != null) {
-                        mainActivity.get().setCampus(i == ALAMEDA ? "Alameda" : "TagusPark");
-                        return;
-                    }
-                    else {
-                        return;
-                    }
-                }
+                res[i] = distance;
             }
-            //Could not infer campus
-            if (mainActivity != null) {
-
-                mainActivity.get().askCampus();
-            }
-
-        } catch (JSONException e) {
-            //No path to a campus
-            if (mainActivity != null) {
-
-                mainActivity.get().askCampus();
-            }
-            e.printStackTrace();
+            return res;
+        } catch (IOException | JSONException e) {
+            Log.d(TAG, "Error getting location from google API", e);
+            return null;
         }
+    }
+
+
+    @Override
+    protected void onPostExecute(int[] res) {
+        if (res == null) {
+            return;
+        }
+        MainActivity activity = mainActivity.get();
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
+            // activity is no longer valid, don't do anything!
+            return;
+        }
+        for (int i = 0; i < NUMBER_CAMPUS; ++i) {
+            int distance = res[i];
+            Log.d(TAG, "Distance to".concat(i == ALAMEDA ? "Alameda" : "Taguspark") + ": " + distance);
+            if (distance < 2000) {
+                Log.d(TAG, "Location should be: ".concat(i == ALAMEDA ? "Alameda" : "TagusPark"));
+                activity.setCampus(i == ALAMEDA ? "Alameda" : "TagusPark");
+                return;
+            }
+        }
+        //Could not infer campus
+        activity.askCampus();
     }
 
     private String readStream(InputStream is) throws IOException {
