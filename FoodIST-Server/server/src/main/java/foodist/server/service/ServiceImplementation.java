@@ -74,6 +74,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     		private ByteString photoByteString = ByteString.copyFrom(new byte[]{});
     		private String menuName;
     		private String foodService;
+    		private String photoName;
     		private final Object lock = new Object();
 
 		
@@ -90,8 +91,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     				}
     				//Renew Lease
     				if (counter == 0) {
-    					menuName = value.getName();
+    					menuName = value.getMenuName();
     					foodService = value.getFoodService();
+    					photoName = value.getPhotoName();
     				}
     				photoByteString = photoByteString.concat(value.getContent());
     				counter++;
@@ -108,7 +110,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     		public void onCompleted() {
     			try {
     				responseObserver.onNext(Empty.newBuilder().build());    
-    				MenuUtils.addPhotoToMenu(foodService, menuName, photoByteString);
+    				MenuUtils.addPhotoToMenu(photoName, foodService, menuName, photoByteString);
     				responseObserver.onCompleted();
     			} catch (StatusRuntimeException e) {
     				throw new IllegalArgumentException(e.getMessage());
@@ -120,7 +122,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     @Override
     public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
     	String foodService = request.getFoodService();
-        String menuName = request.getName();
+        String menuName = request.getMenuName();
         String photoId = request.getPhotoId();               
            
         int sequence = 0;

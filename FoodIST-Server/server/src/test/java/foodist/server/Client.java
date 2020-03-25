@@ -11,6 +11,7 @@ import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
+import foodist.server.util.FileUtils;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import java.io.BufferedInputStream;
@@ -102,9 +103,12 @@ class Client {
             	Contract.AddPhotoRequest.Builder addPhotoRequestBuilder = Contract.AddPhotoRequest.newBuilder();
                 
             	addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
-            	addPhotoRequestBuilder.setName(menuName);
+            	addPhotoRequestBuilder.setMenuName(menuName);
             	addPhotoRequestBuilder.setSequenceNumber(sequence);
             	addPhotoRequestBuilder.setFoodService(foodService);
+            	addPhotoRequestBuilder.setPhotoName(FileUtils.getFileFromPath(photoPath));
+            	
+            	FileUtils.getFileFromPath(photoPath);
             	
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;
@@ -128,7 +132,7 @@ class Client {
 		
 		downloadPhotoBuilder.setPhotoId(photoId);
 		downloadPhotoBuilder.setFoodService(foodService);
-		downloadPhotoBuilder.setName(menuName);									
+		downloadPhotoBuilder.setMenuName(menuName);									
 		
 		DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build(); 		       		
 		

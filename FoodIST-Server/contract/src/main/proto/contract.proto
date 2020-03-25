@@ -13,7 +13,8 @@ message AddPhotoRequest {
     int32 sequenceNumber = 1;
     bytes content = 2;
     string foodService = 3;
-    string name = 4;
+    string menuName = 4;
+    string photoName = 5;
 }
 
 message DownloadPhotoReply {
@@ -24,7 +25,7 @@ message DownloadPhotoReply {
 message DownloadPhotoRequest {
     string photoId = 1;
     string foodService = 2;
-    string name = 3;
+    string menuName = 3;
 }
 
 message ListMenuRequest {

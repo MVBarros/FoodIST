@@ -15,12 +15,12 @@ public class MenuUtils {
 	
 	private static final String BASE_DIR = "photos";
 	
-	public static void addPhotoToMenu(String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
+	public static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
 			
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
 	    createPhotoDir(foodServicePath);
 	    
-	    String photoPath = foodServicePath + UUID.randomUUID().toString();
+	    String photoPath = foodServicePath + UUID.randomUUID().toString() + "." + photoName.split("\\.")[1];
 	    try{
 	        FileOutputStream out=new FileOutputStream(photoPath);	        
 	        out.write(photoByteString.toByteArray());
@@ -80,5 +80,5 @@ public class MenuUtils {
 		StringBuilder buildPath = new StringBuilder();		
 		buildPath.append(BASE_DIR).append("/").append(foodServiceName).append("/").append(menuName).append("/");
 		return buildPath.toString();
-	}
+	}	
 }
