@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,6 +33,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.campus.FoodServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServiceResource;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -76,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
             setCampus(campus);
         } else {
             askPhonePermission();
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(((GlobalStatus)getApplicationContext()).getProfileActivity()){
+            filterServices();
+            ((GlobalStatus)getApplicationContext()).setProfileActivity(true);
         }
     }
 
@@ -134,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-
     public void setCampus(String campus) {
         //Update Interface
         TextView textView = findViewById(R.id.currentCampus);
@@ -149,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void writeServicesToUI(List<FoodService> services) {
+        ViewGroup foodServiceList = findViewById(R.id.foodServices);
+        foodServiceList.removeAllViews();
+
         for (FoodService service : services) {
             //number of info
             String[] info = new String[]{service.getName(), service.getDistance(), service.getTime()};
@@ -175,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            ViewGroup foodServiceList = findViewById(R.id.foodServices);
+            foodServiceList = findViewById(R.id.foodServices);
             foodServiceList.addView(v);
         }
     }
@@ -192,4 +205,22 @@ public class MainActivity extends AppCompatActivity {
         FoodServiceResource resource = new FoodServiceResource(is, campus);
         new FoodServiceParsingTask(MainActivity.this).execute(resource);
     }
+
+    public void filterServices(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+        String position_name = pref.getString(getString(R.string.position_name), null);
+        ArrayList<FoodService> filteredServices = new ArrayList<>();
+
+        if(position_name != null) {
+            for (FoodService service : ((GlobalStatus)getApplicationContext()).getServices()) {
+                //If restriction
+                List<String> restrictions = service.getRestrictions();
+                if (!restrictions.contains(position_name)) {
+                    filteredServices.add(service);
+                }
+            }
+        }
+        writeServicesToUI(filteredServices);
+    }
+
 }
