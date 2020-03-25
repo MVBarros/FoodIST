@@ -12,6 +12,7 @@ import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import foodist.server.util.FileUtils;
+import foodist.server.util.MenuUtils;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import java.io.BufferedInputStream;
@@ -28,7 +29,7 @@ import java.util.concurrent.CountDownLatch;
 
 class Client {
 	
-	private static final String TEST_FOLDER = "photos/test/";
+	private static final String CLIENT_FOLDER = "photos/client/";
 	private FoodISTServerServiceBlockingStub stub;
 	private ManagedChannel channel;	
 	
@@ -140,7 +141,7 @@ class Client {
 		
 			
 		try {
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(TEST_FOLDER + photoId));
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId, foodService, menuName)));
 			
 	        //Write bytes to file		
 	        while (iterator.hasNext()) {
@@ -149,9 +150,15 @@ class Client {
 	            out.write(fileBytes);
 	        }
 		} catch(IOException ioe) {
-			System.out.println("Error! Could not write file: \"" + TEST_FOLDER + photoId + "\".");
+			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId, foodService, menuName) + "\".");
 		}
 
+	}
+	
+	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
+		String photoDirectory = CLIENT_FOLDER + foodServiceName + "/" + menuName + "/";
+		FileUtils.createPhotoDir(photoDirectory);
+		return photoDirectory + photoName;
 	}
 	
 }

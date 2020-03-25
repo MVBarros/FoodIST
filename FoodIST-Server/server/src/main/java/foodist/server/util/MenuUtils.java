@@ -18,8 +18,7 @@ public class MenuUtils {
 	public static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
 			
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
-	    createPhotoDir(foodServicePath);
-	    
+		createPhotoDir(foodServicePath);
 	    String photoPath = foodServicePath + UUID.randomUUID().toString() + "." + photoName.split("\\.")[1];
 	    try{
 	        FileOutputStream out=new FileOutputStream(photoPath);	        
@@ -66,19 +65,18 @@ public class MenuUtils {
 			}						
 	    }			
 		return null;
-	}
-	
-
-	private static void createPhotoDir(String photoPath) {		
-		File directory = new File(photoPath);
-	    if (!directory.exists()){
-	        directory.mkdir();	        
-	    }	
-	}
+	}	
 	
 	private static String getFoodServiceDir(String foodServiceName, String menuName) {
 		StringBuilder buildPath = new StringBuilder();		
 		buildPath.append(BASE_DIR).append("/").append(foodServiceName).append("/").append(menuName).append("/");
 		return buildPath.toString();
 	}	
+	
+	private static void createPhotoDir(String photoPath) {		
+		File directory = new File(photoPath);
+	    if (!directory.exists()){
+	        directory.mkdirs();	        
+	    }	
+	}
 }
