@@ -76,6 +76,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 
+        RadioButton statusButton = (RadioButton) findViewById(status.getCheckedRadioButtonId());
+
+        editor.putString(getString(R.string.position_name), statusButton.getText().toString());
         editor.apply();
     }
 
@@ -266,7 +269,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (selectedStatus != -1) {
             RadioButton status = (RadioButton) findViewById(selectedStatus);
-
             status.toggle();
         }
     }

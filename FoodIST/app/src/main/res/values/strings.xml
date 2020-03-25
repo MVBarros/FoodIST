@@ -3,6 +3,7 @@
     <string name="username">Username</string>
     <string name="user_photo">User Photo</string>
     <string name="position">Position</string>
+    <string name="position_name">Position Name</string>
     <string name="student">Student</string>
     <string name="professor">Professor</string>
     <string name="staff">Staff</string>
