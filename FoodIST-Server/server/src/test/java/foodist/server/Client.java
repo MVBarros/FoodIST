@@ -5,6 +5,8 @@ import com.google.protobuf.Empty;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
+import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
+import foodist.server.grpc.contract.Contract.DownloadPhotoRequest;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
@@ -12,18 +14,22 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServic
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 
 class Client {
 	
+	private static final String TEST_FOLDER = "photos/test/";
 	private FoodISTServerServiceBlockingStub stub;
-	private ManagedChannel channel;
+	private ManagedChannel channel;	
 	
 	Client(ManagedChannel channel) {
 		
@@ -31,13 +37,11 @@ class Client {
 		this.stub = FoodISTServerServiceGrpc.newBlockingStub(this.channel);
 	}  
   
-	void addMenu(String foodService, String name, double price) {	
-		
-		System.out.println(foodService);
+	void addMenu(String foodService, String menuName, double price) {	
 		AddMenuRequest.Builder addMenuBuilder = AddMenuRequest.newBuilder();					
 	  
 		addMenuBuilder.setFoodService(foodService);
-		addMenuBuilder.setName(name);
+		addMenuBuilder.setName(menuName);
 		addMenuBuilder.setPrice(price);				
 	  
 		AddMenuRequest addMenuRequestExample = addMenuBuilder.build();
@@ -53,13 +57,14 @@ class Client {
 		List<Menu> list = listMenuReply.getMenusList();
 	  
 		for(Menu m : list) {
-			System.out.println("List menus");
-			System.out.println(m.getName());
-			System.out.println(m.getPhotoIdCount());
+			//Download photos from menus
+			for(int i = 0; i<m.getPhotoIdCount(); i++) {
+				this.downloadPhoto(m.getPhotoId(i), foodService, m.getName());
+			}			
 		}
 	}
   
-	void addPhoto(String menuName, String photoFoodService, String photoPath) {
+	void addPhoto(String menuName, String foodService, String photoPath) {
 		
 		final CountDownLatch finishLatch = new CountDownLatch(1);
         int sequence = 0;
@@ -99,7 +104,7 @@ class Client {
             	addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
             	addPhotoRequestBuilder.setName(menuName);
             	addPhotoRequestBuilder.setSequenceNumber(sequence);
-            	addPhotoRequestBuilder.setFoodService(photoFoodService);
+            	addPhotoRequestBuilder.setFoodService(foodService);
             	
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;
@@ -116,6 +121,33 @@ class Client {
             //Should Never Happen
             System.exit(1);
         }
+	}
+	
+	void downloadPhoto(String photoId, String foodService, String menuName) {
+		DownloadPhotoRequest.Builder downloadPhotoBuilder = DownloadPhotoRequest.newBuilder();					
+		
+		downloadPhotoBuilder.setPhotoId(photoId);
+		downloadPhotoBuilder.setFoodService(foodService);
+		downloadPhotoBuilder.setName(menuName);									
+		
+		DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build(); 		       		
+		
+		Iterator<DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);   
+		
+			
+		try {
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(TEST_FOLDER + photoId));
+			
+	        //Write bytes to file		
+	        while (iterator.hasNext()) {
+	            Contract.DownloadPhotoReply chunk = iterator.next();
+	            byte[] fileBytes = chunk.getContent().toByteArray();
+	            out.write(fileBytes);
+	        }
+		} catch(IOException ioe) {
+			System.out.println("Error! Could not write file: \"" + TEST_FOLDER + photoId + "\".");
+		}
+
 	}
 	
 }

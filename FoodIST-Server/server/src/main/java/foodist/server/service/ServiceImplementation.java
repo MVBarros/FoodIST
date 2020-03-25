@@ -4,19 +4,24 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
+import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import foodist.server.util.MenuUtils;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	
 	private HashMap<String, List<Menu>> menusHashMap = new HashMap<String, List<Menu>>();
+	
+	public static FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub foodISTServerServiceGrpcStub;
 	
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
@@ -114,8 +119,22 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
-        //TODO
-        super.downloadPhoto(request, responseObserver);
-    }
+    	String foodService = request.getFoodService();
+        String menuName = request.getName();
+        String photoId = request.getPhotoId();               
+           
+        int sequence = 0;
+        
+        byte[] photo = MenuUtils.fetchPhotoBytes(photoId, foodService, menuName);
+        //Send file 1MB chunk at a time
+        for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
+            int chunkSize = Math.min(1024 * 1024, photo.length - i);
+            DownloadPhotoReply.Builder downloadPhotoReplyBuilder = Contract.DownloadPhotoReply.newBuilder();
+            downloadPhotoReplyBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(photo, i, i + chunkSize)));
+            downloadPhotoReplyBuilder.setSequenceNumber(sequence);
+            responseObserver.onNext(downloadPhotoReplyBuilder.build());
+        }
+        responseObserver.onCompleted();
+    }    
     
 }

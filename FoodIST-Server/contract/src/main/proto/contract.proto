@@ -23,6 +23,8 @@ message DownloadPhotoReply {
 
 message DownloadPhotoRequest {
     string photoId = 1;
+    string foodService = 2;
+    string name = 3;
 }
 
 message ListMenuRequest {

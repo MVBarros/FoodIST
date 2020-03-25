@@ -5,7 +5,11 @@ import foodist.server.grpc.contract.Contract.Menu;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 public class MenuUtils {
 	
@@ -30,7 +34,6 @@ public class MenuUtils {
 	public static Menu fetchMenuPhotos(String foodServiceName, String menuName, double menu_price) {
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
 		
-		System.out.println("fecth menu " + foodServicePath);
 		File directory = new File(foodServicePath);
 		
 		Menu.Builder menuBuilder = Menu.newBuilder();
@@ -40,13 +43,31 @@ public class MenuUtils {
 	    if (directory.exists()){
 	    	    
 	        for(String filename : directory.list()) {
-	        	System.out.println(filename);
 	        	menuBuilder.addPhotoId(filename);	        	
 	        }	        
 	    }	
 	    
 	    return menuBuilder.build();
 	}
+	
+	public static byte[] fetchPhotoBytes(String photoId, String foodServiceName, String menuName) {
+		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+		
+		File file = new File(foodServicePath + photoId);		
+		
+		if (file.exists()){
+			try {
+				InputStream inputStream = FileUtils.openInputStream(file);
+		    	byte[] bytes = IOUtils.toByteArray(inputStream);
+		    	return bytes;
+			} catch(IOException ioe) {
+				System.out.println("Error! Could not open file: \"" + file + "\".");
+				//TODO alterar e lancar excepcao personalizada em vez de retornar nulo
+			}						
+	    }			
+		return null;
+	}
+	
 
 	private static void createPhotoDir(String photoPath) {		
 		File directory = new File(photoPath);
