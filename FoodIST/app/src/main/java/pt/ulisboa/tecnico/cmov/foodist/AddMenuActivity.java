@@ -21,6 +21,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +33,10 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import pt.ulisboa.tecnico.cmov.foodist.async.campus.UploadMenuTask;
+import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
+
 public class AddMenuActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_GALLERY = 1;
@@ -39,24 +45,41 @@ public class AddMenuActivity extends AppCompatActivity {
     private static final int GALLERY_PIC = 4;
     private static final int CAMERA_PIC = 5;
 
-    private static final String TAG = "TAG_ProfileActivity";
+    private static final String TAG = "TAG_AddMenuActivity";
 
     private String imageFilePath = null;
 
     private int photoView = R.id.dishView;
+
+    private String SERVICE_NAME = "Service Name";
+
+    private String initialMenuName = "";
+    private String initialPrice = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_menu);
 
-
         Button b = findViewById(R.id.add_new_menu_done_button);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddMenuActivity.this, FoodMenuActivity.class);
-                startActivity(intent);
+                TextView menuName = findViewById(R.id.dishName);
+                TextView menuCost = findViewById(R.id.dishCost);
+
+                Intent oldIntent = getIntent();
+                String foodService = oldIntent.getStringExtra(SERVICE_NAME);
+
+                if(menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)){
+                    Toast.makeText(getApplicationContext(), "Give the menu a name and a cost!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
+                    new UploadMenuTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
+                    Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

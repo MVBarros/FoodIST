@@ -50,15 +50,6 @@ public class FoodMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
 
-        Button b = findViewById(R.id.add_menu_button);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FoodMenuActivity.this, AddMenuActivity.class);
-                startActivity(intent);
-            }
-        });
-
         Button addPhoto = findViewById(R.id.add_photo_button);
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
