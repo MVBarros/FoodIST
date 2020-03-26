@@ -1,4 +1,4 @@
-package foodist.server.util;
+package foodist.server.common;
 
 import com.google.protobuf.ByteString;
 import foodist.server.grpc.contract.Contract.Menu;
@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-public class MenuUtils {
+public class Utils {
 	
 	private static final String BASE_DIR = "photos";
 	
@@ -67,16 +69,56 @@ public class MenuUtils {
 		return null;
 	}	
 	
-	private static String getFoodServiceDir(String foodServiceName, String menuName) {
-		StringBuilder buildPath = new StringBuilder();		
-		buildPath.append(BASE_DIR).append("/").append(foodServiceName).append("/").append(menuName).append("/");
-		return buildPath.toString();
-	}	
-	
-	private static void createPhotoDir(String photoPath) {		
+	public static void createPhotoDir(String photoPath) {			
 		File directory = new File(photoPath);
 	    if (!directory.exists()){
 	        directory.mkdirs();	        
 	    }	
+	}
+	
+	public static String getFileFromPath(String path) {
+		String[] split_path = path.split("/");
+		int position = split_path.length - 1;
+		return split_path[position];
+	}
+	
+	private static String getFoodServiceDir(String foodServiceName, String menuName) {
+		StringBuilder buildPath = new StringBuilder();		
+		buildPath.append(BASE_DIR).append("/").append(foodServiceName).append("/").append(menuName).append("/");
+		return buildPath.toString();
+	}			
+	
+	public static void deleteMenuDirectories(File directory, int iteration) {
+		try {			
+			for(File file : directory.listFiles()) {
+				if(file.isFile()) {
+					FileUtils.forceDelete(new File(file.getParent() + File.separator + file.getName()));		
+				}
+				if(file.isDirectory()) {
+					iteration++;
+					deleteMenuDirectories(file, iteration);
+				}
+			}				
+			if(iteration==1) {
+				directory.delete();
+			}
+		} catch(IOException ioe) {
+			System.out.println(ioe.getMessage());
+		}
+	}
+	public static void deleteMenuDirectory(File directory) {
+	    File[] files = directory.listFiles();
+	    
+	    if(files!=null) {	       
+	    	for(File file: files) {	        	
+	            if(file.isDirectory()) {
+	            	deleteMenuDirectory(file);
+	            } else {
+	            	file.delete();
+	            }
+	        }
+	    }
+	    
+	    directory.delete();
 	}
 }
