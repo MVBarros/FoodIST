@@ -82,7 +82,7 @@ public class AddMenuTest {
   	}
 	
 	@Test
-  	public void AddMenu_Name() {
+  	public void AddMenu_MenuName() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
 	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
