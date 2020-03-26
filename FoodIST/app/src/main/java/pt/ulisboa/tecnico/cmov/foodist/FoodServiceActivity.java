@@ -2,20 +2,15 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class FoodServiceActivity extends AppCompatActivity {
+public class FoodServiceActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +28,7 @@ public class FoodServiceActivity extends AppCompatActivity {
         ArrayList<String[]> menus = new ArrayList<>();
         menus.add(new String[]{"Tosta mista", "10€"});
 
-        for(String[] menu : menus){
+        for (String[] menu : menus) {
 
             //number of info
             LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

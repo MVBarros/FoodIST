@@ -76,21 +76,20 @@ public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
 
     @Override
     protected void onPostExecute(int[] res) {
-        if (res == null) {
-            return;
-        }
         MainActivity activity = mainActivity.get();
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
             // activity is no longer valid, don't do anything!
             return;
         }
-        for (int i = 0; i < NUMBER_CAMPUS; ++i) {
-            int distance = res[i];
-            Log.d(TAG, "Distance to".concat(i == ALAMEDA ? "Alameda" : "Taguspark") + ": " + distance);
-            if (distance < 2000) {
-                Log.d(TAG, "Location should be: ".concat(i == ALAMEDA ? "Alameda" : "TagusPark"));
-                activity.setCampus(i == ALAMEDA ? "Alameda" : "TagusPark");
-                return;
+        if (res != null) {
+            for (int i = 0; i < NUMBER_CAMPUS; ++i) {
+                int distance = res[i];
+                Log.d(TAG, "Distance to".concat(i == ALAMEDA ? "Alameda" : "Taguspark") + ": " + distance);
+                if (distance < 2000) {
+                    Log.d(TAG, "Location should be: ".concat(i == ALAMEDA ? "Alameda" : "TagusPark"));
+                    activity.setCampus(i == ALAMEDA ? "Alameda" : "TagusPark");
+                    return;
+                }
             }
         }
         //Could not infer campus
