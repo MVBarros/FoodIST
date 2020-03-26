@@ -155,8 +155,7 @@ class Client {
 	        out.close();
 		} catch(IOException ioe) {
 			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId, foodService, menuName) + "\".");
-		}
-
+		}				
 	}
 	
 	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {

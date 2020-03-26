@@ -62,8 +62,7 @@ public class Utils {
 		    	byte[] bytes = IOUtils.toByteArray(inputStream);
 		    	return bytes;
 			} catch(IOException ioe) {
-				System.out.println("Error! Could not open file: \"" + file + "\".");
-				//TODO alterar e lancar excepcao personalizada em vez de retornar nulo
+				System.out.println(ioe.getMessage());
 			}						
 	    }			
 		return null;
