@@ -18,7 +18,7 @@ public class CoordenateUtils {
         return 0;
     }
 
-    public static int getWalkingDistanceTo(double latitude, double longitude, double otherLatitude, double otherLongitude, String apiKey) throws IOException, JSONException {
+    public static String getWalkingTimeTo(double latitude, double longitude, double otherLatitude, double otherLongitude, String apiKey) throws IOException, JSONException {
 
         String common = "https://maps.googleapis.com/maps/api/directions/json?origin=";
         String originCoords = String.format(Locale.ENGLISH, "%f,%f", latitude, longitude);
@@ -38,7 +38,7 @@ public class CoordenateUtils {
 
         JSONObject object = new JSONObject(response);
         //If response is invalid, an exception is thrown which we then catch
-        int time = object.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getInt("value");
+        String time = object.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
         return time;
 
     }

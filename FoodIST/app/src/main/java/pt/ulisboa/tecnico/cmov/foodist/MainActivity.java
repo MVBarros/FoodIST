@@ -217,8 +217,8 @@ public class MainActivity extends BaseActivity {
             TextView queue = v.findViewById(R.id.queueTime);
 
             name.setText(info[0]);
-            distance.setText(String.format("Distance: %s", info[1]));
-            queue.setText(String.format("Waiting: %s", info[2]));
+            distance.setText(String.format("Walking Time: %s", info[1]));
+            queue.setText(String.format("Queue Time: %s", info[2]));
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override

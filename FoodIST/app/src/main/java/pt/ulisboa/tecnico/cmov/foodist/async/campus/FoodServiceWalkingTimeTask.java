@@ -41,8 +41,8 @@ public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integ
             try {
                 double serviceLatitude = service.getLatitude();
                 double serviceLongitude = service.getLongitude();
-                int walkingDistance = CoordenateUtils.getWalkingDistanceTo(latitude, longitude, serviceLatitude, serviceLongitude, apiKey);
-                service.setDistance(walkingDistance + " meters");
+                String walkingTime = CoordenateUtils.getWalkingTimeTo(latitude, longitude, serviceLatitude, serviceLongitude, apiKey);
+                service.setDistance(walkingTime);
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Unable to get walking distance to service " + service.getName() + " due to cause: " + e.getCause());
             }
