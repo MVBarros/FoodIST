@@ -30,14 +30,14 @@ public class FoodServicesJsonParser {
     }
 
     public static List<FoodService> parse(FoodServiceData resource) throws IOException, JSONException {
-            JSONObject object = readFile(resource.getIs());
-            JSONArray arr = object.getJSONArray(resource.getCampus());
-            List<FoodService>  services = new ArrayList<>();
-            for(int i = 0; i < arr.length(); ++i) {
-              FoodService service = parseObject(arr.getJSONObject(i));
-              services.add(service);
-            }
-            return services;
+        JSONObject object = readFile(resource.getIs());
+        JSONArray arr = object.getJSONArray(resource.getCampus());
+        List<FoodService> services = new ArrayList<>();
+        for (int i = 0; i < arr.length(); ++i) {
+            FoodService service = parseObject(arr.getJSONObject(i));
+            services.add(service);
+        }
+        return services;
     }
 
     private static FoodService parseObject(JSONObject object) throws JSONException {
@@ -55,7 +55,7 @@ public class FoodServicesJsonParser {
         hours.put("sunday", hourObject.getString("sunday"));
         List<String> restrictions = new ArrayList<String>();
         JSONArray arr = object.getJSONArray("restrictions");
-        for(int i = 0; i < arr.length(); ++i) {
+        for (int i = 0; i < arr.length(); ++i) {
             restrictions.add(arr.getString(i));
         }
         return new FoodService(name, distance, time, latitude, longitude, hours, restrictions);

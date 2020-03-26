@@ -13,7 +13,7 @@ public class FoodService {
     private List<String> restrictions;
 
     public FoodService(String name, String distance, String time, double latitude,
-                        double longitude, Map<String, String> hours, List<String> restictions) {
+                       double longitude, Map<String, String> hours, List<String> restictions) {
         this.name = name;
         this.distance = distance;
         this.time = time;
@@ -31,7 +31,9 @@ public class FoodService {
         return distance;
     }
 
-    public void setDistance(String distance) { this.distance = distance; }
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
 
     public String getTime() {
         return time;

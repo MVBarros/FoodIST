@@ -14,10 +14,6 @@ import java.util.Locale;
 
 public class CoordenateUtils {
 
-    public static int getDistanceBetween(double latitude, double longitude, double otherLatitude, double otherLongitude, String apiKey) {
-        return 0;
-    }
-
     public static String getWalkingTimeTo(double latitude, double longitude, double otherLatitude, double otherLongitude, String apiKey) throws IOException, JSONException {
 
         String common = "https://maps.googleapis.com/maps/api/directions/json?origin=";

@@ -10,8 +10,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
-import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
+import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
@@ -19,6 +19,7 @@ public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integ
     private static final String TAG = "FOOD-SERVICE-WALKING-TIME-TASK";
 
     private WeakReference<MainActivity> mainActivity;
+
     public FoodServiceWalkingTimeTask(MainActivity activity) {
         this.mainActivity = new WeakReference<>(activity);
     }

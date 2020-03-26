@@ -19,7 +19,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -29,8 +28,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -213,7 +210,7 @@ public class ProfileActivity extends BaseActivity {
         editor.apply();
     }
 
-    private void cameraReturn(SharedPreferences.Editor editor, Intent data){
+    private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
@@ -223,7 +220,7 @@ public class ProfileActivity extends BaseActivity {
         editor.apply();
     }
 
-    private void choiceReturn(SharedPreferences.Editor editor, Intent data){
+    private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
@@ -250,7 +247,7 @@ public class ProfileActivity extends BaseActivity {
         return image;
     }
 
-    private void getPreferences(){
+    private void getPreferences() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
 
         ImageView profilePicture = (ImageView) findViewById(R.id.profilePicture);
@@ -258,7 +255,7 @@ public class ProfileActivity extends BaseActivity {
 
         String profilePicturePath = pref.getString(getString(R.string.user_photo), null);
 
-        if(profilePicturePath != null){
+        if (profilePicturePath != null) {
             Bitmap photo = BitmapFactory.decodeFile(profilePicturePath);
             profilePicture.setImageBitmap(photo);
         }

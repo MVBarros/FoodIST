@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class ChooseCampusActivity extends BaseActivity {
     public static final String CAMPUS = "pt.ulisboa.tecnico.cmov.foodlist.MESSAGE";
 

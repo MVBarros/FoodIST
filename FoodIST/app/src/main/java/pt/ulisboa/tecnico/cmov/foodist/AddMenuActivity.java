@@ -1,10 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,14 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class AddMenuActivity extends BaseActivity {
 
@@ -72,44 +68,40 @@ public class AddMenuActivity extends BaseActivity {
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (galleryPermission != PackageManager.PERMISSION_GRANTED){
+        if (galleryPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
-        }
-        else{
+        } else {
             askCameraPermission();
         }
     }
 
     private void askCameraPermission() {
         int cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (cameraPermission != PackageManager.PERMISSION_GRANTED){
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_FROM_CAMERA);
-        }
-        else{
+        } else {
             cameraOrGalleryChooser();
         }
     }
 
-    private void cameraOrGalleryChooser(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+    private void cameraOrGalleryChooser() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Intent galleryintent = new Intent(Intent.ACTION_PICK);
             galleryintent.setType("image/*");
 
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
                 Intent chooser = new Intent(Intent.ACTION_CHOOSER);
                 chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
                 chooser.putExtra(Intent.EXTRA_TITLE, "Select from:");
 
-                Intent[] intentArray = { createCameraIntent() };
+                Intent[] intentArray = {createCameraIntent()};
                 chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
                 startActivityForResult(chooser, REQUEST_PIC);
-            }
-            else{
+            } else {
                 startActivityForResult(galleryintent, GALLERY_PIC);
             }
-        }
-        else {
+        } else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
                 startActivityForResult(createCameraIntent(), CAMERA_PIC);
@@ -118,7 +110,7 @@ public class AddMenuActivity extends BaseActivity {
         }
     }
 
-    public Intent createCameraIntent(){
+    public Intent createCameraIntent() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
         File photoFile = null;
@@ -129,15 +121,15 @@ public class AddMenuActivity extends BaseActivity {
         }
 
         if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(this,"pt.ulisboa.tecnico.cmov.foodist.provider", photoFile);
+            Uri photoURI = FileProvider.getUriForFile(this, "pt.ulisboa.tecnico.cmov.foodist.provider", photoFile);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         }
 
         return cameraIntent;
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PICK_FROM_GALLERY:
                 // If request is cancelled, the result arrays are empty.
@@ -181,7 +173,7 @@ public class AddMenuActivity extends BaseActivity {
         }
     }
 
-    private void galleryReturn(SharedPreferences.Editor editor, Intent data){
+    private void galleryReturn(SharedPreferences.Editor editor, Intent data) {
         Uri selectedImage = data.getData();
 
         String[] filePath = {MediaStore.Images.Media.DATA};
@@ -200,7 +192,7 @@ public class AddMenuActivity extends BaseActivity {
         editor.apply();
     }
 
-    private void cameraReturn(SharedPreferences.Editor editor, Intent data){
+    private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
@@ -210,15 +202,14 @@ public class AddMenuActivity extends BaseActivity {
         editor.apply();
     }
 
-    private void choiceReturn(SharedPreferences.Editor editor, Intent data){
+    private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
 
-        if(photo == null){
+        if (photo == null) {
             galleryReturn(editor, data);
-        }
-        else{
+        } else {
             profilePicture.setImageBitmap(photo);
 
             editor.putString(getString(R.string.user_photo), imageFilePath);
@@ -232,7 +223,7 @@ public class AddMenuActivity extends BaseActivity {
                         Locale.getDefault()).format(new Date());
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName,".jpg", storageDir);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         imageFilePath = image.getAbsolutePath();
         return image;

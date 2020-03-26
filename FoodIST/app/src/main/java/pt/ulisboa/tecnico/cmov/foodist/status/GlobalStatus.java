@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.status;
 
 import android.app.Application;
-import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +41,8 @@ public class GlobalStatus extends Application {
 
 
     public void updateServicesDistance(List<FoodService> services) {
-        for (FoodService service: services) {
-            for (FoodService myService: this.services) {
+        for (FoodService service : services) {
+            for (FoodService myService : this.services) {
                 if (myService.getName().equals(service.getName())) {
                     myService.setDistance(service.getDistance());
                     break;
