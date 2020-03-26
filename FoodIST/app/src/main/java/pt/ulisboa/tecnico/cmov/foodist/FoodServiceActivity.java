@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class FoodServiceActivity extends BaseActivity {
 
+    private String SERVICE_NAME = "Service Name";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,5 +56,21 @@ public class FoodServiceActivity extends BaseActivity {
             foodServiceList.addView(v);
 
         }
+
+        Button addMenu = findViewById(R.id.add_menu_button);
+
+        addMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent oldIntent = getIntent();
+                String serviceName = oldIntent.getStringExtra("Service Name");
+
+                Intent intent = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
+                intent.putExtra(SERVICE_NAME, serviceName);
+
+                startActivity(intent);
+            }
+        });
+
     }
 }

@@ -46,7 +46,7 @@
         <LinearLayout
             android:id="@+id/menus"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="263dp"
             android:orientation="vertical">
 
             <TextView
@@ -57,6 +57,13 @@
                 android:text="Menus"
                 android:textSize="30sp" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/add_menu_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Menu" />
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
