@@ -38,6 +38,8 @@ public class DownloadPhotoTest {
 	private static final double TEST_PRICE = 1.50;
 	
 	private static final String BASE_DIR = "photos";
+	private static final String TEST_ALTERNATIVE_MENU = "Farinheira";
+	private static final String TEST_ALTERNATIVE_PHOTO = "photos/test/farinheira.png";
 	private static final String TEST_FOODSERVICE = "Testbar";
 	private static final String TEST_MENU = "Chourico";
 	private static final String TEST_PHOTO = "photos/test/chourico.jpg";
@@ -71,7 +73,10 @@ public class DownloadPhotoTest {
 
     	client = new Client(channel);    
     	client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
-    	client.addPhoto(TEST_FOODSERVICE, TEST_MENU, TEST_PHOTO);    			
+    	client.addPhoto(TEST_FOODSERVICE, TEST_MENU, TEST_PHOTO);    
+    	
+		client.addMenu(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_PRICE);
+		client.addPhoto(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_ALTERNATIVE_PHOTO);
 		
     	originalPhoto = ImageIO.read(new File(TEST_PHOTO));
         originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
@@ -79,7 +84,7 @@ public class DownloadPhotoTest {
 	}
 
 	@Test
-  	public void downloadPhoto_SinglePhotoAdded() {
+  	public void PhotoUploadedIsPhotoDownloaded() {
 	  	String photoId = "";	
 	  	ListMenuReply listMenuReply = client.listMenu(TEST_FOODSERVICE);
 	  	
