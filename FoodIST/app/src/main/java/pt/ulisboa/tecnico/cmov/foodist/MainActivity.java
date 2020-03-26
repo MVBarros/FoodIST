@@ -119,9 +119,8 @@ public class MainActivity extends BaseActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
     }
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PHONE_LOCATION_REQUEST_CODE) {
             loadCurrentCampus();
         }
@@ -145,7 +144,6 @@ public class MainActivity extends BaseActivity {
             });
         }
     }
-
 
     private void guessCampusFromLocation() {
         fusedLocationClient.getLastLocation()
@@ -177,7 +175,6 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-
     private void loadCurrentCampus() {
         if (hasLocationPermission() && isNetworkAvailable()) {
             guessCampusFromLocation();
@@ -201,7 +198,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void drawServices() {
-        List<FoodService> services = getAvaliableServices();
+        List<FoodService> services = getAvailableServices();
         ViewGroup foodServiceList = findViewById(R.id.foodServices);
         foodServiceList.removeAllViews();
 
@@ -253,7 +250,7 @@ public class MainActivity extends BaseActivity {
         new FoodServiceParsingTask(MainActivity.this).execute(resource);
     }
 
-    public List<FoodService> getAvaliableServices() {
+    public List<FoodService> getAvailableServices() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
         String position_name = pref.getString(getString(R.string.position_name), null);
         ArrayList<FoodService> filteredServices = new ArrayList<>();
