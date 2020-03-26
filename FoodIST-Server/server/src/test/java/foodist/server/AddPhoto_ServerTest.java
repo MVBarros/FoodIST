@@ -43,10 +43,10 @@ public class AddPhoto_ServerTest {
 	private static final double TEST_PRICE = 1.50;
 	
 	private static final String BASE_DIR = "photos";
-	private static final String TEST_FOODSERVICE = "Testbar";
+	private static final String TEST_FOODSERVICE = "Testrestaurant";
 	private static final String TEST_MENU = "Chourico";
 	private static final String TEST_CLIENT_PHOTO = "photos/test/chourico.jpg";
-	private static final String TEST_SERVER_PHOTO = "photos/Testbar/Chourico/";
+	private static final String TEST_SERVER_PHOTO = "photos/Testrestaurant/Chourico/";
   
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    
 	
@@ -82,6 +82,9 @@ public class AddPhoto_ServerTest {
     	originalPhoto = ImageIO.read(new File(TEST_CLIENT_PHOTO));
         originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
         originalPhotoSize = originalPhotoDataBuffer.getSize();   
+        
+        client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
+        client.addPhoto(TEST_FOODSERVICE, TEST_MENU, TEST_CLIENT_PHOTO);
 	}
 
 	@Test
