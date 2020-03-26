@@ -23,22 +23,22 @@
         android:id="@+id/information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/distance"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="0pt"
             android:layout_weight="1"
             android:text="Tosta Mista"
+            android:paddingBottom="10dp"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/queueTime"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="0pt"
             android:layout_weight="1"
-            android:gravity="right"
             android:text="10.00€"
             android:textSize="20sp" />
 

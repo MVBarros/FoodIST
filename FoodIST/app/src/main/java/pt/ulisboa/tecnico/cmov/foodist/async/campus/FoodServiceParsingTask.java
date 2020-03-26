@@ -10,12 +10,11 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
-import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServiceResource;
 import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServicesJsonParser;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
-public class FoodServiceParsingTask extends AsyncTask<FoodServiceResource, Integer, List<FoodService>> {
+public class FoodServiceParsingTask extends AsyncTask<FoodServiceData, Integer, List<FoodService>> {
 
     private static final String TAG = "FOOD-SERVICE-PARSING";
 
@@ -25,20 +24,22 @@ public class FoodServiceParsingTask extends AsyncTask<FoodServiceResource, Integ
         this.mainActivity = new WeakReference<>(mainActivity);
     }
 
-
     @Override
-    protected List<FoodService> doInBackground(FoodServiceResource... foodServiceResources) {
+    protected List<FoodService> doInBackground(FoodServiceData... foodServiceData) {
+
+        List<FoodService> services = null;
         try {
-            if (foodServiceResources.length != 1) {
+            if (foodServiceData.length != 1) {
                 return null;
             }
-            return FoodServicesJsonParser.parse(foodServiceResources[0]);
+            services = FoodServicesJsonParser.parse(foodServiceData[0]);
         } catch (IOException e) {
             Log.e(TAG, "Exception ocurred when opening or reading resource file");
         } catch (JSONException e) {
             Log.e(TAG, "Json file is mal formed");
         }
-        return null;
+
+        return services;
     }
 
     @Override
@@ -51,8 +52,10 @@ public class FoodServiceParsingTask extends AsyncTask<FoodServiceResource, Integ
             // activity is no longer valid, don't do anything!
             return;
         }
-        ((GlobalStatus)activity.getApplicationContext()).setServices(services);
-        activity.filterServices();
+        activity.getGlobalStatus().setServices(services);
+        activity.drawServices();
+        //After it is done try to update walking distance
+        activity.updateServicesWalkingDistance();
     }
 }
 

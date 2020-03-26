@@ -1,15 +1,16 @@
-package pt.ulisboa.tecnico.cmov.foodist.parse;
+package pt.ulisboa.tecnico.cmov.foodist.data;
 
 import java.io.InputStream;
 
-public class FoodServiceResource {
+public class FoodServiceData {
     private InputStream is;
     private String campus;
 
-    public FoodServiceResource(InputStream is, String campus) {
+    public FoodServiceData(InputStream is, String campus) {
         this.is = is;
         this.campus = campus;
     }
+
 
     public InputStream getIs() {
         return is;
@@ -18,4 +19,5 @@ public class FoodServiceResource {
     public String getCampus() {
         return campus;
     }
+
 }

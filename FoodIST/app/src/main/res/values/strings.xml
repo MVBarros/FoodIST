@@ -26,4 +26,6 @@
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>
+    <string name="user_profile">User Profile</string>
+    <string name="change_campus">Change Campus</string>
 </resources>

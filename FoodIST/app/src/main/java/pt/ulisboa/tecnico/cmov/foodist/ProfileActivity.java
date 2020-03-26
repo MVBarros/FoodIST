@@ -19,7 +19,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -30,9 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
-
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private static final int PICK_FROM_GALLERY = 1;
     private static final int PICK_FROM_CAMERA = 2;
@@ -77,11 +74,6 @@ public class ProfileActivity extends AppCompatActivity {
         RadioGroup status = (RadioGroup) findViewById(R.id.universityStatus);
 
         int buttonID = pref.getInt(getString(R.string.position), -1);
-
-        if( buttonID != -1 && buttonID != status.getCheckedRadioButtonId()){
-            Log.d(TAG, "Selected new user position");
-            ((GlobalStatus)getApplicationContext()).setProfileActivity(true);
-        }
 
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 
@@ -218,7 +210,7 @@ public class ProfileActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void cameraReturn(SharedPreferences.Editor editor, Intent data){
+    private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
@@ -228,7 +220,7 @@ public class ProfileActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void choiceReturn(SharedPreferences.Editor editor, Intent data){
+    private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
@@ -255,7 +247,7 @@ public class ProfileActivity extends AppCompatActivity {
         return image;
     }
 
-    private void getPreferences(){
+    private void getPreferences() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
 
         ImageView profilePicture = (ImageView) findViewById(R.id.profilePicture);
@@ -263,7 +255,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         String profilePicturePath = pref.getString(getString(R.string.user_photo), null);
 
-        if(profilePicturePath != null){
+        if (profilePicturePath != null) {
             Bitmap photo = BitmapFactory.decodeFile(profilePicturePath);
             profilePicture.setImageBitmap(photo);
         }

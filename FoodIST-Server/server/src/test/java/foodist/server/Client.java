@@ -2,6 +2,8 @@ package foodist.server;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
+
+import foodist.server.common.Utils;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
@@ -11,8 +13,6 @@ import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
-import foodist.server.util.FileUtils;
-import foodist.server.util.MenuUtils;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import java.io.BufferedInputStream;
@@ -51,7 +51,7 @@ class Client {
 		this.stub.addMenu(addMenuRequestExample);     
 	}
   
-	void listMenu(String foodService) {	
+	ListMenuReply listMenu(String foodService) {	
 		
 		ListMenuRequest listMenuRequest = ListMenuRequest.newBuilder().setFoodService(foodService).build();
 	  		
@@ -59,14 +59,17 @@ class Client {
 		List<Menu> list = listMenuReply.getMenusList();
 	  
 		for(Menu m : list) {
-			//Download photos from menus
+			// This is just an example of what you might do we listMenu 
+			// Download photos from menus
 			for(int i = 0; i<m.getPhotoIdCount(); i++) {
 				this.downloadPhoto(m.getPhotoId(i), foodService, m.getName());
 			}			
 		}
+		
+		return listMenuReply;
 	}
   
-	void addPhoto(String menuName, String foodService, String photoPath) {
+	void addPhoto(String foodService, String menuName, String photoPath) {
 		
 		final CountDownLatch finishLatch = new CountDownLatch(1);
         int sequence = 0;
@@ -107,9 +110,9 @@ class Client {
             	addPhotoRequestBuilder.setMenuName(menuName);
             	addPhotoRequestBuilder.setSequenceNumber(sequence);
             	addPhotoRequestBuilder.setFoodService(foodService);
-            	addPhotoRequestBuilder.setPhotoName(FileUtils.getFileFromPath(photoPath));
+            	addPhotoRequestBuilder.setPhotoName(Utils.getFileFromPath(photoPath));
             	
-            	FileUtils.getFileFromPath(photoPath);
+            	Utils.getFileFromPath(photoPath);
             	
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;
@@ -147,17 +150,17 @@ class Client {
 	        while (iterator.hasNext()) {
 	            Contract.DownloadPhotoReply chunk = iterator.next();
 	            byte[] fileBytes = chunk.getContent().toByteArray();
-	            out.write(fileBytes);
+	            out.write(fileBytes);	            
 	        }
+	        out.close();
 		} catch(IOException ioe) {
 			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId, foodService, menuName) + "\".");
-		}
-
+		}				
 	}
 	
 	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
 		String photoDirectory = CLIENT_FOLDER + foodServiceName + "/" + menuName + "/";
-		FileUtils.createPhotoDir(photoDirectory);
+		Utils.createPhotoDir(photoDirectory);
 		return photoDirectory + photoName;
 	}
 	
