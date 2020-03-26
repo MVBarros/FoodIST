@@ -33,7 +33,7 @@ import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
-public class ListMenuTest { 
+public class ListMenu_ServerTest { 
 		
 	private static final double TEST_PRICE = 1.50;
 	
