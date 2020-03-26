@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class FoodServiceActivity extends AppCompatActivity {
+public class FoodServiceActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

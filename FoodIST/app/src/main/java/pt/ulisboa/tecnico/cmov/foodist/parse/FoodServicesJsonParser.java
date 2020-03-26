@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 
@@ -28,7 +29,7 @@ public class FoodServicesJsonParser {
         return new JSONObject(responseStrBuilder.toString());
     }
 
-    public static List<FoodService> parse(FoodServiceResource resource) throws IOException, JSONException {
+    public static List<FoodService> parse(FoodServiceData resource) throws IOException, JSONException {
             JSONObject object = readFile(resource.getIs());
             JSONArray arr = object.getJSONArray(resource.getCampus());
             List<FoodService>  services = new ArrayList<>();

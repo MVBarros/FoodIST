@@ -32,7 +32,7 @@ import java.util.Locale;
 
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private static final int PICK_FROM_GALLERY = 1;
     private static final int PICK_FROM_CAMERA = 2;
@@ -77,11 +77,6 @@ public class ProfileActivity extends AppCompatActivity {
         RadioGroup status = (RadioGroup) findViewById(R.id.universityStatus);
 
         int buttonID = pref.getInt(getString(R.string.position), -1);
-
-        if( buttonID != -1 && buttonID != status.getCheckedRadioButtonId()){
-            Log.d(TAG, "Selected new user position");
-            ((GlobalStatus)getApplicationContext()).setProfileActivity(true);
-        }
 
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 

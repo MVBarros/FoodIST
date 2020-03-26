@@ -31,7 +31,7 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class FoodMenuActivity extends AppCompatActivity {
+public class FoodMenuActivity extends BaseActivity {
 
     private static final int PICK_FROM_GALLERY = 1;
     private static final int PICK_FROM_CAMERA = 2;

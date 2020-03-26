@@ -31,6 +31,8 @@ public class FoodService {
         return distance;
     }
 
+    public void setDistance(String distance) { this.distance = distance; }
+
     public String getTime() {
         return time;
     }
