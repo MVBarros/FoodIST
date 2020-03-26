@@ -1,11 +1,9 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.campus;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -53,9 +51,8 @@ public class FoodServiceParsingTask extends AsyncTask<FoodServiceResource, Integ
             // activity is no longer valid, don't do anything!
             return;
         }
-
         ((GlobalStatus)activity.getApplicationContext()).setServices(services);
-        activity.writeServicesToUI(services);
-        }
+        activity.filterServices();
     }
+}
 

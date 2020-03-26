@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.foodist.status;
 
 import android.app.Application;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -13,7 +14,9 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
 
-    private List<FoodService> services;
+    private List<FoodService> services = new ArrayList<>();
+
+    private boolean profileActivity = false;
 
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         if (stub == null) {
@@ -36,5 +39,12 @@ public class GlobalStatus extends Application {
         this.services = services;
     }
 
+    public void setProfileActivity(boolean profileActivity){
+        this.profileActivity = profileActivity;
+    }
+
+    public boolean getProfileActivity(){
+        return this.profileActivity;
+    }
 
 }

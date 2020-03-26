@@ -30,6 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_GALLERY = 1;
@@ -74,8 +76,18 @@ public class ProfileActivity extends AppCompatActivity {
 
         RadioGroup status = (RadioGroup) findViewById(R.id.universityStatus);
 
+        int buttonID = pref.getInt(getString(R.string.position), -1);
+
+        if( buttonID != -1 && buttonID != status.getCheckedRadioButtonId()){
+            Log.d(TAG, "Selected new user position");
+            ((GlobalStatus)getApplicationContext()).setProfileActivity(true);
+        }
+
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 
+        RadioButton statusButton = (RadioButton) findViewById(status.getCheckedRadioButtonId());
+
+        editor.putString(getString(R.string.position_name), statusButton.getText().toString());
         editor.apply();
     }
 
@@ -266,7 +278,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (selectedStatus != -1) {
             RadioButton status = (RadioButton) findViewById(selectedStatus);
-
             status.toggle();
         }
     }
