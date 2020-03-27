@@ -9,13 +9,15 @@ import android.net.NetworkInfo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private HashSet<CancelableAsyncTask> tasks = new HashSet<>();
+    private Set<CancelableAsyncTask> tasks = Collections.synchronizedSet(new HashSet<>());
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
