@@ -23,6 +23,8 @@
     <string name="profile_file">profile</string>
     <!-- Google Services API Key for Directions API-->
     <string name="map_api_key">AIzaSyCwTYl8KmYZE3J4vSQj7AMm2Hdk1RhjnyQ</string>
+    <string name="map_alameda">Instituto+Superior+Técnico</string>
+    <string name="map_taguspark">Instituto+Superior+Técnico+-+Taguspark</string>
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>

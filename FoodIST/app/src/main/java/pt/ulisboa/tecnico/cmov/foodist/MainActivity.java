@@ -33,6 +33,7 @@ import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
+import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
 public class MainActivity extends BaseActivity {
@@ -140,15 +141,9 @@ public class MainActivity extends BaseActivity {
                 .addOnSuccessListener(this, (Location location) -> {
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
-                        String common = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
-                        String myCoords = String.format(Locale.ENGLISH, "%f,%f", location.getLatitude(), location.getLongitude());
-                        Log.d("LOCATION", "Coords: " + myCoords);
-                        String destination = "Instituto+Superior+Técnico";
-                        String apiKey = getString(R.string.map_api_key);
-
-                        String urlAlameda = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
-                        destination = "Instituto+Superior+Técnico+-+Taguspark";
-                        String urlTagus = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
+                        String apiKey = getGlobalStatus().getApiKey();
+                        String urlAlameda = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_alameda), apiKey);
+                        String urlTagus = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_taguspark), apiKey);
                         new GuessCampusTask(this).execute(urlAlameda, urlTagus);
                     } else {
                         Toast.makeText(getApplicationContext(), "Could not get location, please select campus", Toast.LENGTH_SHORT).show();

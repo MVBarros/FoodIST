@@ -37,7 +37,7 @@ public class FoodServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integ
     }
 
     @Override
-    protected void safeRunOnUiThread(List<FoodService> services, MainActivity activity) {
+    void safeRunOnUiThread(List<FoodService> services, MainActivity activity) {
         activity.getGlobalStatus().setServices(services);
         activity.drawServices();
         //After it is done try to update walking distance

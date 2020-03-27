@@ -1,8 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.domain;
 
-import java.util.List;
-import java.util.Map;
-
 public class Menu {
     private String foodServiceName;
     private String menuName;
@@ -23,6 +20,8 @@ public class Menu {
         return this.menuName;
     }
 
-    public double getPrice() { return this.price; }
+    public double getPrice() {
+        return this.price;
+    }
 
 }
