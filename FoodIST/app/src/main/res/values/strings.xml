@@ -28,4 +28,5 @@
     <string name="foodist_server_port">9000</string>
     <string name="user_profile">User Profile</string>
     <string name="change_campus">Change Campus</string>
+    <string name="error_menus">No Menus available</string>
 </resources>

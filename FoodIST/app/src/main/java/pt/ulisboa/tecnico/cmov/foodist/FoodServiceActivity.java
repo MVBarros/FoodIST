@@ -12,9 +12,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.cmov.foodist.async.campus.GetMenusTask;
+import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
+
 public class FoodServiceActivity extends BaseActivity {
 
     private String SERVICE_NAME = "Service Name";
+    private String foodServiceName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,37 +30,8 @@ public class FoodServiceActivity extends BaseActivity {
         TextView queueTime = findViewById(R.id.queueTime);
 
         Intent intent = getIntent();
-        String serviceName = intent.getStringExtra("Service Name");
-        foodServiceName.setText(serviceName);
-        //TODO - Ask server for list of Menus
-        ArrayList<String[]> menus = new ArrayList<>();
-        menus.add(new String[]{"Tosta mista", "10€"});
-
-        for (String[] menu : menus) {
-
-            //number of info
-            LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = vi.inflate(R.layout.food_menu, null);
-
-            TextView name = v.findViewById(R.id.menuFood);
-            TextView cost = v.findViewById(R.id.menuCost);
-
-
-            name.setText(menu[0]);
-            cost.setText(menu[1]);
-
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(FoodServiceActivity.this, FoodMenuActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            ViewGroup foodServiceList = findViewById(R.id.menus);
-            foodServiceList.addView(v);
-
-        }
+        this.foodServiceName = intent.getStringExtra("Service Name");
+        foodServiceName.setText(this.foodServiceName);
 
         Button addMenu = findViewById(R.id.add_menu_button);
 
@@ -72,5 +48,13 @@ public class FoodServiceActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ViewGroup foodServiceList = findViewById(R.id.menus);
+        foodServiceList.removeAllViews();
+        new GetMenusTask(FoodServiceActivity.this, ((GlobalStatus)FoodServiceActivity.this.getApplicationContext()).getStub()).execute(this.foodServiceName);
     }
 }
