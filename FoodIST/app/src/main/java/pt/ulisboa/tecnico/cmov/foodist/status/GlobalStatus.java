@@ -15,7 +15,7 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
 
-    private List<FoodService> services = Collections.synchronizedList(new ArrayList<FoodService>());
+    private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
 
     private boolean freshBootFlag = true;
 
@@ -41,7 +41,7 @@ public class GlobalStatus extends Application {
     }
 
     public String getApiKey() {
-        return "AIzaSyCwTYl8KmYZE3J4vSQj7AMm2Hdk1RhjnyQ";
+        return getString(R.string.map_api_key);
     }
 
     public boolean isFreshBootFlag() {

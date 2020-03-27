@@ -250,8 +250,8 @@ public class ProfileActivity extends BaseActivity {
     private void getPreferences() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
 
-        ImageView profilePicture = (ImageView) findViewById(R.id.profilePicture);
-        TextView user = (TextView) findViewById(R.id.username);
+        ImageView profilePicture = findViewById(R.id.profilePicture);
+        TextView user = findViewById(R.id.username);
 
         String profilePicturePath = pref.getString(getString(R.string.user_photo), null);
 
@@ -260,16 +260,14 @@ public class ProfileActivity extends BaseActivity {
             profilePicture.setImageBitmap(photo);
         }
 
-        String username = pref.getString(getString(R.string.username), null);
+        String username = pref.getString(getString(R.string.username), "");
+        user.setText(username);
 
-        if (username != null) {
-            user.setText(username);
-        }
 
         int selectedStatus = pref.getInt(getString(R.string.position), -1);
 
         if (selectedStatus != -1) {
-            RadioButton status = (RadioButton) findViewById(selectedStatus);
+            RadioButton status = findViewById(selectedStatus);
             status.toggle();
         }
     }

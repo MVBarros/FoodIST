@@ -2,14 +2,10 @@ package pt.ulisboa.tecnico.cmov.foodist.async.campus;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
-import java.lang.ref.WeakReference;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
-import pt.ulisboa.tecnico.cmov.foodist.AddMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
@@ -18,7 +14,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
 
     FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
-    public UploadMenuTask( FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
+    public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
         this.stub = stub;
     }
 
@@ -26,7 +22,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
 
     @Override
     protected Boolean doInBackground(Menu... menu) {
-        if(menu.length != 1){
+        if (menu.length != 1) {
             return false;
         }
         Contract.AddMenuRequest.Builder addMenuBuilder = Contract.AddMenuRequest.newBuilder();
@@ -37,9 +33,9 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
 
         Contract.AddMenuRequest request = addMenuBuilder.build();
 
-        try{
+        try {
             this.stub.addMenu(request);
-        } catch (StatusRuntimeException e){
+        } catch (StatusRuntimeException e) {
             return false;
         }
         return true;
