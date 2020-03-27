@@ -1,12 +1,10 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.campus;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
@@ -14,13 +12,12 @@ import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
-public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integer, Boolean> {
+public class FoodServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integer, Boolean, MainActivity> {
+
     private static final String TAG = "TAG_FoodServiceWalkingTimeTask";
 
-    private WeakReference<MainActivity> mainActivity;
-
     public FoodServiceWalkingTimeTask(MainActivity activity) {
-        this.mainActivity = new WeakReference<>(activity);
+        super(activity);
     }
 
     @Override
@@ -51,12 +48,7 @@ public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integ
     }
 
     @Override
-    protected void onPostExecute(Boolean result) {
-        MainActivity activity = mainActivity.get();
-        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
-            // activity is no longer valid, don't do anything!
-            return;
-        }
+    void safeRunOnUiThread(Boolean result, MainActivity activity) {
         if (result) {
             //Services of global status are now updated, just need to draw them
             // (If they have been overridden nothing new will happen)

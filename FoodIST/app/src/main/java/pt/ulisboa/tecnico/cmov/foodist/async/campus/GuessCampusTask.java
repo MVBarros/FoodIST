@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.campus;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,20 +11,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
 
 
-public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
+public class GuessCampusTask extends BaseAsyncTask<String, Integer, int[], MainActivity> {
 
-
-    private WeakReference<MainActivity> mainActivity;
-
-    public GuessCampusTask(MainActivity mainActivity) {
-        this.mainActivity = new WeakReference<>(mainActivity);
+    public GuessCampusTask(MainActivity activity) {
+        super(activity);
     }
 
     private static final int NUMBER_CAMPUS = 2;
@@ -35,7 +30,6 @@ public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
 
     @Override
     protected int[] doInBackground(String... strings) {
-
         if (strings.length != NUMBER_CAMPUS) {
             return null;
         }
@@ -73,17 +67,11 @@ public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
         }
     }
 
-
     @Override
-    protected void onPostExecute(int[] res) {
-        MainActivity activity = mainActivity.get();
-        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
-            // activity is no longer valid, don't do anything!
-            return;
-        }
-        if (res != null) {
+    void safeRunOnUiThread(int[] result, MainActivity activity) {
+        if (result != null) {
             for (int i = 0; i < NUMBER_CAMPUS; ++i) {
-                int distance = res[i];
+                int distance = result[i];
                 Log.d(TAG, "Distance to".concat(i == ALAMEDA ? "Alameda" : "Taguspark") + ": " + distance);
                 if (distance < 2000) {
                     Log.d(TAG, "Location should be: ".concat(i == ALAMEDA ? "Alameda" : "TagusPark"));
@@ -95,7 +83,6 @@ public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
             //Could not infer campus
             activity.askCampus();
         }
-
     }
 
     private String readStream(InputStream is) throws IOException {
