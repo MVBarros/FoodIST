@@ -48,8 +48,10 @@ public class FoodServiceActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        /*
         ViewGroup foodServiceList = findViewById(R.id.menus);
         foodServiceList.removeAllViews();
         new GetMenusTask(FoodServiceActivity.this, ((GlobalStatus) FoodServiceActivity.this.getApplicationContext()).getStub()).execute(this.foodServiceName);
+        */
     }
 }

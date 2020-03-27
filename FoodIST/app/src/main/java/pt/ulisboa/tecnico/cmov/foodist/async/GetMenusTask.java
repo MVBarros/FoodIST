@@ -56,7 +56,7 @@ public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>
 
     @Override
     protected void onPostExecute(List<Contract.Menu> result) {
-        final FoodServiceActivity activity = foodServiceActivity.get();
+        /*final FoodServiceActivity activity = foodServiceActivity.get();
         ViewGroup foodServiceList = activity.findViewById(R.id.menus);
         if (result == null || result.size() == 0) {
             Log.d(TAG, "Unable to request menus");
@@ -89,5 +89,7 @@ public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>
             foodServiceList.addView(v);
         }
         Log.d(TAG, "Menus obtained successfully");
+    */
     }
+
 }

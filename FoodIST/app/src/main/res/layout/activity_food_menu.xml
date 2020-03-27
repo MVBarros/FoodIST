@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,17 +10,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <EditText
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:textSize="30sp"
             android:textAlignment="center"
-            android:text="@string/dish_name"
-            android:gravity="center_horizontal" />
+            android:text="@string/dish_name" />
 
-        <TextView
+        <EditText
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -29,7 +27,7 @@
             android:textSize="30sp"
             android:textAlignment="center"
             android:text="@string/cost"
-            android:gravity="center_horizontal" />
+            />
 
         <ImageView
             android:id="@+id/menuPhotos"
@@ -43,7 +41,7 @@
             android:id="@+id/add_photo_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:text="@string/add_food" />
 
     </LinearLayout>
