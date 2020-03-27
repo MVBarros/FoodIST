@@ -26,20 +26,18 @@ public class FoodServiceParsingTask extends AsyncTask<FoodServiceData, Integer, 
 
     @Override
     protected List<FoodService> doInBackground(FoodServiceData... foodServiceData) {
-
-        List<FoodService> services = null;
+        if (foodServiceData.length != 1) {
+            return null;
+        }
         try {
-            if (foodServiceData.length != 1) {
-                return null;
-            }
-            services = FoodServicesJsonParser.parse(foodServiceData[0]);
+            return FoodServicesJsonParser.parse(foodServiceData[0]);
         } catch (IOException e) {
             Log.e(TAG, "Exception ocurred when opening or reading resource file");
         } catch (JSONException e) {
+            //Should never happen
             Log.e(TAG, "Json file is mal formed");
         }
-
-        return services;
+        return null;
     }
 
     @Override

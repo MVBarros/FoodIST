@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.foodist.status;
 import android.app.Application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -14,7 +15,7 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
 
-    private List<FoodService> services = new ArrayList<>();
+    private List<FoodService> services = Collections.synchronizedList(new ArrayList<FoodService>());
 
     private boolean freshBootFlag = true;
 
@@ -36,19 +37,7 @@ public class GlobalStatus extends Application {
     }
 
     public void setServices(List<FoodService> services) {
-        this.services = services;
-    }
-
-
-    public void updateServicesDistance(List<FoodService> services) {
-        for (FoodService service : services) {
-            for (FoodService myService : this.services) {
-                if (myService.getName().equals(service.getName())) {
-                    myService.setDistance(service.getDistance());
-                    break;
-                }
-            }
-        }
+        this.services = Collections.synchronizedList(services);
     }
 
     public String getApiKey() {

@@ -12,11 +12,10 @@ import java.util.List;
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
-public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integer, List<FoodService>> {
-    private static final String TAG = "FOOD-SERVICE-WALKING-TIME-TASK";
+public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integer, Boolean> {
+    private static final String TAG = "TAG_FoodServiceWalkingTimeTask";
 
     private WeakReference<MainActivity> mainActivity;
 
@@ -25,7 +24,7 @@ public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integ
     }
 
     @Override
-    protected List<FoodService> doInBackground(WalkingTimeData... walkingTimeResources) {
+    protected Boolean doInBackground(WalkingTimeData... walkingTimeResources) {
         if (walkingTimeResources == null || walkingTimeResources.length != 1) {
             return null;
         }
@@ -33,7 +32,7 @@ public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integ
         Double latitude = resource.getLatitude();
         Double longitude = resource.getLongitude();
         if (latitude == null || longitude == null) {
-            return null;
+            return false;
         }
         String apiKey = resource.getApiKey();
         List<FoodService> services = resource.getServices();
@@ -48,19 +47,19 @@ public class FoodServiceWalkingTimeTask extends AsyncTask<WalkingTimeData, Integ
                 Log.e(TAG, "Unable to get walking distance to service " + service.getName() + " due to cause: " + e.getCause());
             }
         }
-        return services;
+        return true;
     }
 
     @Override
-    protected void onPostExecute(List<FoodService> result) {
+    protected void onPostExecute(Boolean result) {
         MainActivity activity = mainActivity.get();
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
             // activity is no longer valid, don't do anything!
             return;
         }
-        if (result != null) {
-            GlobalStatus status = activity.getGlobalStatus();
-            status.updateServicesDistance(result);
+        if (result) {
+            //Services of global status are now updated, just need to draw them
+            // (If they have been overridden nothing new will happen)
             activity.drawServices();
         }
     }

@@ -14,16 +14,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.FoodServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.campus.FoodServiceWalkingTimeTask;
@@ -67,6 +67,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PHONE_LOCATION_REQUEST_CODE) {
+            loadCurrentCampus();
+        }
+    }
+
     private void updateFirstBoot() {
         if (getGlobalStatus().isFreshBootFlag()) {
             getGlobalStatus().setFreshBootFlag(false);
@@ -78,21 +85,15 @@ public class MainActivity extends BaseActivity {
 
     private void setButtons() {
         Button userProfileButton = findViewById(R.id.userProfile);
-        userProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
-            }
+        userProfileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
         });
 
         Button changeCampusButton = findViewById(R.id.changeCampus);
-        changeCampusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
-                startActivity(intent);
-            }
+        changeCampusButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -119,58 +120,41 @@ public class MainActivity extends BaseActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PHONE_LOCATION_REQUEST_CODE) {
-            loadCurrentCampus();
-        }
-    }
-
     public void updateServicesWalkingDistance() {
         if (hasLocationPermission() && isNetworkAvailable()) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    double[] coords = new double[2];
-                    coords[0] = location.getLatitude();
-                    coords[1] = location.getLongitude();
-
-                    //Copy Current Services
-                    GlobalStatus status = getGlobalStatus();
-                    List<FoodService> services = new ArrayList<>(status.getServices());
-                    String apiKey = status.getApiKey();
-                    new FoodServiceWalkingTimeTask(MainActivity.this).execute(new WalkingTimeData(coords[0], coords[1], apiKey, services));
-                }
-            });
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this,
+                    (Location location) -> {
+                        //In some rare cases this can be null
+                        if (location != null) {
+                            GlobalStatus status = getGlobalStatus();
+                            List<FoodService> services = status.getServices();
+                            String apiKey = status.getApiKey();
+                            new FoodServiceWalkingTimeTask(MainActivity.this)
+                                    .execute(new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services));
+                        }
+                    });
         }
     }
 
     private void guessCampusFromLocation() {
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            double[] coords = new double[2];
-                            coords[0] = location.getLatitude();
-                            coords[1] = location.getLongitude();
+                .addOnSuccessListener(this, (Location location) -> {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        String common = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
+                        String myCoords = String.format(Locale.ENGLISH, "%f,%f", location.getLatitude(), location.getLongitude());
+                        Log.d("LOCATION", "Coords: " + myCoords);
+                        String destination = "Instituto+Superior+Técnico";
+                        String apiKey = getString(R.string.map_api_key);
 
-                            String common = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
-                            String myCoords = String.format(Locale.ENGLISH, "%f,%f", coords[0], coords[1]);
-                            Log.d("LOCATION", "Coords: " + myCoords);
-                            String destination = "Instituto+Superior+Técnico";
-                            String apiKey = getString(R.string.map_api_key);
+                        String urlAlameda = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
+                        destination = "Instituto+Superior+Técnico+-+Taguspark";
+                        String urlTagus = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
 
-                            String urlAlameda = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
-                            destination = "Instituto+Superior+Técnico+-+Taguspark";
-                            String urlTagus = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
-
-                            new GuessCampusTask(MainActivity.this).execute(urlAlameda, urlTagus);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Could not get location, please select campus", Toast.LENGTH_SHORT).show();
-                            askCampus();
-                        }
+                        new GuessCampusTask(MainActivity.this).execute(urlAlameda, urlTagus);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Could not get location, please select campus", Toast.LENGTH_SHORT).show();
+                        askCampus();
                     }
                 });
     }
@@ -197,40 +181,35 @@ public class MainActivity extends BaseActivity {
         loadServices(campus);
     }
 
+    private void drawService(FoodService service) {
+
+        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = vi.inflate(R.layout.food_service, null);
+
+        TextView name = v.findViewById(R.id.foodServiceName);
+        name.setText(service.getName());
+
+        TextView distance = v.findViewById(R.id.distance);
+        distance.setText(String.format("Walking Time: %s", service.getDistance()));
+
+        TextView queue = v.findViewById(R.id.queueTime);
+        queue.setText(String.format("Queue Time: %s", service.getTime()));
+
+        v.setOnClickListener(v1 -> {
+            Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+            TextView name1 = v1.findViewById(R.id.foodServiceName);
+            intent.putExtra("Service Name", name1.getText());
+            startActivity(intent);
+        });
+
+        ViewGroup foodServiceList = findViewById(R.id.foodServices);
+        foodServiceList.addView(v);
+    }
+
     public void drawServices() {
-        List<FoodService> services = getAvailableServices();
         ViewGroup foodServiceList = findViewById(R.id.foodServices);
         foodServiceList.removeAllViews();
-
-        for (FoodService service : services) {
-            //number of info
-            String[] info = new String[]{service.getName(), service.getDistance(), service.getTime()};
-
-            LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = vi.inflate(R.layout.food_service, null);
-
-            TextView name = v.findViewById(R.id.foodServiceName);
-            TextView distance = v.findViewById(R.id.distance);
-            TextView queue = v.findViewById(R.id.queueTime);
-
-            name.setText(info[0]);
-            distance.setText(String.format("Walking Time: %s", info[1]));
-            queue.setText(String.format("Queue Time: %s", info[2]));
-
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-                    TextView name = v.findViewById(R.id.foodServiceName);
-
-                    intent.putExtra("Service Name", name.getText());
-                    startActivity(intent);
-                }
-            });
-
-            foodServiceList = findViewById(R.id.foodServices);
-            foodServiceList.addView(v);
-        }
+        getAvailableServices().forEach(this::drawService);
     }
 
     public void askCampus() {
@@ -252,17 +231,10 @@ public class MainActivity extends BaseActivity {
 
     public List<FoodService> getAvailableServices() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        String position_name = pref.getString(getString(R.string.position_name), null);
-        ArrayList<FoodService> filteredServices = new ArrayList<>();
+        String position = pref.getString(getString(R.string.position_name), "");
 
-        if (position_name != null) {
-            for (FoodService service : getGlobalStatus().getServices()) {
-                List<String> restrictions = service.getRestrictions();
-                if (!restrictions.contains(position_name)) {
-                    filteredServices.add(service);
-                }
-            }
-        }
-        return filteredServices;
+        return getGlobalStatus().getServices().stream()
+                .filter(service -> !service.getRestrictions().contains(position))
+                .collect(Collectors.toList());
     }
 }
