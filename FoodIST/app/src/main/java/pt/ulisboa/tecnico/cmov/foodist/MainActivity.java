@@ -21,6 +21,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -45,7 +46,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -92,8 +92,7 @@ public class MainActivity extends BaseActivity {
 
         Button changeCampusButton = findViewById(R.id.changeCampus);
         changeCampusButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
-            startActivity(intent);
+            askCampus();
         });
     }
 
@@ -129,8 +128,8 @@ public class MainActivity extends BaseActivity {
                             GlobalStatus status = getGlobalStatus();
                             List<FoodService> services = status.getServices();
                             String apiKey = status.getApiKey();
-                            new FoodServiceWalkingTimeTask(MainActivity.this)
-                                    .execute(new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services));
+                            new FoodServiceWalkingTimeTask(this)
+                                    .execute(new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, new ArrayList<>(services)));
                         }
                     });
         }
@@ -150,8 +149,7 @@ public class MainActivity extends BaseActivity {
                         String urlAlameda = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
                         destination = "Instituto+Superior+Técnico+-+Taguspark";
                         String urlTagus = common + myCoords + "&destinations=" + destination + "&key=" + apiKey;
-
-                        new GuessCampusTask(MainActivity.this).execute(urlAlameda, urlTagus);
+                        new GuessCampusTask(this).execute(urlAlameda, urlTagus);
                     } else {
                         Toast.makeText(getApplicationContext(), "Could not get location, please select campus", Toast.LENGTH_SHORT).show();
                         askCampus();
@@ -177,7 +175,6 @@ public class MainActivity extends BaseActivity {
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.global_preferences_file), 0).edit();
         editor.putString(getString(R.string.global_preferences_location), campus);
         editor.apply();
-
         loadServices(campus);
     }
 
@@ -226,7 +223,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void launchFoodServiceParseTask(FoodServiceData resource) {
-        new FoodServiceParsingTask(MainActivity.this).execute(resource);
+        new FoodServiceParsingTask(this).execute(resource);
     }
 
     public List<FoodService> getAvailableServices() {

@@ -13,25 +13,19 @@ public class ChooseCampusActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_campus);
 
-        Button tagusparkButton = (Button) findViewById(R.id.taguspark);
-        Button alamedaButton = (Button) findViewById(R.id.alameda);
+        Button tagusparkButton = findViewById(R.id.taguspark);
+        Button alamedaButton = findViewById(R.id.alameda);
 
-        tagusparkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
-                intent.putExtra(CAMPUS, getString(R.string.campus_taguspark));
-                startActivity(intent);
-            }
+        tagusparkButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
+            intent.putExtra(CAMPUS, getString(R.string.campus_taguspark));
+            startActivity(intent);
         });
 
-        alamedaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
-                intent.putExtra(CAMPUS, getString(R.string.campus_alameda));
-                startActivity(intent);
-            }
+        alamedaButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
+            intent.putExtra(CAMPUS, getString(R.string.campus_alameda));
+            startActivity(intent);
         });
 
     }
