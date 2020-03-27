@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;

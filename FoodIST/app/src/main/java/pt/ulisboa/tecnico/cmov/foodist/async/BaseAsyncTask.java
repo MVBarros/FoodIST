@@ -6,6 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.ref.WeakReference;
 
+
+/**
+ * Task that only runs safeRunOnUiThread if the activity still exists
+ */
+
 public abstract class BaseAsyncTask<T, U, V, A extends AppCompatActivity> extends AsyncTask<T, U, V> {
     private WeakReference<A> activity;
 
