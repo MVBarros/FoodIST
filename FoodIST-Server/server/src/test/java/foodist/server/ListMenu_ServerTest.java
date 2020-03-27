@@ -33,7 +33,7 @@ import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
-public class ListMenuTest { 
+public class ListMenu_ServerTest { 
 		
 	private static final double TEST_PRICE = 1.50;
 	
@@ -52,16 +52,6 @@ public class ListMenuTest {
 
 	@Before
 	public void setUp() throws Exception {   
-		File directory = new File(BASE_DIR);
-		
-		for(String filename : directory.list()) {
-			if(filename.equals("test")) {
-				continue;
-			}
-			else {
-				Utils.deleteMenuDirectories(new File(BASE_DIR + "/" + filename), 0);
-			}
-		}	
 		
 		String serverName = InProcessServerBuilder.generateName();
 
