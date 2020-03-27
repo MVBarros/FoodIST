@@ -78,8 +78,9 @@ public class ProfileActivity extends BaseActivity {
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 
         RadioButton statusButton = (RadioButton) findViewById(status.getCheckedRadioButtonId());
-
-        editor.putString(getString(R.string.position_name), statusButton.getText().toString());
+        if(statusButton != null){
+            editor.putString(getString(R.string.position_name), statusButton.getText().toString());
+        }
         editor.apply();
     }
 

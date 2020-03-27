@@ -74,9 +74,11 @@ public class AddMenuActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "Give the menu a name and a cost!", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
                     Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
                     new UploadMenuTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
                     Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
+                    intent.putExtra(SERVICE_NAME, foodService);
                     startActivity(intent);
                 }
             }
