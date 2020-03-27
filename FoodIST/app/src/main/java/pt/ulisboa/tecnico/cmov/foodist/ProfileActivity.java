@@ -50,14 +50,9 @@ public class ProfileActivity extends BaseActivity {
 
         getPreferences();
 
-        ImageView profilePicture = (ImageView) findViewById(R.id.profilePicture);
+        ImageView profilePicture = findViewById(R.id.profilePicture);
 
-        profilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                askGalleryPermission();
-            }
-        });
+        profilePicture.setOnClickListener(v -> askGalleryPermission());
     }
 
     @Override
@@ -67,17 +62,15 @@ public class ProfileActivity extends BaseActivity {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
         SharedPreferences.Editor editor = pref.edit();
 
-        TextView user = (TextView) findViewById(R.id.username);
+        TextView user = findViewById(R.id.username);
 
         editor.putString(getString(R.string.username), user.getText().toString());
 
-        RadioGroup status = (RadioGroup) findViewById(R.id.universityStatus);
-
-        int buttonID = pref.getInt(getString(R.string.position), -1);
+        RadioGroup status = findViewById(R.id.universityStatus);
 
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 
-        RadioButton statusButton = (RadioButton) findViewById(status.getCheckedRadioButtonId());
+        RadioButton statusButton = findViewById(status.getCheckedRadioButtonId());
         if(statusButton != null){
             editor.putString(getString(R.string.position_name), statusButton.getText().toString());
         }
@@ -269,7 +262,9 @@ public class ProfileActivity extends BaseActivity {
 
         if (selectedStatus != -1) {
             RadioButton status = findViewById(selectedStatus);
-            status.toggle();
+            if (status != null) {
+                status.toggle();
+            }
         }
     }
 }
