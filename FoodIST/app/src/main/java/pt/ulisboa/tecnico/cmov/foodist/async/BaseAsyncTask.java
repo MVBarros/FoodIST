@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async.campus;
+package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.os.AsyncTask;
 
@@ -19,6 +19,10 @@ public abstract class BaseAsyncTask<T, U, V, A extends AppCompatActivity> extend
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             safeRunOnUiThread(result, act);
         }
+    }
+
+    public A getActivity() {
+        return activity.get();
     }
 
     abstract void safeRunOnUiThread(V result, A activity);

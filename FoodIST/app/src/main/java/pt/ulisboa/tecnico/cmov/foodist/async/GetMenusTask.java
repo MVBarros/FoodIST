@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async.campus;
+package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.content.Context;
 import android.content.Intent;

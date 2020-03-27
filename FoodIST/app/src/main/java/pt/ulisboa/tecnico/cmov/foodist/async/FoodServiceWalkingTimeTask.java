@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async.campus;
+package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.util.Log;
 
@@ -12,7 +12,7 @@ import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
-public class FoodServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integer, Boolean, MainActivity> {
+public class FoodServiceWalkingTimeTask extends CancelableAsyncTask<WalkingTimeData, Integer, Boolean, MainActivity> {
 
     private static final String TAG = "TAG_FoodServiceWalkingTimeTask";
 

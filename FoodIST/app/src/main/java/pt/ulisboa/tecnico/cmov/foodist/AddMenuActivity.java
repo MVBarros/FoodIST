@@ -31,7 +31,7 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import pt.ulisboa.tecnico.cmov.foodist.async.campus.UploadMenuTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.UploadMenuTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 

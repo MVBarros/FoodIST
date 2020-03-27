@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async.campus;
+package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.util.Log;
 
@@ -18,7 +18,7 @@ import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
-public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, MainActivity> {
+public class GuessCampusTask extends CancelableAsyncTask<String, Integer, String, MainActivity> {
 
     public GuessCampusTask(MainActivity activity) {
         super(activity);

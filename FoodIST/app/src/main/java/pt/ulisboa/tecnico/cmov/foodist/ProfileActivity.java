@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -71,7 +70,7 @@ public class ProfileActivity extends BaseActivity {
         editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
 
         RadioButton statusButton = findViewById(status.getCheckedRadioButtonId());
-        if(statusButton != null){
+        if (statusButton != null) {
             editor.putString(getString(R.string.position_name), statusButton.getText().toString());
         }
         editor.apply();

@@ -9,9 +9,14 @@ import android.net.NetworkInfo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import java.util.HashSet;
+
+import pt.ulisboa.tecnico.cmov.foodist.async.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    private HashSet<CancelableAsyncTask> tasks = new HashSet<>();
+
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -25,5 +30,23 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public GlobalStatus getGlobalStatus() {
         return (GlobalStatus) getApplicationContext();
+    }
+
+    private void cancelTasks() {
+        tasks.forEach(task -> task.cancel(true));
+    }
+
+    public void add(CancelableAsyncTask task) {
+        tasks.add(task);
+    }
+
+    public void remove(CancelableAsyncTask task) {
+        tasks.remove(task);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelTasks();
     }
 }

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async.campus;
+package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.util.Log;
 
@@ -12,7 +12,7 @@ import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServicesJsonParser;
 
-public class FoodServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, List<FoodService>, MainActivity> {
+public class FoodServiceParsingTask extends CancelableAsyncTask<FoodServiceData, Integer, List<FoodService>, MainActivity> {
 
     private static final String TAG = "FOOD-SERVICE-PARSING";
 

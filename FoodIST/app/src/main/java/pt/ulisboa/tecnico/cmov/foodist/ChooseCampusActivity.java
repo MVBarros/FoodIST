@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 public class ChooseCampusActivity extends BaseActivity {
