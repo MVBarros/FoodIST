@@ -34,8 +34,7 @@ public class CoordenateUtils {
 
         JSONObject object = new JSONObject(response);
         //If response is invalid, an exception is thrown which we then catch
-        String time = object.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
-        return time;
+        return object.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
 
     }
 

@@ -38,6 +38,7 @@ public class DownloadPhoto_ServerTest {
 	private static final double TEST_PRICE = 1.50;
 	
 	private static final String BASE_DIR = "photos";
+	private static final String TEST_ALTERNATIVE_FOODSERVICE = "Lakeviewrestaurant";
 	private static final String TEST_ALTERNATIVE_MENU = "Farinheira";
 	private static final String TEST_ALTERNATIVE_PHOTO = "photos/test/farinheira.png";
 	private static final String TEST_FOODSERVICE = "Testbar";
@@ -54,18 +55,7 @@ public class DownloadPhoto_ServerTest {
 	final BindableService bindableService = new ServiceImplementation();
 
 	@Before
-	public void setUp() throws Exception {   
-		File directory = new File(BASE_DIR);
-		
-		for(String filename : directory.list()) {
-			if(filename.equals("test")) {
-				continue;
-			}
-			else {
-				Utils.deleteMenuDirectories(new File(BASE_DIR + "/" + filename), 0);
-			}
-		}	
-		
+	public void setUp() throws Exception {   			
 		String serverName = InProcessServerBuilder.generateName();
 
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
@@ -80,25 +70,38 @@ public class DownloadPhoto_ServerTest {
 		
     	originalPhoto = ImageIO.read(new File(TEST_PHOTO));
         originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
-        originalPhotoSize = originalPhotoDataBuffer.getSize();        		
+        originalPhotoSize = originalPhotoDataBuffer.getSize();    
+        
+        client.addMenu(TEST_ALTERNATIVE_FOODSERVICE, TEST_MENU, TEST_PRICE);
+        client.addPhoto(TEST_ALTERNATIVE_FOODSERVICE, TEST_MENU, TEST_PHOTO);
 	}
-
+	
 	@Test
-  	public void PhotoUploadedIsPhotoDownloaded() {
+  	public void DownloadPhoto_ClientPath() {
 	  	String photoId = "";	
-	  	ListMenuReply listMenuReply = client.listMenu(TEST_FOODSERVICE);
+	  	ListMenuReply listMenuReply = client.listMenu(TEST_ALTERNATIVE_FOODSERVICE);
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
-	  		photoId = m.getPhotoId(0);
-	  		break;
-	  	}
+	  	photoId = listMenuReply.getMenusList().get(0).getPhotoId(0);
 	  	
-		client.downloadPhoto(photoId, TEST_FOODSERVICE, TEST_MENU);
+		boolean path_exists = new File(BASE_DIR + File.separator + "client" + File.separator 
+				+ TEST_ALTERNATIVE_FOODSERVICE + File.separator + TEST_MENU 
+				+ File.separator + photoId).exists();
+		assertTrue(path_exists);
+  	}
+	
+	@Test
+  	public void DownloadPhoto_SamePhoto() {		
+	  	String photoId = "";	
+	  	ListMenuReply listMenuReply = client.listMenu(TEST_ALTERNATIVE_FOODSERVICE);
+	  	
+	  	photoId = listMenuReply.getMenusList().get(0).getPhotoId(0);
+	  	
+		client.downloadPhoto(photoId, TEST_ALTERNATIVE_FOODSERVICE, TEST_MENU);
 
 		try {
 			BufferedImage uploadedPhoto = ImageIO.read(new File(
 					BASE_DIR + File.separator + "client" + File.separator 
-					+ TEST_FOODSERVICE + File.separator + TEST_MENU 
+					+ TEST_ALTERNATIVE_FOODSERVICE + File.separator + TEST_MENU 
 					+ File.separator + photoId));
 			
 			DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();

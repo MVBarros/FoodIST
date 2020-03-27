@@ -26,13 +26,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 
 @RunWith(JUnit4.class)
-public class AddMenuTest { 
+public class AddMenu_ClientTest { 
 		
 	private static final double TEST_PRICE = 1.50;
 	
 	private static final String BASE_DIR = "photos";
 	private static final String TEST_FOODSERVICE = "Testbar";
 	private static final String TEST_MENU = "Chourico";
+	private static final String TEST_PHOTO = "chourico.jpg";
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;
@@ -53,18 +54,7 @@ public class AddMenuTest {
 	Client client;	
 
 	@Before
-	public void setUp() throws Exception {   
-		File directory = new File(BASE_DIR);
-		
-		for(String filename : directory.list()) {
-			if(filename.equals("test")) {
-				continue;
-			}
-			else {
-				Utils.deleteMenuDirectories(new File(BASE_DIR + "/" + filename), 0);
-			}
-		}	
-		
+	public void setUp() throws Exception {   		
 		String serverName = InProcessServerBuilder.generateName();
 
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(serviceImpl).build().start());

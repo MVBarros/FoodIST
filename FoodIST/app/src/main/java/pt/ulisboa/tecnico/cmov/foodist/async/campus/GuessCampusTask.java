@@ -91,9 +91,11 @@ public class GuessCampusTask extends AsyncTask<String, Integer, int[]> {
                     return;
                 }
             }
+        } else {
+            //Could not infer campus
+            activity.askCampus();
         }
-        //Could not infer campus
-        activity.askCampus();
+
     }
 
     private String readStream(InputStream is) throws IOException {

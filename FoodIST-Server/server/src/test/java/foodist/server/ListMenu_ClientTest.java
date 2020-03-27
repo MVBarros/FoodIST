@@ -46,16 +46,6 @@ public class ListMenu_ClientTest {
 	
 	@Before
 	public void setUp() throws Exception {   
-		File directory = new File(BASE_DIR);
-		
-		for(String filename : directory.list()) {
-			if(filename.equals("test")) {
-				continue;
-			}
-			else {
-				Utils.deleteMenuDirectories(new File(BASE_DIR + "/" + filename), 0);
-			}
-		}	
 		
 		String serverName = InProcessServerBuilder.generateName();
 
