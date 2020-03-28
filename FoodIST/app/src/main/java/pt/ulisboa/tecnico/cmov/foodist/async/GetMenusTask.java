@@ -1,24 +1,20 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
-import pt.ulisboa.tecnico.cmov.foodist.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
@@ -28,6 +24,7 @@ public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>
 
     FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
+    private String foodService;
     public GetMenusTask(FoodServiceActivity foodServiceActivity, FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
         this.foodServiceActivity = new WeakReference<>(foodServiceActivity);
         this.stub = stub;
@@ -40,9 +37,11 @@ public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>
         if(foodService.length != 1){
             return null;
         }
+        this.foodService = foodService[0];
+
         Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
-        listMenuBuilder.setFoodService(foodService[0]);
+        listMenuBuilder.setFoodService(this.foodService);
 
         Contract.ListMenuRequest request = listMenuBuilder.build();
 
@@ -56,40 +55,30 @@ public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>
 
     @Override
     protected void onPostExecute(List<Contract.Menu> result) {
-        /*final FoodServiceActivity activity = foodServiceActivity.get();
-        ViewGroup foodServiceList = activity.findViewById(R.id.menus);
+        final FoodServiceActivity activity = foodServiceActivity.get();
+        ListView foodServiceList = activity.findViewById(R.id.menus);
+
         if (result == null || result.size() == 0) {
-            Log.d(TAG, "Unable to request menus");
-            TextView errorText = new TextView(activity);
-            errorText.setText(R.string.error_menus);
-            foodServiceList.addView(errorText);
+            menuError(activity, foodServiceList);
             return;
         }
 
+        ArrayList<Menu> menus = new ArrayList<>();
+
         for(final Contract.Menu menu : result){
-            //number of info
-            LayoutInflater vi = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = vi.inflate(R.layout.food_menu, null);
-
-            TextView name = v.findViewById(R.id.menuFood);
-            TextView cost = v.findViewById(R.id.menuCost);
-
-            name.setText(menu.getName());
-            cost.setText(String.format(Locale.US,"%.2f", menu.getPrice()));
-
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(activity, FoodMenuActivity.class);
-                    intent.putExtra("Number_photos", menu.getPhotoIdCount());
-                    activity.startActivity(intent);
-                }
-            });
-
-            foodServiceList.addView(v);
+            menus.add(Menu.parseContractMenu(this.foodService, menu));
         }
+
+        final MenuAdapter menuAdapter = new MenuAdapter(activity, menus);
+
+        foodServiceList.setAdapter(menuAdapter);
         Log.d(TAG, "Menus obtained successfully");
-    */
+
+    }
+
+    private void menuError(FoodServiceActivity activity, ListView foodServiceList){
+        Log.d(TAG, "Unable to request menus");
+        Toast.makeText(activity, "No menus available...", Toast.LENGTH_SHORT).show();
     }
 
 }

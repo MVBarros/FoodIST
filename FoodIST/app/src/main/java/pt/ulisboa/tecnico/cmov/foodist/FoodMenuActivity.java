@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -28,16 +30,25 @@ import java.util.Date;
 import java.util.Locale;
 
 public class FoodMenuActivity extends BaseActivity {
+    //Intent tags
+    public static final String NUMBER_PHOTOS = "Number_photos";
+    public static final String MENU_NAME = "Menu_name";
+    public static final String MENU_PRICE = "Menu_price";
+    public static final String MENU_SERVICE = "Menu_service";
 
+    //Camera/Gallery tags
     private static final int PICK_FROM_GALLERY = 1;
     private static final int PICK_FROM_CAMERA = 2;
     private static final int REQUEST_PIC = 3;
     private static final int GALLERY_PIC = 4;
     private static final int CAMERA_PIC = 5;
 
-    private static final String TAG = "TAG_ProfileActivity";
+    private static final String TAG = "TAG_FoodMenuActivity";
 
     private String imageFilePath = null;
+
+    private int numPhotos;
+    private String foodService;
 
     private int photoView = R.id.menuPhotos;
 
@@ -45,6 +56,8 @@ public class FoodMenuActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
+
+        intentInitialization(getIntent());
 
         Button addPhoto = findViewById(R.id.add_photo_button);
 
@@ -54,6 +67,53 @@ public class FoodMenuActivity extends BaseActivity {
                 askGalleryPermission();
             }
         });
+    }
+
+    private void intentInitialization(Intent intent){
+        initializeNumPhotos(intent.getIntExtra(NUMBER_PHOTOS, -1));
+        initializeMenuName(intent.getStringExtra(MENU_NAME));
+        initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
+        initializeFoodService(intent.getStringExtra(MENU_SERVICE));
+    }
+
+    private void initializeNumPhotos(int numPhotos){
+        if(numPhotos == -1){
+            Log.d(TAG, "Unable to obtain number of photos");
+        }
+        else{
+            this.numPhotos = numPhotos;
+        }
+    }
+
+    private void initializeMenuName(String menuName){
+        if(menuName == null){
+            Log.d(TAG, "Unable to obtain menu name");
+            Toast.makeText(this, "Unable to obtain menu name", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            TextView menuNameText = findViewById(R.id.menuName);
+            menuNameText.setText(menuName);
+        }
+    }
+
+    private void initializeMenuCost(Double menuCost){
+        if(menuCost == -1.0){
+            Log.d(TAG, "Unable to obtain menu cost");
+            Toast.makeText(this, "Unable to obtain menu cost", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            TextView menuCostText = findViewById(R.id.menuCost);
+            menuCostText.setText(String.format(Locale.US, "%.2f", menuCost));
+        }
+    }
+
+    private void initializeFoodService(String foodService){
+        if(foodService == null){
+            Log.d(TAG, "Unable to obtain correspondent food service");
+        }
+        else{
+            this.foodService = foodService;
+        }
     }
 
     private void askGalleryPermission() {

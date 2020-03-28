@@ -41,6 +41,11 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = "TAG_MainActivity";
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
 
+    private static final String SERVICE_NAME = "Service Name";
+    private static final String DISTANCE = "Distance";
+    private static final String QUEUE_TIME = "Queue time";
+
+
     private boolean isFreshBoot;
 
     @Override
@@ -188,7 +193,9 @@ public class MainActivity extends BaseActivity {
         v.setOnClickListener(v1 -> {
             Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
             TextView name1 = v1.findViewById(R.id.foodServiceName);
-            intent.putExtra("Service Name", name1.getText());
+            intent.putExtra(SERVICE_NAME, name1.getText());
+            intent.putExtra(DISTANCE, service.getDistance());
+            intent.putExtra(QUEUE_TIME, service.getTime());
             startActivity(intent);
         });
 
