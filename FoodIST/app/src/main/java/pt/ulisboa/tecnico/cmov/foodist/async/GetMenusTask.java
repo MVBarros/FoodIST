@@ -1,16 +1,14 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.Contract;
-import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
+import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
@@ -18,23 +16,21 @@ import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
-public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>> {
+public class GetMenusTask extends CancelableAsyncTask<String, Integer, List<Contract.Menu>, FoodServiceActivity> {
 
-    private WeakReference<FoodServiceActivity> foodServiceActivity;
-
-    FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
-
+    private FoodISTServerServiceBlockingStub stub;
     private String foodService;
-    public GetMenusTask(FoodServiceActivity foodServiceActivity, FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
-        this.foodServiceActivity = new WeakReference<>(foodServiceActivity);
-        this.stub = stub;
+
+    public GetMenusTask(FoodServiceActivity activity) {
+        super(activity);
+        this.stub = activity.getGlobalStatus().getStub();
     }
 
-    private static final String TAG = "GETMENU-TASK";
+    private static final String TAG = "GET-MENU-TASK";
 
     @Override
     protected List<Contract.Menu> doInBackground(String... foodService) {
-        if(foodService.length != 1){
+        if (foodService.length != 1) {
             return null;
         }
         this.foodService = foodService[0];
@@ -45,40 +41,35 @@ public class GetMenusTask extends AsyncTask<String, Integer, List<Contract.Menu>
 
         Contract.ListMenuRequest request = listMenuBuilder.build();
 
-        try{
+        try {
             Contract.ListMenuReply reply = this.stub.listMenu(request);
             return reply.getMenusList();
-        } catch (StatusRuntimeException e){
+        } catch (StatusRuntimeException e) {
             return null;
         }
     }
 
     @Override
-    protected void onPostExecute(List<Contract.Menu> result) {
-        final FoodServiceActivity activity = foodServiceActivity.get();
-        ListView foodServiceList = activity.findViewById(R.id.menus);
-
+    void safeRunOnUiThread(List<Contract.Menu> result, FoodServiceActivity activity) {
         if (result == null || result.size() == 0) {
-            menuError(activity, foodServiceList);
+            menuError(activity);
             return;
         }
 
-        ArrayList<Menu> menus = new ArrayList<>();
+        ListView foodServiceList = activity.findViewById(R.id.menus);
+        List<Menu> menus = result.stream()
+                .map(menu -> Menu.parseContractMenu(this.foodService, menu))
+                .collect(Collectors.toList());
 
-        for(final Contract.Menu menu : result){
-            menus.add(Menu.parseContractMenu(this.foodService, menu));
-        }
-
-        final MenuAdapter menuAdapter = new MenuAdapter(activity, menus);
+        final MenuAdapter menuAdapter = new MenuAdapter(activity, new ArrayList<>(menus));
 
         foodServiceList.setAdapter(menuAdapter);
         Log.d(TAG, "Menus obtained successfully");
-
     }
 
-    private void menuError(FoodServiceActivity activity, ListView foodServiceList){
+    private void menuError(FoodServiceActivity activity) {
+        activity.showToast("No menus avaliable...");
         Log.d(TAG, "Unable to request menus");
-        Toast.makeText(activity, "No menus available...", Toast.LENGTH_SHORT).show();
     }
 
 }

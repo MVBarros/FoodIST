@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -44,6 +45,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void remove(CancelableAsyncTask task) {
         tasks.remove(task);
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
     }
 
     @Override

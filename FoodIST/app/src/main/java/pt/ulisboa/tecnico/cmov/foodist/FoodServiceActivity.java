@@ -2,14 +2,10 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class FoodServiceActivity extends BaseActivity {
 
@@ -17,42 +13,46 @@ public class FoodServiceActivity extends BaseActivity {
     private static final String DISTANCE = "Distance";
     private static final String QUEUE_TIME = "Queue time";
     private String foodServiceName;
-    private String queueTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_service);
 
-        TextView foodServiceName = findViewById(R.id.foodServiceName);
-        TextView openingTimes = findViewById(R.id.openingTimes);
+        setFoodServiceName();
+        setQueueTime();
+        setButtons();
+    }
+
+    private void setQueueTime() {
         TextView queueTime = findViewById(R.id.queueTime);
 
         Intent intent = getIntent();
-        this.foodServiceName = intent.getStringExtra(SERVICE_NAME);
-        foodServiceName.setText(this.foodServiceName);
-        String queueValue = intent.getStringExtra(QUEUE_TIME);
-        if(queueValue != null){
-            this.queueTime = queueValue;
-        }
+        String queueValue = intent.getStringExtra(QUEUE_TIME) == null ? "" : intent.getStringExtra(QUEUE_TIME);
+        queueTime.setText(queueValue);
+    }
 
-        queueTime.setText(this.queueTime);
-
+    private void setButtons() {
         Button addMenu = findViewById(R.id.add_menu_button);
 
-        addMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent oldIntent = getIntent();
-                String serviceName = oldIntent.getStringExtra("Service Name");
+        addMenu.setOnClickListener(v -> {
+            Intent oldIntent = getIntent();
+            String serviceName = oldIntent.getStringExtra("Service Name");
 
-                Intent intent = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
-                intent.putExtra(SERVICE_NAME, serviceName);
+            Intent intent1 = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
+            intent1.putExtra(SERVICE_NAME, serviceName);
 
-                startActivity(intent);
-            }
+            startActivity(intent1);
         });
 
+    }
+
+    private void setFoodServiceName() {
+        TextView foodServiceName = findViewById(R.id.foodServiceName);
+        Intent intent = getIntent();
+        String foodService = intent.getStringExtra(SERVICE_NAME) == null ? "" : intent.getStringExtra(SERVICE_NAME);
+        this.foodServiceName = foodService;
+        foodServiceName.setText(foodService);
     }
 
     @Override
@@ -60,6 +60,15 @@ public class FoodServiceActivity extends BaseActivity {
         super.onResume();
         //ListView foodServiceList = findViewById(R.id.menus);
         //foodServiceList.removeAllViews();
-        new GetMenusTask(FoodServiceActivity.this, ((GlobalStatus) FoodServiceActivity.this.getApplicationContext()).getStub()).execute(this.foodServiceName);
+        updateMenus();
     }
+
+    private void updateMenus() {
+        if (isNetworkAvailable()) {
+            new GetMenusTask(this).execute(this.foodServiceName);
+        } else {
+            showToast("No internet connection: Cannot get menus");
+        }
+    }
+
 }
