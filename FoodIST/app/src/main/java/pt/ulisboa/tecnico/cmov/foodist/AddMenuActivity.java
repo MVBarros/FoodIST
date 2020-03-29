@@ -32,7 +32,9 @@ import java.util.Locale;
 import androidx.appcompat.app.AppCompatActivity;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadMenuTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
+import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 
@@ -77,6 +79,12 @@ public class AddMenuActivity extends BaseActivity {
                     Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
                     Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
                     new UploadMenuTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
+
+                    if(imageFilePath != null){
+                        Photo photo = new Photo(foodService, menuName.getText().toString(), imageFilePath);
+                        new UploadPhotoTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+                    }
+
                     Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
                     intent.putExtra(SERVICE_NAME, foodService);
                     startActivity(intent);
@@ -84,7 +92,7 @@ public class AddMenuActivity extends BaseActivity {
             }
         });
 
-        Button photoButton = findViewById(R.id.add_new_menu_photo_button);
+        ImageView photoButton = findViewById(R.id.dishView);
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,14 +217,14 @@ public class AddMenuActivity extends BaseActivity {
         Cursor cursor = getContentResolver().query(selectedImage, filePath, null, null, null);
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(filePath[0]);
-        String absoluteFilePath = cursor.getString(columnIndex);
+        imageFilePath = cursor.getString(columnIndex);
         cursor.close();
 
         ImageView profile = (ImageView) findViewById(photoView);
-        profile.setImageBitmap(BitmapFactory.decodeFile(absoluteFilePath));
+        profile.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
 
         //Save path for future reference
-        editor.putString(getString(R.string.user_photo), absoluteFilePath);
+        editor.putString(getString(R.string.user_photo), imageFilePath);
         editor.apply();
     }
 

@@ -14,6 +14,7 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
+    private FoodISTServerServiceGrpc.FoodISTServerServiceStub assyncStub = null;
 
     private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
 
@@ -30,6 +31,19 @@ public class GlobalStatus extends Application {
             stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
         }
         return stub;
+    }
+
+    public FoodISTServerServiceGrpc.FoodISTServerServiceStub getAssyncStub() {
+        if (assyncStub == null) {
+            String address = getString(R.string.foodist_server_address);
+            int port = Integer.parseInt(getString(R.string.foodist_server_port));
+            ManagedChannel channel = AndroidChannelBuilder.forAddress(address, port)
+                    .context(getApplicationContext())
+                    .usePlaintext()
+                    .build();
+            assyncStub = FoodISTServerServiceGrpc.newStub(channel);
+        }
+        return assyncStub;
     }
 
     public List<FoodService> getServices() {

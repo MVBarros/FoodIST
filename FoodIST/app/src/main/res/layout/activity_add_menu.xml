@@ -39,13 +39,6 @@
             android:src="@drawable/ic_launcher_background" />
 
         <Button
-            android:id="@+id/add_new_menu_photo_button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:text="@string/add_photos" />
-
-        <Button
             android:id="@+id/add_new_menu_done_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
