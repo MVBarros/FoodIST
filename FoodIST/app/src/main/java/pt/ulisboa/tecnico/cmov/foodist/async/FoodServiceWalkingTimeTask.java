@@ -6,8 +6,10 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
@@ -15,6 +17,8 @@ import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 public class FoodServiceWalkingTimeTask extends CancelableAsyncTask<WalkingTimeData, Integer, Boolean, MainActivity> {
 
     private static final String TAG = "TAG_FoodServiceWalkingTimeTask";
+
+    public static AtomicBoolean isRunning = new AtomicBoolean(false);
 
     public FoodServiceWalkingTimeTask(MainActivity activity) {
         super(activity);
@@ -48,7 +52,7 @@ public class FoodServiceWalkingTimeTask extends CancelableAsyncTask<WalkingTimeD
     }
 
     @Override
-    void safeRunOnUiThread(Boolean result, MainActivity activity) {
+    protected void safeRunOnUiThread(Boolean result, MainActivity activity) {
         if (result) {
             //Services of global status are now updated, just need to draw them
             // (If they have been overridden nothing new will happen)

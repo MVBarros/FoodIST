@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServicesJsonParser;
@@ -37,7 +38,7 @@ public class FoodServiceParsingTask extends CancelableAsyncTask<FoodServiceData,
     }
 
     @Override
-    void safeRunOnUiThread(List<FoodService> services, MainActivity activity) {
+    protected void safeRunOnUiThread(List<FoodService> services, MainActivity activity) {
         activity.getGlobalStatus().setServices(services);
         activity.drawServices();
         //After it is done try to update walking distance

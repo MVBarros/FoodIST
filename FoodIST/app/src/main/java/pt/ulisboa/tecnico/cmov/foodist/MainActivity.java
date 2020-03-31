@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 import pt.ulisboa.tecnico.cmov.foodist.async.FoodServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.FoodServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.GuessCampusTask;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainActivityBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
@@ -54,14 +57,15 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         updateFirstBoot();
         setButtons();
         setCurrentCampus();
+        setReceivers();
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
         if (!isFreshBoot) {
             drawServices();
@@ -76,6 +80,10 @@ public class MainActivity extends BaseActivity {
         if (requestCode == PHONE_LOCATION_REQUEST_CODE) {
             loadCurrentCampus();
         }
+    }
+
+    private void setReceivers() {
+        addReceiver(new MainActivityBroadcastReceiver(), ConnectivityManager.CONNECTIVITY_ACTION,WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
     private void updateFirstBoot() {

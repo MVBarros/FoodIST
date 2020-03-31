@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async;
+package pt.ulisboa.tecnico.cmov.foodist.async.base;
 
 import android.os.AsyncTask;
 
@@ -30,6 +30,6 @@ public abstract class BaseAsyncTask<T, U, V, A extends AppCompatActivity> extend
         return activity.get();
     }
 
-    abstract void safeRunOnUiThread(V result, A activity);
+    protected abstract void safeRunOnUiThread(V result, A activity);
 
 }

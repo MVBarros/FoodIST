@@ -13,6 +13,7 @@ import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
@@ -50,7 +51,7 @@ public class GetMenusTask extends CancelableAsyncTask<String, Integer, List<Cont
     }
 
     @Override
-    void safeRunOnUiThread(List<Contract.Menu> result, FoodServiceActivity activity) {
+    protected void safeRunOnUiThread(List<Contract.Menu> result, FoodServiceActivity activity) {
         if (result == null || result.size() == 0) {
             menuError(activity);
             return;

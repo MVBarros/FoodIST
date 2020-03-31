@@ -2,19 +2,15 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
@@ -49,7 +45,7 @@ public class GuessCampusTask extends CancelableAsyncTask<String, Integer, String
     }
 
     @Override
-    void safeRunOnUiThread(String result, MainActivity activity) {
+    protected void safeRunOnUiThread(String result, MainActivity activity) {
         if (result != null) {
             activity.setCampus(result);
         } else {
