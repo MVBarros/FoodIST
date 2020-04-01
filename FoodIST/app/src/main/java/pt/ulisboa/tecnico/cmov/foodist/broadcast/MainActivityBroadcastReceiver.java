@@ -15,7 +15,7 @@ public class MainActivityBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (isNetworkAvailable(context)) {
-            if (!wasNetworkAvaliable()) {
+            if (!wasNetworkAvailable()) {
                 MainActivity activity = (MainActivity) context;
                 activity.updateServicesWalkingDistance();
             }
@@ -26,7 +26,7 @@ public class MainActivityBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-    public boolean wasNetworkAvaliable() {
+    public boolean wasNetworkAvailable() {
         return wasNetworkAvailable;
     }
 

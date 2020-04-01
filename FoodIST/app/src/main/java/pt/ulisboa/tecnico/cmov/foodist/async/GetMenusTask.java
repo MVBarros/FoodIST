@@ -13,11 +13,11 @@ import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
-public class GetMenusTask extends CancelableAsyncTask<String, Integer, List<Contract.Menu>, FoodServiceActivity> {
+public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.Menu>, FoodServiceActivity> {
 
     private FoodISTServerServiceBlockingStub stub;
     private String foodService;
@@ -51,18 +51,18 @@ public class GetMenusTask extends CancelableAsyncTask<String, Integer, List<Cont
     }
 
     @Override
-    protected void safeRunOnUiThread(List<Contract.Menu> result, FoodServiceActivity activity) {
+    public void onPostExecute(List<Contract.Menu> result) {
         if (result == null || result.size() == 0) {
-            menuError(activity);
+            menuError(getActivity());
             return;
         }
 
-        ListView foodServiceList = activity.findViewById(R.id.menus);
+        ListView foodServiceList = getActivity().findViewById(R.id.menus);
         List<Menu> menus = result.stream()
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
                 .collect(Collectors.toList());
 
-        final MenuAdapter menuAdapter = new MenuAdapter(activity, new ArrayList<>(menus));
+        final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(menus));
 
         foodServiceList.setAdapter(menuAdapter);
         Log.d(TAG, "Menus obtained successfully");

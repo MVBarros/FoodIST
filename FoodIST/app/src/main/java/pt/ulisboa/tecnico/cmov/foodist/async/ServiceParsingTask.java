@@ -8,21 +8,22 @@ import java.io.IOException;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServicesJsonParser;
 
-public class FoodServiceParsingTask extends CancelableAsyncTask<FoodServiceData, Integer, List<FoodService>, MainActivity> {
+public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, List<FoodService>, MainActivity> {
 
     private static final String TAG = "FOOD-SERVICE-PARSING";
 
-    public FoodServiceParsingTask(MainActivity activity) {
+    public ServiceParsingTask(MainActivity activity) {
         super(activity);
     }
 
+
     @Override
-    protected List<FoodService> doInBackground(FoodServiceData... foodServiceData) {
+    public List<FoodService> doInBackground(FoodServiceData... foodServiceData) {
         if (foodServiceData.length != 1) {
             return null;
         }
@@ -38,11 +39,13 @@ public class FoodServiceParsingTask extends CancelableAsyncTask<FoodServiceData,
     }
 
     @Override
-    protected void safeRunOnUiThread(List<FoodService> services, MainActivity activity) {
-        activity.getGlobalStatus().setServices(services);
-        activity.drawServices();
-        //After it is done try to update walking distance
-        activity.updateServicesWalkingDistance();
+    public void onPostExecute(List<FoodService> services) {
+        if (services != null) {
+            getActivity().getGlobalStatus().setServices(services);
+            getActivity().drawServices();
+            //After it is done try to update walking distance
+            getActivity().updateServicesWalkingDistance();
+        }
     }
 }
 

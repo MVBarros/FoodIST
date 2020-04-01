@@ -10,11 +10,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
-public class GuessCampusTask extends CancelableAsyncTask<String, Integer, String, MainActivity> {
+public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, MainActivity> {
 
     public GuessCampusTask(MainActivity activity) {
         super(activity);
@@ -45,12 +45,12 @@ public class GuessCampusTask extends CancelableAsyncTask<String, Integer, String
     }
 
     @Override
-    protected void safeRunOnUiThread(String result, MainActivity activity) {
+    public void onPostExecute(String result) {
         if (result != null) {
-            activity.setCampus(result);
+            getActivity().setCampus(result);
         } else {
             //Could not infer campus
-            activity.askCampus();
+            getActivity().askCampus();
         }
     }
 

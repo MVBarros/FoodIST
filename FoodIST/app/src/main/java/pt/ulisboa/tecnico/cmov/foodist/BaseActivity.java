@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,11 +18,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private Set<CancelableAsyncTask> tasks = Collections.synchronizedSet(new HashSet<>());
+    private Set<AsyncTask> tasks = Collections.synchronizedSet(new HashSet<>());
     private Set<BroadcastReceiver> receivers = new HashSet<>();
 
     public boolean isNetworkAvailable() {
@@ -47,11 +47,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         receivers.forEach(this::unregisterReceiver);
     }
 
-    public void addTask(CancelableAsyncTask task) {
+    public void addTask(AsyncTask task) {
         tasks.add(task);
     }
 
-    public void removeTask(CancelableAsyncTask task) {
+    public void removeTask(AsyncTask task) {
         tasks.remove(task);
     }
 
@@ -64,7 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showToast(String message) {
-        Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
