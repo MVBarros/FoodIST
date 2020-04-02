@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 
 
 /**
- * Task that only runs safeRunOnUiThread if the activity still exists
+ * Task that maintains a reference to the activity that created it
  */
 
 public abstract class BaseAsyncTask<T, U, V, A extends AppCompatActivity> extends AsyncTask<T, U, V> {

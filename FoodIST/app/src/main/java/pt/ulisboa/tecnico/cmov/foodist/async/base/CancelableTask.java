@@ -6,6 +6,7 @@ import pt.ulisboa.tecnico.cmov.foodist.BaseActivity;
 
 /**
  * Task that is cancelled if it's activity is destroyed by the android runtime
+ * Must be the root of the decoration
  */
 
 public class CancelableTask<T, U, V, A extends BaseActivity> extends BaseAsyncTask<T, U, V, A> {
@@ -33,6 +34,16 @@ public class CancelableTask<T, U, V, A extends BaseActivity> extends BaseAsyncTa
     public void onPostExecute(V result) {
         task.onPostExecute(result);
         task.getActivity().removeTask(this);
+    }
+
+    @Override
+    public void onCancelled(V result) {
+        task.onCancelled(result);
+    }
+
+    @Override
+    public void onCancelled() {
+        task.onCancelled();
     }
 
 }

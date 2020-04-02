@@ -26,12 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import pt.ulisboa.tecnico.cmov.foodist.async.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceWalkingTimeTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.SingleRunTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainActivityBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
@@ -152,11 +151,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void launchWalkingTimeTask(WalkingTimeData data) {
-        new SingleRunTask<>(new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))), ServiceWalkingTimeTask.class).execute(data);
+        new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).execute(data);
     }
 
     private void launchGuessCampusTask(String... urls) {
-        new SingleRunTask<>(new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this))), GuessCampusTask.class).execute(urls);
+        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this))).execute(urls);
     }
 
     private void guessCampusFromLocation() {
@@ -243,7 +242,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void launchFoodServiceParseTask(FoodServiceData resource) {
-        new SingleRunTask<>(new CancelableTask<>(new SafePostTask<>(new ServiceParsingTask(this))), ServiceParsingTask.class).execute(resource);
+        new CancelableTask<>((new SafePostTask<>(new ServiceParsingTask(this)))).execute(resource);
     }
 
     public List<FoodService> getAvailableServices() {
