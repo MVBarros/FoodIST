@@ -2,12 +2,16 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,6 +50,7 @@ public class AddMenuActivity extends BaseActivity {
     private static final int GALLERY_PIC = 4;
     private static final int CAMERA_PIC = 5;
 
+    private static final String DEBUG_TAG = "NetworkStatusExample";
     private static final String TAG = "TAG_AddMenuActivity";
 
     private String imageFilePath = null;
@@ -78,17 +83,40 @@ public class AddMenuActivity extends BaseActivity {
                 else{
                     Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
                     Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
-                    new UploadMenuTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
 
-                    if(imageFilePath != null){
-                        Photo photo = new Photo(foodService, menuName.getText().toString(), imageFilePath);
-                        new UploadPhotoTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+                    boolean isNetworkOn = this.checkNetworkStatus();
+                    if(isNetworkOn) {
+
+                        new UploadMenuTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
+
+                        if(imageFilePath != null){
+                            Photo photo = new Photo(foodService, menuName.getText().toString(), imageFilePath);
+                            new UploadPhotoTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+                        }
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Mobile device is not online! Please check your connection.", Toast.LENGTH_SHORT).show();
                     }
 
                     Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
                     intent.putExtra(SERVICE_NAME, foodService);
                     startActivity(intent);
                 }
+            }
+
+            private boolean checkNetworkStatus() {
+                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                boolean network_status = false;
+                for (Network network : connMgr.getAllNetworks()) {
+                    NetworkInfo networkInfo = connMgr.getNetworkInfo(network);
+                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        network_status |= networkInfo.isConnected();
+                    }
+                    if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        network_status |= networkInfo.isConnected();
+                    }
+                }
+                return network_status;
             }
         });
 
