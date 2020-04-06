@@ -119,7 +119,6 @@ public class ProfileActivity extends BaseActivity {
 
             }
         }
-        //TODO MAKE TOAST SAYING NO PREMISSIONS
     }
 
     public Intent createCameraIntent() {
@@ -129,7 +128,7 @@ public class ProfileActivity extends BaseActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            //TODO - What to do in case of photo failure?
+            showToast("Invalid Image Provided");
         }
 
         if (photoFile != null) {
@@ -196,7 +195,7 @@ public class ProfileActivity extends BaseActivity {
         String absoluteFilePath = cursor.getString(columnIndex);
         cursor.close();
 
-        ImageView profile = (ImageView) findViewById(photoView);
+        ImageView profile = findViewById(photoView);
         profile.setImageBitmap(BitmapFactory.decodeFile(absoluteFilePath));
 
         //Save path for future reference
@@ -205,7 +204,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
-        ImageView profilePicture = (ImageView) findViewById(photoView);
+        ImageView profilePicture = findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
         profilePicture.setImageBitmap(photo);
@@ -215,7 +214,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
-        ImageView profilePicture = (ImageView) findViewById(photoView);
+        ImageView profilePicture = findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
 
@@ -238,10 +237,6 @@ public class ProfileActivity extends BaseActivity {
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         Log.d(TAG, "Photo Path: " + (imageFilePath != null));
 
-        if(imageFilePath != null){
-            File oldPhoto = new File(imageFilePath);
-            Log.d(TAG, "Delete Photo: " + oldPhoto.delete());
-        }
 
         imageFilePath = image.getAbsolutePath();
         return image;
