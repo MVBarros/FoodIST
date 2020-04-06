@@ -1,7 +1,6 @@
 package foodist.server;
 
 import com.google.protobuf.Empty;
-import foodist.server.common.Utils;
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -12,7 +11,6 @@ import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
-import java.io.File;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,10 +28,8 @@ public class AddMenu_ClientTest {
 		
 	private static final double TEST_PRICE = 1.50;
 	
-	private static final String BASE_DIR = "photos";
 	private static final String TEST_FOODSERVICE = "Testbar";
 	private static final String TEST_MENU = "Chourico";
-	private static final String TEST_PHOTO = "chourico.jpg";
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;

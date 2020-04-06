@@ -1,11 +1,9 @@
 package foodist.server;
 
-import foodist.server.common.Utils;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
-import java.io.File;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -25,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class ListMenu_ClientTest { 
 	
-	private static final String BASE_DIR = "photos";
 	private static final String TEST_FOODSERVICE = "Testbar";
   
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    

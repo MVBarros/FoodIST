@@ -1,13 +1,9 @@
 package foodist.server;
 
-import foodist.server.common.Utils;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.DownloadPhotoRequest;
-import foodist.server.grpc.contract.Contract.ListMenuReply;
-import foodist.server.grpc.contract.Contract.ListMenuRequest;
-import foodist.server.grpc.contract.Contract.Menu;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
@@ -15,9 +11,6 @@ import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,19 +20,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(JUnit4.class)
-public class DownloadPhoto_ClientTest { 
-		
-	private static final double TEST_PRICE = 1.50;
+public class DownloadPhoto_ClientTest { 	
 	
-	private static final String BASE_DIR = "photos";
-	private static final String TEST_ALTERNATIVE_MENU = "Farinheira";
-	private static final String TEST_ALTERNATIVE_PHOTO = "photos/test/farinheira.png";
 	private static final String TEST_FOODSERVICE = "Testbar";
 	private static final String TEST_MENU = "Chourico";
 	private static final String TEST_PHOTO = "photos/test/chourico.jpg";

@@ -4,31 +4,17 @@ import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.commons.io.FileUtils;
-
-import foodist.server.common.Utils;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
-import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
 
@@ -37,7 +23,6 @@ public class ListMenu_ServerTest {
 		
 	private static final double TEST_PRICE = 1.50;
 	
-	private static final String BASE_DIR = "photos";
 	private static final String TEST_FOODSERVICE = "Testbar";
 	private static final String TEST_MENU = "Chourico";
 	private static final String TEST_ALTERNATIVE_MENU = "Farinheira";

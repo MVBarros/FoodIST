@@ -1,11 +1,5 @@
 package foodist.server;
 
-import foodist.server.common.Utils;
-import foodist.server.grpc.contract.Contract;
-import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
-import foodist.server.grpc.contract.Contract.AddPhotoRequest;
-import foodist.server.grpc.contract.Contract.ListMenuReply;
-import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.service.ServiceImplementation;
 
 import java.awt.image.BufferedImage;
@@ -19,21 +13,12 @@ import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 
-import com.google.protobuf.Empty;
-
-import static org.mockito.AdditionalAnswers.delegatesTo;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -58,18 +43,7 @@ public class AddPhoto_ServerTest {
 	public int originalPhotoSize;
 	
 	@Before
-	public void setUp() throws Exception {   
-		File directory = new File(BASE_DIR);
-		
-		for(String filename : directory.list()) {
-			if(filename.equals("test")) {
-				continue;
-			}
-			else {
-				Utils.deleteMenuDirectories(new File(BASE_DIR + "/" + filename), 0);
-			}
-		}	
-		
+	public void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
 
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
