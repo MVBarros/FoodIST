@@ -13,14 +13,13 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	
-	private HashMap<String, List<Menu>> menusHashMap = new HashMap<String, List<Menu>>();
+	private HashMap<String, HashSet<Menu>> menusHashMap = new HashMap<String, HashSet<Menu>>();
 	
 	public static FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub foodISTServerServiceGrpcStub;
 	
@@ -34,16 +33,16 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	    Menu menu = menuBuilder.build();
 	        
 	    System.out.println(request.getName() + ":" + request.getPrice());
-	    List<Menu> menuList = this.menusHashMap.get(foodService);
+	    HashSet<Menu> menuSet = this.menusHashMap.get(foodService);
 	      
-	    if(menuList!=null) {
-	    	menuList.add(menu);
-	    	this.menusHashMap.put(foodService, menuList);         
+	    if(menuSet!=null) {
+	    	menuSet.add(menu);
+	    	this.menusHashMap.put(foodService, menuSet);         
 	    } 
 	    else {
-	    	List<Menu> new_MenuList = new ArrayList<Menu>();
-	    	new_MenuList.add(menu);
-	    	this.menusHashMap.put(foodService, new_MenuList);         
+	    	HashSet<Menu> new_MenuSet = new HashSet<Menu>();
+	    	new_MenuSet.add(menu);
+	    	this.menusHashMap.put(foodService, new_MenuSet);         
 	    } 
 	      
 	    responseObserver.onNext(null);
@@ -54,7 +53,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
 		String foodService = request.getFoodService();                
 
-		List<Menu> menuList = menusHashMap.get(foodService);
+		HashSet<Menu> menuList = menusHashMap.get(foodService);
 		    
 		ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
 		    
