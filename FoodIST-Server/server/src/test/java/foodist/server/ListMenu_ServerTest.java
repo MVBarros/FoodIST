@@ -116,4 +116,15 @@ public class ListMenu_ServerTest {
 	  	
   	}
 	
+	@Test
+  	public void listMenu_AvoidDuplicateMenus() {
+		client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
+		ListMenuReply lmReply = client.listMenu(TEST_FOODSERVICE);
+		String listedMenus = "";
+		for(Menu m : lmReply.getMenusList()) {
+			listedMenus += m.getName();
+		}
+		assertEquals(TEST_MENU, listedMenus);
+  	}
+	
 }
