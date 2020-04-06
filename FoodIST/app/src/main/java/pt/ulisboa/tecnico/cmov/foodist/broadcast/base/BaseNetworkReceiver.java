@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.broadcast;
+package pt.ulisboa.tecnico.cmov.foodist.broadcast.base;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,23 +8,29 @@ import android.net.NetworkInfo;
 
 public abstract class BaseNetworkReceiver extends BroadcastReceiver {
     private boolean wasNetworkAvailable = true;
+    public boolean isFirst = true;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        boolean isNetworkAvaliable = isNetworkAvailable(context);
-        if (isNetworkAvaliable != wasNetworkAvailable) {
-            if (isNetworkAvaliable) {
-                onNetworkUp(context, intent);
+        if (isFirst) {
+            isFirst = false;
+            wasNetworkAvailable = isNetworkAvailable(context);
+        } else {
+            boolean isNetworkAvaliable = isNetworkAvailable(context);
+            if (isNetworkAvaliable != wasNetworkAvailable) {
+                if (isNetworkAvaliable) {
+                    onNetworkUp(context, intent);
+                } else {
+                    onNetworkDown(context, intent);
+                }
             }
-            else {
-                onNetworkDown(context, intent);
-            }
+            wasNetworkAvailable = isNetworkAvaliable;
         }
-        wasNetworkAvailable = isNetworkAvaliable;
     }
 
-    abstract void onNetworkUp(Context context, Intent intent);
-    abstract void onNetworkDown(Context context, Intent intent);
+    protected abstract void onNetworkUp(Context context, Intent intent);
+
+    protected abstract void onNetworkDown(Context context, Intent intent);
 
     public boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager

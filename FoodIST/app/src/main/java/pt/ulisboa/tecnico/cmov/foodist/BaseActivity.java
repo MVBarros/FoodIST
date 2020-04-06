@@ -63,6 +63,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         receivers.add(receiver);
     }
 
+    public void addReceivers() {}
+
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -71,6 +73,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cancelTasks();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         cancelReceivers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        addReceivers();
     }
 }

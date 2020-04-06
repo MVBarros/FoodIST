@@ -1,11 +1,15 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 
 public class FoodServiceActivity extends BaseActivity {
 
@@ -22,8 +26,12 @@ public class FoodServiceActivity extends BaseActivity {
         setFoodServiceName();
         setQueueTime();
         setButtons();
+        setReceivers();
     }
 
+    private void setReceivers() {
+        addReceiver(new ServiceNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    }
     private void setQueueTime() {
         TextView queueTime = findViewById(R.id.queueTime);
 
@@ -63,7 +71,7 @@ public class FoodServiceActivity extends BaseActivity {
         updateMenus();
     }
 
-    private void updateMenus() {
+    public void updateMenus() {
         if (isNetworkAvailable()) {
             new GetMenusTask(this).execute(this.foodServiceName);
         } else {

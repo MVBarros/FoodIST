@@ -31,7 +31,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainActivityBroadcastReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
@@ -61,7 +61,6 @@ public class MainActivity extends BaseActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         setButtons();
         setCurrentCampus();
-        setReceivers();
     }
 
     @Override
@@ -81,8 +80,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void setReceivers() {
-        addReceiver(new MainActivityBroadcastReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    public void addReceivers() {
+        addReceiver(new MainNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
     private void updateFirstBoot() {
