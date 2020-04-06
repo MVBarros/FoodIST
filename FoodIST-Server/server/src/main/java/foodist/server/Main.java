@@ -4,6 +4,7 @@ import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import foodist.server.service.ServiceImplementation;
+import foodist.server.thread.Cleanup;
 
 import java.io.IOException;
 
@@ -21,6 +22,9 @@ public class Main {
 
         System.out.println("Server Starting");
         server.start();
+        
+        System.out.println("Starting memory cleaning thread");
+        new Thread(new Cleanup()).start();
         
         System.out.println("Server Started at port " + port);
         server.awaitTermination();
