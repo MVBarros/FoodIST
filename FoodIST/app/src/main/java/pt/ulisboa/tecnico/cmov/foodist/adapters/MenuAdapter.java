@@ -20,6 +20,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
     public static final String MENU_NAME = "Menu_name";
     public static final String MENU_PRICE = "Menu_price";
     public static final String MENU_SERVICE = "Menu_service";
+    public static final String PHOTO_LIST = "Menu_photo_list";
 
     public MenuAdapter(Context context, ArrayList<Menu> menus){
         super(context, 0, menus);
@@ -47,6 +48,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
                intent.putExtra(MENU_NAME, menu.getMenuName());
                intent.putExtra(MENU_PRICE, menu.getPrice());
                intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
+               intent.putExtra(PHOTO_LIST, menu.getPhotoID());
                getContext().startActivity(intent);
 
             }

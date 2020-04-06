@@ -29,7 +29,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import pt.ulisboa.tecnico.cmov.foodist.async.DownloadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -39,6 +42,7 @@ public class FoodMenuActivity extends BaseActivity {
     public static final String MENU_NAME = "Menu_name";
     public static final String MENU_PRICE = "Menu_price";
     public static final String MENU_SERVICE = "Menu_service";
+    public static final String PHOTO_LIST = "Menu_photo_list";
 
     //Camera/Gallery tags
     private static final int PICK_FROM_GALLERY = 1;
@@ -62,7 +66,11 @@ public class FoodMenuActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
 
+
+
         intentInitialization(getIntent());
+        //Photo photo = new Photo(this.foodService, this.menuName, null, 0);
+        //new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
 
         Button addPhoto = findViewById(R.id.add_photo_button);
 
@@ -79,6 +87,16 @@ public class FoodMenuActivity extends BaseActivity {
         initializeMenuName(intent.getStringExtra(MENU_NAME));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeFoodService(intent.getStringExtra(MENU_SERVICE));
+        initializePhotoIDs(intent.getStringArrayExtra(PHOTO_LIST));
+    }
+
+    private void initializePhotoIDs(String[] photoIDs){
+        if(numPhotos == -1){
+            Log.d(TAG, "Unable to obtain number of photos");
+        }
+        else{
+            this.numPhotos = numPhotos;
+        }
     }
 
     private void initializeNumPhotos(int numPhotos){
