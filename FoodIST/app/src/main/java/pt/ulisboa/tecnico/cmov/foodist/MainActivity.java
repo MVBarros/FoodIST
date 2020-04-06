@@ -72,7 +72,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-
         super.onResume();
         if (!isFreshBoot) {
             drawServices();
@@ -201,8 +200,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void drawService(FoodService service) {
-        try {
-            if (this.isFoodServiceAvailable(service)) {
                 LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.food_service, null);
 
@@ -226,10 +223,7 @@ public class MainActivity extends BaseActivity {
 
                 ViewGroup foodServiceList = findViewById(R.id.foodServices);
                 foodServiceList.addView(v);
-            }
-        } catch(ParseException pe) {
-            Log.e(TAG, "Unable to parse hours for Food Service: \"" + service.getHours() + "\".");
-        }
+
     }
 
     public void drawServices() {
@@ -261,60 +255,7 @@ public class MainActivity extends BaseActivity {
 
         return getGlobalStatus().getServices().stream()
                 .filter(service -> !service.getRestrictions().contains(position))
+                .filter(FoodService::isFoodServiceAvailable)
                 .collect(Collectors.toList());
-    }
-
-    private boolean isFoodServiceAvailable(FoodService service) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
-
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
-
-        calendar.setTime(currentDate);
-
-        String currentHours = dateFormat.format(currentDate);
-        String currentWeekday = this.weekdayIntToString(calendar.get(Calendar.DAY_OF_WEEK));
-
-        String functioningHours = service.getHours().get(currentWeekday);
-
-        if(!functioningHours.equals("closed")) {
-            return this.isTimeInRange(currentHours, functioningHours.split("-"));
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    private String weekdayIntToString(int weekday) {
-        switch(weekday) {
-            case 1:
-                return "sunday";
-            case 2:
-                return "monday";
-            case 3:
-                return "tuesday";
-            case 4:
-                return "wednesday";
-            case 5:
-                return "thursday";
-            case 6:
-                return "friday";
-            case 7:
-                return "saturday";
-            default:
-                throw new IndexOutOfBoundsException("A number in the \"1-7\" range must be inserted!");
-        }
-    }
-
-    private boolean isTimeInRange(String currentTime, String[] timeRange) throws ParseException {
-        String lowerLimit = timeRange[0];
-        String upperLimit = timeRange[1];
-
-        Date ctDate = new SimpleDateFormat("hh:mm").parse(currentTime);
-        Date llDate = new SimpleDateFormat("hh:mm").parse(lowerLimit);
-        Date upDate = new SimpleDateFormat("hh:mm").parse(upperLimit);
-
-        return ctDate.after(llDate) && ctDate.before(upDate);
     }
 }
