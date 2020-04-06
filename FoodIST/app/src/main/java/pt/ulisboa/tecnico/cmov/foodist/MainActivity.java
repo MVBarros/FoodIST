@@ -277,7 +277,13 @@ public class MainActivity extends BaseActivity {
 
         String functioningHours = service.getHours().get(currentWeekday);
 
-        return this.isTimeInRange(currentHours, functioningHours.split("-"));
+        if(!functioningHours.equals("closed")) {
+            return this.isTimeInRange(currentHours, functioningHours.split("-"));
+        }
+        else {
+            return false;
+        }
+
     }
 
     private String weekdayIntToString(int weekday) {

@@ -7,11 +7,13 @@
       "latitude": 38.736550,
       "longitude": -9.302204,
       "hours": {
-        "monday": "09:00-18:00",
-        "tuesday": "09:00-18:00",
-        "wednesday": "09:00-18:00",
-        "thursday": "09:00-18:00",
-        "sunday": "09:00-18:00"
+        "monday": "09:00-22:00",
+        "tuesday": "09:00-22:00",
+        "wednesday": "09:00-22:00",
+        "thursday": "09:00-22:00",
+        "friday": "09:00-22:00",
+        "saturday": "09:00-22:00",
+        "sunday": "closed"
       },
       "restrictions": []
     },
@@ -26,7 +28,9 @@
         "tuesday": "09:00-18:00",
         "wednesday": "09:00-18:00",
         "thursday": "09:00-18:00",
-        "sunday": "09:00-18:00"
+        "friday": "09:00-18:00",
+        "saturday": "closed",
+        "sunday": "closed"
       },
       "restrictions": []
     },
@@ -41,6 +45,8 @@
         "tuesday": "09:00-18:00",
         "wednesday": "09:00-18:00",
         "thursday": "09:00-18:00",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "09:00-18:00"
       },
       "restrictions": ["Staff", "Visitor"]
@@ -56,6 +62,8 @@
         "tuesday": "00:00-23:59",
         "wednesday": "00:00-23:59",
         "thursday": "00:00-23:59",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "00:00-23:59"
       },
       "restrictions": []
@@ -73,6 +81,8 @@
         "tuesday": "09:00-18:00",
         "wednesday": "09:00-18:00",
         "thursday": "09:00-18:00",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "09:00-18:00"
       },
       "restrictions": ["Staff", "Visitor"]
@@ -89,6 +99,8 @@
         "tuesday": "09:00-18:00",
         "wednesday": "09:00-18:00",
         "thursday": "09:00-18:00",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "09:00-18:00"
       },
       "restrictions": []
@@ -104,6 +116,8 @@
         "tuesday": "09:00-18:00",
         "wednesday": "09:00-18:00",
         "thursday": "09:00-18:00",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "09:00-18:00"
       },
       "restrictions": ["Staff", "Visitor"]
@@ -119,6 +133,8 @@
         "tuesday": "00:00-23:59",
         "wednesday": "00:00-23:59",
         "thursday": "00:00-23:59",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "00:00-23:59"
       },
       "restrictions": []
@@ -134,6 +150,8 @@
         "tuesday": "09:00-18:00",
         "wednesday": "09:00-18:00",
         "thursday": "09:00-18:00",
+        "friday": "closed",
+        "saturday": "closed",
         "sunday": "09:00-18:00"
       },
       "restrictions": []
