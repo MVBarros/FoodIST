@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
@@ -235,6 +236,12 @@ public class ProfileActivity extends BaseActivity {
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        Log.d(TAG, "Photo Path: " + (imageFilePath != null));
+
+        if(imageFilePath != null){
+            File oldPhoto = new File(imageFilePath);
+            Log.d(TAG, "Delete Photo: " + oldPhoto.delete());
+        }
 
         imageFilePath = image.getAbsolutePath();
         return image;
@@ -246,10 +253,10 @@ public class ProfileActivity extends BaseActivity {
         ImageView profilePicture = findViewById(R.id.profilePicture);
         TextView user = findViewById(R.id.username);
 
-        String profilePicturePath = pref.getString(getString(R.string.user_photo), null);
+        this.imageFilePath = pref.getString(getString(R.string.user_photo), null);
 
-        if (profilePicturePath != null) {
-            Bitmap photo = BitmapFactory.decodeFile(profilePicturePath);
+        if (this.imageFilePath != null) {
+            Bitmap photo = BitmapFactory.decodeFile(this.imageFilePath);
             profilePicture.setImageBitmap(photo);
         }
 
