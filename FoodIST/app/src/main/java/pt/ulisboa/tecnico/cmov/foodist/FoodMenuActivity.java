@@ -170,16 +170,20 @@ public class FoodMenuActivity extends BaseActivity {
     /**********************/
 
     private void nextPhoto(){
-        numPhoto = ++numPhoto % this.photoIDs.length;
-        Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-        new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+        if(photoIDs.length > 0) {
+            numPhoto = ++numPhoto % this.photoIDs.length;
+            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
+            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+        }
     }
 
     private void previousPhoto(){
-        numPhoto = --numPhoto == -1 ? this.photoIDs.length-1 : numPhoto;
+        if(photoIDs.length > 0) {
+            numPhoto = --numPhoto == -1 ? this.photoIDs.length-1 : numPhoto;
+            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
+            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+        }
 
-        Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-        new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
     }
 
     /**********************/
