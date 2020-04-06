@@ -67,6 +67,12 @@ public class FoodServiceActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateMenus();
+    }
+
     public void updateMenus() {
         if (isNetworkAvailable()) {
             new GetMenusTask(this).execute(this.foodServiceName);
