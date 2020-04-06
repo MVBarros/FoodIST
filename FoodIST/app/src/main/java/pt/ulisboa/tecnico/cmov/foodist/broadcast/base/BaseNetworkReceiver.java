@@ -5,10 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import java.util.HashMap;
 
 public abstract class BaseNetworkReceiver extends BroadcastReceiver {
     private boolean wasNetworkAvailable = true;
     public boolean isFirst = true;
+
+    HashMap<Button, OnClickListener> whenUp = new HashMap<>();
+    HashMap<Button, OnClickListener> whenDown = new HashMap<>();
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -20,12 +28,27 @@ public abstract class BaseNetworkReceiver extends BroadcastReceiver {
             if (isNetworkAvaliable != wasNetworkAvailable) {
                 if (isNetworkAvaliable) {
                     onNetworkUp(context, intent);
+                    updateButtonsUp();
                 } else {
                     onNetworkDown(context, intent);
+                    updateButtonsDown();
                 }
             }
             wasNetworkAvailable = isNetworkAvaliable;
         }
+    }
+
+    final void updateButtonsUp() {
+        whenUp.keySet().forEach(button -> {
+            button.setOnClickListener(whenUp.get(button));
+        });
+    }
+
+
+    final void updateButtonsDown() {
+        whenDown.keySet().forEach(button -> {
+            button.setOnClickListener(whenDown.get(button));
+        });
     }
 
     protected abstract void onNetworkUp(Context context, Intent intent);

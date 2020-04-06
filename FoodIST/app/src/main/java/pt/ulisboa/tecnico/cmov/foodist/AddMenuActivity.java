@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -32,8 +31,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadMenuTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
@@ -77,25 +74,22 @@ public class AddMenuActivity extends BaseActivity {
                 Intent oldIntent = getIntent();
                 String foodService = oldIntent.getStringExtra(SERVICE_NAME);
 
-                if(menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)){
-                    Toast.makeText(getApplicationContext(), "Give the menu a name and a cost!", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
+                    showToast("Give the menu a name and a cost!");
+                } else {
                     Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
                     Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
 
-                    boolean isNetworkOn = this.checkNetworkStatus();
-                    if(isNetworkOn) {
+                    if (isNetworkAvailable()) {
 
-                        new UploadMenuTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
+                        new UploadMenuTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
 
-                        if(imageFilePath != null){
+                        if (imageFilePath != null) {
                             Photo photo = new Photo(foodService, menuName.getText().toString(), imageFilePath);
-                            new UploadPhotoTask(((GlobalStatus)AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+                            new UploadPhotoTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
                         }
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Mobile device is not online! Please check your connection.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        showToast("Mobile device is not online! Please check your connection.");
                     }
 
                     Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
