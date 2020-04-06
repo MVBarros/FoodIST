@@ -50,11 +50,13 @@ public abstract class BaseNetworkReceiver extends BroadcastReceiver {
 
     final void updateButtonsUp() {
         buttons.forEach(button -> button.setClickable(true));
+        buttons.forEach(button -> button.setAlpha(1f));
     }
 
 
     final void updateButtonsDown() {
         buttons.forEach(button -> button.setClickable(false));
+        buttons.forEach(button -> button.setAlpha(.5f));
     }
 
     protected abstract void onNetworkUp(Context context, Intent intent);
