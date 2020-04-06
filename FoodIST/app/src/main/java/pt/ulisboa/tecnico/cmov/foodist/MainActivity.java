@@ -55,14 +55,14 @@ public class MainActivity extends BaseActivity {
     private static final String DISTANCE = "Distance";
     private static final String QUEUE_TIME = "Queue time";
 
-
     private boolean isFreshBoot;
+    private boolean isOnCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        isOnCreate = true;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         updateFirstBoot();
         setButtons();
@@ -74,11 +74,14 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (!isFreshBoot) {
-            drawServices();
-            updateServicesWalkingDistance();
+            if (!isOnCreate) {
+                drawServices();
+                updateServicesWalkingDistance();
+            }
         } else {
             updateFirstBoot();
         }
+        isOnCreate = false;
     }
 
     @Override
