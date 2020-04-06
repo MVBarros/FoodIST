@@ -8,6 +8,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,12 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -196,30 +201,35 @@ public class MainActivity extends BaseActivity {
     }
 
     private void drawService(FoodService service) {
+        try {
+            if (this.isFoodServiceAvailable(service)) {
+                LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.food_service, null);
 
-        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = vi.inflate(R.layout.food_service, null);
+                TextView name = v.findViewById(R.id.foodServiceName);
+                name.setText(service.getName());
 
-        TextView name = v.findViewById(R.id.foodServiceName);
-        name.setText(service.getName());
+                TextView distance = v.findViewById(R.id.distance);
+                distance.setText(String.format("Walking Time: %s", service.getDistance()));
 
-        TextView distance = v.findViewById(R.id.distance);
-        distance.setText(String.format("Walking Time: %s", service.getDistance()));
+                TextView queue = v.findViewById(R.id.queueTime);
+                queue.setText(String.format("Queue Time: %s", service.getTime()));
 
-        TextView queue = v.findViewById(R.id.queueTime);
-        queue.setText(String.format("Queue Time: %s", service.getTime()));
+                v.setOnClickListener(v1 -> {
+                    Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+                    TextView name1 = v1.findViewById(R.id.foodServiceName);
+                    intent.putExtra(SERVICE_NAME, name1.getText());
+                    intent.putExtra(DISTANCE, service.getDistance());
+                    intent.putExtra(QUEUE_TIME, service.getTime());
+                    startActivity(intent);
+                });
 
-        v.setOnClickListener(v1 -> {
-            Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-            TextView name1 = v1.findViewById(R.id.foodServiceName);
-            intent.putExtra(SERVICE_NAME, name1.getText());
-            intent.putExtra(DISTANCE, service.getDistance());
-            intent.putExtra(QUEUE_TIME, service.getTime());
-            startActivity(intent);
-        });
-
-        ViewGroup foodServiceList = findViewById(R.id.foodServices);
-        foodServiceList.addView(v);
+                ViewGroup foodServiceList = findViewById(R.id.foodServices);
+                foodServiceList.addView(v);
+            }
+        } catch(ParseException pe) {
+            Log.e(TAG, "Unable to parse hours for Food Service: \"" + service.getHours() + "\".");
+        }
     }
 
     public void drawServices() {
@@ -252,5 +262,53 @@ public class MainActivity extends BaseActivity {
         return getGlobalStatus().getServices().stream()
                 .filter(service -> !service.getRestrictions().contains(position))
                 .collect(Collectors.toList());
+    }
+
+    private boolean isFoodServiceAvailable(FoodService service) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+
+        calendar.setTime(currentDate);
+
+        String currentHours = dateFormat.format(currentDate);
+        String currentWeekday = this.weekdayIntToString(calendar.get(Calendar.DAY_OF_WEEK));
+
+        String functioningHours = service.getHours().get(currentWeekday);
+
+        return this.isTimeInRange(currentHours, functioningHours.split("-"));
+    }
+
+    private String weekdayIntToString(int weekday) {
+        switch(weekday) {
+            case 1:
+                return "sunday";
+            case 2:
+                return "monday";
+            case 3:
+                return "tuesday";
+            case 4:
+                return "wednesday";
+            case 5:
+                return "thursday";
+            case 6:
+                return "friday";
+            case 7:
+                return "saturday";
+            default:
+                throw new IndexOutOfBoundsException("A number in the \"1-7\" range must be inserted!");
+        }
+    }
+
+    private boolean isTimeInRange(String currentTime, String[] timeRange) throws ParseException {
+        String lowerLimit = timeRange[0];
+        String upperLimit = timeRange[1];
+
+        Date ctDate = new SimpleDateFormat("hh:mm").parse(currentTime);
+        Date llDate = new SimpleDateFormat("hh:mm").parse(lowerLimit);
+        Date upDate = new SimpleDateFormat("hh:mm").parse(upperLimit);
+
+        return ctDate.after(llDate) && ctDate.before(upDate);
     }
 }
