@@ -8,7 +8,6 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,8 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,11 +68,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isFreshBoot) {
-            if (!isOnCreate) {
-                drawServices();
-                updateServicesWalkingDistance();
-            }
+        if (!isOnCreate) {
+            drawServices();
+            updateServicesWalkingDistance();
         } else {
             updateFirstBoot();
         }
@@ -203,29 +196,29 @@ public class MainActivity extends BaseActivity {
     }
 
     private void drawService(FoodService service) {
-                LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View v = vi.inflate(R.layout.food_service, null);
+        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = vi.inflate(R.layout.food_service, null);
 
-                TextView name = v.findViewById(R.id.foodServiceName);
-                name.setText(service.getName());
+        TextView name = v.findViewById(R.id.foodServiceName);
+        name.setText(service.getName());
 
-                TextView distance = v.findViewById(R.id.distance);
-                distance.setText(String.format("Walking Time: %s", service.getDistance()));
+        TextView distance = v.findViewById(R.id.distance);
+        distance.setText(String.format("Walking Time: %s", service.getDistance()));
 
-                TextView queue = v.findViewById(R.id.queueTime);
-                queue.setText(String.format("Queue Time: %s", service.getTime()));
+        TextView queue = v.findViewById(R.id.queueTime);
+        queue.setText(String.format("Queue Time: %s", service.getTime()));
 
-                v.setOnClickListener(v1 -> {
-                    Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-                    TextView name1 = v1.findViewById(R.id.foodServiceName);
-                    intent.putExtra(SERVICE_NAME, name1.getText());
-                    intent.putExtra(DISTANCE, service.getDistance());
-                    intent.putExtra(QUEUE_TIME, service.getTime());
-                    startActivity(intent);
-                });
+        v.setOnClickListener(v1 -> {
+            Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
+            TextView name1 = v1.findViewById(R.id.foodServiceName);
+            intent.putExtra(SERVICE_NAME, name1.getText());
+            intent.putExtra(DISTANCE, service.getDistance());
+            intent.putExtra(QUEUE_TIME, service.getTime());
+            startActivity(intent);
+        });
 
-                ViewGroup foodServiceList = findViewById(R.id.foodServices);
-                foodServiceList.addView(v);
+        ViewGroup foodServiceList = findViewById(R.id.foodServices);
+        foodServiceList.addView(v);
 
     }
 
