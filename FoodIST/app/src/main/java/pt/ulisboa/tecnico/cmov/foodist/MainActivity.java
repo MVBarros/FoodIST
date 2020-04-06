@@ -144,6 +144,8 @@ public class MainActivity extends BaseActivity {
                         WalkingTimeData data = new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services);
                         launchWalkingTimeTask(data);
                     });
+        } else {
+            showToast("Could not get services walking distance");
         }
     }
 
