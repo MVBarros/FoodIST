@@ -1,14 +1,20 @@
 package foodist.server.data;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import com.google.protobuf.ByteString;
 
 import foodist.server.grpc.contract.Contract.Menu;
 
@@ -64,4 +70,73 @@ public class Storage {
 		System.out.println("Sucess!");
 	}
 	
+	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
+		
+		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+		createPhotoDir(foodServicePath);
+	    String photoPath = foodServicePath + UUID.randomUUID().toString() + "." + photoName.split("\\.")[1];
+	    try{
+	        FileOutputStream out=new FileOutputStream(photoPath);	        
+	        out.write(photoByteString.toByteArray());
+	        out.close(); 
+	    }
+	    catch (IOException ioe){
+	        System.out.println("Error! Could not write file: \"" + photoPath + "\".");
+	    }
+	}
+	
+	public synchronized static Menu fetchMenuPhotos(String foodServiceName, String menuName, double menu_price) {
+		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+		
+		File directory = new File(foodServicePath);
+		
+		Menu.Builder menuBuilder = Menu.newBuilder();
+		menuBuilder.setName(menuName);
+		menuBuilder.setPrice(menu_price);
+				
+	    if (directory.exists()){
+	    	    
+	        for(String filename : directory.list()) {
+	        	menuBuilder.addPhotoId(filename);	        	
+	        }	        
+	    }	
+	    
+	    return menuBuilder.build();
+	}
+	
+	public synchronized static byte[] fetchPhotoBytes(String photoId, String foodServiceName, String menuName) {
+		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+		
+		File file = new File(foodServicePath + photoId);		
+		
+		if (file.exists()){
+			try {
+				InputStream inputStream = FileUtils.openInputStream(file);
+		    	byte[] bytes = IOUtils.toByteArray(inputStream);
+		    	return bytes;
+			} catch(IOException ioe) {
+				System.out.println(ioe.getMessage());
+			}						
+	    }			
+		return null;
+	}	
+	
+	public synchronized static void createPhotoDir(String photoPath) {			
+		File directory = new File(photoPath);
+	    if (!directory.exists()){
+	        directory.mkdirs();	        
+	    }	
+	}
+	
+	public synchronized static String getFileFromPath(String path) {
+		String[] split_path = path.split("/");
+		int position = split_path.length - 1;
+		return split_path[position];
+	}
+	
+	private synchronized static String getFoodServiceDir(String foodServiceName, String menuName) {
+		StringBuilder buildPath = new StringBuilder();		
+		buildPath.append(BASE_DIR).append("/").append(foodServiceName).append("/").append(menuName).append("/");
+		return buildPath.toString();
+	}			
 }

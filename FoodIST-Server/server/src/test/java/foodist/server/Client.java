@@ -3,7 +3,7 @@ package foodist.server;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 
-import foodist.server.common.Utils;
+import foodist.server.data.Storage;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
@@ -110,9 +110,9 @@ class Client {
             	addPhotoRequestBuilder.setMenuName(menuName);
             	addPhotoRequestBuilder.setSequenceNumber(sequence);
             	addPhotoRequestBuilder.setFoodService(foodService);
-            	addPhotoRequestBuilder.setPhotoName(Utils.getFileFromPath(photoPath));
+            	addPhotoRequestBuilder.setPhotoName(Storage.getFileFromPath(photoPath));
             	
-            	Utils.getFileFromPath(photoPath);
+            	Storage.getFileFromPath(photoPath);
             	
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;
@@ -160,7 +160,7 @@ class Client {
 	
 	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
 		String photoDirectory = CLIENT_FOLDER + foodServiceName + "/" + menuName + "/";
-		Utils.createPhotoDir(photoDirectory);
+		Storage.createPhotoDir(photoDirectory);
 		return photoDirectory + photoName;
 	}
 	

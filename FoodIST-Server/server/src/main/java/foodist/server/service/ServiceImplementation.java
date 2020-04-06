@@ -3,7 +3,6 @@ package foodist.server.service;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 
-import foodist.server.common.Utils;
 import foodist.server.data.Storage;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
@@ -47,7 +46,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 		ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
 		    
 		for(Menu m : menuList) {			
-			Menu menu = Utils.fetchMenuPhotos(foodService, m.getName(), m.getPrice());
+			Menu menu = Storage.fetchMenuPhotos(foodService, m.getName(), m.getPrice());
 			listMenuReplyBuilder.addMenus(menu);        	
 		}
 		    
@@ -99,7 +98,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     		public void onCompleted() {
     			try {
     				responseObserver.onNext(Empty.newBuilder().build());    
-    				Utils.addPhotoToMenu(photoName, foodService, menuName, photoByteString);
+    				Storage.addPhotoToMenu(photoName, foodService, menuName, photoByteString);
     				responseObserver.onCompleted();
     			} catch (StatusRuntimeException e) {
     				throw new IllegalArgumentException(e.getMessage());
@@ -116,7 +115,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
            
         int sequence = 0;
         
-        byte[] photo = Utils.fetchPhotoBytes(photoId, foodService, menuName);
+        byte[] photo = Storage.fetchPhotoBytes(photoId, foodService, menuName);
         //Send file 1MB chunk at a time
         for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
             int chunkSize = Math.min(1024 * 1024, photo.length - i);
