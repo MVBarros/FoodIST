@@ -40,18 +40,15 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
         menuFood.setText(menu.getMenuName());
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Intent intent = new Intent(getContext(), FoodMenuActivity.class);
-               //intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
-               intent.putExtra(MENU_NAME, menu.getMenuName());
-               intent.putExtra(MENU_PRICE, menu.getPrice());
-               intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
-               intent.putExtra(PHOTO_LIST, menu.getPhotoID());
-               getContext().startActivity(intent);
+        convertView.setOnClickListener(v -> {
+           Intent intent = new Intent(getContext(), FoodMenuActivity.class);
+           //intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
+           intent.putExtra(MENU_NAME, menu.getMenuName());
+           intent.putExtra(MENU_PRICE, menu.getPrice());
+           intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
+           intent.putExtra(PHOTO_LIST, menu.getPhotoID());
+           getContext().startActivity(intent);
 
-            }
         });
         return convertView;
     }

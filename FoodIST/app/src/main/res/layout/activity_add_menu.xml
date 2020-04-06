@@ -18,6 +18,7 @@
             android:layout_weight="2"
             android:text=""
             android:textSize="30sp"
+            android:maxLength="60"
             android:hint="@string/dish_name" />
 
         <EditText
@@ -29,6 +30,7 @@
             android:textSize="30sp"
             android:text=""
             android:inputType="numberDecimal"
+            android:maxLength="5"
             />
 
         <ImageView

@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Collections;
-import java.util.Set;
-
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 
@@ -30,10 +27,14 @@ public class FoodServiceActivity extends BaseActivity {
         setButtons();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateMenus();
+    }
 
     public void addReceivers() {
-        Set<Button> buttons = Collections.singleton(findViewById(R.id.add_menu_button));
-        addReceiver(new ServiceNetworkReceiver(buttons), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        addReceiver(new ServiceNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
     private void setQueueTime() {
@@ -55,7 +56,6 @@ public class FoodServiceActivity extends BaseActivity {
 
             startActivity(intent);
         });
-
     }
 
     private void setFoodServiceName() {
@@ -66,13 +66,6 @@ public class FoodServiceActivity extends BaseActivity {
         foodServiceName.setText(foodService);
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateMenus();
-    }
-
     public void updateMenus() {
         if (isNetworkAvailable()) {
             new GetMenusTask(this).execute(this.foodServiceName);
@@ -80,7 +73,5 @@ public class FoodServiceActivity extends BaseActivity {
             showToast("No internet connection: Cannot get menus");
         }
     }
-
-
 }
 

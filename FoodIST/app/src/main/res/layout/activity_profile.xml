@@ -31,6 +31,7 @@
             android:layout_marginRight="30dp"
             android:layout_height="50dp"
             android:hint="@string/username"
+            android:maxLength="60"
             android:autofillHints="" />
 
         <RadioGroup

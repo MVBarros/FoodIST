@@ -76,31 +76,23 @@ public class FoodMenuActivity extends BaseActivity {
         else{
             Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
         }
+        setButtons();
+    }
+
+    protected void setButtons() {
 
         Button previousPhoto = findViewById(R.id.previousPhoto);
-
-        previousPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previousPhoto();
-            }
-        });
+        previousPhoto.setOnClickListener(v -> previousPhoto());
 
         Button nextPhoto = findViewById(R.id.nextPhoto);
-
-        nextPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextPhoto();
-            }
-        });
+        nextPhoto.setOnClickListener(v -> nextPhoto());
 
         Button addPhoto = findViewById(R.id.add_photo_button);
-
-        addPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addPhoto.setOnClickListener(v -> {
+            if (isNetworkAvailable()) {
                 askGalleryPermission();
+            } else {
+                showToast("Cannot upload photo without internet");
             }
         });
     }
@@ -229,7 +221,6 @@ public class FoodMenuActivity extends BaseActivity {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
                 startActivityForResult(createCameraIntent(), CAMERA_PIC);
-
             }
         }
     }
@@ -241,7 +232,7 @@ public class FoodMenuActivity extends BaseActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            //TODO - What to do in case of photo failure?
+            showToast("Could not get image provided");
         }
 
         if (photoFile != null) {
@@ -309,8 +300,7 @@ public class FoodMenuActivity extends BaseActivity {
         cursor.close();
 
         Photo photo = new Photo(this.foodService, this.menuName, absoluteFilePath);
-        new UploadPhotoTask(((GlobalStatus)FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
-
+        launchUploadPhotoTask(photo);
         //Save path for future reference
         //TODO - add directly to cache
         /*
@@ -321,13 +311,21 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
-        new UploadPhotoTask(((GlobalStatus)FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+        launchUploadPhotoTask(photo);
         //TODO - add directly to cache
         /*
         editor.putString(getString(R.string.user_photo), imageFilePath);
         editor.apply();
 
          */
+    }
+
+    private void launchUploadPhotoTask(Photo photo) {
+        if (isNetworkAvailable()) {
+            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+        } else {
+            showToast("Cannot upload menu photo without network connection");
+        }
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
@@ -337,7 +335,7 @@ public class FoodMenuActivity extends BaseActivity {
             galleryReturn(editor, data);
         } else {
             Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
-            new UploadPhotoTask(((GlobalStatus)FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+            launchUploadPhotoTask(photo);
         }
     }
 
