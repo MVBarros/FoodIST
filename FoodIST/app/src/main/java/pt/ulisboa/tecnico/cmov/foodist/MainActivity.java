@@ -59,7 +59,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         isOnCreate = true;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        updateFirstBoot();
         setButtons();
         setCurrentCampus();
         setReceivers();
@@ -71,8 +70,6 @@ public class MainActivity extends BaseActivity {
         if (!isOnCreate) {
             drawServices();
             updateServicesWalkingDistance();
-        } else {
-            updateFirstBoot();
         }
         isOnCreate = false;
     }
