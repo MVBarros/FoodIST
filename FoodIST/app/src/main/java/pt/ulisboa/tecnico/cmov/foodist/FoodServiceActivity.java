@@ -7,13 +7,15 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Set;
+
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 
 public class FoodServiceActivity extends BaseActivity {
 
-    private String SERVICE_NAME = "Service Name";
+    private static final String SERVICE_NAME = "Service Name";
     private static final String DISTANCE = "Distance";
     private static final String QUEUE_TIME = "Queue time";
     private String foodServiceName;
@@ -30,8 +32,10 @@ public class FoodServiceActivity extends BaseActivity {
     }
 
     private void setReceivers() {
-        addReceiver(new ServiceNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        Set<Button> buttons = Collections.singleton(findViewById(R.id.add_menu_button));
+        addReceiver(new ServiceNetworkReceiver(buttons), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
+
     private void setQueueTime() {
         TextView queueTime = findViewById(R.id.queueTime);
 
@@ -44,13 +48,12 @@ public class FoodServiceActivity extends BaseActivity {
         Button addMenu = findViewById(R.id.add_menu_button);
 
         addMenu.setOnClickListener(v -> {
-            Intent oldIntent = getIntent();
-            String serviceName = oldIntent.getStringExtra("Service Name");
+            String serviceName = getIntent().getStringExtra("Service Name");
 
-            Intent intent1 = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
-            intent1.putExtra(SERVICE_NAME, serviceName);
+            Intent intent = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
+            intent.putExtra(SERVICE_NAME, serviceName);
 
-            startActivity(intent1);
+            startActivity(intent);
         });
 
     }
@@ -79,4 +82,6 @@ public class FoodServiceActivity extends BaseActivity {
         }
     }
 
+
 }
+

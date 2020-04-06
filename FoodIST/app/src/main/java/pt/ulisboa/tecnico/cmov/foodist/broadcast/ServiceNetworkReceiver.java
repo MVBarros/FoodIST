@@ -3,12 +3,24 @@ package pt.ulisboa.tecnico.cmov.foodist.broadcast;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
+
+import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 
 public class ServiceNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "SERVICE-ACTIVITY-NETWORK-RECEIVER";
+
+
+    public ServiceNetworkReceiver() {
+        super();
+    }
+
+    public ServiceNetworkReceiver(Set<Button> buttons) {
+        super(buttons);
+    }
 
     @Override
     protected void onNetworkUp(Context context, Intent intent) {

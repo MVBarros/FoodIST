@@ -5,50 +5,56 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class BaseNetworkReceiver extends BroadcastReceiver {
     private boolean wasNetworkAvailable = true;
     public boolean isFirst = true;
 
-    HashMap<Button, OnClickListener> whenUp = new HashMap<>();
-    HashMap<Button, OnClickListener> whenDown = new HashMap<>();
+    Set<Button> buttons;
 
+
+    public BaseNetworkReceiver() {
+        this.buttons = new HashSet<>();
+    }
+
+    public BaseNetworkReceiver(Set<Button> buttons) {
+        this.buttons = buttons;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        boolean isNetworkAvailable = isNetworkAvailable(context);
         if (isFirst) {
             isFirst = false;
-            wasNetworkAvailable = isNetworkAvailable(context);
         } else {
-            boolean isNetworkAvaliable = isNetworkAvailable(context);
-            if (isNetworkAvaliable != wasNetworkAvailable) {
-                if (isNetworkAvaliable) {
+            if (isNetworkAvailable != wasNetworkAvailable) {
+                if (isNetworkAvailable) {
                     onNetworkUp(context, intent);
-                    updateButtonsUp();
                 } else {
                     onNetworkDown(context, intent);
-                    updateButtonsDown();
                 }
             }
-            wasNetworkAvailable = isNetworkAvaliable;
         }
+
+        if (isNetworkAvailable) {
+            updateButtonsUp();
+        } else {
+            updateButtonsDown();
+        }
+        wasNetworkAvailable = isNetworkAvailable;
     }
 
     final void updateButtonsUp() {
-        whenUp.keySet().forEach(button -> {
-            button.setOnClickListener(whenUp.get(button));
-        });
+        buttons.forEach(button -> button.setClickable(true));
     }
 
 
     final void updateButtonsDown() {
-        whenDown.keySet().forEach(button -> {
-            button.setOnClickListener(whenDown.get(button));
-        });
+        buttons.forEach(button -> button.setClickable(false));
     }
 
     protected abstract void onNetworkUp(Context context, Intent intent);
