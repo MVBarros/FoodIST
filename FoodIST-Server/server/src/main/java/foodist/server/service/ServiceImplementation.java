@@ -14,12 +14,12 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServic
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	
-	private HashMap<String, HashSet<Menu>> menusHashMap = new HashMap<String, HashSet<Menu>>();
+	private ConcurrentHashMap<String, HashSet<Menu>> menusHashMap = new ConcurrentHashMap<String, HashSet<Menu>>();
 	
 	public static FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub foodISTServerServiceGrpcStub;
 	
