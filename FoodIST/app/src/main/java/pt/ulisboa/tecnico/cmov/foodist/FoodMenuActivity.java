@@ -55,7 +55,7 @@ public class FoodMenuActivity extends BaseActivity {
 
     private String imageFilePath = null;
 
-    private int numPhotos;
+    private int numPhoto = 0;
     private String foodService;
     private String menuName;
     private String[] photoIDs;
@@ -69,15 +69,31 @@ public class FoodMenuActivity extends BaseActivity {
 
         intentInitialization(getIntent());
         if(photoIDs.length > 0){
-            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[0]);
+            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
             new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
         }
 
         else{
             Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
-
         }
 
+        Button previousPhoto = findViewById(R.id.previousPhoto);
+
+        previousPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previousPhoto();
+            }
+        });
+
+        Button nextPhoto = findViewById(R.id.nextPhoto);
+
+        nextPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextPhoto();
+            }
+        });
 
         Button addPhoto = findViewById(R.id.add_photo_button);
 
@@ -90,7 +106,6 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void intentInitialization(Intent intent){
-        initializeNumPhotos(intent.getIntExtra(NUMBER_PHOTOS, -1));
         initializeMenuName(intent.getStringExtra(MENU_NAME));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeFoodService(intent.getStringExtra(MENU_SERVICE));
@@ -106,6 +121,8 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
+    /*
+    //DEPECRATED
     private void initializeNumPhotos(int numPhotos){
         if(numPhotos == -1){
             Log.d(TAG, "Unable to obtain number of photos");
@@ -114,6 +131,8 @@ public class FoodMenuActivity extends BaseActivity {
             this.numPhotos = numPhotos;
         }
     }
+
+     */
 
     private void initializeMenuName(String menuName){
         if(menuName == null){
@@ -146,6 +165,26 @@ public class FoodMenuActivity extends BaseActivity {
             this.foodService = foodService;
         }
     }
+    /**********************/
+    /**  Iterate Photos  **/
+    /**********************/
+
+    private void nextPhoto(){
+        numPhoto = ++numPhoto % this.photoIDs.length;
+        Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+    }
+
+    private void previousPhoto(){
+        numPhoto = --numPhoto == -1 ? this.photoIDs.length-1 : numPhoto;
+
+        Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+    }
+
+    /**********************/
+    /**  Photo Requests  **/
+    /**********************/
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);

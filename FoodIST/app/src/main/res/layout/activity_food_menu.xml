@@ -37,6 +37,26 @@
             android:src="@drawable/ic_launcher_background"
             android:contentDescription="@string/menu_photos" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/previousPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/previous_photo" />
+
+            <Button
+                android:id="@+id/nextPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/next_photo" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/add_photo_button"
             android:layout_width="match_parent"

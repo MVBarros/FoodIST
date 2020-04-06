@@ -19,6 +19,9 @@
     <string name="global_preferences_location">global_preferences</string>
     <string name="campus_taguspark">TagusPark</string>
     <string name="campus_alameda">Alameda</string>
+    <string name="previous_photo">Previous Photo</string>
+    <string name="next_photo">Next Photo</string>
+
     <!-- Profile variables -->
     <string name="profile_file">profile</string>
     <!-- Google Services API Key for Directions API-->

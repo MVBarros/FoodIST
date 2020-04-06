@@ -101,7 +101,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, Foo
 
     private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
         //TODO - Check if path has '/' in the end
-        String photoDirectory = photosPath + foodServiceName + "/" + menuName + "/";
+        String photoDirectory = photosPath + "/Cache/" + foodServiceName + "/" + menuName + "/";
         createPhotoDir(photoDirectory);
         return photoDirectory + photoName;
     }

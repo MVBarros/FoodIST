@@ -16,7 +16,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class MenuAdapter extends ArrayAdapter<Menu> {
-    public static final String NUMBER_PHOTOS = "Number_photos";
+    //public static final String NUMBER_PHOTOS = "Number_photos";
     public static final String MENU_NAME = "Menu_name";
     public static final String MENU_PRICE = "Menu_price";
     public static final String MENU_SERVICE = "Menu_service";
@@ -44,7 +44,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
             @Override
             public void onClick(View v) {
                Intent intent = new Intent(getContext(), FoodMenuActivity.class);
-               intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
+               //intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
                intent.putExtra(MENU_NAME, menu.getMenuName());
                intent.putExtra(MENU_PRICE, menu.getPrice());
                intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
