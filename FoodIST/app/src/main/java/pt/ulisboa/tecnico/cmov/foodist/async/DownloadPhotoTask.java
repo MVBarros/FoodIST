@@ -41,7 +41,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, Foo
         this.stub = activity.getGlobalStatus().getStub();
     }
 
-    private static final String TAG = "GET-MENU-TASK";
+    private static final String TAG = "DOWNLOAD-PHOTOS-TASK";
 
     @Override
     protected String doInBackground(Photo... photoRequest) {
@@ -73,7 +73,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, Foo
                 out.close();
                 return path;
             } catch(IOException ioe) {
-                System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photo.getPhotoID(), photo.getFoodServiceName(), photo.getMenuName()) + "\".");
+                Log.d(TAG, "Error! Could not write file: \"" + assembleClientPhotoPath(photo.getPhotoID(), photo.getFoodServiceName(), photo.getMenuName()) + "\".");
             }
         } catch (StatusRuntimeException e) {
             return null;

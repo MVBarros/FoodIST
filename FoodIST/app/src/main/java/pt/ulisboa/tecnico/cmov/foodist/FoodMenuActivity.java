@@ -58,6 +58,7 @@ public class FoodMenuActivity extends BaseActivity {
     private int numPhotos;
     private String foodService;
     private String menuName;
+    private String[] photoIDs;
 
     private int photoView = R.id.menuPhotos;
 
@@ -66,11 +67,17 @@ public class FoodMenuActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
 
-
-
         intentInitialization(getIntent());
-        //Photo photo = new Photo(this.foodService, this.menuName, null, 0);
-        //new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+        if(photoIDs.length > 0){
+            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[0]);
+            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+        }
+
+        else{
+            Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
+
+        }
+
 
         Button addPhoto = findViewById(R.id.add_photo_button);
 
@@ -91,11 +98,11 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void initializePhotoIDs(String[] photoIDs){
-        if(numPhotos == -1){
-            Log.d(TAG, "Unable to obtain number of photos");
+        if(photoIDs == null){
+            Log.d(TAG, "Unable to obtain IDs");
         }
         else{
-            this.numPhotos = numPhotos;
+            this.photoIDs = photoIDs;
         }
     }
 
