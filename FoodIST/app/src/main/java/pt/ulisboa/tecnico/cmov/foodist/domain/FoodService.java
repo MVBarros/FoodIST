@@ -64,7 +64,7 @@ public class FoodService {
     }
 
     public boolean isFoodServiceAvailable() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM");
 
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
