@@ -29,6 +29,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
+
 public class FoodMenuActivity extends BaseActivity {
     //Intent tags
     public static final String NUMBER_PHOTOS = "Number_photos";
@@ -49,6 +53,7 @@ public class FoodMenuActivity extends BaseActivity {
 
     private int numPhotos;
     private String foodService;
+    private String menuName;
 
     private int photoView = R.id.menuPhotos;
 
@@ -91,6 +96,7 @@ public class FoodMenuActivity extends BaseActivity {
             Toast.makeText(this, "Unable to obtain menu name", Toast.LENGTH_SHORT).show();
         }
         else{
+            this.menuName = menuName;
             TextView menuNameText = findViewById(R.id.menuName);
             menuNameText.setText(menuName);
         }
@@ -234,36 +240,36 @@ public class FoodMenuActivity extends BaseActivity {
         String absoluteFilePath = cursor.getString(columnIndex);
         cursor.close();
 
-        ImageView profile = (ImageView) findViewById(photoView);
-        profile.setImageBitmap(BitmapFactory.decodeFile(absoluteFilePath));
+        Photo photo = new Photo(this.foodService, this.menuName, absoluteFilePath);
+        new UploadPhotoTask(((GlobalStatus)FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
 
         //Save path for future reference
+        //TODO - add directly to cache
+        /*
         editor.putString(getString(R.string.user_photo), absoluteFilePath);
         editor.apply();
+        */
     }
 
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
-        ImageView profilePicture = (ImageView) findViewById(photoView);
-
-        Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
-        profilePicture.setImageBitmap(photo);
-
+        Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
+        new UploadPhotoTask(((GlobalStatus)FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+        //TODO - add directly to cache
+        /*
         editor.putString(getString(R.string.user_photo), imageFilePath);
         editor.apply();
+
+         */
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
-        ImageView profilePicture = (ImageView) findViewById(photoView);
+        Bitmap tryingPhoto = BitmapFactory.decodeFile(imageFilePath);
 
-        Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
-
-        if (photo == null) {
+        if (tryingPhoto == null) {
             galleryReturn(editor, data);
         } else {
-            profilePicture.setImageBitmap(photo);
-
-            editor.putString(getString(R.string.user_photo), imageFilePath);
-            editor.apply();
+            Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
+            new UploadPhotoTask(((GlobalStatus)FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
         }
     }
 
