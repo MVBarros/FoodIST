@@ -28,10 +28,10 @@ public class FoodServiceActivity extends BaseActivity {
         setFoodServiceName();
         setQueueTime();
         setButtons();
-        setReceivers();
     }
 
-    private void setReceivers() {
+
+    public void addReceivers() {
         Set<Button> buttons = Collections.singleton(findViewById(R.id.add_menu_button));
         addReceiver(new ServiceNetworkReceiver(buttons), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
@@ -66,13 +66,6 @@ public class FoodServiceActivity extends BaseActivity {
         foodServiceName.setText(foodService);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //ListView foodServiceList = findViewById(R.id.menus);
-        //foodServiceList.removeAllViews();
-        updateMenus();
-    }
 
     public void updateMenus() {
         if (isNetworkAvailable()) {

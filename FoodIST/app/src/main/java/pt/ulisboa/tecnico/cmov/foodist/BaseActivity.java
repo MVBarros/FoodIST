@@ -45,6 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void cancelReceivers() {
         receivers.forEach(this::unregisterReceiver);
+        receivers = new HashSet<>();
     }
 
     public void addTask(AsyncTask task) {
