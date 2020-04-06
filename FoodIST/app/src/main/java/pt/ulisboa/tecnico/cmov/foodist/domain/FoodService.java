@@ -59,6 +59,10 @@ public class FoodService {
         return hours;
     }
 
+    public String getHoursForToday() {
+        return hours.get(weekdayIntToString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)));
+    }
+
     public List<String> getRestrictions() {
         return restrictions;
     }

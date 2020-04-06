@@ -13,9 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +58,6 @@ public class FoodMenuActivity extends BaseActivity {
     private String menuName;
     private String[] photoIDs;
 
-    private int photoView = R.id.menuPhotos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +65,10 @@ public class FoodMenuActivity extends BaseActivity {
         setContentView(R.layout.activity_food_menu);
 
         intentInitialization(getIntent());
-        if(photoIDs.length > 0){
+        if (photoIDs.length > 0) {
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
-        }
-
-        else{
+            launchDownloadPhotoTask(photo);
+        } else {
             Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
         }
         setButtons();
@@ -97,90 +92,65 @@ public class FoodMenuActivity extends BaseActivity {
         });
     }
 
-    private void intentInitialization(Intent intent){
+    private void intentInitialization(Intent intent) {
         initializeMenuName(intent.getStringExtra(MENU_NAME));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeFoodService(intent.getStringExtra(MENU_SERVICE));
         initializePhotoIDs(intent.getStringArrayExtra(PHOTO_LIST));
     }
 
-    private void initializePhotoIDs(String[] photoIDs){
-        if(photoIDs == null){
+    private void initializePhotoIDs(String[] photoIDs) {
+        if (photoIDs == null) {
             Log.d(TAG, "Unable to obtain IDs");
-        }
-        else{
+        } else {
             this.photoIDs = photoIDs;
         }
     }
 
-    /*
-    //DEPECRATED
-    private void initializeNumPhotos(int numPhotos){
-        if(numPhotos == -1){
-            Log.d(TAG, "Unable to obtain number of photos");
-        }
-        else{
-            this.numPhotos = numPhotos;
-        }
-    }
-
-     */
-
-    private void initializeMenuName(String menuName){
-        if(menuName == null){
+    private void initializeMenuName(String menuName) {
+        if (menuName == null) {
             Log.d(TAG, "Unable to obtain menu name");
             Toast.makeText(this, "Unable to obtain menu name", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             this.menuName = menuName;
             TextView menuNameText = findViewById(R.id.menuName);
             menuNameText.setText(menuName);
         }
     }
 
-    private void initializeMenuCost(Double menuCost){
-        if(menuCost == -1.0){
+    private void initializeMenuCost(Double menuCost) {
+        if (menuCost == -1.0) {
             Log.d(TAG, "Unable to obtain menu cost");
             Toast.makeText(this, "Unable to obtain menu cost", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             TextView menuCostText = findViewById(R.id.menuCost);
             menuCostText.setText(String.format(Locale.US, "%.2f", menuCost));
         }
     }
 
-    private void initializeFoodService(String foodService){
-        if(foodService == null){
+    private void initializeFoodService(String foodService) {
+        if (foodService == null) {
             Log.d(TAG, "Unable to obtain correspondent food service");
-        }
-        else{
+        } else {
             this.foodService = foodService;
         }
     }
-    /**********************/
-    /**  Iterate Photos  **/
-    /**********************/
 
-    private void nextPhoto(){
-        if(photoIDs.length > 0) {
+    private void nextPhoto() {
+        if (photoIDs.length > 0) {
             numPhoto = ++numPhoto % this.photoIDs.length;
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+            launchDownloadPhotoTask(photo);
         }
     }
 
-    private void previousPhoto(){
-        if(photoIDs.length > 0) {
-            numPhoto = --numPhoto == -1 ? this.photoIDs.length-1 : numPhoto;
+    private void previousPhoto() {
+        if (photoIDs.length > 0) {
+            numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+            launchDownloadPhotoTask(photo);
         }
-
     }
-
-    /**********************/
-    /**  Photo Requests  **/
-    /**********************/
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -318,6 +288,15 @@ public class FoodMenuActivity extends BaseActivity {
         editor.apply();
 
          */
+    }
+
+
+    private void launchDownloadPhotoTask(Photo photo) {
+        if (isNetworkAvailable()) {
+            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+        } else {
+            showToast("Cannot download menu photo without network connection");
+        }
     }
 
     private void launchUploadPhotoTask(Photo photo) {

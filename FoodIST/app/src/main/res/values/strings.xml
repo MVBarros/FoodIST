@@ -34,4 +34,5 @@
     <string name="user_profile">User Profile</string>
     <string name="change_campus">Change Campus</string>
     <string name="error_menus">No Menus available</string>
+    <string name="working_hours">Working Hours:</string>
 </resources>

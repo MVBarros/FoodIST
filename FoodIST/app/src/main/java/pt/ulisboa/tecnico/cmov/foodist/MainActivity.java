@@ -49,6 +49,7 @@ public class MainActivity extends BaseActivity {
     private static final String SERVICE_NAME = "Service Name";
     private static final String DISTANCE = "Distance";
     private static final String QUEUE_TIME = "Queue time";
+    private static final String SERVICE_HOURS = "Service Hours";
 
     private boolean isFreshBoot;
     private boolean isOnCreate;
@@ -212,6 +213,7 @@ public class MainActivity extends BaseActivity {
             intent.putExtra(SERVICE_NAME, name1.getText());
             intent.putExtra(DISTANCE, service.getDistance());
             intent.putExtra(QUEUE_TIME, service.getTime());
+            intent.putExtra(SERVICE_HOURS, service.getHoursForToday());
             startActivity(intent);
         });
 

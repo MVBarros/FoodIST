@@ -13,6 +13,7 @@ import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 public class FoodServiceActivity extends BaseActivity {
 
     private static final String SERVICE_NAME = "Service Name";
+    private static final String SERVICE_HOURS = "Service Hours";
     private static final String DISTANCE = "Distance";
     private static final String QUEUE_TIME = "Queue time";
     private String foodServiceName;
@@ -60,10 +61,13 @@ public class FoodServiceActivity extends BaseActivity {
 
     private void setFoodServiceName() {
         TextView foodServiceName = findViewById(R.id.foodServiceName);
+        TextView foodServiceHours = findViewById(R.id.openingTimes);
         Intent intent = getIntent();
         String foodService = intent.getStringExtra(SERVICE_NAME) == null ? "" : intent.getStringExtra(SERVICE_NAME);
+        String hours = intent.getStringExtra(SERVICE_HOURS) == null ? "" : intent.getStringExtra(SERVICE_HOURS);
         this.foodServiceName = foodService;
         foodServiceName.setText(foodService);
+        foodServiceHours.setText(String.format("%s %s", getString(R.string.working_hours), hours));
     }
 
     public void updateMenus() {
