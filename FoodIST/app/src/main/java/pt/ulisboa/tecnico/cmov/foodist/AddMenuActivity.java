@@ -2,22 +2,17 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,65 +59,45 @@ public class AddMenuActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_menu);
 
-        Button b = findViewById(R.id.add_new_menu_done_button);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView menuName = findViewById(R.id.dishName);
-                TextView menuCost = findViewById(R.id.dishCost);
-
-                Intent oldIntent = getIntent();
-                String foodService = oldIntent.getStringExtra(SERVICE_NAME);
-
-                if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
-                    showToast("Give the menu a name and a cost!");
-                } else {
-                    Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
-                    Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
-
-                    if (isNetworkAvailable()) {
-
-                        new UploadMenuTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
-
-                        if (imageFilePath != null) {
-                            Photo photo = new Photo(foodService, menuName.getText().toString(), imageFilePath);
-                            new UploadPhotoTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
-                        }
-                    } else {
-                        showToast("Mobile device is not online! Please check your connection.");
-                    }
-
-                    Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
-                    intent.putExtra(SERVICE_NAME, foodService);
-                    startActivity(intent);
-                }
-            }
-
-            private boolean checkNetworkStatus() {
-                ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                boolean network_status = false;
-                for (Network network : connMgr.getAllNetworks()) {
-                    NetworkInfo networkInfo = connMgr.getNetworkInfo(network);
-                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        network_status |= networkInfo.isConnected();
-                    }
-                    if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-                        network_status |= networkInfo.isConnected();
-                    }
-                }
-                return network_status;
-            }
-        });
-
-        ImageView photoButton = findViewById(R.id.dishView);
-        photoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                askGalleryPermission();
-            }
-        });
-
+        setButtons();
     }
+
+    private void setButtons() {
+
+        Button b = findViewById(R.id.add_new_menu_done_button);
+        b.setOnClickListener(v -> {
+            TextView menuName = findViewById(R.id.dishName);
+            TextView menuCost = findViewById(R.id.dishCost);
+
+            String foodService = getIntent().getStringExtra(SERVICE_NAME);
+
+            if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
+                showToast("Give the menu a name and a cost!");
+            } else {
+                Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
+                Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
+                uploadMenu(menu);
+            }
+        });
+        ImageView photoButton = findViewById(R.id.dishView);
+        photoButton.setOnClickListener(v -> askGalleryPermission());
+    }
+
+    private void uploadMenu(Menu menu) {
+        if (isNetworkAvailable()) {
+            new UploadMenuTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
+            if (imageFilePath != null) {
+                Photo photo = new Photo(menu.getFoodServiceName(), menu.getMenuName(), imageFilePath);
+                new UploadPhotoTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+            }
+            Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
+            intent.putExtra(SERVICE_NAME, menu.getFoodServiceName());
+            startActivity(intent);
+        } else {
+            showToast("device is not online! Please check your connection.");
+        }
+    }
+
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
