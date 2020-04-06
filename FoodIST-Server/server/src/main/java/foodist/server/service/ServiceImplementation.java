@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 
 import foodist.server.common.Utils;
+import foodist.server.data.Storage;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
@@ -15,11 +16,8 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class ServiceImplementation extends FoodISTServerServiceImplBase {
-	
-	private ConcurrentHashMap<String, HashSet<Menu>> menusHashMap = new ConcurrentHashMap<String, HashSet<Menu>>();
+public class ServiceImplementation extends FoodISTServerServiceImplBase {	
 	
 	public static FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub foodISTServerServiceGrpcStub;
 	
@@ -33,17 +31,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	    Menu menu = menuBuilder.build();
 	        
 	    System.out.println(request.getName() + ":" + request.getPrice());
-	    HashSet<Menu> menuSet = this.menusHashMap.get(foodService);
-	      
-	    if(menuSet!=null) {
-	    	menuSet.add(menu);
-	    	this.menusHashMap.put(foodService, menuSet);         
-	    } 
-	    else {
-	    	HashSet<Menu> new_MenuSet = new HashSet<Menu>();
-	    	new_MenuSet.add(menu);
-	    	this.menusHashMap.put(foodService, new_MenuSet);         
-	    } 
+	    
+	    Storage.addMenu(foodService, menu);
 	      
 	    responseObserver.onNext(null);
 	    responseObserver.onCompleted();      
@@ -52,8 +41,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     @Override
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
 		String foodService = request.getFoodService();                
-
-		HashSet<Menu> menuList = menusHashMap.get(foodService);
+		
+		HashSet<Menu> menuList = Storage.getMenuSet(foodService);
 		    
 		ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
 		    

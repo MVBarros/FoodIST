@@ -24,7 +24,7 @@ public class Main {
         server.start();
         
         System.out.println("Starting memory cleaning thread");
-        new Thread(new Cleanup(23, 59, 59, 999)).start();
+        new Thread(new Cleanup()).start();
         
         System.out.println("Server Started at port " + port);
         server.awaitTermination();

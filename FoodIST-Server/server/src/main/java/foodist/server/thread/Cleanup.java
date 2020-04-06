@@ -6,29 +6,28 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import foodist.server.data.Storage;
+
 public class Cleanup implements Runnable {
 	
 	private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 	
-	private int cleanup_hour;
-	private int cleanup_minute;
-	private int cleanup_second;
-	private int cleanup_milli;
+	private int cleanup_hour = 23;
+	private int cleanup_minute = 59;
+	private int cleanup_second = 59;
+	private int cleanup_milli = 999;
 	
-	public Cleanup(int cleanup_hour, int cleanup_minute, int cleanup_second, int cleanup_milli) {
-		this.cleanup_hour = cleanup_hour;
-		this.cleanup_minute = cleanup_minute;
-		this.cleanup_second = cleanup_second;
-		this.cleanup_milli = cleanup_milli;
+	public Cleanup() {
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		long delete_wait = 0;
 		
 		while(true) {						
 			try {
+				Storage.purge();
+				
 				Thread.sleep(delete_wait);
 				
 				Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
@@ -47,7 +46,7 @@ public class Cleanup implements Runnable {
 				Date cdate = this.parseDate(cDateString);								
 				
 				String dDateString = this.determineDeleteDate(year, month, day,
-						this.cleanup_hour, this.cleanup_minute, this.cleanup_second, this.cleanup_second);
+							this.cleanup_hour, this.cleanup_minute, this.cleanup_second, this.cleanup_milli);					
 				Date ddate = this.parseDate(dDateString);
 				
 				delete_wait = ddate.getTime() - cdate.getTime();
