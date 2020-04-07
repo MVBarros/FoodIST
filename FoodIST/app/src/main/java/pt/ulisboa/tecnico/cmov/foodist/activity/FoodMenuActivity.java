@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,6 +36,8 @@ import pt.ulisboa.tecnico.cmov.foodist.async.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -71,6 +75,11 @@ public class FoodMenuActivity extends BaseActivity {
         intentInitialization(getIntent());
         downloadCurrentPhoto();
         setButtons();
+    }
+
+    @Override
+    public void addReceivers() {
+        addReceiver(new MenuNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
     public void setPhotoView() {
