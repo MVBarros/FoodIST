@@ -21,6 +21,7 @@
     <string name="campus_alameda">Alameda</string>
     <string name="previous_photo">Previous Photo</string>
     <string name="next_photo">Next Photo</string>
+    <string name="number_photos">No Photos Available</string>
 
     <!-- Profile variables -->
     <string name="profile_file">profile</string>

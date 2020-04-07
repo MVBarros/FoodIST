@@ -37,6 +37,15 @@
             android:padding="40dp"
             android:contentDescription="@string/menu_photos" />
 
+        <TextView
+            android:id="@+id/photoNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:gravity="center"
+            android:text="@string/number_photos"
+            android:textSize="30sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

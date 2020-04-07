@@ -65,11 +65,13 @@ public class FoodMenuActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
+        TextView numberPhoto = findViewById(R.id.photoNumber);
 
         intentInitialization(getIntent());
         if (photoIDs.length > 0) {
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
             launchDownloadPhotoTask(photo);
+            numberPhoto.setText(String.format(Locale.US,"%d/%d", numPhoto+1, photoIDs.length));
         } else {
             Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
         }
@@ -140,17 +142,24 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void nextPhoto() {
         if (photoIDs.length > 0) {
+            TextView numberPhoto = findViewById(R.id.photoNumber);
+
             numPhoto = ++numPhoto % this.photoIDs.length;
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
             launchDownloadPhotoTask(photo);
+            numberPhoto.setText(String.format(Locale.US,"%d/%d", numPhoto+1, photoIDs.length));
+
         }
     }
 
     private void previousPhoto() {
         if (photoIDs.length > 0) {
+            TextView numberPhoto = findViewById(R.id.photoNumber);
+
             numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
             launchDownloadPhotoTask(photo);
+            numberPhoto.setText(String.format(Locale.US,"%d/%d", numPhoto+1, photoIDs.length));
         }
     }
 
