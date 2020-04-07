@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.domain;
 
-import foodist.server.grpc.contract.Contract;
-
 public class Photo {
     private String foodServiceName;
     private String menuName;
@@ -14,6 +12,7 @@ public class Photo {
         this(foodServiceName, menuName, photoPath);
         this.photoID = photoID;
     }
+
     //To send photos to the server
     public Photo(String foodServiceName, String menuName, String photoPath) {
         this.foodServiceName = foodServiceName;

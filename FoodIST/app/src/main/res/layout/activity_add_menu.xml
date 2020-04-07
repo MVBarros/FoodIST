@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,8 +29,7 @@
             android:textSize="30sp"
             android:text=""
             android:inputType="numberDecimal"
-            android:maxLength="5"
-            />
+            android:maxLength="5" />
 
         <ImageView
             android:id="@+id/dishView"
@@ -39,8 +37,7 @@
             android:layout_height="0dp"
             android:layout_weight="12"
             android:padding="30dp"
-            android:src="@drawable/ic_add"
-            />
+            android:src="@drawable/ic_add" />
 
         <Button
             android:id="@+id/add_new_menu_done_button"

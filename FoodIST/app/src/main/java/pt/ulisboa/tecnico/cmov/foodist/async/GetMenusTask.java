@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
-import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
@@ -58,11 +58,11 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         }
 
         if (result.size() == 0) {
-            menuError(getActivity(), "No menus available for this service");
+            getActivity().showToast("No menus available for this service");
             return;
         }
 
-            ListView foodServiceList = getActivity().findViewById(R.id.menus);
+        ListView foodServiceList = getActivity().findViewById(R.id.menus);
         List<Menu> menus = result.stream()
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
                 .collect(Collectors.toList());

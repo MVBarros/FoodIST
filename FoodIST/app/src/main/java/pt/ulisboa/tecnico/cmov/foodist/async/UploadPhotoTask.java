@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,7 +24,7 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
 
-    FoodISTServerServiceGrpc.FoodISTServerServiceStub stub;
+    private FoodISTServerServiceGrpc.FoodISTServerServiceStub stub;
     private WeakReference<FoodMenuActivity> activity;
 
     public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, FoodMenuActivity activity) {

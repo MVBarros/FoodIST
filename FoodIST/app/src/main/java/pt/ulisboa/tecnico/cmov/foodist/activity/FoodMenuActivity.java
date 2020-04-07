@@ -36,7 +36,6 @@ import pt.ulisboa.tecnico.cmov.foodist.async.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;

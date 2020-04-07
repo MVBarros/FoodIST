@@ -11,8 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class MenuAdapter extends ArrayAdapter<Menu> {
@@ -22,15 +22,15 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
     public static final String MENU_SERVICE = "Menu_service";
     public static final String PHOTO_LIST = "Menu_photo_list";
 
-    public MenuAdapter(Context context, ArrayList<Menu> menus){
+    public MenuAdapter(Context context, ArrayList<Menu> menus) {
         super(context, 0, menus);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
         Menu menu = getItem(position);
 
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.food_menu, parent, false);
         }
 
@@ -41,13 +41,13 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
 
         convertView.setOnClickListener(v -> {
-           Intent intent = new Intent(getContext(), FoodMenuActivity.class);
-           //intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
-           intent.putExtra(MENU_NAME, menu.getMenuName());
-           intent.putExtra(MENU_PRICE, menu.getPrice());
-           intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
-           intent.putExtra(PHOTO_LIST, menu.getPhotoID());
-           getContext().startActivity(intent);
+            Intent intent = new Intent(getContext(), FoodMenuActivity.class);
+            //intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
+            intent.putExtra(MENU_NAME, menu.getMenuName());
+            intent.putExtra(MENU_PRICE, menu.getPrice());
+            intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
+            intent.putExtra(PHOTO_LIST, menu.getPhotoID());
+            getContext().startActivity(intent);
 
         });
         return convertView;

@@ -44,7 +44,6 @@ public class AddMenuActivity extends BaseActivity {
     private static final int GALLERY_PIC = 4;
     private static final int CAMERA_PIC = 5;
 
-    private static final String DEBUG_TAG = "NetworkStatusExample";
     private static final String TAG = "TAG_AddMenuActivity";
 
     private String imageFilePath = null;

@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -13,13 +12,13 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
 
 
-    FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
+    private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
+    private static final String TAG = "UPLOADMENU-TASK";
 
     public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
         this.stub = stub;
     }
 
-    private static final String TAG = "UPLOADMENU-TASK";
 
     @Override
     protected Boolean doInBackground(Menu... menu) {

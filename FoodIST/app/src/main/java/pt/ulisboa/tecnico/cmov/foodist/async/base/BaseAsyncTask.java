@@ -19,20 +19,24 @@ public abstract class BaseAsyncTask<T, U, V, A extends AppCompatActivity> extend
     }
 
     @Override
-    protected void onPreExecute() {}
+    protected void onPreExecute() {
+    }
 
     @Override
-    protected void onCancelled() {}
+    protected void onCancelled() {
+    }
 
     @Override
-    protected void onCancelled(V result) {}
+    protected void onCancelled(V result) {
+    }
 
 
     @Override
     protected abstract V doInBackground(T... ts);
 
     @Override
-    public void onPostExecute(V result) {}
+    public void onPostExecute(V result) {
+    }
 
     public A getActivity() {
         return activity.get();
