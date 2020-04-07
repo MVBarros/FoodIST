@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 

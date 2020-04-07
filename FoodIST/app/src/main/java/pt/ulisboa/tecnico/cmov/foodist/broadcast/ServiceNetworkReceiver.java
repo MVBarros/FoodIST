@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import java.util.Set;
 
-import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 
 public class ServiceNetworkReceiver extends BaseNetworkReceiver {

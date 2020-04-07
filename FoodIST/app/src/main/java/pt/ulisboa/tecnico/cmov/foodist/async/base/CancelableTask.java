@@ -1,8 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.base;
 
-import android.os.AsyncTask;
-
-import pt.ulisboa.tecnico.cmov.foodist.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 
 /**
  * Task that is cancelled if it's activity is destroyed by the android runtime

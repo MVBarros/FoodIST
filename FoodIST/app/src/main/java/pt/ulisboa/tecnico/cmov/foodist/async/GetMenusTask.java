@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
-import pt.ulisboa.tecnico.cmov.foodist.FoodServiceActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;

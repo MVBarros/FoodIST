@@ -20,12 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true">
-        <activity android:name=".AddMenuActivity"/>
-        <activity android:name=".FoodMenuActivity" />
-        <activity android:name=".FoodServiceActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".ChooseCampusActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.AddMenuActivity"/>
+        <activity android:name=".activity.FoodMenuActivity" />
+        <activity android:name=".activity.FoodServiceActivity" />
+        <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.ChooseCampusActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

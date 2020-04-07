@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import java.util.HashSet;
-
-import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 
 public class MainNetworkReceiver extends BaseNetworkReceiver {

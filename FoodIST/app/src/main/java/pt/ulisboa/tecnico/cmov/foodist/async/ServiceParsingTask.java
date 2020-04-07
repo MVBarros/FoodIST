@@ -7,7 +7,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist;
+package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadMenuTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
@@ -150,7 +152,7 @@ public class AddMenuActivity extends BaseActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            //TODO - What to do in case of photo failure?
+            showToast("Unable to get photo taken from camera");
         }
 
         if (photoFile != null) {

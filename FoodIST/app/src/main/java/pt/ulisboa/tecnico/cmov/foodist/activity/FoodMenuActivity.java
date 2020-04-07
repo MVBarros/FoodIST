@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist;
+package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.DownloadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;

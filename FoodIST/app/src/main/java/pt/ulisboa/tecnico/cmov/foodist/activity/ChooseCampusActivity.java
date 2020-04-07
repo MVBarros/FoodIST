@@ -1,8 +1,11 @@
-package pt.ulisboa.tecnico.cmov.foodist;
+package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+
+import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 
 public class ChooseCampusActivity extends BaseActivity {
     public static final String CAMPUS = "pt.ulisboa.tecnico.cmov.foodlist.MESSAGE";

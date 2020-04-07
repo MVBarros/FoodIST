@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist;
+package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 

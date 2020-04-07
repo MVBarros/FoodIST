@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import pt.ulisboa.tecnico.cmov.foodist.MainActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
