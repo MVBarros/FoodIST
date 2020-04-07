@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +36,7 @@ public class Storage {
 	}
 	
 	public synchronized static HashSet<Menu> getMenuSet(String foodService) {
+		menusHashMap.putIfAbsent(foodService, new HashSet<>());
 		return menusHashMap.get(foodService);
 	}
 	

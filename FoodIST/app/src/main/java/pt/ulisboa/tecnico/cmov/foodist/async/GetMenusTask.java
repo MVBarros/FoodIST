@@ -52,12 +52,17 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
 
     @Override
     public void onPostExecute(List<Contract.Menu> result) {
-        if (result == null || result.size() == 0) {
-            menuError(getActivity());
+        if (result == null) {
+            menuError(getActivity(), "Unable to get menus from server");
             return;
         }
 
-        ListView foodServiceList = getActivity().findViewById(R.id.menus);
+        if (result.size() == 0) {
+            menuError(getActivity(), "No menus available for this service");
+            return;
+        }
+
+            ListView foodServiceList = getActivity().findViewById(R.id.menus);
         List<Menu> menus = result.stream()
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
                 .collect(Collectors.toList());
@@ -68,8 +73,8 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         Log.d(TAG, "Menus obtained successfully");
     }
 
-    private void menuError(FoodServiceActivity activity) {
-        activity.showToast("No menus avaliable...");
+    private void menuError(FoodServiceActivity activity, String message) {
+        activity.showToast(message);
         Log.d(TAG, "Unable to request menus");
     }
 
