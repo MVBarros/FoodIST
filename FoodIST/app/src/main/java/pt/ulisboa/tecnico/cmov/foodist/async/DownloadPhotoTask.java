@@ -43,11 +43,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, Foo
             return null;
         }
         Photo photo = photoRequest[0];
-        Bitmap cachedPhoto = PhotoCache.getInstance().getPhoto(photo.getPhotoID());
 
-        if(cachedPhoto != null){
-            return cachedPhoto;
-        }
 
         Contract.DownloadPhotoRequest.Builder downloadPhotoBuilder = Contract.DownloadPhotoRequest.newBuilder();
 

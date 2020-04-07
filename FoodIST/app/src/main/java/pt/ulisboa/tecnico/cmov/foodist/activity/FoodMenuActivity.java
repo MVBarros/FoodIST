@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -89,11 +91,26 @@ public class FoodMenuActivity extends BaseActivity {
     public void downloadCurrentPhoto() {
         if (photoIDs.length > 0) {
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            launchDownloadPhotoTask(photo);
+            getPhoto(photo);
             setPhotoView();
         } else {
             Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void getPhoto(Photo photo){
+        Bitmap cachedPhoto = getCachedPhoto(photo.getPhotoID());
+        if(cachedPhoto == null){
+            launchDownloadPhotoTask(photo);
+        }
+        else{
+            ImageView photoView = findViewById(R.id.menuPhotos);
+            photoView.setImageBitmap(cachedPhoto);
+        }
+    }
+    
+    public Bitmap getCachedPhoto(String photoID){
+        return PhotoCache.getInstance().getPhoto(photoID);
     }
 
     protected void setButtons() {
