@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,30 +20,35 @@ import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
+import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
 
-public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, FoodMenuActivity> {
+public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, FoodMenuActivity> {
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
-    private String photosPath;
 
     public DownloadPhotoTask(FoodMenuActivity activity) {
         super(activity);
-        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        this.photosPath = storageDir.getAbsolutePath();
+
         this.stub = activity.getGlobalStatus().getStub();
     }
 
     private static final String TAG = "DOWNLOAD-PHOTOS-TASK";
 
     @Override
-    protected String doInBackground(Photo... photoRequest) {
+    protected Bitmap doInBackground(Photo... photoRequest) {
         if (photoRequest.length != 1) {
             return null;
         }
         Photo photo = photoRequest[0];
+        Bitmap cachedPhoto = PhotoCache.getInstance().getPhoto(photo.getPhotoID());
+
+        if(cachedPhoto != null){
+            return cachedPhoto;
+        }
+
         Contract.DownloadPhotoRequest.Builder downloadPhotoBuilder = Contract.DownloadPhotoRequest.newBuilder();
 
         downloadPhotoBuilder.setPhotoId(photo.getPhotoID());
@@ -50,60 +57,35 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, Foo
 
         Contract.DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build();
 
-        try {
-            Iterator<Contract.DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);
+        Iterator<Contract.DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);
 
-            try {
-                String path = assembleClientPhotoPath(photo.getPhotoID(), photo.getFoodServiceName(), photo.getMenuName());
-                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(path));
-
-                //Write bytes to file
-                while (iterator.hasNext()) {
-                    Contract.DownloadPhotoReply chunk = iterator.next();
-                    byte[] fileBytes = chunk.getContent().toByteArray();
-                    out.write(fileBytes);
-                }
-                out.close();
-                return path;
-            } catch (IOException ioe) {
-                Log.d(TAG, "Error! Could not write file: \"" + assembleClientPhotoPath(photo.getPhotoID(), photo.getFoodServiceName(), photo.getMenuName()) + "\".");
+        try(ByteArrayOutputStream bis = new ByteArrayOutputStream()) {
+            //Write bytes to file
+            while (iterator.hasNext()) {
+                Contract.DownloadPhotoReply chunk = iterator.next();
+                byte[] fileBytes = chunk.getContent().toByteArray();
+                bis.write(fileBytes);
             }
-        } catch (StatusRuntimeException e) {
+            Bitmap photoBitmap = BitmapFactory.decodeByteArray(bis.toByteArray(), 0, bis.size());
+            return PhotoCache.getInstance().addAndGetPhoto(photo.getPhotoID(), photoBitmap);
+        } catch (IOException | StatusRuntimeException ioe) {
             return null;
         }
-        return null;
     }
 
     @Override
-    public void onPostExecute(String result) {
+    public void onPostExecute(Bitmap result) {
         if (result == null) {
             photoError(getActivity());
             return;
         }
 
         ImageView photoView = getActivity().findViewById(R.id.menuPhotos);
-
-        Bitmap photo = BitmapFactory.decodeFile(result);
-        photoView.setImageBitmap(photo);
+        photoView.setImageBitmap(result);
     }
 
     private void photoError(FoodMenuActivity activity) {
         activity.showToast("Unable to download photo, check connection");
         Log.d(TAG, "Unable to download photo");
     }
-
-    private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
-        //TODO - Check if path has '/' in the end
-        String photoDirectory = photosPath + "/Cache/" + foodServiceName + "/" + menuName + "/";
-        createPhotoDir(photoDirectory);
-        return photoDirectory + photoName;
     }
-
-    public static void createPhotoDir(String photoPath) {
-        File directory = new File(photoPath);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-    }
-
-}
