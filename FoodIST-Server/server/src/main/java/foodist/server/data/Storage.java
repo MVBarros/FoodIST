@@ -29,15 +29,14 @@ public class Storage {
 	    	menusHashMap.put(foodService, menuSet);         
 	    } 
 	    else {
-	    	HashSet<Menu> new_MenuSet = new HashSet<Menu>();
+	    	HashSet<Menu> new_MenuSet = new HashSet<>();
 	    	new_MenuSet.add(menu);
 	    	menusHashMap.put(foodService, new_MenuSet);         
 	    } 
 	}
 	
 	public synchronized static HashSet<Menu> getMenuSet(String foodService) {
-		menusHashMap.putIfAbsent(foodService, new HashSet<>());
-		return menusHashMap.get(foodService);
+		return menusHashMap.putIfAbsent(foodService, new HashSet<>());
 	}
 	
 	public synchronized static void purge() {	
