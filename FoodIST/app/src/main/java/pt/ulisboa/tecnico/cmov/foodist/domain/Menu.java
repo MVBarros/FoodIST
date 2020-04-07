@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import foodist.server.grpc.contract.Contract;
@@ -20,7 +19,7 @@ public class Menu {
     }
 
     //When parsing the menus from the server
-    public Menu(String foodServiceName, String menuName, double price, int photoIdCount, List<String> photoIDs){
+    public Menu(String foodServiceName, String menuName, double price, int photoIdCount, List<String> photoIDs) {
         this(foodServiceName, menuName, price);
         this.photoIdCount = photoIdCount;
         this.photoID = photoIDs.toArray(new String[0]);
@@ -38,11 +37,15 @@ public class Menu {
         return this.price;
     }
 
-    public int getPhotoIdCount() {return this.photoIdCount; }
+    public int getPhotoIdCount() {
+        return this.photoIdCount;
+    }
 
-    public String[] getPhotoID() { return this.photoID; }
+    public String[] getPhotoID() {
+        return this.photoID;
+    }
 
-    public static Menu parseContractMenu(String foodServiceName, Contract.Menu menu){
+    public static Menu parseContractMenu(String foodServiceName, Contract.Menu menu) {
         return new Menu(foodServiceName, menu.getName(), menu.getPrice(), menu.getPhotoIdCount(), menu.getPhotoIdList());
     }
 }

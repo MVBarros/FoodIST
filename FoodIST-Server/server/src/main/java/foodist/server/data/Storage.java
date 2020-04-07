@@ -19,7 +19,7 @@ public class Storage {
 	
 	private static final String BASE_DIR = "photos";
 	
-	private static ConcurrentHashMap<String, HashSet<Menu>> menusHashMap = new ConcurrentHashMap<String, HashSet<Menu>>();
+	private static ConcurrentHashMap<String, HashSet<Menu>> menusHashMap = new ConcurrentHashMap<>();
 	
 	public synchronized static void addMenu(String foodService, Menu menu) {
 	    HashSet<Menu> menuSet = menusHashMap.get(foodService);
@@ -44,7 +44,7 @@ public class Storage {
 		System.out.print("Cleaning up server persistent memory... ");
 		Iterator<Entry<String, HashSet<Menu>>> iterator = menusHashMap.entrySet().iterator();
 		while (iterator.hasNext()) {
-	        Map.Entry<String, HashSet<Menu>> pair = (Map.Entry<String, HashSet<Menu>>) iterator.next();
+	        Map.Entry<String, HashSet<Menu>> pair = iterator.next();
 	        System.out.println(pair.getKey() + " = " + pair.getValue());
 	        menusHashMap.put(pair.getKey(), null);
 	        System.out.println(pair.getKey() + " = " + pair.getValue());

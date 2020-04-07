@@ -8,8 +8,7 @@
     android:orientation="vertical"
     app:layout_constraintStart_toStartOf="parent"
     tools:layout_editor_absoluteY="131dp"
-    android:background="?android:attr/selectableItemBackground"
-    >
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/foodServiceName"

@@ -15,8 +15,8 @@ import java.util.Iterator;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
-import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
@@ -65,7 +65,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, Foo
                 }
                 out.close();
                 return path;
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 Log.d(TAG, "Error! Could not write file: \"" + assembleClientPhotoPath(photo.getPhotoID(), photo.getFoodServiceName(), photo.getMenuName()) + "\".");
             }
         } catch (StatusRuntimeException e) {
@@ -101,7 +101,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, String, Foo
 
     public static void createPhotoDir(String photoPath) {
         File directory = new File(photoPath);
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdirs();
         }
     }

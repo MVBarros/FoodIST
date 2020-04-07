@@ -64,7 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         receivers.add(receiver);
     }
 
-    public void addReceivers() {}
+    public void addReceivers() {
+    }
 
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

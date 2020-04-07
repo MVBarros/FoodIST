@@ -42,8 +42,14 @@ message Menu {
     repeated string photoId = 4;
 }
 
+message UpdateMenuRequest {
+    string foodService = 1;
+    string menuName = 2;
+}
+
 service FoodISTServerService {
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
+    rpc updateMenu(UpdateMenuRequest) returns (Menu);
     rpc addMenu(AddMenuRequest) returns (google.protobuf.Empty);
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);

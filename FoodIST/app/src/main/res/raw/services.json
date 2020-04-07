@@ -49,7 +49,10 @@
         "saturday": "closed",
         "sunday": "closed"
       },
-      "restrictions": ["Staff", "Visitor"]
+      "restrictions": [
+        "Staff",
+        "Visitor"
+      ]
     },
     {
       "name": "Maquinas de Venda Automática",
@@ -85,8 +88,10 @@
         "saturday": "closed",
         "sunday": "closed"
       },
-      "restrictions": ["Staff", "Visitor"]
-
+      "restrictions": [
+        "Staff",
+        "Visitor"
+      ]
     },
     {
       "name": "Bar de Civil",
@@ -120,7 +125,10 @@
         "saturday": "closed",
         "sunday": "closed"
       },
-      "restrictions": ["Staff", "Visitor"]
+      "restrictions": [
+        "Staff",
+        "Visitor"
+      ]
     },
     {
       "name": "Maquina de Venda Automática",
