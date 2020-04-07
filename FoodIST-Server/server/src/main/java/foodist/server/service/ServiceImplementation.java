@@ -9,11 +9,13 @@ import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
@@ -50,6 +52,23 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         ListMenuReply listMenuReply = listMenuReplyBuilder.build();
         responseObserver.onNext(listMenuReply);
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Menu> responseObserver) {
+        String service = request.getFoodService();
+        String menu = request.getMenuName();
+
+        HashSet<Menu> menus = Storage.getMenuSet(service);
+        Optional<Menu> opt = menus.stream().filter(storedMenu -> storedMenu.getName().equals(menu)).findFirst();
+
+        if (opt.isPresent()) {
+            Menu ret = Storage.fetchMenuPhotos(service, opt.get().getName(), opt.get().getPrice());
+            responseObserver.onNext(ret);
+            responseObserver.onCompleted();
+        } else {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("No such menu").asRuntimeException());
+        }
     }
 
     @Override

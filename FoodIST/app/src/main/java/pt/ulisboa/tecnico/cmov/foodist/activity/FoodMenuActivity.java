@@ -30,6 +30,7 @@ import java.util.Locale;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.DownloadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
@@ -58,6 +59,7 @@ public class FoodMenuActivity extends BaseActivity {
     private int numPhoto = 0;
     private String foodService;
     private String menuName;
+
     private String[] photoIDs;
 
 
@@ -65,17 +67,25 @@ public class FoodMenuActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
-        TextView numberPhoto = findViewById(R.id.photoNumber);
 
         intentInitialization(getIntent());
+        downloadCurrentPhoto();
+        setButtons();
+    }
+
+    public void setPhotoView() {
+        TextView numberPhoto = findViewById(R.id.photoNumber);
+        numberPhoto.setText(String.format(Locale.US, "%d/%d", numPhoto + 1, photoIDs.length));
+    }
+
+    public void downloadCurrentPhoto() {
         if (photoIDs.length > 0) {
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
             launchDownloadPhotoTask(photo);
-            numberPhoto.setText(String.format(Locale.US,"%d/%d", numPhoto+1, photoIDs.length));
+            setPhotoView();
         } else {
             Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
         }
-        setButtons();
     }
 
     protected void setButtons() {
@@ -141,26 +151,13 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void nextPhoto() {
-        if (photoIDs.length > 0) {
-            TextView numberPhoto = findViewById(R.id.photoNumber);
-
-            numPhoto = ++numPhoto % this.photoIDs.length;
-            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            launchDownloadPhotoTask(photo);
-            numberPhoto.setText(String.format(Locale.US,"%d/%d", numPhoto+1, photoIDs.length));
-
-        }
+        numPhoto = ++numPhoto % this.photoIDs.length;
+        downloadCurrentPhoto();
     }
 
     private void previousPhoto() {
-        if (photoIDs.length > 0) {
-            TextView numberPhoto = findViewById(R.id.photoNumber);
-
-            numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
-            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            launchDownloadPhotoTask(photo);
-            numberPhoto.setText(String.format(Locale.US,"%d/%d", numPhoto+1, photoIDs.length));
-        }
+        numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
+        downloadCurrentPhoto();
     }
 
     private void askGalleryPermission() {
@@ -310,9 +307,17 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
+    public void launchUpdateMenuTask() {
+        if (isNetworkAvailable()) {
+            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).execute(foodService, menuName);
+        } else {
+            showToast("Cannot download menu photo without network connection");
+        }
+    }
+
     private void launchUploadPhotoTask(Photo photo) {
         if (isNetworkAvailable()) {
-            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub()).execute(photo);
+            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).execute(photo);
         } else {
             showToast("Cannot upload menu photo without network connection");
         }
@@ -340,4 +345,22 @@ public class FoodMenuActivity extends BaseActivity {
         imageFilePath = image.getAbsolutePath();
         return image;
     }
+
+
+    public int getNumPhoto() {
+        return numPhoto;
+    }
+
+    public void setNumPhoto(int numPhoto) {
+        this.numPhoto = numPhoto;
+    }
+
+    public String[] getPhotoIDs() {
+        return photoIDs;
+    }
+
+    public void setPhotoIDs(String[] photoIDs) {
+        this.photoIDs = photoIDs;
+    }
+
 }

@@ -36,6 +36,11 @@ message ListMenuReply {
     repeated Menu menus = 1;
 }
 
+message UpdateMenuRequest {
+    string foodService = 1;
+    string menuName = 2;
+}
+
 message Menu {
     string name = 2;
     double price = 3;
@@ -44,6 +49,7 @@ message Menu {
 
 service FoodISTServerService {
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
+    rpc updateMenu(UpdateMenuRequest) returns (Menu);
     rpc addMenu(AddMenuRequest) returns (google.protobuf.Empty);
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);

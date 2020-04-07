@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -10,12 +11,14 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
 
@@ -23,9 +26,11 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
 
     FoodISTServerServiceGrpc.FoodISTServerServiceStub stub;
+    private WeakReference<FoodMenuActivity> activity;
 
-    public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub) {
+    public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, FoodMenuActivity activity) {
         this.stub = stub;
+        this.activity = new WeakReference<>(activity);
     }
 
     private static final String TAG = "UPLOADPHOTO-TASK";
@@ -96,9 +101,14 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (result) {
             Log.d(TAG, "Photo uploaded successfully");
-            return;
+
+        } else {
+            Log.d(TAG, "Photo unable to be uploaded");
         }
-        Log.d(TAG, "Photo unable to be uploaded");
+        FoodMenuActivity act = activity.get();
+        if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            act.launchUpdateMenuTask();
+        }
     }
 
     public static String getFileFromPath(String path) {
