@@ -67,11 +67,6 @@ public class MainActivity extends BaseActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         setButtons();
         setCurrentCampus();
-        /*updateFirstBoot();
-        if(isFreshBoot){
-            Intent intent = new Intent(this, CacheService.class);
-            startService(intent);
-        }*/
     }
 
     @Override

@@ -21,12 +21,14 @@ public class ChooseCampusActivity extends BaseActivity {
         tagusparkButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
             intent.putExtra(CAMPUS, getString(R.string.campus_taguspark));
+            finish();
             startActivity(intent);
         });
 
         alamedaButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
             intent.putExtra(CAMPUS, getString(R.string.campus_alameda));
+            finish();
             startActivity(intent);
         });
 

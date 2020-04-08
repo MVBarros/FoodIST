@@ -44,12 +44,10 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class FoodMenuActivity extends BaseActivity {
-    //Intent tags
-    public static final String NUMBER_PHOTOS = "Number_photos";
+
     public static final String MENU_NAME = "Menu_name";
     public static final String MENU_PRICE = "Menu_price";
     public static final String MENU_SERVICE = "Menu_service";
-    public static final String PHOTO_LIST = "Menu_photo_list";
 
     //Camera/Gallery tags
     private static final int PICK_FROM_GALLERY = 1;
@@ -137,6 +135,23 @@ public class FoodMenuActivity extends BaseActivity {
         });
     }
 
+    public void updatePhotos(String[] newPhotos) {
+        int newIndex = 0;
+        if (photoIDs.length != 0) {
+            int i = 0;
+            for (String photo : newPhotos) {
+                if (photo.equals(photoIDs[numPhoto])) {
+                    newIndex = i;
+                    break;
+                }
+                i++;
+            }
+        }
+        photoIDs = newPhotos;
+        numPhoto = newIndex;
+        downloadCurrentPhoto();
+    }
+
     private void intentInitialization(Intent intent) {
         initializeMenuName(intent.getStringExtra(MENU_NAME));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
@@ -206,20 +221,20 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void cameraOrGalleryChooser() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Intent galleryintent = new Intent(Intent.ACTION_PICK);
-            galleryintent.setType("image/*");
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+            galleryIntent.setType("image/*");
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
                 Intent chooser = new Intent(Intent.ACTION_CHOOSER);
-                chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
+                chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
                 chooser.putExtra(Intent.EXTRA_TITLE, "Select from:");
 
                 Intent[] intentArray = {createCameraIntent()};
                 chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
                 startActivityForResult(chooser, REQUEST_PIC);
             } else {
-                startActivityForResult(galleryintent, GALLERY_PIC);
+                startActivityForResult(galleryIntent, GALLERY_PIC);
             }
         } else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -325,7 +340,7 @@ public class FoodMenuActivity extends BaseActivity {
         if (isNetworkAvailable()) {
             new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodService, menuName);
         } else {
-            showToast("Cannot download menu photo without network connection");
+            showToast("Cannot get menu photos without internet");
         }
     }
 
@@ -359,22 +374,4 @@ public class FoodMenuActivity extends BaseActivity {
         imageFilePath = image.getAbsolutePath();
         return image;
     }
-
-
-    public int getNumPhoto() {
-        return numPhoto;
-    }
-
-    public void setNumPhoto(int numPhoto) {
-        this.numPhoto = numPhoto;
-    }
-
-    public String[] getPhotoIDs() {
-        return photoIDs;
-    }
-
-    public void setPhotoIDs(String[] photoIDs) {
-        this.photoIDs = photoIDs;
-    }
-
 }

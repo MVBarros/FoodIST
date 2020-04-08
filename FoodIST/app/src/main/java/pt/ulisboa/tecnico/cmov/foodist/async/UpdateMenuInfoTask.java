@@ -3,16 +3,14 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 import android.util.Log;
 
 import foodist.server.grpc.contract.Contract;
-import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
+import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 
 public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.Menu, FoodMenuActivity> {
 
-    private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
-    private String foodService;
-    private String menuName;
+    private FoodISTServerServiceBlockingStub stub;
 
     public UpdateMenuInfoTask(FoodMenuActivity activity) {
         super(activity);
@@ -27,18 +25,17 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
         if (foodService.length != 2) {
             return null;
         }
-        this.foodService = foodService[0];
-        this.menuName = foodService[1];
+        String foodService1 = foodService[0];
+        String menuName = foodService[1];
 
         Contract.UpdateMenuRequest req = Contract.UpdateMenuRequest.newBuilder()
-                .setFoodService(this.foodService)
+                .setFoodService(foodService1)
                 .setMenuName(menuName)
                 .build();
 
 
         try {
-            Contract.Menu reply = this.stub.updateMenu(req);
-            return reply;
+            return this.stub.updateMenu(req);
         } catch (StatusRuntimeException e) {
             return null;
         }
@@ -51,23 +48,7 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
             return;
         }
         FoodMenuActivity activity = getActivity();
-        int currPhotoIndex = activity.getNumPhoto();
-        String[] currPhotos = activity.getPhotoIDs();
-
         String[] newPhotos = menu.getPhotoIdList().toArray(new String[menu.getPhotoIdCount()]);
-        int newIndex = 0;
-        if (currPhotos.length != 0) {
-            int i = 0;
-            for (String photo : newPhotos) {
-                if (photo.equals(currPhotos[currPhotoIndex])) {
-                    newIndex = i;
-                    break;
-                }
-                i++;
-            }
-        }
-        activity.setPhotoIDs(newPhotos);
-        activity.setNumPhoto(newIndex);
-        activity.downloadCurrentPhoto();
+        activity.updatePhotos(newPhotos);
     }
 }
