@@ -38,6 +38,7 @@ public class PhotoCache {
 
     public synchronized Boolean addPhotoIfNotFull(String photoID, Bitmap photo){
         if(cache.size() + photo.getByteCount() > cacheSize){
+            Log.d(TAG, "Cache Full");
             return false;
         }
         addPhoto(photoID, photo);

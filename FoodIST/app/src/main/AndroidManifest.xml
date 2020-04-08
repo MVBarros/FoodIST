@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.CacheService"/>
+        <service android:name=".service.CacheService" />
         <receiver android:name=".broadcast.CacheNetworkReceiver"
             android:enabled="true">
 

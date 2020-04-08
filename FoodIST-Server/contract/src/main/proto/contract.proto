@@ -47,11 +47,17 @@ message UpdateMenuRequest {
     string menuName = 2;
 }
 
+message PhotoReply {
+    repeated string photoID = 1;
+}
+
 service FoodISTServerService {
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
     rpc updateMenu(UpdateMenuRequest) returns (Menu);
     rpc addMenu(AddMenuRequest) returns (google.protobuf.Empty);
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
+    rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
+
 }
 
