@@ -89,11 +89,9 @@ public class AddMenuActivity extends BaseActivity {
             new UploadMenuTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
             if (imageFilePath != null) {
                 Photo photo = new Photo(menu.getFoodServiceName(), menu.getMenuName(), imageFilePath);
-                new UploadPhotoTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getAssyncStub(), null).execute(photo);
+                new UploadPhotoTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getAssyncStub(), this).execute(photo);
             }
-            Intent intent = new Intent(AddMenuActivity.this, FoodServiceActivity.class);
-            intent.putExtra(SERVICE_NAME, menu.getFoodServiceName());
-            startActivity(intent);
+            finish();
         } else {
             showToast("device is not online! Please check your connection.");
         }

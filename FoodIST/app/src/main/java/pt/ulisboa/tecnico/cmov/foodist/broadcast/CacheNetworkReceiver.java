@@ -15,10 +15,10 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 public class CacheNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "CACHE-NETWORK-RECEIVER";
 
-    private boolean wasNetworkAvailable = true;
-    public boolean isFirst = true;
+    private static boolean wasNetworkAvailable = true;
+    public static boolean isFirst = true;
 
-    private WifiPreloadingTask cachePreloadingTask = null;
+    private static WifiPreloadingTask cachePreloadingTask = null;
     @Override
     public void onReceive(Context context, Intent intent) {
 

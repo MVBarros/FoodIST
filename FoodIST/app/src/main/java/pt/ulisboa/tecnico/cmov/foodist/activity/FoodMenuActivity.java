@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -65,7 +66,7 @@ public class FoodMenuActivity extends BaseActivity {
     private String foodService;
     private String menuName;
 
-    private String[] photoIDs;
+    private String[] photoIDs = new String[0];
 
 
     @Override
@@ -74,8 +75,13 @@ public class FoodMenuActivity extends BaseActivity {
         setContentView(R.layout.activity_food_menu);
 
         intentInitialization(getIntent());
-        downloadCurrentPhoto();
         setButtons();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        launchUpdateMenuTask();
     }
 
     @Override
@@ -135,15 +141,6 @@ public class FoodMenuActivity extends BaseActivity {
         initializeMenuName(intent.getStringExtra(MENU_NAME));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeFoodService(intent.getStringExtra(MENU_SERVICE));
-        initializePhotoIDs(intent.getStringArrayExtra(PHOTO_LIST));
-    }
-
-    private void initializePhotoIDs(String[] photoIDs) {
-        if (photoIDs == null) {
-            Log.d(TAG, "Unable to obtain IDs");
-        } else {
-            this.photoIDs = photoIDs;
-        }
     }
 
     private void initializeMenuName(String menuName) {
@@ -176,12 +173,16 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void nextPhoto() {
-        numPhoto = ++numPhoto % this.photoIDs.length;
+        if (this.photoIDs.length != 0) {
+            numPhoto = ++numPhoto % this.photoIDs.length;
+        }
         downloadCurrentPhoto();
     }
 
     private void previousPhoto() {
-        numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
+        if (this.photoIDs.length != 0) {
+            numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
+        }
         downloadCurrentPhoto();
     }
 
@@ -304,29 +305,17 @@ public class FoodMenuActivity extends BaseActivity {
 
         Photo photo = new Photo(this.foodService, this.menuName, absoluteFilePath);
         launchUploadPhotoTask(photo);
-        //Save path for future reference
-        //TODO - add directly to cache
-        /*
-        editor.putString(getString(R.string.user_photo), absoluteFilePath);
-        editor.apply();
-        */
     }
 
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
         launchUploadPhotoTask(photo);
-        //TODO - add directly to cache
-        /*
-        editor.putString(getString(R.string.user_photo), imageFilePath);
-        editor.apply();
-
-         */
     }
 
 
     private void launchDownloadPhotoTask(Photo photo) {
         if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).execute(photo);
+            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
         } else {
             showToast("Cannot download menu photo without network connection");
         }
@@ -334,7 +323,7 @@ public class FoodMenuActivity extends BaseActivity {
 
     public void launchUpdateMenuTask() {
         if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).execute(foodService, menuName);
+            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodService, menuName);
         } else {
             showToast("Cannot download menu photo without network connection");
         }
@@ -342,7 +331,7 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void launchUploadPhotoTask(Photo photo) {
         if (isNetworkAvailable()) {
-            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).execute(photo);
+            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
         } else {
             showToast("Cannot upload menu photo without network connection");
         }
