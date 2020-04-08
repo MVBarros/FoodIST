@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -19,39 +21,38 @@ public class Storage {
 	
 	private static final String BASE_DIR = "photos";
 	
-	private static ConcurrentHashMap<String, HashSet<Menu>> menusHashMap = new ConcurrentHashMap<>();
+	private static AtomicInteger atomicInteger = new AtomicInteger(0);
+	private static ConcurrentHashMap<String, HashMap<String, Menu>> foodServiceMap = new ConcurrentHashMap<>();
 	
 	public synchronized static void addMenu(String foodService, Menu menu) {
-	    HashSet<Menu> menuSet = menusHashMap.get(foodService);
+	    HashMap<String, Menu> menuMap = foodServiceMap.get(foodService);
 	      
-	    if(menuSet!=null) {
-	    	menuSet.add(menu);
-	    	menusHashMap.put(foodService, menuSet);         
+	    if(menuMap!=null) {
+	    	menuMap.put(menu.getName(), menu);
+	    	foodServiceMap.put(foodService, menuMap);         
 	    } 
 	    else {
-	    	HashSet<Menu> new_MenuSet = new HashSet<Menu>();
-	    	new_MenuSet.add(menu);
-	    	menusHashMap.put(foodService, new_MenuSet);         
+	    	HashMap<String, Menu> newMenuMap = new HashMap<>();
+	    	newMenuMap.put(menu.getName(), menu);
+	    	foodServiceMap.put(foodService, newMenuMap);         
 	    } 
 	}
 	
-	public synchronized static HashSet<Menu> getMenuSet(String foodService) {
-		menusHashMap.putIfAbsent(foodService, new HashSet<>());
-		return menusHashMap.get(foodService);
+	public synchronized static HashMap<String, Menu> getMenuMap(String foodService) {
+		return foodServiceMap.putIfAbsent(foodService, new HashMap<String, Menu>());
 	}
 	
 	public synchronized static void purge() {	
 		System.out.print("Cleaning up server persistent memory... ");
-		Iterator<Entry<String, HashSet<Menu>>> iterator = menusHashMap.entrySet().iterator();
+		
+		Iterator<Entry<String, HashMap<String, Menu>>> iterator = foodServiceMap.entrySet().iterator();
 		while (iterator.hasNext()) {
-	        Map.Entry<String, HashSet<Menu>> pair = iterator.next();
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
-	        menusHashMap.put(pair.getKey(), null);
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	        HashMap.Entry<String, HashMap<String, Menu>> pair = iterator.next();
+	        foodServiceMap.put(pair.getKey(), null);
 	        iterator.remove(); 
 	    }
-		File directory = new File(BASE_DIR);
 		
+		File directory = new File(BASE_DIR);		
 		for(String filename : directory.list()) {
 			if(filename.equals("test")) {
 				continue;
@@ -72,14 +73,14 @@ public class Storage {
 		
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
 		createPhotoDir(foodServicePath);
-	    String photoPath = foodServicePath + UUID.randomUUID().toString() + "." + photoName.split("\\.")[1];
+	    String photoPath = foodServicePath + atomicInteger.incrementAndGet() + "." + photoName.split("\\.")[1];
 	    try{
 	        FileOutputStream out=new FileOutputStream(photoPath);	        
 	        out.write(photoByteString.toByteArray());
 	        out.close(); 
 	    }
 	    catch (IOException ioe){
-	        System.out.println("Error! Could not write file: \"" + photoPath + "\".");
+	        System.out.println("Error! Could not write file: \"" + photoPath + "\"");
 	    }
 	}
 	
@@ -113,7 +114,7 @@ public class Storage {
 		    	byte[] bytes = IOUtils.toByteArray(inputStream);
 		    	return bytes;
 			} catch(IOException ioe) {
-				System.out.println(ioe.getMessage());
+				System.out.println("Could not fetch photograph \"" + photoId + "\"");
 			}						
 	    }			
 		return null;

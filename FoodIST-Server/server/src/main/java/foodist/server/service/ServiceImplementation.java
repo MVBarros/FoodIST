@@ -14,8 +14,9 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
@@ -28,8 +29,6 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         menuBuilder.setPrice(request.getPrice());
         Menu menu = menuBuilder.build();
 
-        System.out.println(request.getName() + ":" + request.getPrice());
-
         Storage.addMenu(foodService, menu);
 
         responseObserver.onNext(null);
@@ -40,12 +39,14 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
         String foodService = request.getFoodService();
 
-        HashSet<Menu> menuList = Storage.getMenuSet(foodService);
+        HashMap<String, Menu> menuMap = Storage.getMenuMap(foodService);
 
         ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
-
-        for (Menu m : menuList) {
-            Menu menu = Storage.fetchMenuPhotos(foodService, m.getName(), m.getPrice());
+        
+        Iterator<Entry<String, Menu>> iterator = menuMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+        	Entry<String, Menu> entry = iterator.next();
+            Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
             listMenuReplyBuilder.addMenus(menu);
         }
 
@@ -57,17 +58,19 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     @Override
     public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Menu> responseObserver) {
         String service = request.getFoodService();
-        String menu = request.getMenuName();
+        String name = request.getMenuName();
 
-        HashSet<Menu> menus = Storage.getMenuSet(service);
-        Optional<Menu> opt = menus.stream().filter(storedMenu -> storedMenu.getName().equals(menu)).findFirst();
-
-        if (opt.isPresent()) {
-            Menu ret = Storage.fetchMenuPhotos(service, opt.get().getName(), opt.get().getPrice());
-            responseObserver.onNext(ret);
+        HashMap<String, Menu> menus = Storage.getMenuMap(service);
+        
+        Menu menu = menus.get(name);
+        
+        if(menu!=null) {
+        	Menu ret = Storage.fetchMenuPhotos(service, name, menu.getPrice());
+        	responseObserver.onNext(ret);
             responseObserver.onCompleted();
-        } else {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("No such menu").asRuntimeException());
+        }
+        else {
+        	responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("No such menu").asRuntimeException());
         }
     }
 
