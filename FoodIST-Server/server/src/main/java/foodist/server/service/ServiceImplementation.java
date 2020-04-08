@@ -8,6 +8,7 @@ import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.Contract.PhotoReply;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -19,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
-
+	
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
         Menu.Builder menuBuilder = Menu.newBuilder();
@@ -141,6 +142,14 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
             downloadPhotoReplyBuilder.setSequenceNumber(sequence);
             responseObserver.onNext(downloadPhotoReplyBuilder.build());
         }
+        responseObserver.onCompleted();
+    }
+    
+    @Override
+    public void requestPhotoIDs(Empty request, StreamObserver<foodist.server.grpc.contract.Contract.PhotoReply> responseObserver) {
+    	// fetches the oldest three photo ids 
+        PhotoReply photoReply = Storage.fetchPhotoIds(3);
+        responseObserver.onNext(photoReply);
         responseObserver.onCompleted();
     }
 

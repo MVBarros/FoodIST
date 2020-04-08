@@ -24,8 +24,6 @@ message DownloadPhotoReply {
 
 message DownloadPhotoRequest {
     string photoId = 1;
-    string foodService = 2;
-    string menuName = 3;
 }
 
 message ListMenuRequest {
@@ -58,6 +56,5 @@ service FoodISTServerService {
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
-
 }
 

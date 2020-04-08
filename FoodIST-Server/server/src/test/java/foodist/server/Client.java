@@ -12,6 +12,7 @@ import foodist.server.grpc.contract.Contract.DownloadPhotoRequest;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.Contract.PhotoReply;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
@@ -62,7 +63,7 @@ class Client {
 			// This is just an example of what you might do we listMenu 
 			// Download photos from menus
 			for(int i = 0; i<m.getPhotoIdCount(); i++) {
-				this.downloadPhoto(m.getPhotoId(i), foodService, m.getName());
+				this.downloadPhoto(m.getPhotoId(i));
 			}			
 		}
 		
@@ -131,7 +132,7 @@ class Client {
         }
 	}
 	
-	void downloadPhoto(String photoId, String foodService, String menuName) {
+	void downloadPhoto(String photoId) {
 		DownloadPhotoRequest.Builder downloadPhotoBuilder = DownloadPhotoRequest.newBuilder();					
 		
 		downloadPhotoBuilder.setPhotoId(photoId);							
@@ -142,7 +143,7 @@ class Client {
 		
 			
 		try {
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId, foodService, menuName)));
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId)));
 			
 	        //Write bytes to file		
 	        while (iterator.hasNext()) {
@@ -152,12 +153,23 @@ class Client {
 	        }
 	        out.close();
 		} catch(IOException ioe) {
-			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId, foodService, menuName) + "\".");
+			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId) + "\".");
 		}		
 	}
 	
-	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
-		String photoDirectory = CLIENT_FOLDER + foodServiceName + "/" + menuName + "/";
+	void requestPhotoIds() {
+		PhotoReply photoReply = this.stub.requestPhotoIDs(Empty.newBuilder().build());
+		List<String> list = photoReply.getPhotoIDList();
+	  
+		for(String photoId : list) {
+			// This is just an example of what you might do with requestPhotoIds; 
+			// Download photos from menus
+			this.downloadPhoto(photoId);
+		}
+	}
+	
+	private String assembleClientPhotoPath(String photoName) {
+		String photoDirectory = CLIENT_FOLDER + "/";
 		Storage.createPhotoDir(photoDirectory);
 		return photoDirectory + photoName;
 	}

@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.protobuf.ByteString;
 
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.Contract.PhotoReply;
 
 public class Storage {
 	
@@ -110,8 +111,6 @@ public class Storage {
 	public synchronized static byte[] fetchPhotoBytes(String photoId) {
 		String photoPath = photoPathMap.get(photoId);		
 		
-		System.out.println(photoId);
-		System.out.println(photoPath);
 		File file = new File(photoPath);		
 		
 		if (file.exists()){
@@ -125,6 +124,22 @@ public class Storage {
 	    }			
 		return null;
 	}	
+	
+	public synchronized static PhotoReply fetchPhotoIds(int quantity) {		
+		PhotoReply.Builder builder = PhotoReply.newBuilder();
+		
+		Iterator<HashMap<String, Menu>> outer = foodServiceMap.values().iterator();
+		
+		while(outer.hasNext()) {
+			HashMap<String, Menu> menusMap = outer.next();
+			Iterator<String> inner = menusMap.keySet().iterator();			
+			for(int i = 0; inner.hasNext() && i<quantity; i++) {
+				builder.addPhotoID(inner.next());
+			}
+		}			
+		
+		return builder.build();
+	}
 	
 	public synchronized static void createPhotoDir(String photoPath) {			
 		File directory = new File(photoPath);
