@@ -7,8 +7,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +21,7 @@ public class Storage {
 	
 	private static final String BASE_DIR = "photos";
 	
+	private static AtomicInteger atomicInteger = new AtomicInteger(0);
 	private static ConcurrentHashMap<String, HashMap<String, Menu>> foodServiceMap = new ConcurrentHashMap<>();
 	
 	public synchronized static void addMenu(String foodService, Menu menu) {
@@ -72,14 +73,14 @@ public class Storage {
 		
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
 		createPhotoDir(foodServicePath);
-	    String photoPath = foodServicePath + UUID.randomUUID().toString() + "." + photoName.split("\\.")[1];
+	    String photoPath = foodServicePath + atomicInteger.incrementAndGet() + "." + photoName.split("\\.")[1];
 	    try{
 	        FileOutputStream out=new FileOutputStream(photoPath);	        
 	        out.write(photoByteString.toByteArray());
 	        out.close(); 
 	    }
 	    catch (IOException ioe){
-	        System.out.println("Error! Could not write file: \"" + photoPath + "\".");
+	        System.out.println("Error! Could not write file: \"" + photoPath + "\"");
 	    }
 	}
 	
@@ -113,7 +114,7 @@ public class Storage {
 		    	byte[] bytes = IOUtils.toByteArray(inputStream);
 		    	return bytes;
 			} catch(IOException ioe) {
-				System.out.println(ioe.getMessage());
+				System.out.println("Could not fetch photograph \"" + photoId + "\"");
 			}						
 	    }			
 		return null;

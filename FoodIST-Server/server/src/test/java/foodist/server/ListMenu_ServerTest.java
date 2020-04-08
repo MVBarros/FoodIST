@@ -20,7 +20,7 @@ import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
 public class ListMenu_ServerTest { 
-	
+
 	@Rule
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
         
@@ -55,11 +55,14 @@ public class ListMenu_ServerTest {
 	
 	@Test
   	public void listMultipleMenus_SameFoodService() {
-		client.addMenu("Burger Shop", "Double Burger", 4.50);
-		client.addPhoto("Burger Shop", "Double Burger", "photos/test/double_burger.jpg");
+		client.addMenu("Hamburger Town", "Burger", 2.50);
+		client.addMenu("Hamburger Town", "Double Burger", 4.50);
+		
+		client.addPhoto("Hamburger Town", "Burger", "photos/test/burger.png");
+		client.addPhoto("Hamburger Town", "Double Burger", "photos/test/double_burger.jpg");
 		
 	  	String menus = "";	
-	  	ListMenuReply listMenuReply = client.listMenu("Burger Shop");
+	  	ListMenuReply listMenuReply = client.listMenu("Hamburger Town");
 	  	
 	  	for(Menu m : listMenuReply.getMenusList()) {
 	  		menus += m.getName();
