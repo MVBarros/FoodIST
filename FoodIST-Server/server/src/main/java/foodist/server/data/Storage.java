@@ -39,7 +39,8 @@ public class Storage {
 	}
 	
 	public synchronized static HashMap<String, Menu> getMenuMap(String foodService) {
-		return foodServiceMap.putIfAbsent(foodService, new HashMap<String, Menu>());
+		foodServiceMap.putIfAbsent(foodService, new HashMap<String, Menu>());
+		return foodServiceMap.get(foodService);
 	}
 	
 	public synchronized static void purge() {	

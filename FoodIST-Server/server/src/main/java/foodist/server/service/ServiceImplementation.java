@@ -40,16 +40,15 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         String foodService = request.getFoodService();
 
         HashMap<String, Menu> menuMap = Storage.getMenuMap(foodService);
-
-        ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
         
-        Iterator<Entry<String, Menu>> iterator = menuMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-        	Entry<String, Menu> entry = iterator.next();
-            Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
-            listMenuReplyBuilder.addMenus(menu);
-        }
-
+        ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
+	    Iterator<Entry<String, Menu>> iterator = menuMap.entrySet().iterator();
+	    while (iterator.hasNext()) {
+	        Entry<String, Menu> entry = iterator.next();
+	        Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
+	        listMenuReplyBuilder.addMenus(menu);
+	    }
+	
         ListMenuReply listMenuReply = listMenuReplyBuilder.build();
         responseObserver.onNext(listMenuReply);
         responseObserver.onCompleted();
