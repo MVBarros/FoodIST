@@ -128,14 +128,23 @@ public class Storage {
 	public synchronized static PhotoReply fetchPhotoIds(int quantity) {		
 		PhotoReply.Builder builder = PhotoReply.newBuilder();
 		
-		Iterator<HashMap<String, Menu>> outer = foodServiceMap.values().iterator();
+		Iterator<Entry<String, HashMap<String, Menu>>> outer = foodServiceMap.entrySet().iterator();
 		
 		while(outer.hasNext()) {
-			HashMap<String, Menu> menusMap = outer.next();
-			Iterator<String> inner = menusMap.keySet().iterator();			
-			for(int i = 0; inner.hasNext() && i<quantity; i++) {
-				builder.addPhotoID(inner.next());
-			}
+			Entry<String, HashMap<String, Menu>> mapping = outer.next();
+			String foodService = mapping.getKey();
+			Iterator<String> inner = mapping.getValue().keySet().iterator();		
+			while(inner.hasNext()) {
+				String menu = inner.next();
+				
+				String[] photoIds = new File(BASE_DIR + 
+						File.separator + foodService + File.separator 
+						+ menu + File.separator).list();
+				
+				for(int i = 0; i<photoIds.length && i<quantity; i++) {
+					builder.addPhotoID(photoIds[i]);
+				}
+			}			
 		}			
 		
 		return builder.build();

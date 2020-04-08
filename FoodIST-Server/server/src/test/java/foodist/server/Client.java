@@ -160,7 +160,7 @@ class Client {
 	void requestPhotoIds() {
 		PhotoReply photoReply = this.stub.requestPhotoIDs(Empty.newBuilder().build());
 		List<String> list = photoReply.getPhotoIDList();
-	  
+		
 		for(String photoId : list) {
 			// This is just an example of what you might do with requestPhotoIds; 
 			// Download photos from menus

@@ -26,9 +26,7 @@ import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
-public class DownloadPhoto_ServerTest { 
-			
-	private static final String BASE_DIR = "photos";
+public class DownloadPhoto_ServerTest { 		
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;
