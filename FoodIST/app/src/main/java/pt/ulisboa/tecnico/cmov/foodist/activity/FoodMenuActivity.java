@@ -102,18 +102,17 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
-    public void getPhoto(Photo photo){
+    public void getPhoto(Photo photo) {
         Bitmap cachedPhoto = getCachedPhoto(photo.getPhotoID());
-        if(cachedPhoto == null){
+        if (cachedPhoto == null) {
             launchDownloadPhotoTask(photo);
-        }
-        else{
+        } else {
             ImageView photoView = findViewById(R.id.menuPhotos);
             photoView.setImageBitmap(cachedPhoto);
         }
     }
-    
-    public Bitmap getCachedPhoto(String photoID){
+
+    public Bitmap getCachedPhoto(String photoID) {
         return PhotoCache.getInstance().getPhoto(photoID);
     }
 

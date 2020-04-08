@@ -8,17 +8,18 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
-import pt.ulisboa.tecnico.cmov.foodist.async.WifiPreloadingTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.WifiPreLoadingTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
-public class CacheNetworkReceiver extends BaseNetworkReceiver {
+public class PreLoadingNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "CACHE-NETWORK-RECEIVER";
 
     private static boolean wasNetworkAvailable = true;
     public static boolean isFirst = true;
 
-    private static WifiPreloadingTask cachePreloadingTask = null;
+    private static WifiPreLoadingTask cachePreloadingTask = null;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -41,21 +42,22 @@ public class CacheNetworkReceiver extends BaseNetworkReceiver {
         }
         wasNetworkAvailable = isNetworkAvailable;
     }
+
     @Override
     protected void onNetworkUp(Context context, Intent intent) {
         Log.d(TAG, "Wifi connected");
         FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = ((GlobalStatus) context.getApplicationContext()).getStub();
-        this.cachePreloadingTask = new WifiPreloadingTask();
-        this.cachePreloadingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, stub);
+        cachePreloadingTask = new WifiPreLoadingTask();
+        cachePreloadingTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, stub);
     }
 
     @Override
     protected void onNetworkDown(Context context, Intent intent) {
         Log.d(TAG, "Wifi disconnected");
 
-        if(this.cachePreloadingTask != null){
-            this.cachePreloadingTask.cancel(true);
-            this.cachePreloadingTask = null;
+        if (cachePreloadingTask != null) {
+            cachePreloadingTask.cancel(true);
+            cachePreloadingTask = null;
         }
     }
 

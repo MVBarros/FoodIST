@@ -2,15 +2,10 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -55,7 +50,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, Foo
 
         Iterator<Contract.DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);
 
-        try(ByteArrayOutputStream bis = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream bis = new ByteArrayOutputStream()) {
             //Write bytes to file
             while (iterator.hasNext()) {
                 Contract.DownloadPhotoReply chunk = iterator.next();
@@ -84,4 +79,4 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, Foo
         activity.showToast("Unable to download photo, check connection");
         Log.d(TAG, "Unable to download photo");
     }
-    }
+}
