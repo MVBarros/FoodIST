@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
@@ -17,6 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import pt.ulisboa.tecnico.cmov.foodist.activity.AddMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
@@ -26,10 +29,18 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub stub;
     private WeakReference<FoodMenuActivity> activity;
+    private Context mContext;
 
     public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, FoodMenuActivity activity) {
         this.stub = stub;
         this.activity = new WeakReference<>(activity);
+        mContext = activity.getApplicationContext();
+    }
+
+    public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, AddMenuActivity activity) {
+        this.stub = stub;
+        this.activity = new WeakReference<>(null);
+        mContext = activity.getApplicationContext();
     }
 
     private static final String TAG = "UPLOADPHOTO-TASK";
@@ -65,7 +76,6 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         byte[] data = new byte[1024 * 1024];
 
         try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(photo[0].getPhotoPath()))) {
-
             int numRead;
 
             //Send file chunks to server
@@ -100,6 +110,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (result) {
             Log.d(TAG, "Photo uploaded successfully");
+            //TODO PUT PHOTO IN CACHE
 
         } else {
             Log.d(TAG, "Photo unable to be uploaded");
@@ -108,6 +119,8 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             act.launchUpdateMenuTask();
         }
+        Toast toast = Toast.makeText(mContext, "Upload of photo completed", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public static String getFileFromPath(String path) {

@@ -7,7 +7,9 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.CacheNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -87,5 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         addReceivers();
+        addReceiver(new CacheNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION );
     }
+
 }

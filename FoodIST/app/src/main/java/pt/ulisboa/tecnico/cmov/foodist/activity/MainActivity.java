@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,11 +67,11 @@ public class MainActivity extends BaseActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         setButtons();
         setCurrentCampus();
-        updateFirstBoot();
+        /*updateFirstBoot();
         if(isFreshBoot){
             Intent intent = new Intent(this, CacheService.class);
             startService(intent);
-        }
+        }*/
     }
 
     @Override
@@ -159,11 +160,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void launchWalkingTimeTask(WalkingTimeData data) {
-        new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).execute(data);
+        new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }
 
     private void launchGuessCampusTask(String... urls) {
-        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this))).execute(urls);
+        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
     }
 
     private void guessCampusFromLocation() {
@@ -251,7 +252,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void launchFoodServiceParseTask(FoodServiceData resource) {
-        new CancelableTask<>((new SafePostTask<>(new ServiceParsingTask(this)))).execute(resource);
+        new CancelableTask<>((new SafePostTask<>(new ServiceParsingTask(this)))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, resource);
     }
 
     public List<FoodService> getAvailableServices() {
