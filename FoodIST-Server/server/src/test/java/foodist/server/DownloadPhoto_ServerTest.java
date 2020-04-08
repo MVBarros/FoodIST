@@ -27,16 +27,8 @@ import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
 public class DownloadPhoto_ServerTest { 
-		
-	private static final double TEST_PRICE = 1.50;
-	
+			
 	private static final String BASE_DIR = "photos";
-	private static final String TEST_ALTERNATIVE_FOODSERVICE = "Lakeviewrestaurant";
-	private static final String TEST_ALTERNATIVE_MENU = "Farinheira";
-	private static final String TEST_ALTERNATIVE_PHOTO = "photos/test/farinheira.png";
-	private static final String TEST_FOODSERVICE = "Testbar";
-	private static final String TEST_MENU = "Chourico";
-	private static final String TEST_PHOTO = "photos/test/chourico.jpg";
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;
@@ -54,48 +46,41 @@ public class DownloadPhoto_ServerTest {
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
-    	client = new Client(channel);    
-    	client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
-    	client.addPhoto(TEST_FOODSERVICE, TEST_MENU, TEST_PHOTO);    
-    	
-		client.addMenu(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_PRICE);
-		client.addPhoto(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_ALTERNATIVE_PHOTO);
-		
-    	originalPhoto = ImageIO.read(new File(TEST_PHOTO));
-        originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
-        originalPhotoSize = originalPhotoDataBuffer.getSize();    
-        
-        client.addMenu(TEST_ALTERNATIVE_FOODSERVICE, TEST_MENU, TEST_PRICE);
-        client.addPhoto(TEST_ALTERNATIVE_FOODSERVICE, TEST_MENU, TEST_PHOTO);
+    	client = new Client(channel);        	          
 	}
 	
 	@Test
   	public void DownloadPhoto_ClientPath() {
+		client.addMenu("Tugalandia", "Farinheira", 8.00);
+		client.addPhoto("Tugalandia", "Farinheira", "photos/test/farinheira.png");
+		
 	  	String photoId = "";	
-	  	ListMenuReply listMenuReply = client.listMenu(TEST_ALTERNATIVE_FOODSERVICE);
+	  	ListMenuReply listMenuReply = client.listMenu("Tugalandia");
 	  	
 	  	photoId = listMenuReply.getMenusList().get(0).getPhotoId(0);
 	  	
-		boolean path_exists = new File(BASE_DIR + File.separator + "client" + File.separator 
-				+ TEST_ALTERNATIVE_FOODSERVICE + File.separator + TEST_MENU 
-				+ File.separator + photoId).exists();
+		boolean path_exists = new File("photos/client" + File.separator + photoId).exists();
 		assertTrue(path_exists);
   	}
 	
 	@Test
   	public void DownloadPhoto_SamePhoto() {		
+		client.addMenu("Romano", "Risotto", 7.00);
+    	client.addPhoto("Romano", "Risotto", "photos/test/risotto.jpg");    		    	
+        
 	  	String photoId = "";	
-	  	ListMenuReply listMenuReply = client.listMenu(TEST_ALTERNATIVE_FOODSERVICE);
+	  	ListMenuReply listMenuReply = client.listMenu("Romano");
 	  	
 	  	photoId = listMenuReply.getMenusList().get(0).getPhotoId(0);
 	  	
-		client.downloadPhoto(photoId, TEST_ALTERNATIVE_FOODSERVICE, TEST_MENU);
+		client.downloadPhoto(photoId);
 
 		try {
-			BufferedImage uploadedPhoto = ImageIO.read(new File(
-					BASE_DIR + File.separator + "client" + File.separator 
-					+ TEST_ALTERNATIVE_FOODSERVICE + File.separator + TEST_MENU 
-					+ File.separator + photoId));
+			originalPhoto = ImageIO.read(new File("photos/test/risotto.jpg"));
+	        originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
+	        originalPhotoSize = originalPhotoDataBuffer.getSize();
+	        
+			BufferedImage uploadedPhoto = ImageIO.read(new File("photos/Romano/Risotto" + File.separator + photoId));
 			
 			DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();
 		    int uploadedPhotoSize = uploadedPhotoDataBuffer.getSize();                      

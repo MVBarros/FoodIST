@@ -27,9 +27,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(JUnit4.class)
 public class DownloadPhoto_ClientTest { 	
 	
-	private static final String TEST_FOODSERVICE = "Testbar";
-	private static final String TEST_MENU = "Chourico";
-	private static final String TEST_PHOTO = "photos/test/chourico.jpg";
+	private static final String PHOTO_ID = "CLIENT_TEST";
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;
@@ -63,9 +61,9 @@ public class DownloadPhoto_ClientTest {
 	@Test
   	public void DownloadPhoto_Photo() {
 		ArgumentCaptor<DownloadPhotoRequest> requestCaptor = ArgumentCaptor.forClass(DownloadPhotoRequest.class);
-	    client.downloadPhoto(TEST_PHOTO, TEST_FOODSERVICE, TEST_MENU);
+	    client.downloadPhoto(PHOTO_ID);
 	    verify(serviceImpl).downloadPhoto(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<DownloadPhotoReply>>any());
-	    assertEquals(TEST_PHOTO, requestCaptor.getValue().getPhotoId());
+	    assertEquals(PHOTO_ID, requestCaptor.getValue().getPhotoId());
   	}
 	
 }

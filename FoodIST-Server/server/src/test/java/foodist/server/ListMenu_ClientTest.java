@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class ListMenu_ClientTest { 
 	
-	private static final String TEST_FOODSERVICE = "Testbar";
+	private static final String TEST_FOODSERVICE = "CLIENT_TEST";
   
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    
 	

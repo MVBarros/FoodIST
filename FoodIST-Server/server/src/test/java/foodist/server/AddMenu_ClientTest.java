@@ -26,10 +26,9 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 @RunWith(JUnit4.class)
 public class AddMenu_ClientTest { 
 		
-	private static final double TEST_PRICE = 1.50;
-	
-	private static final String TEST_FOODSERVICE = "Testbar";
-	private static final String TEST_MENU = "Chourico";
+	private static final double TEST_PRICE = 1.50;	
+	private static final String TEST_FOODSERVICE = "CLIENT_TEST";
+	private static final String TEST_MENU = "CLIENT_TEST";
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;
