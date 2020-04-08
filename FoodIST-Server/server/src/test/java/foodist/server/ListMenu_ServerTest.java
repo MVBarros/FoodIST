@@ -20,15 +20,7 @@ import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
 public class ListMenu_ServerTest { 
-		
-	private static final double TEST_PRICE = 1.50;
 	
-	private static final String TEST_FOODSERVICE = "Testbar";
-	private static final String TEST_MENU = "Chourico";
-	private static final String TEST_ALTERNATIVE_MENU = "Farinheira";
-	private static final String TEST_PHOTO = "photos/test/chourico.jpg";
-	private static final String TEST_ALTERNATIVE_PHOTO = "photos/test/farinheira.png";
-  
 	@Rule
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
         
@@ -44,72 +36,83 @@ public class ListMenu_ServerTest {
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    
-    	client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
-    	client.addPhoto(TEST_FOODSERVICE, TEST_MENU, TEST_PHOTO);
 	}
 
 	@Test
   	public void listSingleMenu_SameFoodService() {
+    	client.addMenu("Burger Shop", "Burger", 3.50);
+    	client.addPhoto("Burger Shop", "Burger", "photos/test/burger.png");
+    	
 	  	String menus = "";	
-	  	ListMenuReply listMenuReply = client.listMenu(TEST_FOODSERVICE);
+	  	ListMenuReply listMenuReply = client.listMenu("Burger Shop");
 	  	
 	  	for(Menu m : listMenuReply.getMenusList()) {
-	  		menus = m.getName();
+	  		menus += m.getName();
 	  	}
 	  	
-		assertEquals(TEST_MENU, menus);
+		assertEquals("Burger", menus);
   	}
 	
 	@Test
   	public void listMultipleMenus_SameFoodService() {
-		client.addMenu(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_PRICE);
-		client.addPhoto(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_ALTERNATIVE_PHOTO);
+		client.addMenu("Burger Shop", "Double Burger", 4.50);
+		client.addPhoto("Burger Shop", "Double Burger", "photos/test/double_burger.jpg");
 		
 	  	String menus = "";	
-	  	ListMenuReply listMenuReply = client.listMenu(TEST_FOODSERVICE);
+	  	ListMenuReply listMenuReply = client.listMenu("Burger Shop");
 	  	
 	  	for(Menu m : listMenuReply.getMenusList()) {
 	  		menus += m.getName();
 	  	}
 	  	
-		assertEquals(TEST_MENU+TEST_ALTERNATIVE_MENU, menus);
+	  	String expected = "Burger" + "Double Burger";
+		assertEquals(expected, menus);
   	}
 	
 	@Test
   	public void listMultipleMenus_DifferentFoodService() {
-		client.addMenu(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_PRICE);
-		client.addPhoto(TEST_FOODSERVICE, TEST_ALTERNATIVE_MENU, TEST_ALTERNATIVE_PHOTO);
-						
-	  	String menus = "";	
+		client.addMenu("Pizza Parlor", "Cheese Pizza", 9.50);
+	  	client.addMenu("Pizza Parlor", "Pepperoni Pizza", 11.00);
 	  	
-	  	ListMenuReply listMenuReply = client.listMenu(TEST_FOODSERVICE);
-	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
-	  		menus += m.getName();
-	  	}
-	  	
-	  	client.addMenu("Sewerbar", TEST_MENU, TEST_PRICE);
-		client.addPhoto("Sewerbar", TEST_MENU, TEST_ALTERNATIVE_PHOTO);
-	  	
-	  	listMenuReply = client.listMenu("Sewerbar");
+	  	client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/cheese_pizza.jpg");
+		client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/pepperoni_pizza.jpg");
+			  	
+		String menus = "";	
+		ListMenuReply listMenuReply = client.listMenu("Pizza Parlor");
 	  	
 	  	for(Menu m : listMenuReply.getMenusList()) {
 	  		menus += m.getName();
 	  	}
 	  	
-	  	assertEquals(TEST_MENU+TEST_ALTERNATIVE_MENU+TEST_MENU, menus);
+	  	String expected = "Pepperoni Pizza" +  "Cheese Pizza";	  	
+	  	assertEquals(expected, menus);
 	  	
   	}
 	
 	@Test
-  	public void listMenu_AvoidDuplicateMenus() {
-		client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
-		ListMenuReply lmReply = client.listMenu(TEST_FOODSERVICE);
+  	public void listMenu_AvoidDuplicateMenus_SameNameSameObject() {
+		client.addMenu("Healthy Veggies", "Salad", 2.50);
+		client.addMenu("Healthy Veggies", "Salad", 2.50);		
+		ListMenuReply lmReply = client.listMenu("Healthy Veggies");
 		String listedMenus = "";
 		for(Menu m : lmReply.getMenusList()) {
 			listedMenus += m.getName();
 		}
-		assertEquals(TEST_MENU, listedMenus);
+		System.out.println(listedMenus);
+		assertEquals("Salad", listedMenus);
+  	}
+	
+	@Test
+  	public void listMenu_AvoidDuplicateMenus_SameNameDifferentObject() {
+		client.addMenu("Deutsch Kuche", "Wurst", 6.50);
+		client.addMenu("Deutsch Kuche", "Wurst", 5.50);	
+		ListMenuReply lmReply = client.listMenu("Deutsch Kuche");
+		String listedMenus = "";
+		for(Menu m : lmReply.getMenusList()) {
+			listedMenus += m.getName();
+		}
+		System.out.println(listedMenus);
+		assertEquals("Wurst", listedMenus);
   	}
 	
 }

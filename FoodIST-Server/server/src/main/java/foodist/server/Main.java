@@ -38,9 +38,9 @@ public class Main {
         Duration duration = Duration.between(now, nextRun);
         long initial_delay = duration.getSeconds();
         
-        System.out.println("Starting memory cleaning thread");
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);   
-        scheduler.scheduleAtFixedRate(new Cleanup(), initial_delay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
+        //System.out.println("Starting memory cleaning thread");
+        //ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);   
+        //scheduler.scheduleAtFixedRate(new Cleanup(), initial_delay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
         
         System.out.println("Server Started at port " + port);
         server.awaitTermination();

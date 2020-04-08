@@ -31,8 +31,6 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         menuBuilder.setPrice(request.getPrice());
         Menu menu = menuBuilder.build();
 
-        System.out.println(request.getName() + ":" + request.getPrice());
-
         Storage.addMenu(foodService, menu);
 
         responseObserver.onNext(null);
