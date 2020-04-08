@@ -23,6 +23,7 @@ public class Storage {
 	
 	private static AtomicInteger atomicInteger = new AtomicInteger(0);
 	private static ConcurrentHashMap<String, HashMap<String, Menu>> foodServiceMap = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, String> photoPathMap = new ConcurrentHashMap<>();
 	
 	public synchronized static void addMenu(String foodService, Menu menu) {
 	    HashMap<String, Menu> menuMap = foodServiceMap.get(foodService);
@@ -73,12 +74,14 @@ public class Storage {
 	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
 		
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
-		createPhotoDir(foodServicePath);
-	    String photoPath = foodServicePath + atomicInteger.incrementAndGet() + "." + photoName.split("\\.")[1];
+		createPhotoDir(foodServicePath);	
+		String photoId = atomicInteger.incrementAndGet() + "." + photoName.split("\\.")[1];
+	    String photoPath = foodServicePath + photoId;
 	    try{
 	        FileOutputStream out=new FileOutputStream(photoPath);	        
 	        out.write(photoByteString.toByteArray());
 	        out.close(); 
+	        photoPathMap.put(photoId, photoPath);
 	    }
 	    catch (IOException ioe){
 	        System.out.println("Error! Could not write file: \"" + photoPath + "\"");
@@ -104,10 +107,12 @@ public class Storage {
 	    return menuBuilder.build();
 	}
 	
-	public synchronized static byte[] fetchPhotoBytes(String photoId, String foodServiceName, String menuName) {
-		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+	public synchronized static byte[] fetchPhotoBytes(String photoId) {
+		String photoPath = photoPathMap.get(photoId);		
 		
-		File file = new File(foodServicePath + photoId);		
+		System.out.println(photoId);
+		System.out.println(photoPath);
+		File file = new File(photoPath);		
 		
 		if (file.exists()){
 			try {

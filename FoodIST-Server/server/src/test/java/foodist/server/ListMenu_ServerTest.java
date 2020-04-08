@@ -89,7 +89,6 @@ public class ListMenu_ServerTest {
 	  	
 	  	String expected = "Pepperoni Pizza" +  "Cheese Pizza";	  	
 	  	assertEquals(expected, menus);
-	  	
   	}
 	
 	@Test

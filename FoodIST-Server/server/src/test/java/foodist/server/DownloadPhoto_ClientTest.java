@@ -48,7 +48,7 @@ public class DownloadPhoto_ClientTest {
 						
 		}));
 	Client client;		
-
+	
 	@Before
 	public void setUp() throws Exception {   
 		
@@ -58,23 +58,7 @@ public class DownloadPhoto_ClientTest {
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);            		
-	}
-	
-	@Test
-  	public void DownloadPhoto_FoodService() {
-		ArgumentCaptor<DownloadPhotoRequest> requestCaptor = ArgumentCaptor.forClass(DownloadPhotoRequest.class);
-	    client.downloadPhoto(TEST_PHOTO, TEST_FOODSERVICE, TEST_MENU);
-	    verify(serviceImpl).downloadPhoto(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<DownloadPhotoReply>>any());
-	    assertEquals(TEST_FOODSERVICE, requestCaptor.getValue().getFoodService());
-  	}
-	
-	@Test
-  	public void DownloadPhoto_MenuName() {
-		ArgumentCaptor<DownloadPhotoRequest> requestCaptor = ArgumentCaptor.forClass(DownloadPhotoRequest.class);
-	    client.downloadPhoto(TEST_PHOTO, TEST_FOODSERVICE, TEST_MENU);
-	    verify(serviceImpl).downloadPhoto(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<DownloadPhotoReply>>any());
-	    assertEquals(TEST_MENU, requestCaptor.getValue().getMenuName());
-  	}
+	}	
 	
 	@Test
   	public void DownloadPhoto_Photo() {

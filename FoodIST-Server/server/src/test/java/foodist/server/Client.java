@@ -134,9 +134,7 @@ class Client {
 	void downloadPhoto(String photoId, String foodService, String menuName) {
 		DownloadPhotoRequest.Builder downloadPhotoBuilder = DownloadPhotoRequest.newBuilder();					
 		
-		downloadPhotoBuilder.setPhotoId(photoId);
-		downloadPhotoBuilder.setFoodService(foodService);
-		downloadPhotoBuilder.setMenuName(menuName);									
+		downloadPhotoBuilder.setPhotoId(photoId);							
 		
 		DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build(); 		       		
 		
@@ -155,7 +153,7 @@ class Client {
 	        out.close();
 		} catch(IOException ioe) {
 			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId, foodService, menuName) + "\".");
-		}				
+		}		
 	}
 	
 	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {

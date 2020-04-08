@@ -127,13 +127,12 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
-        String foodService = request.getFoodService();
-        String menuName = request.getMenuName();
         String photoId = request.getPhotoId();
 
         int sequence = 0;
 
-        byte[] photo = Storage.fetchPhotoBytes(photoId, foodService, menuName);
+        byte[] photo = Storage.fetchPhotoBytes(photoId);
+        
         //Send file 1MB chunk at a time
         for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
             int chunkSize = Math.min(1024 * 1024, photo.length - i);
