@@ -1,8 +1,11 @@
-package pt.ulisboa.tecnico.cmov.foodist.threads;
+package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
+
+import com.google.protobuf.Empty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,29 +17,32 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 
-public class WifiPreloadingThread implements Runnable {
-    private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
-    private List<String> photoIDs;
-    private final static String TAG = "WIFI-PRELOADING-THREAD";
 
-    public WifiPreloadingThread(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub, List<String> photoIDs){
-        this.stub = stub;
-        this.photoIDs = photoIDs;
-    }
+public class WifiPreloadingTask extends AsyncTask<FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub, Integer, Boolean> {
+
+    private static final String TAG = "WIFI-PRELOADING-TASK";
 
     @Override
-    public void run() {
-        for(String photoID : this.photoIDs){
-            if(Thread.interrupted()){
-                Log.d(TAG, "Thread interrupted");
-                return;
-            }
-
-            if(!downloadPhoto(photoID, this.stub)){
-                Log.d(TAG, "Thread ended - Cache is full");
-                return;
-            }
+    protected Boolean doInBackground(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub... stub) {
+        if (stub.length != 1) {
+            return null;
         }
+        
+        try{
+            List<String> photoIDs = stub[0].requestPhotoIDs(Empty.newBuilder().build()).getPhotoIDList();
+
+            for(String photoID : photoIDs){
+                if(!downloadPhoto(photoID, stub[0])){
+                    Log.d(TAG, "Thread ended - Cache is full");
+                    return true;
+                }
+            }
+            return true;
+        } catch (StatusRuntimeException e){
+            Log.d(TAG, "Unable to request photos from server");
+            return true;
+        }
+
     }
 
     private Boolean downloadPhoto(String photoID, FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub){
