@@ -9,11 +9,11 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.CacheNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.PreLoadingNetworkReceiver;
 
 public class CacheService extends Service {
 
-    private CacheNetworkReceiver receiver = new CacheNetworkReceiver();
+    private PreLoadingNetworkReceiver receiver = new PreLoadingNetworkReceiver();
 
     @Nullable
     @Override
@@ -23,7 +23,7 @@ public class CacheService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION );
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(getPackageName() + WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(receiver, filter);
         return super.onStartCommand(intent, flags, startId);

@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,7 +38,6 @@ import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
-import pt.ulisboa.tecnico.cmov.foodist.service.CacheService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
@@ -67,11 +65,6 @@ public class MainActivity extends BaseActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         setButtons();
         setCurrentCampus();
-        /*updateFirstBoot();
-        if(isFreshBoot){
-            Intent intent = new Intent(this, CacheService.class);
-            startService(intent);
-        }*/
     }
 
     @Override

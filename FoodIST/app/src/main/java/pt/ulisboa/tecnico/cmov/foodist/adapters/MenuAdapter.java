@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -16,16 +18,15 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class MenuAdapter extends ArrayAdapter<Menu> {
-    //public static final String NUMBER_PHOTOS = "Number_photos";
-    public static final String MENU_NAME = "Menu_name";
-    public static final String MENU_PRICE = "Menu_price";
-    public static final String MENU_SERVICE = "Menu_service";
-    public static final String PHOTO_LIST = "Menu_photo_list";
+    private static final String MENU_NAME = "Menu_name";
+    private static final String MENU_PRICE = "Menu_price";
+    private static final String MENU_SERVICE = "Menu_service";
 
     public MenuAdapter(Context context, ArrayList<Menu> menus) {
         super(context, 0, menus);
     }
 
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Menu menu = getItem(position);
@@ -42,11 +43,9 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), FoodMenuActivity.class);
-            //intent.putExtra(NUMBER_PHOTOS, menu.getPhotoIdCount());
             intent.putExtra(MENU_NAME, menu.getMenuName());
             intent.putExtra(MENU_PRICE, menu.getPrice());
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
-            intent.putExtra(PHOTO_LIST, menu.getPhotoID());
             getContext().startActivity(intent);
 
         });

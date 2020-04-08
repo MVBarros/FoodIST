@@ -57,6 +57,8 @@ public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integ
             //Services of global status are now updated, just need to draw them
             // (If they have been overridden nothing new will happen)
             getActivity().drawServices();
+        } else {
+            getActivity().showToast("Unable to calculate food services walking time");
         }
     }
 }

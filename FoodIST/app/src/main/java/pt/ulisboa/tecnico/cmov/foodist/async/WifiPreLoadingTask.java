@@ -13,44 +13,44 @@ import java.util.Iterator;
 import java.util.List;
 
 import foodist.server.grpc.contract.Contract;
-import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
+import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 
 
-public class WifiPreloadingTask extends AsyncTask<FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub, Integer, Boolean> {
+public class WifiPreLoadingTask extends AsyncTask<FoodISTServerServiceBlockingStub, Integer, Boolean> {
 
     private static final String TAG = "WIFI-PRELOADING-TASK";
 
     @Override
-    protected Boolean doInBackground(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub... stub) {
+    protected Boolean doInBackground(FoodISTServerServiceBlockingStub... stub) {
         if (stub.length != 1) {
             return null;
         }
-        
-        try{
+
+        try {
             List<String> photoIDs = stub[0].requestPhotoIDs(Empty.newBuilder().build()).getPhotoIDList();
 
-            for(String photoID : photoIDs){
-                if(!downloadPhoto(photoID, stub[0])){
+            for (String photoID : photoIDs) {
+                if (!downloadPhoto(photoID, stub[0])) {
                     Log.d(TAG, "Thread ended - Cache is full");
                     return true;
                 }
             }
             return true;
-        } catch (StatusRuntimeException e){
+        } catch (StatusRuntimeException e) {
             Log.d(TAG, "Unable to request photos from server");
             return true;
         }
 
     }
 
-    private Boolean downloadPhoto(String photoID, FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub){
-        if(PhotoCache.getInstance().getPhoto(photoID) == null){
+    private Boolean downloadPhoto(String photoID, FoodISTServerServiceBlockingStub stub) {
+        if (PhotoCache.getInstance().getPhoto(photoID) == null) {
             Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder().setPhotoId(photoID).build();
             Iterator<Contract.DownloadPhotoReply> iterator = stub.downloadPhoto(request);
 
-            try(ByteArrayOutputStream bis = new ByteArrayOutputStream()) {
+            try (ByteArrayOutputStream bis = new ByteArrayOutputStream()) {
                 //Write bytes to file
                 while (iterator.hasNext()) {
                     Contract.DownloadPhotoReply chunk = iterator.next();
