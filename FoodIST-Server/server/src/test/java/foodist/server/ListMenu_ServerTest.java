@@ -101,7 +101,6 @@ public class ListMenu_ServerTest {
 		for(Menu m : lmReply.getMenusList()) {
 			listedMenus += m.getName();
 		}
-		System.out.println(listedMenus);
 		assertEquals("Salad", listedMenus);
   	}
 	
@@ -114,7 +113,6 @@ public class ListMenu_ServerTest {
 		for(Menu m : lmReply.getMenusList()) {
 			listedMenus += m.getName();
 		}
-		System.out.println(listedMenus);
 		assertEquals("Wurst", listedMenus);
   	}
 	
