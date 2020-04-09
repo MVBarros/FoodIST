@@ -9,8 +9,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,9 +28,6 @@ public class AddMenu_ClientTest {
 	private static final String TEST_FOODSERVICE = "CLIENT_TEST";
 	private static final String TEST_MENU = "CLIENT_TEST";
   
-	public BufferedImage originalPhoto;
-	public DataBuffer originalPhotoDataBuffer;
-	public int originalPhotoSize;
 	@Rule
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    
 	

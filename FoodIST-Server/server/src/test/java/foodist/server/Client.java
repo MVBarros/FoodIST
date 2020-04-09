@@ -163,7 +163,7 @@ class Client {
 		
 		for(String photoId : list) {
 			// This is just an example of what you might do with requestPhotoIds; 
-			// Download photos from menus
+			// Download photos with that Id from menus
 			this.downloadPhoto(photoId);
 		}
 	}

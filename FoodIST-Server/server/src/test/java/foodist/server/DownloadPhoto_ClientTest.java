@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(JUnit4.class)
 public class DownloadPhoto_ClientTest { 	
 	
-	private static final String PHOTO_ID = "CLIENT_TEST";
+	private static final String PHOTO_ID = "photos/test/turnip.png";
   
 	public BufferedImage originalPhoto;
 	public DataBuffer originalPhotoDataBuffer;

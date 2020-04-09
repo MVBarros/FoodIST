@@ -1,9 +1,13 @@
 package foodist.server;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,9 +26,6 @@ public class RequestPhotoIds_ServerTest {
 	Client client;	
 	final BindableService bindableService = new ServiceImplementation();	
 	
-	public BufferedImage originalPhoto;
-	public DataBuffer originalPhotoDataBuffer;
-	public int originalPhotoSize;
 	
 	@Before
 	public void setUp() throws Exception {   				
@@ -37,17 +38,45 @@ public class RequestPhotoIds_ServerTest {
 	}
 
 	@Test
-  	public void RequestPhoto_Test() {
-		// TODO 
+  	public void RequestPhoto_Test() throws IOException {
 		client.addMenu("Mercado", "Nabo", 1.00);
 				
 		for(int i = 1; i<=4; i++) {
-			client.addPhoto("Mercado", "Nabo", "photos/test/nabo_0" + i + ".png");
+			client.addPhoto("Mercado", "Nabo", "photos/test/nabo_0" + i + ".png");			
 		}			
 		
-		client.requestPhotoIds();
+		client.requestPhotoIds();	
 		
-		assertTrue(true);
+		//boolean[] expected = {true, true, true};		
+		//ArrayList<Boolean> booleanList = new ArrayList<Boolean>();
+		
+		int total_iterations = 0;
+		int wrong_iterations = 0;		
+		for(String server : new File("photos/Mercado/Nabo").list()) {
+			BufferedImage uploadedPhoto = ImageIO.read(new File("photos/Mercado/Nabo/" + server));
+			DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();
+		    int uploadedPhotoSize = uploadedPhotoDataBuffer.getSize();
+			for(String client : new File("photos/client/").list()) {
+				BufferedImage downloadedPhoto = ImageIO.read(new File("photos/client/" + client));
+				DataBuffer downloadedPhotoDataBuffer = downloadedPhoto.getData().getDataBuffer();
+				int downloadedPhotoSize = downloadedPhotoDataBuffer.getSize();						
+			    if(downloadedPhotoSize == uploadedPhotoSize) {
+			    	for(int j=0; j<downloadedPhotoSize; j++) { 
+			    		if(downloadedPhotoDataBuffer.getElem(j) != uploadedPhotoDataBuffer.getElem(j)) {	
+			    			wrong_iterations--;
+			                break;			                
+			            }
+			        }            
+			    }
+			    else {
+			    	wrong_iterations++;
+			    }
+			    total_iterations++;
+			}
+		}
+					
+		int right_photos = total_iterations - wrong_iterations;
+		assertEquals(3, right_photos);
   	}
 	
 }
