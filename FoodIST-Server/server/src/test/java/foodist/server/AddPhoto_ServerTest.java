@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -83,6 +84,17 @@ public class AddPhoto_ServerTest {
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}	
-  	}	
+  	}
+	
+	@Test
+  	public void AddPhoto_DuplicatePhoto() {
+    	client.addMenu("Mackies", "Fries", 6.50);
+    	
+    	for(int i=0; i<1024; i++) {
+    		client.addPhoto("Mackies", "Fries", "photos/test/fries.jpg");
+    	}
+        
+		assertEquals(1024, new File("photos/Mackies/Fries/").list().length);
+  	}
 	
 }

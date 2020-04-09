@@ -145,8 +145,7 @@ class Client {
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId)));
 			
 	        //Write bytes to file		
-	        while (iterator.hasNext()) {
-	        	System.out.println("entrou");
+	        while (iterator.hasNext()) {	        	
 	            Contract.DownloadPhotoReply chunk = iterator.next();
 	            byte[] fileBytes = chunk.getContent().toByteArray();
 	            out.write(fileBytes);	            
