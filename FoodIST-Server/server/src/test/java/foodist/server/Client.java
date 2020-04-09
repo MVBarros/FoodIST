@@ -132,21 +132,21 @@ class Client {
         }
 	}
 	
-	void downloadPhoto(String photoId) {
+	void downloadPhoto(String photoId) {		
 		DownloadPhotoRequest.Builder downloadPhotoBuilder = DownloadPhotoRequest.newBuilder();					
 		
 		downloadPhotoBuilder.setPhotoId(photoId);							
 		
 		DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build(); 		       		
-		
-		Iterator<DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);   
-		
 			
-		try {
+		Iterator<DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);
+				
+		try {		
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId)));
 			
 	        //Write bytes to file		
 	        while (iterator.hasNext()) {
+	        	System.out.println("entrou");
 	            Contract.DownloadPhotoReply chunk = iterator.next();
 	            byte[] fileBytes = chunk.getContent().toByteArray();
 	            out.write(fileBytes);	            
@@ -154,7 +154,7 @@ class Client {
 	        out.close();
 		} catch(IOException ioe) {
 			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId) + "\".");
-		}		
+		}
 	}
 	
 	void requestPhotoIds() {
