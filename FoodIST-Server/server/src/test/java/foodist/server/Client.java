@@ -13,6 +13,7 @@ import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.Contract.PhotoReply;
+import foodist.server.grpc.contract.Contract.UpdateMenuRequest;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
@@ -52,6 +53,23 @@ class Client {
 		this.stub.addMenu(addMenuRequestExample);     
 	}
   
+	void updateMenu(String foodservice, String name) {
+		UpdateMenuRequest.Builder updateMenuRequestBuilder = UpdateMenuRequest.newBuilder();
+		
+		updateMenuRequestBuilder.setFoodService(foodservice);
+		updateMenuRequestBuilder.setMenuName(name);
+		
+		UpdateMenuRequest updateMenuRequestExample = updateMenuRequestBuilder.build();
+		
+		Menu menu = this.stub.updateMenu(updateMenuRequestExample);
+		
+		for(String photoId : menu.getPhotoIdList()) {
+			// This is just an example of what you might do we listMenu 
+			// Download photos from menus			
+			this.downloadPhoto(photoId);
+		}
+	}
+	
 	ListMenuReply listMenu(String foodService) {	
 		
 		ListMenuRequest listMenuRequest = ListMenuRequest.newBuilder().setFoodService(foodService).build();
@@ -68,7 +86,7 @@ class Client {
 		}
 		
 		return listMenuReply;
-	}
+	}	
   
 	void addPhoto(String foodService, String menuName, String photoPath) {
 		

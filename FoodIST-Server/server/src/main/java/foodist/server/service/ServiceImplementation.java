@@ -60,7 +60,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Menu> responseObserver) {
         String service = request.getFoodService();
         String name = request.getMenuName();
-
+        
         HashMap<String, Menu> menus = Storage.getMenuMap(service);
         
         Menu menu = menus.get(name);
