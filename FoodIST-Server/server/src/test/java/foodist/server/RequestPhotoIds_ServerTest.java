@@ -1,6 +1,7 @@
 package foodist.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import foodist.server.service.ServiceImplementation;
@@ -21,14 +22,12 @@ import io.grpc.testing.GrpcCleanupRule;
 
 public class RequestPhotoIds_ServerTest {
 	
-	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    
+	static final BindableService bindableService = new ServiceImplementation();
+	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    	
+	static Client client;		
 	
-	Client client;	
-	final BindableService bindableService = new ServiceImplementation();	
-	
-	
-	@Before
-	public void setUp() throws Exception {   				
+	@BeforeClass
+	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
 
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
@@ -38,17 +37,137 @@ public class RequestPhotoIds_ServerTest {
 	}
 
 	@Test
-  	public void RequestPhoto_Test() throws IOException {
-		client.addMenu("Mercado", "Nabo", 1.00);
+  	public void RequestPhoto_Upload0Photo() throws IOException {
+		client.addMenu("Mercado", "Alho", 0.69);											
+		client.requestPhotoIds();		
+		
+		boolean exists = new File("photos/Mercado/Alho").exists();
+		
+		assertFalse(exists);
+  	}
+	
+	@Test
+  	public void RequestPhoto_Upload1Photo() throws IOException {
+		client.addMenu("Mercado", "Beterraba", 1.00);						
+		client.addPhoto("Mercado", "Beterraba", "photos/test/beterraba.jpg");								
+		client.requestPhotoIds();		
+		
+		int total_iterations = 0;
+		int wrong_iterations = 0;		
+		
+		String uploadedPhotoTitle = new File("photos/Mercado/Beterraba").list()[0];
+		BufferedImage uploadedPhoto = ImageIO.read(new File("photos/Mercado/Beterraba/" + uploadedPhotoTitle));
+		DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();
+	    int uploadedPhotoSize = uploadedPhotoDataBuffer.getSize();
+		for(String client : new File("photos/client/").list()) {
+			BufferedImage downloadedPhoto = ImageIO.read(new File("photos/client/" + client));
+			DataBuffer downloadedPhotoDataBuffer = downloadedPhoto.getData().getDataBuffer();
+			int downloadedPhotoSize = downloadedPhotoDataBuffer.getSize();						
+		    if(downloadedPhotoSize == uploadedPhotoSize) {
+		    	for(int j=0; j<downloadedPhotoSize; j++) { 
+		    		if(downloadedPhotoDataBuffer.getElem(j) != uploadedPhotoDataBuffer.getElem(j)) {	
+		    			wrong_iterations--;
+		                break;			                
+		            }
+		        }            
+		    }
+		    else {
+		    	wrong_iterations++;
+		    }
+		    total_iterations++;
+		}
+					
+		int right_photos = total_iterations - wrong_iterations;
+		assertEquals(1, right_photos);
+  	}
+  	
+	@Test
+  	public void RequestPhoto_Upload2Photos() throws IOException {
+		client.addMenu("Mercado", "Alface", 0.89);
+				
+		for(int i = 1; i<=2; i++) {
+			client.addPhoto("Mercado", "Alface", "photos/test/alface_0" + i + ".jpg");			
+		}			
+		
+		client.requestPhotoIds();		
+		
+		int total_iterations = 0;
+		int wrong_iterations = 0;		
+		for(String server : new File("photos/Mercado/Alface").list()) {
+			BufferedImage uploadedPhoto = ImageIO.read(new File("photos/Mercado/Alface/" + server));
+			DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();
+		    int uploadedPhotoSize = uploadedPhotoDataBuffer.getSize();
+			for(String client : new File("photos/client/").list()) {
+				BufferedImage downloadedPhoto = ImageIO.read(new File("photos/client/" + client));
+				DataBuffer downloadedPhotoDataBuffer = downloadedPhoto.getData().getDataBuffer();
+				int downloadedPhotoSize = downloadedPhotoDataBuffer.getSize();						
+			    if(downloadedPhotoSize == uploadedPhotoSize) {
+			    	for(int j=0; j<downloadedPhotoSize; j++) { 
+			    		if(downloadedPhotoDataBuffer.getElem(j) != uploadedPhotoDataBuffer.getElem(j)) {	
+			    			wrong_iterations--;
+			                break;			                
+			            }
+			        }            
+			    }
+			    else {
+			    	wrong_iterations++;
+			    }
+			    total_iterations++;
+			}
+		}
+					
+		int right_photos = total_iterations - wrong_iterations;
+		assertEquals(2, right_photos);
+  	}
+
+	@Test
+  	public void RequestPhoto_Upload3Photos() throws IOException {
+		client.addMenu("Mercado", "Cenoura", 0.79);
+				
+		for(int i = 1; i<=3; i++) {
+			client.addPhoto("Mercado", "Cenoura", "photos/test/cenoura_0" + i + ".jpg");			
+		}			
+		
+		client.requestPhotoIds();		
+		
+		int total_iterations = 0;
+		int wrong_iterations = 0;		
+		for(String server : new File("photos/Mercado/Cenoura").list()) {
+			BufferedImage uploadedPhoto = ImageIO.read(new File("photos/Mercado/Cenoura/" + server));
+			DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();
+		    int uploadedPhotoSize = uploadedPhotoDataBuffer.getSize();
+			for(String client : new File("photos/client/").list()) {
+				BufferedImage downloadedPhoto = ImageIO.read(new File("photos/client/" + client));
+				DataBuffer downloadedPhotoDataBuffer = downloadedPhoto.getData().getDataBuffer();
+				int downloadedPhotoSize = downloadedPhotoDataBuffer.getSize();						
+			    if(downloadedPhotoSize == uploadedPhotoSize) {
+			    	for(int j=0; j<downloadedPhotoSize; j++) { 
+			    		if(downloadedPhotoDataBuffer.getElem(j) != uploadedPhotoDataBuffer.getElem(j)) {	
+			    			wrong_iterations--;
+			                break;			                
+			            }
+			        }            
+			    }
+			    else {
+			    	wrong_iterations++;
+			    }
+			    total_iterations++;
+			}
+		}
+					
+		int right_photos = total_iterations - wrong_iterations;
+		assertEquals(3, right_photos);
+  	}
+	
+	@Test
+  	public void RequestPhoto_Upload4Photos() throws IOException {
+		client.addMenu("Mercado", "Nabo", 0.99);
 				
 		for(int i = 1; i<=4; i++) {
 			client.addPhoto("Mercado", "Nabo", "photos/test/nabo_0" + i + ".png");			
 		}			
 		
-		client.requestPhotoIds();	
-		
-		//boolean[] expected = {true, true, true};		
-		//ArrayList<Boolean> booleanList = new ArrayList<Boolean>();
+		client.requestPhotoIds();		
 		
 		int total_iterations = 0;
 		int wrong_iterations = 0;		

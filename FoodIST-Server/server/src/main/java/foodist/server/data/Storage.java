@@ -141,9 +141,11 @@ public class Storage {
 						File.separator + foodService + File.separator 
 						+ menu + File.separator).list();
 				
-				for(int i = 0; i<photoIds.length && i<quantity; i++) {
-					builder.addPhotoID(photoIds[i]);
-				}
+				if(photoIds!=null) {
+					for(int i = 0; i<photoIds.length && i<quantity; i++) {					
+						builder.addPhotoID(photoIds[i]);
+					}
+				}					
 			}			
 		}			
 		
