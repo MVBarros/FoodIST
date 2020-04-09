@@ -97,6 +97,6 @@ public class DownloadPhoto_ServerTest {
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}		       
-  	}
+  	}	
 	
 }

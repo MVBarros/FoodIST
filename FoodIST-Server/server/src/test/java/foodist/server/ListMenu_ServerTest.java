@@ -115,4 +115,11 @@ public class ListMenu_ServerTest {
 		assertEquals("Wurst", listedMenus);
   	}
 	
+	@Test
+  	public void listMenu_NoMenusInFoodService() {
+		ListMenuReply lmReply = client.listMenu("Invisible Restaurant");
+		
+		assertEquals(0, lmReply.getMenusList().size());
+  	}
+	
 }
