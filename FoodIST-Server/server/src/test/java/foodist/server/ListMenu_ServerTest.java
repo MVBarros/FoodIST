@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +143,29 @@ public class ListMenu_ServerTest {
 	@Test
   	public void listMenu_NoMenusInFoodService() {		
 		assertEquals(0, client.listMenu("Invisible Restaurant").size());
+  	}
+	
+	@Test
+  	public void UpdateMenu_DonwloadPhoto() throws IOException {
+		client.addMenu("Graveli", "Pepperoni", 14.99);
+		client.addMenu("Graveli", "Cheese", 12.99);
+		
+		String[] format = {"pepperoni_pizza.jpg", "pepperoni_pizza.png"};
+		client.addPhoto("Graveli", "Cheese", "photos/test/cheese_pizza.jpg");
+		for(int i = 0; i<format.length; i++) {
+			client.addPhoto("Graveli", "Pepperoni", "photos/test/" + format[i]);
+		}		
+		
+		for(Menu menu : client.listMenu("Graveli")) {
+			for(String photoId : menu.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
+		}
+		
+		int photos = 
+				new File("photos/Graveli/Pepperoni/").list().length + 
+				new File("photos/Graveli/Cheese/").list().length;
+		assertEquals(3, photos);
   	}
 	
 }

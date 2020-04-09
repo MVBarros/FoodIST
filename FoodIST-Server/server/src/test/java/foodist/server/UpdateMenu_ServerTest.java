@@ -1,9 +1,15 @@
 package foodist.server;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,5 +65,23 @@ public class UpdateMenu_ServerTest {
 		Menu menu = client.updateMenu("Mackies", "Special");
 		
 		assertFalse(menu.getPhotoIdList().isEmpty());				
+  	}
+	
+	@Test
+  	public void UpdateMenu_DonwloadPhoto() throws IOException {
+		client.addMenu("Romano", "Pepperoni", 14.99);				
+		
+		String[] format = {".jpg", ".png"};		
+		for(int i = 0; i<format.length; i++) {
+			client.addPhoto("Romano", "Pepperoni", "photos/test/pepperoni_pizza" + format[i]);
+		}
+													
+		Menu menu = client.updateMenu("Romano", "Pepperoni");
+		
+		for(String photoId : menu.getPhotoIdList()) {
+			client.downloadPhoto(photoId);
+		}
+		
+		assertEquals(2, new File("photos/Romano/Pepperoni/").list().length);
   	}
 }
