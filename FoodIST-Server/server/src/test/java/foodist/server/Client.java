@@ -53,7 +53,7 @@ class Client {
 		this.stub.addMenu(addMenuRequestExample);     
 	}
   
-	void updateMenu(String foodservice, String name) {
+	Menu updateMenu(String foodservice, String name) {
 		UpdateMenuRequest.Builder updateMenuRequestBuilder = UpdateMenuRequest.newBuilder();
 		
 		updateMenuRequestBuilder.setFoodService(foodservice);
@@ -63,29 +63,17 @@ class Client {
 		
 		Menu menu = this.stub.updateMenu(updateMenuRequestExample);
 		
-		for(String photoId : menu.getPhotoIdList()) {
-			// This is just an example of what you might do we listMenu 
-			// Download photos from menus			
-			this.downloadPhoto(photoId);
-		}
+		return menu;
 	}
 	
-	ListMenuReply listMenu(String foodService) {	
+	List<Menu> listMenu(String foodService) {	
 		
 		ListMenuRequest listMenuRequest = ListMenuRequest.newBuilder().setFoodService(foodService).build();
 	  		
 		ListMenuReply listMenuReply = this.stub.listMenu(listMenuRequest);    
-		List<Menu> list = listMenuReply.getMenusList();
-	  
-		for(Menu m : list) {
-			// This is just an example of what you might do we listMenu 
-			// Download photos from menus
-			for(int i = 0; i<m.getPhotoIdCount(); i++) {
-				this.downloadPhoto(m.getPhotoId(i));
-			}			
-		}
+		List<Menu> list = listMenuReply.getMenusList();	 
 		
-		return listMenuReply;
+		return list;
 	}	
   
 	void addPhoto(String foodService, String menuName, String photoPath) {
@@ -174,15 +162,11 @@ class Client {
 		}
 	}
 	
-	void requestPhotoIds() {
+	List<String> requestPhotoIds() {
 		PhotoReply photoReply = this.stub.requestPhotoIDs(Empty.newBuilder().build());
 		List<String> list = photoReply.getPhotoIDList();
 		
-		for(String photoId : list) {
-			// This is just an example of what you might do with requestPhotoIds; 
-			// Download photos with that Id from menus
-			this.downloadPhoto(photoId);
-		}
+		return list;
 	}
 	
 	private String assembleClientPhotoPath(String photoName) {

@@ -6,7 +6,7 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,23 +22,17 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
-public class DownloadPhoto_ServerTest { 		
-  
-	public BufferedImage originalPhoto;
-	public DataBuffer originalPhotoDataBuffer;
-	public int originalPhotoSize;
-	@Rule
-	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-        
-	Client client;	
-	final BindableService bindableService = new ServiceImplementation();
+public class DownloadPhoto_ServerTest {
+		        
+	static final BindableService bindableService = new ServiceImplementation();
+	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
+	static Client client;	
 
-	@Before
-	public void setUp() throws Exception {   			
+	@BeforeClass
+	public static void setUp() throws Exception {   			
 		String serverName = InProcessServerBuilder.generateName();
 
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
@@ -53,9 +47,8 @@ public class DownloadPhoto_ServerTest {
 		client.addPhoto("Tugalandia", "Farinheira", "photos/test/farinheira.png");
 		
 	  	String photoId = "";	
-	  	ListMenuReply listMenuReply = client.listMenu("Tugalandia");
-	  	
-	  	photoId = listMenuReply.getMenusList().get(0).getPhotoId(0);
+	  	photoId = client.listMenu("Tugalandia").get(0).getPhotoId(0);	  	
+	  	client.downloadPhoto(photoId);
 	  	
 		boolean path_exists = new File("photos/client" + File.separator + photoId).exists();
 		assertTrue(path_exists);
@@ -67,17 +60,15 @@ public class DownloadPhoto_ServerTest {
     	client.addPhoto("Romano", "Risotto", "photos/test/risotto.jpg");    		    	
         
 	  	String photoId = "";	
-	  	ListMenuReply listMenuReply = client.listMenu("Romano");
-	  	
-	  	photoId = listMenuReply.getMenusList().get(0).getPhotoId(0);
+	  	photoId = client.listMenu("Romano").get(0).getPhotoId(0);	  	
 	  	
 		client.downloadPhoto(photoId);
 
 		try {
-			originalPhoto = ImageIO.read(new File("photos/test/risotto.jpg"));
-	        originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
-	        originalPhotoSize = originalPhotoDataBuffer.getSize();
-	        
+			BufferedImage originalPhoto = ImageIO.read(new File("photos/test/risotto.jpg"));
+			DataBuffer originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer(); 
+			int originalPhotoSize = originalPhotoDataBuffer.getSize();
+			
 			BufferedImage uploadedPhoto = ImageIO.read(new File("photos/Romano/Risotto" + File.separator + photoId));
 			
 			DataBuffer uploadedPhotoDataBuffer = uploadedPhoto.getData().getDataBuffer();
@@ -102,6 +93,6 @@ public class DownloadPhoto_ServerTest {
 	@Test
 	public void DownloadPhoto_EmptyPhotoString() {
 		client.downloadPhoto("");
-	}
+	}			
 	
 }

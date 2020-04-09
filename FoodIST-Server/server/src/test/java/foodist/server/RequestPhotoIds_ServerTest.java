@@ -35,7 +35,7 @@ public class RequestPhotoIds_ServerTest {
 
     	client = new Client(channel);
 	}
-
+	
 	@Test
   	public void RequestPhoto_Upload0Photo() throws IOException {
 		client.addMenu("Mercado", "Alho", 0.69);											
@@ -50,7 +50,9 @@ public class RequestPhotoIds_ServerTest {
   	public void RequestPhoto_Upload1Photo() throws IOException {
 		client.addMenu("Mercado", "Beterraba", 1.00);						
 		client.addPhoto("Mercado", "Beterraba", "photos/test/beterraba.jpg");								
-		client.requestPhotoIds();		
+		for(String photoId : client.requestPhotoIds()) {
+			client.downloadPhoto(photoId);
+		}
 		
 		int total_iterations = 0;
 		int wrong_iterations = 0;		
@@ -89,7 +91,9 @@ public class RequestPhotoIds_ServerTest {
 			client.addPhoto("Mercado", "Alface", "photos/test/alface_0" + i + ".jpg");			
 		}			
 		
-		client.requestPhotoIds();		
+		for(String photoId : client.requestPhotoIds()) {
+			client.downloadPhoto(photoId);
+		}	
 		
 		int total_iterations = 0;
 		int wrong_iterations = 0;		
@@ -128,7 +132,9 @@ public class RequestPhotoIds_ServerTest {
 			client.addPhoto("Mercado", "Cenoura", "photos/test/cenoura_0" + i + ".jpg");			
 		}			
 		
-		client.requestPhotoIds();		
+		for(String photoId : client.requestPhotoIds()) {
+			client.downloadPhoto(photoId);
+		}		
 		
 		int total_iterations = 0;
 		int wrong_iterations = 0;		
@@ -167,7 +173,9 @@ public class RequestPhotoIds_ServerTest {
 			client.addPhoto("Mercado", "Nabo", "photos/test/nabo_0" + i + ".png");			
 		}			
 		
-		client.requestPhotoIds();		
+		for(String photoId : client.requestPhotoIds()) {
+			client.downloadPhoto(photoId);
+		}
 		
 		int total_iterations = 0;
 		int wrong_iterations = 0;		
@@ -197,5 +205,4 @@ public class RequestPhotoIds_ServerTest {
 		int right_photos = total_iterations - wrong_iterations;
 		assertEquals(3, right_photos);
   	}
-	
 }

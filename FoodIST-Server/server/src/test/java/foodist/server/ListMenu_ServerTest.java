@@ -15,7 +15,6 @@ import org.junit.runners.JUnit4;
 import java.util.ArrayList;
 import java.util.List;
 
-import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
 
@@ -42,17 +41,19 @@ public class ListMenu_ServerTest {
 
     	client = new Client(channel);    
 	}
-
+	
 	@Test
   	public void listMenu_SingleMenu() {
     	client.addMenu("Burger Shop", "Burger", 3.50);
     	client.addPhoto("Burger Shop", "Burger", "photos/test/burger.png");
     	
     	List<String> menus = new ArrayList<String>();	  	
-	  	ListMenuReply listMenuReply = client.listMenu("Burger Shop");
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
+	  	for(Menu m : client.listMenu("Burger Shop")) {
 	  		menus.add(m.getName());
+			for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 	  	}
 	  	
 	  	String[] expected = {"Burger"};	  	
@@ -68,10 +69,12 @@ public class ListMenu_ServerTest {
 		client.addPhoto("Hamburger Town", "Double Burger", "photos/test/double_burger.jpg");
 			  	
 	  	List<String> menus = new ArrayList<String>();	  	
-	  	ListMenuReply listMenuReply = client.listMenu("Hamburger Town");
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
+	  	for(Menu m : client.listMenu("Hamburger Town")) {
 	  		menus.add(m.getName());
+	  		for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 	  	}
 	  	
 	  	String[] expected = {"Burger", "Double Burger"};	    	  	
@@ -87,10 +90,12 @@ public class ListMenu_ServerTest {
 		client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/pepperoni_pizza.jpg");
 			  	
 		List<String> menus = new ArrayList<String>();	  		
-		ListMenuReply listMenuReply = client.listMenu("Pizza Parlor");
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
+	  	for(Menu m : client.listMenu("Pizza Parlor")) {
 	  		menus.add(m.getName());
+	  		for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 	  	}
 	  	
 	  	String[] expected = {"Cheese Pizza", "Pepperoni Pizza"};	  	
@@ -103,10 +108,12 @@ public class ListMenu_ServerTest {
 		client.addMenu("Healthy Veggies", "Salad", 2.50);	
 		
 		List<String> menus = new ArrayList<String>();	  		
-		ListMenuReply lmReply = client.listMenu("Healthy Veggies");
 
-		for(Menu m : lmReply.getMenusList()) {
+		for(Menu m : client.listMenu("Healthy Veggies")) {
 			menus.add(m.getName());
+			for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 		}
 		
 		String[] expected = {"Salad"};
@@ -119,10 +126,12 @@ public class ListMenu_ServerTest {
 		client.addMenu("Deutsch Kuche", "Wurst", 5.50);	
 		
 		List<String> menus = new ArrayList<String>();
-		ListMenuReply lmReply = client.listMenu("Deutsch Kuche");
 
-		for(Menu m : lmReply.getMenusList()) {
+		for(Menu m : client.listMenu("Deutsch Kuche")) {
 			menus.add(m.getName());
+			for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 		}
 		
 		String[] expected = {"Wurst"};
@@ -130,10 +139,8 @@ public class ListMenu_ServerTest {
   	}
 	
 	@Test
-  	public void listMenu_NoMenusInFoodService() {
-		ListMenuReply lmReply = client.listMenu("Invisible Restaurant");
-		
-		assertEquals(0, lmReply.getMenusList().size());
+  	public void listMenu_NoMenusInFoodService() {		
+		assertEquals(0, client.listMenu("Invisible Restaurant").size());
   	}
 	
 }
