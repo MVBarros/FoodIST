@@ -14,7 +14,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,17 +25,12 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class AddPhoto_ServerTest { 		
   
-	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    
+	static final BindableService bindableService = new ServiceImplementation();
+	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    	
+	static Client client;	
 	
-	Client client;	
-	final BindableService bindableService = new ServiceImplementation();	
-	
-	public BufferedImage originalPhoto;
-	public DataBuffer originalPhotoDataBuffer;
-	public int originalPhotoSize;
-	
-	@Before
-	public void setUp() throws Exception {   				
+	@BeforeClass
+	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
 
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
@@ -61,10 +56,11 @@ public class AddPhoto_ServerTest {
 		String photoId = new File("photos/Ristorante/Pasta").list()[0];
 		
 		try {
-			originalPhoto = ImageIO.read(new File("photos/test/pasta.jpg"));
-	        originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
-	        originalPhotoSize = originalPhotoDataBuffer.getSize(); 
-	        
+			
+			BufferedImage originalPhoto = ImageIO.read(new File("photos/test/pasta.jpg"));
+			DataBuffer originalPhotoDataBuffer = originalPhoto.getData().getDataBuffer();
+			int originalPhotoSize = originalPhotoDataBuffer.getSize();
+  
 			BufferedImage uploadedPhoto = ImageIO.read(new File(
 					"photos/Ristorante/Pasta" 
 					+ File.separator + photoId 
