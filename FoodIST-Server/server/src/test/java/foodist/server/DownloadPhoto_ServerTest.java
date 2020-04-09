@@ -99,4 +99,9 @@ public class DownloadPhoto_ServerTest {
 		}		       
   	}	
 	
+	@Test
+	public void DownloadPhoto_EmptyPhotoString() {
+		System.out.println("Empty String");
+		client.downloadPhoto("");
+	}
 }

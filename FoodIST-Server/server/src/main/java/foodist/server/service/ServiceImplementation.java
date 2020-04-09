@@ -3,6 +3,7 @@ package foodist.server.service;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 import foodist.server.data.Storage;
+import foodist.server.data.StorageException;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
@@ -121,6 +122,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 					responseObserver.onCompleted();
 				} catch (StatusRuntimeException e) {
 					throw new IllegalArgumentException(e.getMessage());
+				} catch (StorageException e) {
+					this.onError(e);
 				}
 			}
 		};
@@ -131,18 +134,23 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         String photoId = request.getPhotoId();
 
         int sequence = 0;
-
-        byte[] photo = Storage.fetchPhotoBytes(photoId);
         
-        //Send file 1MB chunk at a time
-        for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
-            int chunkSize = Math.min(1024 * 1024, photo.length - i);
-            DownloadPhotoReply.Builder downloadPhotoReplyBuilder = Contract.DownloadPhotoReply.newBuilder();
-            downloadPhotoReplyBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(photo, i, i + chunkSize)));
-            downloadPhotoReplyBuilder.setSequenceNumber(sequence);
-            responseObserver.onNext(downloadPhotoReplyBuilder.build());
-        }
-        responseObserver.onCompleted();
+        try {
+        	byte[] photo = Storage.fetchPhotoBytes(photoId);
+	        //Send file 1MB chunk at a time
+	        
+        	for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
+	            int chunkSize = Math.min(1024 * 1024, photo.length - i);
+	            DownloadPhotoReply.Builder downloadPhotoReplyBuilder = Contract.DownloadPhotoReply.newBuilder();
+	            downloadPhotoReplyBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(photo, i, i + chunkSize)));
+	            downloadPhotoReplyBuilder.setSequenceNumber(sequence);
+	            responseObserver.onNext(downloadPhotoReplyBuilder.build());
+	        }
+        	
+	        responseObserver.onCompleted();
+		} catch (StorageException e) {
+			responseObserver.onError(e);
+		}       
     }
     
     @Override

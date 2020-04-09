@@ -83,6 +83,6 @@ public class AddPhoto_ServerTest {
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}	
-  	}
+  	}	
 	
 }

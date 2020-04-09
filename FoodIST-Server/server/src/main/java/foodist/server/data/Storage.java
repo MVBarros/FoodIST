@@ -64,15 +64,14 @@ public class Storage {
 				try {
 					FileUtils.forceDelete(new File(BASE_DIR + "/" + filename));
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
-					e.printStackTrace();
+					System.out.println("Could not delete file: \"" + BASE_DIR + "/" + filename + "\".");
 				}
 			}
 		}
 		System.out.println("Sucess!");
 	}
 	
-	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
+	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) throws StorageException {	    	    		
 		
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
 		createPhotoDir(foodServicePath);	
@@ -85,7 +84,7 @@ public class Storage {
 	        photoPathMap.put(photoId, photoPath);
 	    }
 	    catch (IOException ioe){
-	        System.out.println("Error! Could not write file: \"" + photoPath + "\"");
+	    	throw new StorageException("Could not write file: \"" + photoPath + "\"");
 	    }
 	}
 	
@@ -108,20 +107,23 @@ public class Storage {
 	    return menuBuilder.build();
 	}
 	
-	public synchronized static byte[] fetchPhotoBytes(String photoId) {
+	public synchronized static byte[] fetchPhotoBytes(String photoId) throws StorageException {
 		String photoPath = photoPathMap.get(photoId);		
 		
-		File file = new File(photoPath);		
-		
-		if (file.exists()){
-			try {
+		try {
+			File file = new File(photoPath);		
+			
+			if (file.exists()){				
 				InputStream inputStream = FileUtils.openInputStream(file);
 		    	byte[] bytes = IOUtils.toByteArray(inputStream);
-		    	return bytes;
-			} catch(IOException ioe) {
-				System.out.println("Could not fetch photograph \"" + photoId + "\"");
-			}						
-	    }			
+		    	return bytes;								
+		    }	
+		} catch(IOException ioe) {
+			throw new StorageException("Could not fetch photograph \"" + photoId + "\"");
+		} catch(NullPointerException npe) {
+			throw new StorageException("Photograph \"" + photoId + "\" does not exist");
+		}
+				
 		return null;
 	}	
 	
