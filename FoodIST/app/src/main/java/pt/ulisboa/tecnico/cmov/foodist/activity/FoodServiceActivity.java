@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -42,9 +43,10 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallback, LocationListener {
 
+    private LocationManager mLocationManager;
+
     private static final String SERVICE_NAME = "Service Name";
     private static final String SERVICE_HOURS = "Service Hours";
-    private static final String DISTANCE = "Distance";
     private static final String LATITUDE = "Latitude";
     private static final String LONGITUDE = "Longitude";
     private static final String QUEUE_TIME = "Queue time";
@@ -52,10 +54,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     private String foodServiceName;
     private double latitude;
     private double longitude;
-    private String walkingTime;
     private GoogleMap map;
-
-    private boolean receivingUpdates = true;
 
     private static final String TAG = "ACTIVITY_FOOD_SERVICE";
 
@@ -64,8 +63,9 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_service);
 
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         setFoodService();
-        initMap();
         setQueueTime();
         setButtons();
     }
@@ -73,9 +73,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     @Override
     public void onResume() {
         super.onResume();
-        if (!receivingUpdates) {
-            startLocationUpdates();
-        }
+        initMap();
         updateMenus();
     }
 
@@ -142,9 +140,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     @SuppressLint("MissingPermission")
     public void startLocationUpdates() {
         if (hasLocationPermission()) {
-            LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
-            receivingUpdates = false;
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
         }
     }
 
@@ -192,7 +188,6 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         this.foodServiceName = foodService;
         this.latitude = intent.getDoubleExtra(LATITUDE, 0);
         this.longitude = intent.getDoubleExtra(LONGITUDE, 0);
-        this.walkingTime = intent.getStringExtra(DISTANCE) == null ? "" : intent.getStringExtra(DISTANCE);
         foodServiceName.setText(foodService);
         foodServiceHours.setText(String.format("%s %s", getString(R.string.working_hours), hours));
     }

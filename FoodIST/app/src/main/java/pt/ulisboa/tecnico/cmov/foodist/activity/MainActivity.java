@@ -52,7 +52,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private LocationManager mLocationManager;
 
-    private static final String TAG = "TAG_MainActivity";
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
 
     private static final String SERVICE_NAME = "Service Name";
@@ -62,7 +61,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final String LATITUDE = "Latitude";
     private static final String LONGITUDE = "Longitude";
 
-    private boolean isFreshBoot;
     private boolean isOnCreate;
 
     private LocationRequestContext reqContext;
@@ -99,6 +97,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     private void updateFirstBoot() {
+        boolean isFreshBoot;
         if (getGlobalStatus().isFreshBootFlag()) {
             getGlobalStatus().setFreshBootFlag(false);
             isFreshBoot = true;
