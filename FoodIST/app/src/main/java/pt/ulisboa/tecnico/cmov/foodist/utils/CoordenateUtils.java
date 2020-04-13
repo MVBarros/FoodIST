@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist.utils;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,6 +89,10 @@ public class CoordenateUtils {
         String origin = String.format(Locale.ENGLISH, "%f,%f", latitude, longitude);
         String destination = String.format(Locale.ENGLISH, "%f,%f", destLatitude, destLongitude);
         return getUrlForDirections(origin, destination, apiKey);
+    }
+
+    public static String getUrlForDirections(LatLng org, LatLng dest, String apiKey) {
+        return getUrlForDirections(org.latitude, org.longitude, dest.latitude, dest.longitude, apiKey);
     }
 
     public static String getUrlForDirections(String origin, String destination, String apiKey) {

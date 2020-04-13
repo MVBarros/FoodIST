@@ -21,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_api_key" />
+
+
         <activity android:name=".activity.AddMenuActivity" />
         <activity android:name=".activity.FoodMenuActivity" />
         <activity android:name=".activity.FoodServiceActivity" />
