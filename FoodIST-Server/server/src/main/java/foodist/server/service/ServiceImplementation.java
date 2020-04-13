@@ -3,11 +3,13 @@ package foodist.server.service;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 import foodist.server.data.Storage;
+import foodist.server.data.StorageException;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.Contract.PhotoReply;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -19,7 +21,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
-
+	
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
         Menu.Builder menuBuilder = Menu.newBuilder();
@@ -58,7 +60,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Menu> responseObserver) {
         String service = request.getFoodService();
         String name = request.getMenuName();
-
+        
         HashMap<String, Menu> menus = Storage.getMenuMap(service);
         
         Menu menu = menus.get(name);
@@ -120,6 +122,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 					responseObserver.onCompleted();
 				} catch (StatusRuntimeException e) {
 					throw new IllegalArgumentException(e.getMessage());
+				} catch (StorageException e) {
+					this.onError(e);
 				}
 			}
 		};
@@ -127,21 +131,33 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
-        String foodService = request.getFoodService();
-        String menuName = request.getMenuName();
         String photoId = request.getPhotoId();
 
         int sequence = 0;
-
-        byte[] photo = Storage.fetchPhotoBytes(photoId, foodService, menuName);
-        //Send file 1MB chunk at a time
-        for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
-            int chunkSize = Math.min(1024 * 1024, photo.length - i);
-            DownloadPhotoReply.Builder downloadPhotoReplyBuilder = Contract.DownloadPhotoReply.newBuilder();
-            downloadPhotoReplyBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(photo, i, i + chunkSize)));
-            downloadPhotoReplyBuilder.setSequenceNumber(sequence);
-            responseObserver.onNext(downloadPhotoReplyBuilder.build());
-        }
+        
+        try {
+        	byte[] photo = Storage.fetchPhotoBytes(photoId);
+	        //Send file 1MB chunk at a time
+	        
+        	for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
+	            int chunkSize = Math.min(1024 * 1024, photo.length - i);
+	            DownloadPhotoReply.Builder downloadPhotoReplyBuilder = Contract.DownloadPhotoReply.newBuilder();
+	            downloadPhotoReplyBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(photo, i, i + chunkSize)));
+	            downloadPhotoReplyBuilder.setSequenceNumber(sequence);
+	            responseObserver.onNext(downloadPhotoReplyBuilder.build());
+	        }
+        	
+	        responseObserver.onCompleted();
+		} catch (StorageException e) {
+			responseObserver.onError(e);
+		}       
+    }
+    
+    @Override
+    public void requestPhotoIDs(Empty request, StreamObserver<foodist.server.grpc.contract.Contract.PhotoReply> responseObserver) {
+    	// fetches the oldest three photo ids 
+        PhotoReply photoReply = Storage.fetchPhotoIds(3);
+        responseObserver.onNext(photoReply);
         responseObserver.onCompleted();
     }
 

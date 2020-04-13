@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.protobuf.ByteString;
 
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.Contract.PhotoReply;
 
 public class Storage {
 	
@@ -23,6 +24,7 @@ public class Storage {
 	
 	private static AtomicInteger atomicInteger = new AtomicInteger(0);
 	private static ConcurrentHashMap<String, HashMap<String, Menu>> foodServiceMap = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, String> photoPathMap = new ConcurrentHashMap<>();
 	
 	public synchronized static void addMenu(String foodService, Menu menu) {
 	    HashMap<String, Menu> menuMap = foodServiceMap.get(foodService);
@@ -62,26 +64,27 @@ public class Storage {
 				try {
 					FileUtils.forceDelete(new File(BASE_DIR + "/" + filename));
 				} catch (IOException e) {
-					System.out.println(e.getMessage());
-					e.printStackTrace();
+					System.out.println("Could not delete file: \"" + BASE_DIR + "/" + filename + "\".");
 				}
 			}
 		}
 		System.out.println("Sucess!");
 	}
 	
-	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) {	    	    		
+	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) throws StorageException {	    	    		
 		
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
-		createPhotoDir(foodServicePath);
-	    String photoPath = foodServicePath + atomicInteger.incrementAndGet() + "." + photoName.split("\\.")[1];
+		createPhotoDir(foodServicePath);	
+		String photoId = atomicInteger.incrementAndGet() + "." + photoName.split("\\.")[1];
+	    String photoPath = foodServicePath + photoId;
 	    try{
 	        FileOutputStream out=new FileOutputStream(photoPath);	        
 	        out.write(photoByteString.toByteArray());
 	        out.close(); 
+	        photoPathMap.put(photoId, photoPath);
 	    }
 	    catch (IOException ioe){
-	        System.out.println("Error! Could not write file: \"" + photoPath + "\"");
+	    	throw new StorageException("Could not write file: \"" + photoPath + "\"");
 	    }
 	}
 	
@@ -104,22 +107,52 @@ public class Storage {
 	    return menuBuilder.build();
 	}
 	
-	public synchronized static byte[] fetchPhotoBytes(String photoId, String foodServiceName, String menuName) {
-		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+	public synchronized static byte[] fetchPhotoBytes(String photoId) throws StorageException {
+		String photoPath = photoPathMap.get(photoId);		
 		
-		File file = new File(foodServicePath + photoId);		
-		
-		if (file.exists()){
-			try {
+		try {
+			File file = new File(photoPath);		
+			
+			if (file.exists()){				
 				InputStream inputStream = FileUtils.openInputStream(file);
 		    	byte[] bytes = IOUtils.toByteArray(inputStream);
-		    	return bytes;
-			} catch(IOException ioe) {
-				System.out.println("Could not fetch photograph \"" + photoId + "\"");
-			}						
-	    }			
+		    	return bytes;								
+		    }	
+		} catch(IOException ioe) {
+			throw new StorageException("Could not fetch photograph \"" + photoId + "\"");
+		} catch(NullPointerException npe) {
+			throw new StorageException("Photograph \"" + photoId + "\" does not exist");
+		}
+				
 		return null;
 	}	
+	
+	public synchronized static PhotoReply fetchPhotoIds(int quantity) {		
+		PhotoReply.Builder builder = PhotoReply.newBuilder();
+		
+		Iterator<Entry<String, HashMap<String, Menu>>> outer = foodServiceMap.entrySet().iterator();
+		
+		while(outer.hasNext()) {
+			Entry<String, HashMap<String, Menu>> mapping = outer.next();
+			String foodService = mapping.getKey();
+			Iterator<String> inner = mapping.getValue().keySet().iterator();		
+			while(inner.hasNext()) {
+				String menu = inner.next();
+				
+				String[] photoIds = new File(BASE_DIR + 
+						File.separator + foodService + File.separator 
+						+ menu + File.separator).list();
+				
+				if(photoIds!=null) {
+					for(int i = 0; i<photoIds.length && i<quantity; i++) {					
+						builder.addPhotoID(photoIds[i]);
+					}
+				}					
+			}			
+		}			
+		
+		return builder.build();
+	}
 	
 	public synchronized static void createPhotoDir(String photoPath) {			
 		File directory = new File(photoPath);

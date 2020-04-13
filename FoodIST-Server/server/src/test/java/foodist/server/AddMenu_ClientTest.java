@@ -9,8 +9,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,14 +24,10 @@ import static org.mockito.AdditionalAnswers.delegatesTo;
 @RunWith(JUnit4.class)
 public class AddMenu_ClientTest { 
 		
-	private static final double TEST_PRICE = 1.50;
-	
-	private static final String TEST_FOODSERVICE = "Testbar";
-	private static final String TEST_MENU = "Chourico";
+	private static final double TEST_PRICE = 1.50;	
+	private static final String TEST_FOODSERVICE = "CLIENT_TEST";
+	private static final String TEST_MENU = "CLIENT_TEST";
   
-	public BufferedImage originalPhoto;
-	public DataBuffer originalPhotoDataBuffer;
-	public int originalPhotoSize;
 	@Rule
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    
 	

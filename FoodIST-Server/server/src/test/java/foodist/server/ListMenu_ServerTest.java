@@ -12,11 +12,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.junit.Assert.assertEquals;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
+
+import static org.hamcrest.Matchers.hasItems;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(JUnit4.class)
 public class ListMenu_ServerTest { 
@@ -37,83 +43,129 @@ public class ListMenu_ServerTest {
 
     	client = new Client(channel);    
 	}
-
+	
 	@Test
-  	public void listSingleMenu_SameFoodService() {
+  	public void listMenu_SingleMenu() {
     	client.addMenu("Burger Shop", "Burger", 3.50);
     	client.addPhoto("Burger Shop", "Burger", "photos/test/burger.png");
     	
-	  	String menus = "";	
-	  	ListMenuReply listMenuReply = client.listMenu("Burger Shop");
+    	List<String> menus = new ArrayList<String>();	  	
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
-	  		menus += m.getName();
+	  	for(Menu m : client.listMenu("Burger Shop")) {
+	  		menus.add(m.getName());
+			for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 	  	}
 	  	
-		assertEquals("Burger", menus);
-  	}
+	  	String[] expected = {"Burger"};	  	
+	    assertThat(menus, hasItems(expected));		
+  	}	
 	
 	@Test
-  	public void listMultipleMenus_SameFoodService() {
+  	public void listMenu_MultipleMenu_OnePhotoForBoth() {
 		client.addMenu("Hamburger Town", "Burger", 2.50);
 		client.addMenu("Hamburger Town", "Double Burger", 4.50);
 		
 		client.addPhoto("Hamburger Town", "Burger", "photos/test/burger.png");
 		client.addPhoto("Hamburger Town", "Double Burger", "photos/test/double_burger.jpg");
-		
-	  	String menus = "";	
-	  	ListMenuReply listMenuReply = client.listMenu("Hamburger Town");
+			  	
+	  	List<String> menus = new ArrayList<String>();	  	
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
-	  		menus += m.getName();
+	  	for(Menu m : client.listMenu("Hamburger Town")) {
+	  		menus.add(m.getName());
+	  		for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 	  	}
 	  	
-	  	String expected = "Burger" + "Double Burger";
-		assertEquals(expected, menus);
+	  	String[] expected = {"Burger", "Double Burger"};	    	  	
+	    assertThat(menus, hasItems(expected));
   	}
 	
 	@Test
-  	public void listMultipleMenus_DifferentFoodService() {
+  	public void listMenu_MultipleMenu_TwoPhotosForJustOne() {
 		client.addMenu("Pizza Parlor", "Cheese Pizza", 9.50);
 	  	client.addMenu("Pizza Parlor", "Pepperoni Pizza", 11.00);
 	  	
 	  	client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/cheese_pizza.jpg");
 		client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/pepperoni_pizza.jpg");
 			  	
-		String menus = "";	
-		ListMenuReply listMenuReply = client.listMenu("Pizza Parlor");
+		List<String> menus = new ArrayList<String>();	  		
 	  	
-	  	for(Menu m : listMenuReply.getMenusList()) {
-	  		menus += m.getName();
+	  	for(Menu m : client.listMenu("Pizza Parlor")) {
+	  		menus.add(m.getName());
+	  		for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 	  	}
 	  	
-	  	String expected = "Pepperoni Pizza" +  "Cheese Pizza";	  	
-	  	assertEquals(expected, menus);
-	  	
+	  	String[] expected = {"Cheese Pizza", "Pepperoni Pizza"};	  	
+	  	assertThat(menus, hasItems(expected));
   	}
 	
 	@Test
   	public void listMenu_AvoidDuplicateMenus_SameNameSameObject() {
 		client.addMenu("Healthy Veggies", "Salad", 2.50);
-		client.addMenu("Healthy Veggies", "Salad", 2.50);		
-		ListMenuReply lmReply = client.listMenu("Healthy Veggies");
-		String listedMenus = "";
-		for(Menu m : lmReply.getMenusList()) {
-			listedMenus += m.getName();
+		client.addMenu("Healthy Veggies", "Salad", 2.50);	
+		
+		List<String> menus = new ArrayList<String>();	  		
+
+		for(Menu m : client.listMenu("Healthy Veggies")) {
+			menus.add(m.getName());
+			for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 		}
-		assertEquals("Salad", listedMenus);
+		
+		String[] expected = {"Salad"};
+		assertThat(menus, hasItems(expected));
   	}
 	
 	@Test
   	public void listMenu_AvoidDuplicateMenus_SameNameDifferentObject() {
 		client.addMenu("Deutsch Kuche", "Wurst", 6.50);
 		client.addMenu("Deutsch Kuche", "Wurst", 5.50);	
-		ListMenuReply lmReply = client.listMenu("Deutsch Kuche");
-		String listedMenus = "";
-		for(Menu m : lmReply.getMenusList()) {
-			listedMenus += m.getName();
+		
+		List<String> menus = new ArrayList<String>();
+
+		for(Menu m : client.listMenu("Deutsch Kuche")) {
+			menus.add(m.getName());
+			for(String photoId : m.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
 		}
-		assertEquals("Wurst", listedMenus);
+		
+		String[] expected = {"Wurst"};
+		assertThat(menus, hasItems(expected));
+  	}
+	
+	@Test
+  	public void listMenu_NoMenusInFoodService() {		
+		assertEquals(0, client.listMenu("Invisible Restaurant").size());
+  	}
+	
+	@Test
+  	public void UpdateMenu_DonwloadPhoto() throws IOException {
+		client.addMenu("Graveli", "Pepperoni", 14.99);
+		client.addMenu("Graveli", "Cheese", 12.99);
+		
+		String[] format = {"pepperoni_pizza.jpg", "pepperoni_pizza.png"};
+		client.addPhoto("Graveli", "Cheese", "photos/test/cheese_pizza.jpg");
+		for(int i = 0; i<format.length; i++) {
+			client.addPhoto("Graveli", "Pepperoni", "photos/test/" + format[i]);
+		}		
+		
+		for(Menu menu : client.listMenu("Graveli")) {
+			for(String photoId : menu.getPhotoIdList()) {
+				client.downloadPhoto(photoId);
+			}
+		}
+		
+		int photos = 
+				new File("photos/Graveli/Pepperoni/").list().length + 
+				new File("photos/Graveli/Cheese/").list().length;
+		assertEquals(3, photos);
   	}
 	
 }

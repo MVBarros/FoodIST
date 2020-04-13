@@ -12,6 +12,8 @@ import foodist.server.grpc.contract.Contract.DownloadPhotoRequest;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
+import foodist.server.grpc.contract.Contract.PhotoReply;
+import foodist.server.grpc.contract.Contract.UpdateMenuRequest;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
@@ -51,23 +53,28 @@ class Client {
 		this.stub.addMenu(addMenuRequestExample);     
 	}
   
-	ListMenuReply listMenu(String foodService) {	
+	Menu updateMenu(String foodservice, String name) {
+		UpdateMenuRequest.Builder updateMenuRequestBuilder = UpdateMenuRequest.newBuilder();
+		
+		updateMenuRequestBuilder.setFoodService(foodservice);
+		updateMenuRequestBuilder.setMenuName(name);
+		
+		UpdateMenuRequest updateMenuRequestExample = updateMenuRequestBuilder.build();
+		
+		Menu menu = this.stub.updateMenu(updateMenuRequestExample);
+		
+		return menu;
+	}
+	
+	List<Menu> listMenu(String foodService) {	
 		
 		ListMenuRequest listMenuRequest = ListMenuRequest.newBuilder().setFoodService(foodService).build();
 	  		
 		ListMenuReply listMenuReply = this.stub.listMenu(listMenuRequest);    
-		List<Menu> list = listMenuReply.getMenusList();
-	  
-		for(Menu m : list) {
-			// This is just an example of what you might do we listMenu 
-			// Download photos from menus
-			for(int i = 0; i<m.getPhotoIdCount(); i++) {
-				this.downloadPhoto(m.getPhotoId(i), foodService, m.getName());
-			}			
-		}
+		List<Menu> list = listMenuReply.getMenusList();	 
 		
-		return listMenuReply;
-	}
+		return list;
+	}	
   
 	void addPhoto(String foodService, String menuName, String photoPath) {
 		
@@ -131,35 +138,39 @@ class Client {
         }
 	}
 	
-	void downloadPhoto(String photoId, String foodService, String menuName) {
+	void downloadPhoto(String photoId) {		
 		DownloadPhotoRequest.Builder downloadPhotoBuilder = DownloadPhotoRequest.newBuilder();					
 		
-		downloadPhotoBuilder.setPhotoId(photoId);
-		downloadPhotoBuilder.setFoodService(foodService);
-		downloadPhotoBuilder.setMenuName(menuName);									
+		downloadPhotoBuilder.setPhotoId(photoId);							
 		
 		DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build(); 		       		
-		
-		Iterator<DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);   
-		
 			
-		try {
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId, foodService, menuName)));
+		Iterator<DownloadPhotoReply> iterator = this.stub.downloadPhoto(downloadPhotoRequest);
+				
+		try {		
+			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(assembleClientPhotoPath(photoId)));
 			
 	        //Write bytes to file		
-	        while (iterator.hasNext()) {
+	        while (iterator.hasNext()) {	        	
 	            Contract.DownloadPhotoReply chunk = iterator.next();
 	            byte[] fileBytes = chunk.getContent().toByteArray();
 	            out.write(fileBytes);	            
 	        }
 	        out.close();
 		} catch(IOException ioe) {
-			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId, foodService, menuName) + "\".");
-		}				
+			System.out.println("Error! Could not write file: \"" + assembleClientPhotoPath(photoId) + "\".");
+		}
 	}
 	
-	private String assembleClientPhotoPath(String photoName, String foodServiceName, String menuName) {
-		String photoDirectory = CLIENT_FOLDER + foodServiceName + "/" + menuName + "/";
+	List<String> requestPhotoIds() {
+		PhotoReply photoReply = this.stub.requestPhotoIDs(Empty.newBuilder().build());
+		List<String> list = photoReply.getPhotoIDList();
+		
+		return list;
+	}
+	
+	private String assembleClientPhotoPath(String photoName) {
+		String photoDirectory = CLIENT_FOLDER + "/";
 		Storage.createPhotoDir(photoDirectory);
 		return photoDirectory + photoName;
 	}
