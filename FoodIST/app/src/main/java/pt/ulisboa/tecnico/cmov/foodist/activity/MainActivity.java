@@ -1,14 +1,18 @@
 package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +47,10 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements LocationListener {
+    public enum LocationRequestContext {CAMPUS, DISTANCE}
 
-    private FusedLocationProviderClient fusedLocationClient;
+    private LocationManager mLocationManager;
 
     private static final String TAG = "TAG_MainActivity";
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
@@ -59,12 +65,14 @@ public class MainActivity extends BaseActivity {
     private boolean isFreshBoot;
     private boolean isOnCreate;
 
+    private LocationRequestContext reqContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         isOnCreate = true;
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setButtons();
         setCurrentCampus();
     }
@@ -135,22 +143,21 @@ public class MainActivity extends BaseActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PHONE_LOCATION_REQUEST_CODE);
     }
 
+    private void updateServicesFromLocation(Location location) {
+        GlobalStatus status = getGlobalStatus();
+        List<FoodService> services = new ArrayList<>(status.getServices());
+        String apiKey = status.getApiKey();
+        WalkingTimeData data = new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services);
+        launchWalkingTimeTask(data);
+    }
+
+    @SuppressLint("MissingPermission")
     public void updateServicesWalkingDistance() {
         if (hasLocationPermission() && isNetworkAvailable()) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this,
-                    (Location location) -> {
-                        //In some rare cases this can be null
-                        if (location == null) {
-                            return;
-                        }
-                        GlobalStatus status = getGlobalStatus();
-                        List<FoodService> services = new ArrayList<>(status.getServices());
-                        String apiKey = status.getApiKey();
-                        WalkingTimeData data = new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services);
-                        launchWalkingTimeTask(data);
-                    });
+            reqContext = LocationRequestContext.DISTANCE;
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         } else {
-            showToast("Could not get services walking distance");
+            showToast("Could not get services walking distance as there is no location permission and/or noInternet");
         }
     }
 
@@ -162,27 +169,24 @@ public class MainActivity extends BaseActivity {
         new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
     }
 
+    private void updateCampusFromLocation(Location location) {
+        String apiKey = getGlobalStatus().getApiKey();
+        String urlAlameda = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_alameda), apiKey);
+        String urlTagus = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_taguspark), apiKey);
+        launchGuessCampusTask(urlAlameda, urlTagus);
+    }
+
+    @SuppressLint("MissingPermission")
     private void guessCampusFromLocation() {
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, (Location location) -> {
-                    // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                        String apiKey = getGlobalStatus().getApiKey();
-                        String urlAlameda = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_alameda), apiKey);
-                        String urlTagus = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_taguspark), apiKey);
-                        launchGuessCampusTask(urlAlameda, urlTagus);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Could not get location, please select campus", Toast.LENGTH_SHORT).show();
-                        askCampus();
-                    }
-                });
+        reqContext = LocationRequestContext.CAMPUS;
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
     private void loadCurrentCampus() {
         if (hasLocationPermission() && isNetworkAvailable()) {
             guessCampusFromLocation();
         } else {
-            Toast.makeText(getApplicationContext(), "Could not infer campus, please insert it manually", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Could not infer campus as no network and/or location is avaliable, please insert it manually", Toast.LENGTH_SHORT).show();
             askCampus();
         }
     }
@@ -260,5 +264,53 @@ public class MainActivity extends BaseActivity {
                 .filter(service -> !service.getRestrictions().contains(position))
                 .filter(FoodService::isFoodServiceAvailable)
                 .collect(Collectors.toList());
+    }
+
+    private void distanceLocationCallback(Location location) {
+        if (location != null) {
+            Log.v("Location Result for Distance", location.getLatitude() + " and " + location.getLongitude());
+            updateServicesFromLocation(location);
+        } else {
+            showToast("Could not get services walking distance");
+        }
+    }
+
+    private void campusLocationCallback(Location location) {
+        if (location != null) {
+            Log.v("Location Result for Campus", location.getLatitude() + " and " + location.getLongitude());
+            updateCampusFromLocation(location);
+        } else {
+            showToast("Could not infer campus from location");
+            askCampus();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        switch (reqContext) {
+            case DISTANCE:
+                distanceLocationCallback(location);
+                break;
+            case CAMPUS:
+                campusLocationCallback(location);
+                break;
+        }
+
+        mLocationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        //DO NOTHING
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        //DO NOTHING
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        //DO NOTHING
     }
 }

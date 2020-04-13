@@ -50,7 +50,7 @@ public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, Main
             getActivity().setCampus(result);
         } else {
             //Could not infer campus
-            getActivity().showToast("Unable to guess campus");
+            getActivity().showToast("Unable to guess campus from current location");
             getActivity().askCampus();
         }
     }
