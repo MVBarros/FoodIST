@@ -20,13 +20,10 @@ import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -66,8 +63,6 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_service);
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         setFoodService();
         initMap();
@@ -116,6 +111,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         double longitude = Math.min(first.longitude, second.longitude);
         return new LatLng(latitude, longitude);
     }
+
     public void updateMap(LatLng source, LatLng dest) {
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(getSouthWest(source, dest), getNorthEast(source, dest)), 100));
         map.clear();
@@ -127,7 +123,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
                 .execute((new DirectionCallback() {
                     @Override
                     public void onDirectionSuccess(Direction direction) {
-                        if(direction.isOK()) {
+                        if (direction.isOK()) {
                             Log.v(TAG, "Direction is Ok");
                             fillMap(direction);
                         } else {
@@ -147,7 +143,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     public void startLocationUpdates() {
         if (hasLocationPermission()) {
             LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 2, this);
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
             receivingUpdates = false;
         }
     }
