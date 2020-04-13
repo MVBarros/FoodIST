@@ -56,6 +56,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     private double longitude;
     private GoogleMap map;
 
+    private boolean isReceiving = false;
+
     private static final String TAG = "ACTIVITY_FOOD_SERVICE";
 
     @Override
@@ -79,6 +81,12 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     public void addReceivers() {
         addReceiver(new ServiceNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
     }
 
     private void initMap() {
@@ -111,7 +119,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     public void updateMap(LatLng source, LatLng dest) {
-        map.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(getSouthWest(source, dest), getNorthEast(source, dest)), 100));
+        map.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(getSouthWest(source, dest), getNorthEast(source, dest)), 30));
         map.clear();
         map.addMarker(new MarkerOptions().position(dest).title(foodServiceName));
         GoogleDirection.withServerKey(((GlobalStatus) getApplicationContext()).getApiKey())
@@ -139,8 +147,18 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     @SuppressLint("MissingPermission")
     public void startLocationUpdates() {
-        if (hasLocationPermission()) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+        if (hasLocationPermission() && isNetworkAvailable()) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+                isReceiving = true;
+        } else {
+            showToast("No internet or location permission: cannot show directions to service");
+        }
+    }
+
+    public void stopLocationUpdates() {
+        if (isReceiving) {
+            mLocationManager.removeUpdates(this);
+            isReceiving = false;
         }
     }
 

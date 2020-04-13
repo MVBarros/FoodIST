@@ -27,11 +27,14 @@ public class ServiceNetworkReceiver extends BaseNetworkReceiver {
         Log.d(TAG, "On Network Up");
         FoodServiceActivity activity = (FoodServiceActivity) context;
         activity.updateMenus();
+        activity.startLocationUpdates();
     }
 
     @Override
     protected void onNetworkDown(Context context, Intent intent) {
         Log.d(TAG, "On Network Down");
+        FoodServiceActivity activity = (FoodServiceActivity) context;
+        activity.stopLocationUpdates();
     }
 
 }
