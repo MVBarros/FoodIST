@@ -45,8 +45,6 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallback, LocationListener {
 
-    private FusedLocationProviderClient fusedLocationClient;
-
     private static final String SERVICE_NAME = "Service Name";
     private static final String SERVICE_HOURS = "Service Hours";
     private static final String DISTANCE = "Distance";
@@ -140,7 +138,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
                     @Override
                     public void onDirectionFailure(Throwable t) {
                         Log.v(TAG, "Could not get Direction");
-                        showToast("Could not get directions to food service from current location");
+                        showToast("Could not get directions to food service");
                     }
                 }));
     }
