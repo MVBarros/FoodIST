@@ -61,6 +61,8 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final String LATITUDE = "Latitude";
     private static final String LONGITUDE = "Longitude";
 
+    private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
+
     private boolean isOnCreate;
 
     private LocationRequestContext reqContext;
@@ -153,12 +155,20 @@ public class MainActivity extends BaseActivity implements LocationListener {
     @SuppressLint("MissingPermission")
     public void updateServicesWalkingDistance() {
         if (hasLocationPermission() && isNetworkAvailable()) {
-            reqContext = LocationRequestContext.DISTANCE;
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null && location.getTime() >= Calendar.getInstance().getTimeInMillis() - MAX_TIME) {
+                //We trust this location to be recent enough that the user's location has not changed that much
+                distanceLocationCallback(location);
+            } else {
+                //Request new location since the last known location is too old
+                reqContext = LocationRequestContext.DISTANCE;
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            }
         } else {
             showToast("Could not get services walking distance as there is no location permission and/or noInternet");
         }
     }
+
 
     private void launchWalkingTimeTask(WalkingTimeData data) {
         new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
@@ -177,8 +187,14 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     @SuppressLint("MissingPermission")
     private void guessCampusFromLocation() {
-        reqContext = LocationRequestContext.CAMPUS;
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null && location.getTime() >= Calendar.getInstance().getTimeInMillis() - MAX_TIME) {
+            //We trust this location to be recent enough that the user's location has not changed that much
+            campusLocationCallback(location);
+        } else {
+            reqContext = LocationRequestContext.CAMPUS;
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
     }
 
     private void loadCurrentCampus() {

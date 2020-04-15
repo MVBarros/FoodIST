@@ -25,6 +25,8 @@ public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, Main
 
     private static final String TAG = "LOCATION-TASK";
 
+    private static final int MAX_DISTANCE = 2000; //2 kilometers
+
     @Override
     protected String doInBackground(String... strings) {
         if (strings.length != NUMBER_CAMPUS) {
@@ -33,7 +35,7 @@ public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, Main
         try {
             for (int i = 0; i < NUMBER_CAMPUS; ++i) {
                 int distance = CoordenateUtils.getDistance(strings[i]);
-                if (distance < 2000) {
+                if (distance < MAX_DISTANCE) {
                     return i == ALAMEDA ? "Alameda" : "TagusPark";
                 }
             }
@@ -57,7 +59,7 @@ public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, Main
 
     private String readStream(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(is), 1000);
+        BufferedReader r = new BufferedReader(new InputStreamReader(is));
         for (String line = r.readLine(); line != null; line = r.readLine()) {
             sb.append(line);
         }
