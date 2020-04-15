@@ -1,19 +1,15 @@
-package pt.ulisboa.tecnico.cmov.foodist.activity;
+package pt.ulisboa.tecnico.cmov.foodist.activity.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -23,6 +19,7 @@ import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -34,63 +31,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
-public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallback, LocationListener {
+public abstract class ActivityWithMap extends BaseActivity implements OnMapReadyCallback, LocationListener {
 
-    private LocationManager mLocationManager;
-
-    private static final String SERVICE_NAME = "Service Name";
-    private static final String SERVICE_HOURS = "Service Hours";
-    private static final String LATITUDE = "Latitude";
-    private static final String LONGITUDE = "Longitude";
-    private static final String QUEUE_TIME = "Queue time";
-
-    private String foodServiceName;
-    private double latitude;
-    private double longitude;
     private GoogleMap map;
 
     private boolean isReceiving = false;
 
-    private static final String TAG = "ACTIVITY_FOOD_SERVICE";
+    private static final String TAG = "ACTIVITY-WITH-MAP";
+
+    private LocationManager mLocationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food_service);
-
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        setFoodService();
-        setQueueTime();
-        setButtons();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initMap();
-        updateMenus();
-    }
-
-    public void addReceivers() {
-        addReceiver(new ServiceNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
-    }
-
-    public void setMapClick() {
-        map.setOnMapClickListener(latLng -> {
-            Intent intent = new Intent(FoodServiceActivity.this, FullscreenMapActivity.class);
-            intent.putExtra(SERVICE_NAME, foodServiceName);
-            intent.putExtra(LATITUDE, latitude);
-            intent.putExtra(LONGITUDE, longitude);
-            startActivity(intent);
-        });
     }
 
     @Override
@@ -99,10 +56,25 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         stopLocationUpdates();
     }
 
+
+    public abstract String getMarkerName();
+
+    public abstract double getLatitude();
+
+    public abstract double getLongitude();
+
+    public abstract SupportMapFragment getMapFragment();
+
+    public abstract void mapClick(LatLng latLng);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initMap();
+    }
     private void initMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = getMapFragment();
 
         mapFragment.getMapAsync(this);
     }
@@ -131,7 +103,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     public void updateMap(LatLng source, LatLng dest) {
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(getSouthWest(source, dest), getNorthEast(source, dest)), 30));
         map.clear();
-        map.addMarker(new MarkerOptions().position(dest).title(foodServiceName));
+        map.addMarker(new MarkerOptions().position(dest).title(getMarkerName()));
         GoogleDirection.withServerKey(((GlobalStatus) getApplicationContext()).getApiKey())
                 .from(source)
                 .to(dest)
@@ -158,8 +130,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     @SuppressLint("MissingPermission")
     public void startLocationUpdates() {
         if (hasLocationPermission() && isNetworkAvailable()) {
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
-                isReceiving = true;
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+            isReceiving = true;
         } else {
             showToast("No internet or location permission: cannot show directions to service");
         }
@@ -179,53 +151,11 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         if (hasLocationPermission()) {
             map.setMyLocationEnabled(true);
         }
-        LatLng destination = new LatLng(latitude, longitude);
+        LatLng destination = new LatLng(getLatitude(), getLongitude());
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(destination, 18));
-        map.addMarker(new MarkerOptions().position(destination).title(foodServiceName));
-        setMapClick();
+        map.addMarker(new MarkerOptions().position(destination).title(getMarkerName()));
+        map.setOnMapClickListener(this::mapClick);
         startLocationUpdates();
-    }
-
-    private void setQueueTime() {
-        TextView queueTime = findViewById(R.id.queueTime);
-
-        Intent intent = getIntent();
-        String queueValue = intent.getStringExtra(QUEUE_TIME) == null ? "" : intent.getStringExtra(QUEUE_TIME);
-        queueTime.setText(queueValue);
-    }
-
-    private void setButtons() {
-        Button addMenu = findViewById(R.id.add_menu_button);
-
-        addMenu.setOnClickListener(v -> {
-            String serviceName = getIntent().getStringExtra("Service Name");
-
-            Intent intent = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
-            intent.putExtra(SERVICE_NAME, serviceName);
-
-            startActivity(intent);
-        });
-    }
-
-    private void setFoodService() {
-        TextView foodServiceName = findViewById(R.id.foodServiceName);
-        TextView foodServiceHours = findViewById(R.id.openingTimes);
-        Intent intent = getIntent();
-        String foodService = intent.getStringExtra(SERVICE_NAME) == null ? "" : intent.getStringExtra(SERVICE_NAME);
-        String hours = intent.getStringExtra(SERVICE_HOURS) == null ? "" : intent.getStringExtra(SERVICE_HOURS);
-        this.foodServiceName = foodService;
-        this.latitude = intent.getDoubleExtra(LATITUDE, 0);
-        this.longitude = intent.getDoubleExtra(LONGITUDE, 0);
-        foodServiceName.setText(foodService);
-        foodServiceHours.setText(String.format("%s %s", getString(R.string.working_hours), hours));
-    }
-
-    public void updateMenus() {
-        if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceName);
-        } else {
-            showToast("No internet connection: Cannot get menus");
-        }
     }
 
     @Override
@@ -233,7 +163,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         if (location != null) {
             Log.v(TAG, "latitude: " + location.getLatitude());
             Log.v(TAG, "longitude: " + location.getLongitude());
-            updateMap(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(latitude, longitude));
+            updateMap(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(getLatitude(), getLongitude()));
         }
     }
 
@@ -252,4 +182,3 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     }
 }
-
