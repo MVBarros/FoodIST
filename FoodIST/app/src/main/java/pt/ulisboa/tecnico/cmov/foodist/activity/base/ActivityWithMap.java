@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -31,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MapUpdateTask;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class ActivityWithMap extends BaseActivity implements OnMapReadyCallback, LocationListener {
@@ -70,6 +74,7 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
     @Override
     protected void onResume() {
         super.onResume();
+        addReceiver(new MapUpdateTask(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
         initMap();
     }
     private void initMap() {
@@ -152,7 +157,7 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
             map.setMyLocationEnabled(true);
         }
         LatLng destination = new LatLng(getLatitude(), getLongitude());
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(destination, 18));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 18));
         map.addMarker(new MarkerOptions().position(destination).title(getMarkerName()));
         map.setOnMapClickListener(this::mapClick);
         startLocationUpdates();
