@@ -2,11 +2,13 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 package foodist.server.grpc.contract;
 
+enum FoodType {Vegetarian = 0; Vegan = 1; Meat = 2; Fish = 3;}
 
 message AddMenuRequest {
     string foodService = 1;
     string name = 2;
     double price = 3;
+    FoodType type = 4;
 }
 
 message AddPhotoRequest {
@@ -24,8 +26,6 @@ message DownloadPhotoReply {
 
 message DownloadPhotoRequest {
     string photoId = 1;
-    string foodService = 2;
-    string menuName = 3;
 }
 
 message ListMenuRequest {
@@ -36,15 +36,16 @@ message ListMenuReply {
     repeated Menu menus = 1;
 }
 
-message UpdateMenuRequest {
-    string foodService = 1;
-    string menuName = 2;
-}
-
 message Menu {
     string name = 2;
     double price = 3;
     repeated string photoId = 4;
+    FoodType type = 5;
+}
+
+message UpdateMenuRequest {
+    string foodService = 1;
+    string menuName = 2;
 }
 
 message PhotoReply {
@@ -59,4 +60,3 @@ service FoodISTServerService {
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
 }
-
