@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
@@ -279,10 +280,10 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setDiets() {
-        Map<GlobalStatus.DietConstraint, Boolean> constraints = getGlobalStatus().getUserConstraints();
+        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
 
         final CheckBox vegBox = findViewById(R.id.Vegetarian);
-        vegBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Vegetarian));
+        vegBox.setChecked(constraints.get(Contract.FoodType.Vegetarian));
         vegBox.setOnClickListener((l) ->
         {
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
@@ -292,7 +293,7 @@ public class ProfileActivity extends BaseActivity {
         });
 
         final CheckBox meatBox = findViewById(R.id.Meat);
-        meatBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Meat));
+        meatBox.setChecked(constraints.get(Contract.FoodType.Meat));
         meatBox.setOnClickListener((l) ->
         {
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
@@ -302,7 +303,7 @@ public class ProfileActivity extends BaseActivity {
         });
 
         final CheckBox fishBox = findViewById(R.id.Fish);
-        fishBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Fish));
+        fishBox.setChecked(constraints.get(Contract.FoodType.Fish));
         fishBox.setOnClickListener((l) ->
         {
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
@@ -312,7 +313,7 @@ public class ProfileActivity extends BaseActivity {
         });
 
         final CheckBox veganBox = findViewById(R.id.Vegan);
-        veganBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Vegan));
+        veganBox.setChecked(constraints.get(Contract.FoodType.Vegan));
         veganBox.setOnClickListener((l) ->
         {
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);

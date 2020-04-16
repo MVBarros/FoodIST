@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.Contract;
@@ -65,6 +66,14 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         ListView foodServiceList = getActivity().findViewById(R.id.menus);
         List<Menu> menus = result.stream()
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
+                .collect(Collectors.toList());
+
+        getActivity().setMenus(menus);
+
+        Map<Contract.FoodType, Boolean> constraints = getActivity().getGlobalStatus().getUserConstraints();
+
+        menus = menus.stream()
+                .filter(menu -> menu.isConstrained(constraints))
                 .collect(Collectors.toList());
 
         final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(menus));

@@ -47,7 +47,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
 		for (Entry<String, Menu> entry : menuMap.entrySet()) {
 			Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
-			listMenuReplyBuilder.addMenus(menu);
+			listMenuReplyBuilder.addMenus(menu.toBuilder().setType(entry.getValue().getType()));
 		}
 	
         ListMenuReply listMenuReply = listMenuReplyBuilder.build();

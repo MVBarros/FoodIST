@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.domain;
 
 import java.util.List;
+import java.util.Map;
 
 import foodist.server.grpc.contract.Contract;
 
@@ -54,4 +55,9 @@ public class Menu {
     public Contract.FoodType getType() {
         return type;
     }
+
+    public boolean isConstrained(Map<Contract.FoodType, Boolean> constraints) {
+        return constraints.get(this.type) == true;
+    }
+
 }

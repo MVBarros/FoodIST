@@ -24,6 +24,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 import javax.security.auth.x500.X500Principal;
 
+import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.okhttp.OkHttpChannelBuilder;
@@ -32,7 +33,6 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
 
-    public enum DietConstraint {Meat, Vegetarian, Vegan, Fish}
 
     public static final String MEAT_KEY = "MEAT";
     public static final String VEGAN_KEY = "VEGAN";
@@ -132,29 +132,25 @@ public class GlobalStatus extends Application {
         return context.getSocketFactory();
     }
 
-    public Map<DietConstraint, Boolean> getUserConstraints() {
-        Map<DietConstraint, Boolean> userConstraints = new HashMap<>();
+    public Map<Contract.FoodType, Boolean> getUserConstraints() {
+        Map<Contract.FoodType, Boolean> userConstraints = new HashMap<>();
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
 
         boolean vegetarian = pref.getBoolean(VEGETARIAN_KEY, true);
-        userConstraints.put(DietConstraint.Vegetarian, vegetarian);
+        userConstraints.put(Contract.FoodType.Vegetarian, vegetarian);
 
         boolean meat = pref.getBoolean(MEAT_KEY, true);
-        userConstraints.put(DietConstraint.Meat, meat);
+        userConstraints.put(Contract.FoodType.Meat, meat);
 
         boolean vegan = pref.getBoolean(VEGAN_KEY, true);
-        userConstraints.put(DietConstraint.Vegan, vegan);
+        userConstraints.put(Contract.FoodType.Vegan, vegan);
 
         boolean fish = pref.getBoolean(FISH_KEY, true);
-        userConstraints.put(DietConstraint.Fish, fish);
+        userConstraints.put(Contract.FoodType.Fish, fish);
 
         return userConstraints;
     }
 
-
-    public void switchConstraint(DietConstraint constraint) {
-        getUserConstraints().put(constraint, getUserConstraints().get(constraint));
-    }
 
 }
