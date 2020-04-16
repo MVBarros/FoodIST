@@ -74,7 +74,7 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, Foo
     }
 
     private void photoError(FoodMenuActivity activity) {
-        activity.showToast("Unable to download photo, check connection");
+        activity.showToast(activity.getString(R.string.photo_download_error_message));
         Log.d(TAG, "Unable to download photo");
     }
 }

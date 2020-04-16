@@ -54,12 +54,12 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
     @Override
     public void onPostExecute(List<Contract.Menu> result) {
         if (result == null) {
-            menuError(getActivity(), "Unable to get menus from server");
+            menuError(getActivity(), getActivity().getString(R.string.error_getting_menus_message));
             return;
         }
 
         if (result.size() == 0) {
-            getActivity().showToast("No menus available for this service");
+            getActivity().showToast(getActivity().getString(R.string.no_menus_avaliable_message));
             return;
         }
 
@@ -79,7 +79,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(filteredMenus));
 
         if (filteredMenus.size() !=  menus.size()) {
-            getActivity().showToast("Some menus were filtered according to your dietary constraints");
+            getActivity().showToast(getActivity().getString(R.string.filter_menu_message));
             getActivity().doShowAllButton();
         }
 

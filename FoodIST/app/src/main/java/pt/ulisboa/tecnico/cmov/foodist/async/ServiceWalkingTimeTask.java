@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
@@ -58,7 +59,7 @@ public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integ
             // (If they have been overridden nothing new will happen)
             getActivity().drawServices();
         } else {
-            getActivity().showToast("Unable to calculate food services walking time");
+            getActivity().showToast(getActivity().getString(R.string.unable_calculate_walking_time));
         }
     }
 }

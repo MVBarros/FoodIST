@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
@@ -52,7 +53,7 @@ public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, Main
             getActivity().setCampus(result);
         } else {
             //Could not infer campus
-            getActivity().showToast("Unable to guess campus from current location");
+            getActivity().showToast(getActivity().getString(R.string.guess_campus_impossible_message));
             getActivity().askCampus();
         }
     }
