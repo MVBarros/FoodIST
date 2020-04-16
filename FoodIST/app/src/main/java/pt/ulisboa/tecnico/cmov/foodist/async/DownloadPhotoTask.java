@@ -43,8 +43,6 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, Foo
         Contract.DownloadPhotoRequest.Builder downloadPhotoBuilder = Contract.DownloadPhotoRequest.newBuilder();
 
         downloadPhotoBuilder.setPhotoId(photo.getPhotoID());
-        downloadPhotoBuilder.setFoodService(photo.getFoodServiceName());
-        downloadPhotoBuilder.setMenuName(photo.getMenuName());
 
         Contract.DownloadPhotoRequest downloadPhotoRequest = downloadPhotoBuilder.build();
 

@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.AddMenuActivity">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,9 +16,9 @@
             android:id="@+id/dishName"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text=""
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:maxLength="60"
             android:hint="@string/dish_name" />
 
@@ -24,9 +26,9 @@
             android:id="@+id/dishCost"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:hint="@string/cost"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:text=""
             android:inputType="numberDecimal"
             android:maxLength="5" />
@@ -35,15 +37,69 @@
             android:id="@+id/dishView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="12"
+            android:layout_weight="7"
             android:padding="30dp"
             android:src="@drawable/ic_add" />
+
+
+        <TextView
+            android:id="@+id/FoodTypeText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:maxLength="60"
+            android:text="Food Type"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            />
+
+        <RadioGroup
+            android:id="@+id/FoodTypeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Vegetarian"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Meat"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Vegan"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Fish"
+                android:textSize="20sp" />
+        </RadioGroup>
+
 
         <Button
             android:id="@+id/add_new_menu_done_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:text="@string/done" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
