@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FoodIST</string>
 
-
+    <string name="language">language</string>
     <string name="global_preferences_file">global_preferences</string>
     <string name="global_preferences_location">global_preferences</string>
     <string name="campus_taguspark">TagusPark</string>
@@ -85,6 +85,7 @@
     <string name="profile_position_camera_failure_toast">Unable to get photo taken from camera</string>
     <string name="profile_user_photo">User Photo</string>
     <string name="profile_position">Position</string>
+    <string name="profile_language_chosen">Language</string>
 
 
     <!-- Google Services API Key for Directions API-->

@@ -4,11 +4,15 @@ import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +21,10 @@ import androidx.core.content.ContextCompat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.PreLoadingNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -73,6 +79,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static Context setLocale(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(context.getString(R.string.profile_file), 0);
+
+        Locale locale = new Locale(pref.getString(context.getString(R.string.profile_language_chosen), "en"));
+        Locale.setDefault(locale);
+
+        Configuration config = new Configuration(context.getResources().getConfiguration());
+        config.setLocale(locale);
+        context = context.createConfigurationContext(config);
+        return context;
+    }
+    @Override
+    protected void attachBaseContext(Context base){
+        super.attachBaseContext(setLocale(base));
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
