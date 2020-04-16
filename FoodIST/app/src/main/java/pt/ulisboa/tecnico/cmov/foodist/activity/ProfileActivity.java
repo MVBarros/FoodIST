@@ -2,9 +2,11 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,6 +60,7 @@ public class ProfileActivity extends BaseActivity {
         getPreferences();
 
         setDiets();
+        setLanguage();
 
         ImageView profilePicture = findViewById(R.id.profilePicture);
 
@@ -83,6 +86,7 @@ public class ProfileActivity extends BaseActivity {
         if (statusButton != null) {
             editor.putString(getString(R.string.profile_position_name), statusButton.getText().toString());
         }
+
         editor.apply();
     }
 
@@ -276,6 +280,40 @@ public class ProfileActivity extends BaseActivity {
                 status.toggle();
             }
         }
+
+        int currentLanguage = pref.getInt(getString(R.string.language), -1);
+
+        if(currentLanguage != -1){
+            RadioButton language = findViewById(currentLanguage);
+            if(language != null){
+                language.toggle();
+            }
+        }
+    }
+
+    private void setLanguage(){
+
+        final RadioButton englishLanguage = findViewById(R.id.languageEnglish);
+
+        englishLanguage.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
+            prefEditor.putString(getString(R.string.profile_language_chosen), "en");
+            prefEditor.apply();
+        });
+
+        final RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
+
+        portugueseLanguage.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
+            prefEditor.putString(getString(R.string.profile_language_chosen), "pt");
+            prefEditor.apply();
+        });
     }
 
     private void setDiets() {

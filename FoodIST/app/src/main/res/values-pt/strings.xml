@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">FoodIST</string>
+
+    <string name="language">language</string>
+    <string name="global_preferences_file">global_preferences</string>
+    <string name="global_preferences_location">global_preferences</string>
+    <string name="campus_taguspark">TagusPark</string>
+    <string name="campus_alameda">Alameda</string>
+
+    <!-- activity add menu -->
+    <!-- Layout -->
+    <string name="add_menu_dish_name">Nome do Prato</string>
+    <string name="add_menu_cost">Preço</string>
+    <string name="add_menu_done">Completar</string>
+    <!-- Activity -->
+    <string name="add_menu_invalid_input_toast">Dá um nome e preço ao menu!</string>
+    <string name="add_menu_no_internet_access_toast">Dispositivo não está online! Verifica a connectividade</string>
+    <string name="add_menu_camera_failure_toast">Impossivel de obter a fotografia da câmara</string>
+
+    <!-- activity choose campus -->
+    <!-- Layout -->
+    <string name="campus1">Taguspark</string>
+    <string name="campus2">Alameda</string>
+
+    <!-- activity food menu -->
+    <!-- Layout -->
+    <string name="food_menu_dish_name">Nome do Prato</string>
+    <string name="food_menu_cost">Preço</string>
+    <string name="food_menu_number_photos">Sem Fotos Disponíveis</string>
+    <string name="food_menu_previous_photo">Foto Anterior</string>
+    <string name="food_menu_next_photo">Próxima Foto</string>
+    <string name="food_menu_add_photos">Adicionar Foto</string>
+    <string name="food_menu_photos">Menu de Fotos</string>
+
+    <!-- Activity -->
+    <string name="food_menu_no_photos_available_toast">Não ha fotos disponíveis para este menu</string>
+    <string name="food_menu_photo_upload_no_internet_failure_toast">Impossivel de enviar foto sem internet</string>
+    <string name="food_menu_name_failure_toast">Impossivel de obter nome do menu</string>
+    <string name="food_menu_cost_failure_toast">Impossivel de obter preço do menu</string>
+    <string name="food_menu_camera_failure_toast">Impossivel de obter a fotografia da câmara</string>
+    <string name="food_menu_download_photo_failure_toast">Impossivel de obter menu sem internet</string>
+    <string name="food_menu_update_menu_failure_toast">Impossivel de atualizar menu sem internet</string>
+    <string name="food_menu_upload_photo_failure_toast">Impossivel de enviar menu sem internet</string>
+
+    <!-- activity food service -->
+    <!-- Layout -->
+    <string name="food_service_name">Nome Restaurante</string>
+    <string name="food_service_opening_time">Horas de Abertura:</string>
+    <string name="food_service_queue_time">Tempo de espera:</string>
+    <string name="food_service_add_menu">Adicionar Menu</string>
+    <!-- Activity -->
+    <string name="food_service_working_hours">Horário Funcionamento:</string>
+    <string name="food_service_menu_update_failure_toast">Impossivel de obter menus sem internet</string>
+
+    <!-- activity main -->
+    <!-- Layout -->
+    <string name="main_user_profile">Prefil de Utilizador</string>
+    <string name="main_change_campus">Trocar de Campus</string>
+    <!-- Activity -->
+    <string name="main_no_selected_campus_failure_toast">Não foi possível obter localização, seleciona um Campus</string>
+    <string name="main_infering_location_failure_toast">Não foi possível inferir localização, seleciona um Campus</string>
+    <string name="main_update_walking_distance_failure_toast">Não foi possível obter tempo de distancia, sem permissões e/ou sem internet</string>
+
+    <!-- activity profile -->
+    <!-- Layout -->
+    <string name="profile_username">Username</string>
+    <string name="profile_profession">Profissão</string>
+    <string name="profile_student">Estudante</string>
+    <string name="profile_professor">Professor</string>
+    <string name="profile_staff">Staff</string>
+    <string name="profile_visitor">Visitante</string>
+    <string name="profile_language">Linguagem:</string>
+    <string name="profile_language_option_english">Inglês</string>
+    <string name="profile_language_option_portuguese">Portugues</string>
+    <string name="profile_dietary_constraints">Restrições Alimentares</string>
+    <string name="profile_dietary_vegetarian">Vegetariano</string>
+    <string name="profile_dietary_meat">Carne</string>
+    <string name="profile_dietary_fish">Peixe</string>
+    <string name="profile_dietary_vegen">Vegan</string>
+
+    <!-- Activity -->
+    <string name="profile_file">profile</string>
+    <string name="profile_position_name">Position Name</string>
+    <string name="profile_position_camera_failure_toast">Impossivel de obter foto de câmara</string>
+    <string name="profile_user_photo">User Photo</string>
+    <string name="profile_position">Position</string>
+    <string name="profile_language_chosen">Language</string>
+
+
+    <!-- Google Services API Key for Directions API-->
+    <string name="map_api_key">AIzaSyCwTYl8KmYZE3J4vSQj7AMm2Hdk1RhjnyQ</string>
+    <string name="map_alameda">Instituto+Superior+Técnico</string>
+    <string name="map_taguspark">Instituto+Superior+Técnico+-+Taguspark</string>
+
+    <!-- Server Interactions API -->
+    <string name="foodist_server_address">10.0.2.2</string>
+    <string name="foodist_server_port">9000</string>
+    <string name="error_menus">No Menus available</string>
+    <string name="add_menu_food_type">Food Type</string>
+    <string name="menu_type_vegetarian">Vegetarian</string>
+    <string name="menu_type_vegan">Vegan</string>
+    <string name="menu_type_fish">Fish</string>
+    <string name="menu_type_meat">Meat</string>
+</resources>
