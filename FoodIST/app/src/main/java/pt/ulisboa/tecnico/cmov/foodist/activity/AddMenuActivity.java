@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadMenuTask;
@@ -70,13 +72,19 @@ public class AddMenuActivity extends BaseActivity {
             TextView menuName = findViewById(R.id.dishName);
             TextView menuCost = findViewById(R.id.dishCost);
 
+            Contract.FoodType type = getFoodType();
+            if (type == null) {
+                showToast("Give the menu a type!");
+                return;
+            }
+
             String foodService = getIntent().getStringExtra(SERVICE_NAME);
 
             if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
                 showToast(getString(R.string.add_menu_invalid_input_toast));
             } else {
                 Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
-                Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
+                Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()), type);
                 uploadMenu(menu);
             }
         });
@@ -185,7 +193,7 @@ public class AddMenuActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-                        switch (requestCode) {
+            switch (requestCode) {
                 case GALLERY_PIC:
 
                     galleryReturn(data);
@@ -246,5 +254,25 @@ public class AddMenuActivity extends BaseActivity {
 
         imageFilePath = image.getAbsolutePath();
         return image;
+    }
+
+    private Contract.FoodType getFoodType() {
+        RadioButton button = findViewById(R.id.add_menu_vegetarian);
+        if (button.isChecked()) {
+            return Contract.FoodType.Vegetarian;
+        }
+        button = findViewById(R.id.add_menu_meat);
+        if (button.isChecked()) {
+            return Contract.FoodType.Meat;
+        }
+        button = findViewById(R.id.add_menu_fish);
+        if (button.isChecked()) {
+            return Contract.FoodType.Fish;
+        }
+        button = findViewById(R.id.add_menu_vegan);
+        if (button.isChecked()) {
+            return Contract.FoodType.Vegan;
+        }
+        return null;
     }
 }
