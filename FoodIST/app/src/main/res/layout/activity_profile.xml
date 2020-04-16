@@ -6,146 +6,146 @@
     android:layout_height="match_parent"
     tools:context=".activity.ProfileActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/profilePicture"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:src="@drawable/ic_add" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:autofillHints=""
-            android:hint="@string/username"
-            android:maxLength="60" />
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:src="@drawable/ic_add" />
 
-
-        <TextView
-            android:id="@+id/RoleTitle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:autofillHints=""
-            android:text="Profession"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:maxLength="60" />
-
-        <RadioGroup
-            android:id="@+id/universityStatus"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            >
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:autofillHints=""
+                android:hint="@string/username"
+                android:maxLength="60" />
 
 
-        <RadioButton
-            android:id="@+id/radioButton"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/student"
-            android:textSize="20sp" />
-
-        <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/professor"
-            android:textSize="20sp" />
-
-        <RadioButton
-            android:id="@+id/radioButton3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/staff"
-            android:textSize="20sp" />
-
-        <RadioButton
-            android:id="@+id/radioButton4"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/visitor"
-            android:textSize="20sp" />
-    </RadioGroup>
-
-
-        <TextView
-            android:id="@+id/ConstraintsTitle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:autofillHints=""
-            android:text="Dietary Constraints"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:maxLength="60" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight= "4"
-        android:orientation="vertical">
-            <CheckBox
-                android:id="@+id/Vegetarian"
+            <TextView
+                android:id="@+id/RoleTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Vegetarian"
-                android:textSize="20sp"
-                android:checked="true"
-                />
+                android:autofillHints=""
+                android:maxLength="60"
+                android:text="Profession"
+                android:textAlignment="center"
+                android:textSize="20sp" />
 
-            <CheckBox
-                android:id="@+id/Meat"
+            <RadioGroup
+                android:id="@+id/universityStatus"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4">
+
+
+                <RadioButton
+                    android:id="@+id/radioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/student"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/professor"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/staff"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/visitor"
+                    android:textSize="20sp" />
+            </RadioGroup>
+
+
+            <TextView
+                android:id="@+id/ConstraintsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Meat"
-                android:textSize="20sp"
-                android:checked="true"
-                />
+                android:autofillHints=""
+                android:maxLength="60"
+                android:text="Dietary Constraints"
+                android:textAlignment="center"
+                android:textSize="20sp" />
 
-            <CheckBox
-                android:id="@+id/Fish"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Fish"
-                android:textSize="20sp"
-                android:checked="true"
-                />
+                android:layout_weight="4"
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/Vegan"
+                <CheckBox
+                    android:id="@+id/Vegetarian"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Vegetarian"
+                    android:textSize="20sp" />
+
+                <CheckBox
+                    android:id="@+id/Meat"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Meat"
+                    android:textSize="20sp" />
+
+                <CheckBox
+                    android:id="@+id/Fish"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Fish"
+                    android:textSize="20sp" />
+
+                <CheckBox
+                    android:id="@+id/Vegan"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Vegan"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!--Empty to pad-->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Vegan"
-                android:textSize="20sp"
-                android:checked="true"
-                />
-    </LinearLayout>
+                android:layout_weight="2"
+                android:orientation="vertical" />
 
-        <!--Empty to pad-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight= "2"
-        android:orientation="vertical"/>
+        </LinearLayout>
+    </ScrollView>
 
-</LinearLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
