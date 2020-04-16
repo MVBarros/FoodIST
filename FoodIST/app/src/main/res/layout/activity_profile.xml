@@ -97,16 +97,17 @@
         android:layout_height="0dp"
         android:layout_weight= "4"
         android:orientation="vertical">
-            <RadioButton
+            <CheckBox
                 android:id="@+id/Vegetarian"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="Vegetarian"
                 android:textSize="20sp"
-                android:checked="true"/>
+                android:checked="true"
+                />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/Meat"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -116,7 +117,7 @@
                 android:checked="true"
                 />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/Fish"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -126,7 +127,7 @@
                 android:checked="true"
                 />
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/Vegan"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

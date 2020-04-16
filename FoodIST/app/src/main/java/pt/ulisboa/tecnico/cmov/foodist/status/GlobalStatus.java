@@ -1,16 +1,11 @@
 package pt.ulisboa.tecnico.cmov.foodist.status;
 
 import android.app.Application;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.util.Log;
 
 import org.conscrypt.Conscrypt;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.Provider;
@@ -20,6 +15,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -28,16 +24,20 @@ import javax.security.auth.x500.X500Principal;
 
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.ManagedChannel;
-import io.grpc.android.AndroidChannelBuilder;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
+
+    public enum Diets {Meat, Vegetarian, Vegan, Fish}
+
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub assyncStub = null;
 
     private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
+
+    //private Map<Diets, Boolean>
 
     private boolean freshBootFlag = true;
 

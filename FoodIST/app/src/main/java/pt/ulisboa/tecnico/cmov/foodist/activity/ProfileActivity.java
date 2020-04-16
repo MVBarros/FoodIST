@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -51,6 +52,8 @@ public class ProfileActivity extends BaseActivity {
         setContentView(R.layout.activity_profile);
 
         getPreferences();
+
+        setDiets();
 
         ImageView profilePicture = findViewById(R.id.profilePicture);
 
@@ -270,4 +273,7 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
+
+    private void setDiets() {
+       }
 }
