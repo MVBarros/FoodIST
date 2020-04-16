@@ -20,14 +20,14 @@
             android:text=""
             android:textSize="20sp"
             android:maxLength="60"
-            android:hint="@string/dish_name" />
+            android:hint="@string/add_menu_dish_name" />
 
         <EditText
             android:id="@+id/dishCost"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:hint="@string/cost"
+            android:hint="@string/add_menu_cost"
             android:textSize="20sp"
             android:text=""
             android:inputType="numberDecimal"
@@ -49,7 +49,7 @@
             android:layout_weight="1"
             android:autofillHints=""
             android:maxLength="60"
-            android:text="Food Type"
+            android:text="@string/add_menu_food_type"
             android:textAlignment="center"
             android:textSize="20sp"
             />
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Vegetarian"
+                android:text="@string/menu_type_vegetarian"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -74,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Meat"
+                android:text="@string/menu_type_meat"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Vegan"
+                android:text="@string/menu_type_vegan"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Fish"
+                android:text="@string/menu_type_fish"
                 android:textSize="20sp" />
         </RadioGroup>
 
@@ -100,6 +100,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="@string/done" />
+            android:text="@string/add_menu_done" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

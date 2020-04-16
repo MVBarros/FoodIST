@@ -41,14 +41,14 @@
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_weight="1"
-                android:text="@string/user_profile" />
+                android:text="@string/main_user_profile" />
 
             <Button
                 android:id="@+id/changeCampus"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_weight="1"
-                android:text="@string/change_campus" />
+                android:text="@string/main_change_campus" />
 
         </LinearLayout>
 

@@ -73,15 +73,15 @@ public class ProfileActivity extends BaseActivity {
 
         TextView user = findViewById(R.id.username);
 
-        editor.putString(getString(R.string.username), user.getText().toString());
+        editor.putString(getString(R.string.profile_username), user.getText().toString());
 
         RadioGroup status = findViewById(R.id.universityStatus);
 
-        editor.putInt(getString(R.string.position), status.getCheckedRadioButtonId());
+        editor.putInt(getString(R.string.profile_position), status.getCheckedRadioButtonId());
 
         RadioButton statusButton = findViewById(status.getCheckedRadioButtonId());
         if (statusButton != null) {
-            editor.putString(getString(R.string.position_name), statusButton.getText().toString());
+            editor.putString(getString(R.string.profile_position_name), statusButton.getText().toString());
         }
         editor.apply();
     }
@@ -208,7 +208,7 @@ public class ProfileActivity extends BaseActivity {
         profile.setImageBitmap(BitmapFactory.decodeFile(absoluteFilePath));
 
         //Save path for future reference
-        editor.putString(getString(R.string.user_photo), absoluteFilePath);
+        editor.putString(getString(R.string.profile_user_photo), absoluteFilePath);
         editor.apply();
     }
 
@@ -218,7 +218,7 @@ public class ProfileActivity extends BaseActivity {
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
         profilePicture.setImageBitmap(photo);
 
-        editor.putString(getString(R.string.user_photo), imageFilePath);
+        editor.putString(getString(R.string.profile_user_photo), imageFilePath);
         editor.apply();
     }
 
@@ -232,7 +232,7 @@ public class ProfileActivity extends BaseActivity {
         } else {
             profilePicture.setImageBitmap(photo);
 
-            editor.putString(getString(R.string.user_photo), imageFilePath);
+            editor.putString(getString(R.string.profile_user_photo), imageFilePath);
             editor.apply();
         }
     }
@@ -257,18 +257,18 @@ public class ProfileActivity extends BaseActivity {
         ImageView profilePicture = findViewById(R.id.profilePicture);
         TextView user = findViewById(R.id.username);
 
-        this.imageFilePath = pref.getString(getString(R.string.user_photo), null);
+        this.imageFilePath = pref.getString(getString(R.string.profile_user_photo), null);
 
         if (this.imageFilePath != null) {
             Bitmap photo = BitmapFactory.decodeFile(this.imageFilePath);
             profilePicture.setImageBitmap(photo);
         }
 
-        String username = pref.getString(getString(R.string.username), "");
+        String username = pref.getString(getString(R.string.profile_username), "");
         user.setText(username);
 
 
-        int selectedStatus = pref.getInt(getString(R.string.position), -1);
+        int selectedStatus = pref.getInt(getString(R.string.profile_position), -1);
 
         if (selectedStatus != -1) {
             RadioButton status = findViewById(selectedStatus);

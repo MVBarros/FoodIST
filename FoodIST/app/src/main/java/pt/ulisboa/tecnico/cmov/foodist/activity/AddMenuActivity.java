@@ -73,7 +73,7 @@ public class AddMenuActivity extends BaseActivity {
             String foodService = getIntent().getStringExtra(SERVICE_NAME);
 
             if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
-                showToast("Give the menu a name and a cost!");
+                showToast(getString(R.string.add_menu_invalid_input_toast));
             } else {
                 Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
                 Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()));
@@ -93,7 +93,7 @@ public class AddMenuActivity extends BaseActivity {
             }
             finish();
         } else {
-            showToast("device is not online! Please check your connection.");
+            showToast(getString(R.string.add_menu_no_internet_access_toast));
         }
     }
 
@@ -149,7 +149,7 @@ public class AddMenuActivity extends BaseActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            showToast("Unable to get photo taken from camera");
+            showToast(getString(R.string.add_menu_camera_failure_toast));
         }
 
         if (photoFile != null) {
@@ -185,27 +185,24 @@ public class AddMenuActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor editor = pref.edit();
-
-            switch (requestCode) {
+                        switch (requestCode) {
                 case GALLERY_PIC:
 
-                    galleryReturn(editor, data);
+                    galleryReturn(data);
                     break;
                 case CAMERA_PIC:
                     Log.d(TAG, "I should not entered here");
 
-                    cameraReturn(editor, data);
+                    cameraReturn();
                     break;
                 case REQUEST_PIC:
-                    choiceReturn(editor, data);
+                    choiceReturn(data);
                     break;
             }
         }
     }
 
-    private void galleryReturn(SharedPreferences.Editor editor, Intent data) {
+    private void galleryReturn(Intent data) {
         Uri selectedImage = data.getData();
 
         String[] filePath = {MediaStore.Images.Media.DATA};
@@ -218,34 +215,24 @@ public class AddMenuActivity extends BaseActivity {
 
         ImageView profile = (ImageView) findViewById(photoView);
         profile.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
-
-        //Save path for future reference
-        editor.putString(getString(R.string.user_photo), imageFilePath);
-        editor.apply();
     }
 
-    private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
+    private void cameraReturn() {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
         profilePicture.setImageBitmap(photo);
-
-        editor.putString(getString(R.string.user_photo), imageFilePath);
-        editor.apply();
     }
 
-    private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
+    private void choiceReturn(Intent data) {
         ImageView profilePicture = (ImageView) findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
 
         if (photo == null) {
-            galleryReturn(editor, data);
+            galleryReturn(data);
         } else {
             profilePicture.setImageBitmap(photo);
-
-            editor.putString(getString(R.string.user_photo), imageFilePath);
-            editor.apply();
         }
     }
 

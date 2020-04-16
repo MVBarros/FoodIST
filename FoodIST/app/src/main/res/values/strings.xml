@@ -1,39 +1,104 @@
 <resources>
     <string name="app_name">FoodIST</string>
-    <string name="username">Username</string>
-    <string name="user_photo">User Photo</string>
-    <string name="position">Position</string>
-    <string name="position_name">Position Name</string>
-    <string name="student">Student</string>
-    <string name="professor">Professor</string>
-    <string name="staff">Staff</string>
-    <string name="visitor">Visitor</string>
-    <string name="add_food">Add Photo</string>
-    <string name="add_menu">Add Menu</string>
-    <string name="menu_photos">Menu Photos</string>
-    <string name="dish_name">Dish Name</string>
-    <string name="cost">Cost</string>
-    <string name="add_photos">Add Photos</string>
-    <string name="done">Done</string>
+
+
     <string name="global_preferences_file">global_preferences</string>
     <string name="global_preferences_location">global_preferences</string>
     <string name="campus_taguspark">TagusPark</string>
     <string name="campus_alameda">Alameda</string>
-    <string name="previous_photo">Previous Photo</string>
-    <string name="next_photo">Next Photo</string>
-    <string name="number_photos">No Photos Available</string>
 
-    <!-- Profile variables -->
+    <!-- activity add menu -->
+    <!-- Layout -->
+    <string name="add_menu_dish_name">Dish Name</string>
+    <string name="add_menu_cost">Cost</string>
+    <string name="add_menu_done">Done</string>
+    <!-- Activity -->
+    <string name="add_menu_invalid_input_toast">Give the menu a name and a cost!</string>
+    <string name="add_menu_no_internet_access_toast">Device is not online! Please check your connection</string>
+    <string name="add_menu_camera_failure_toast">Unable to get photo taken from camera</string>
+
+
+    <!-- activity choose campus -->
+    <!-- Layout -->
+    <string name="campus1">Taguspark</string>
+    <string name="campus2">Alameda</string>
+
+    <!-- activity food menu -->
+    <!-- Layout -->
+    <string name="food_menu_dish_name">Dish Name</string>
+    <string name="food_menu_cost">Cost</string>
+    <string name="food_menu_number_photos">No Photos Available</string>
+    <string name="food_menu_previous_photo">Previous Photo</string>
+    <string name="food_menu_next_photo">Next Photo</string>
+    <string name="food_menu_add_photos">Add Photos</string>
+    <string name="food_menu_photos">Menu Photos</string>
+
+    <!-- Activity -->
+    <string name="food_menu_no_photos_available_toast">No photos available for this menu</string>
+    <string name="food_menu_photo_upload_no_internet_failure_toast">Cannot upload photo without internet</string>
+    <string name="food_menu_name_failure_toast">Unable to obtain menu name</string>
+    <string name="food_menu_cost_failure_toast">Unable to obtain menu cost</string>
+    <string name="food_menu_camera_failure_toast">Unable to get photo taken from camera</string>
+    <string name="food_menu_download_photo_failure_toast">Cannot download menu photo without network connection</string>
+    <string name="food_menu_update_menu_failure_toast">Cannot update menu without network connection</string>
+    <string name="food_menu_upload_photo_failure_toast">Cannot upload menu photo without network connection</string>
+
+    <!-- activity food service -->
+    <!-- Layout -->
+    <string name="food_service_name">Food Service Name</string>
+    <string name="food_service_opening_time">Open Hours: Unknown</string>
+    <string name="food_service_queue_time">Queue Time: Unknown</string>
+    <string name="food_service_add_menu">Add Menu</string>
+    <!-- Activity -->
+    <string name="food_service_working_hours">Working Hours:</string>
+    <string name="food_service_menu_update_failure_toast">No internet connection, cannot get menus</string>
+
+
+    <!-- activity main -->
+    <!-- Layout -->
+    <string name="main_user_profile">User Profile</string>
+    <string name="main_change_campus">Change Campus</string>
+    <!-- Activity -->
+    <string name="main_no_selected_campus_failure_toast">Could not get location, please select campus</string>
+    <string name="main_infering_location_failure_toast">Could not infer campus as no network and/or location is avaliable, please insert it manually</string>
+    <string name="main_update_walking_distance_failure_toast">Could not get services walking distance as there is no location permission and/or no Internet</string>
+    <!-- activity profile -->
+    <!-- Layout -->
+    <string name="profile_username">Username</string>
+    <string name="profile_profession">Profession</string>
+    <string name="profile_student">Student</string>
+    <string name="profile_professor">Professor</string>
+    <string name="profile_staff">Staff</string>
+    <string name="profile_visitor">Visitor</string>
+    <string name="profile_language">Language:</string>
+    <string name="profile_language_option_english">English</string>
+    <string name="profile_language_option_portuguese">Portuguese</string>
+    <string name="profile_dietary_constraints">Dietary Constraints</string>
+    <string name="profile_dietary_vegetarian">Vegetarian</string>
+    <string name="profile_dietary_meat">Meat</string>
+    <string name="profile_dietary_fish">Fish</string>
+    <string name="profile_dietary_vegen">Vegan</string>
+
+    <!-- Activity -->
     <string name="profile_file">profile</string>
+    <string name="profile_position_name">Position Name</string>
+    <string name="profile_position_camera_failure_toast">Unable to get photo taken from camera</string>
+    <string name="profile_user_photo">User Photo</string>
+    <string name="profile_position">Position</string>
+
+
     <!-- Google Services API Key for Directions API-->
     <string name="map_api_key">AIzaSyCwTYl8KmYZE3J4vSQj7AMm2Hdk1RhjnyQ</string>
     <string name="map_alameda">Instituto+Superior+Técnico</string>
     <string name="map_taguspark">Instituto+Superior+Técnico+-+Taguspark</string>
+
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>
-    <string name="user_profile">User Profile</string>
-    <string name="change_campus">Change Campus</string>
     <string name="error_menus">No Menus available</string>
-    <string name="working_hours">Working Hours:</string>
+    <string name="add_menu_food_type">Food Type</string>
+    <string name="menu_type_vegetarian">Vegetarian</string>
+    <string name="menu_type_vegan">Vegan</string>
+    <string name="menu_type_fish">Fish</string>
+    <string name="menu_type_meat">Meat</string>
 </resources>
