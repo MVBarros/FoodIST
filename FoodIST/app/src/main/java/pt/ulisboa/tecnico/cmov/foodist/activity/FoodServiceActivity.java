@@ -6,17 +6,22 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.ActivityWithMap;
+import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class FoodServiceActivity extends ActivityWithMap {
 
@@ -30,6 +35,8 @@ public class FoodServiceActivity extends ActivityWithMap {
     private String foodServiceName;
     private double latitude;
     private double longitude;
+
+    private ArrayList<Menu> menus = new ArrayList<>();
 
     private static final String TAG = "ACTIVITY_FOOD_SERVICE";
 
@@ -131,6 +138,24 @@ public class FoodServiceActivity extends ActivityWithMap {
         } else {
             showToast(getString(R.string.food_service_menu_update_failure_toast));
         }
+    }
+
+    public ArrayList<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(ArrayList<Menu> menus) {
+        this.menus = menus;
+    }
+
+
+    public void doShowAllButton() {
+        final Button button = findViewById(R.id.show_all_menus_button);
+        button.setOnClickListener((l) -> {
+            final MenuAdapter menuAdapter = new MenuAdapter(this, menus);
+            ListView foodServiceList = findViewById(R.id.menus);
+            foodServiceList.setAdapter(menuAdapter);
+        });
     }
 
 }

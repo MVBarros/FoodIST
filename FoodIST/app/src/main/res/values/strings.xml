@@ -102,4 +102,12 @@
     <string name="menu_type_vegan">Vegan</string>
     <string name="menu_type_fish">Fish</string>
     <string name="menu_type_meat">Meat</string>
+    <string name="add_activity_show_all_menus">Show all menus</string>
+    <string name="filter_menu_message">Some menus were filtered according to your dietary constraints</string>
+    <string name="error_getting_menus_message">Unable to get menus from server</string>
+    <string name="no_menus_avaliable_message">No menus available for this service</string>
+    <string name="photo_download_error_message">Unable to download photo, check connection</string>
+    <string name="guess_campus_impossible_message">Unable to guess campus from current location</string>
+    <string name="unable_calculate_walking_time">Unable to calculate food services walking time</string>
+    <string name="upload_photo_complete_message">Upload of photo completed</string>
 </resources>

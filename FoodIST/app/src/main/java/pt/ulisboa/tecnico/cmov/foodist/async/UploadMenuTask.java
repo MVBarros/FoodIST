@@ -30,6 +30,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
         addMenuBuilder.setFoodService(menu[0].getFoodServiceName());
         addMenuBuilder.setName(menu[0].getMenuName());
         addMenuBuilder.setPrice(menu[0].getPrice());
+        addMenuBuilder.setType(menu[0].getType());
 
         Contract.AddMenuRequest request = addMenuBuilder.build();
 

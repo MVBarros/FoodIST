@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.Contract;
@@ -53,12 +54,12 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
     @Override
     public void onPostExecute(List<Contract.Menu> result) {
         if (result == null) {
-            menuError(getActivity(), "Unable to get menus from server");
+            menuError(getActivity(), getActivity().getString(R.string.error_getting_menus_message));
             return;
         }
 
         if (result.size() == 0) {
-            getActivity().showToast("No menus available for this service");
+            getActivity().showToast(getActivity().getString(R.string.no_menus_avaliable_message));
             return;
         }
 
@@ -67,10 +68,24 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
                 .collect(Collectors.toList());
 
-        final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(menus));
+        getActivity().setMenus(new ArrayList<>(menus));
+
+        Map<Contract.FoodType, Boolean> constraints = getActivity().getGlobalStatus().getUserConstraints();
+
+        List<Menu> filteredMenus = menus.stream()
+                .filter(menu -> menu.isConstrained(constraints))
+                .collect(Collectors.toList());
+
+        final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(filteredMenus));
+
+        if (filteredMenus.size() !=  menus.size()) {
+            getActivity().showToast(getActivity().getString(R.string.filter_menu_message));
+            getActivity().doShowAllButton();
+        }
 
         foodServiceList.setAdapter(menuAdapter);
         Log.d(TAG, "Menus obtained successfully");
+
     }
 
     private void menuError(FoodServiceActivity activity, String message) {

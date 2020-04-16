@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
@@ -47,6 +48,8 @@ public class ProfileActivity extends BaseActivity {
     private static final int CAMERA_PIC = 5;
 
     private static final String TAG = "TAG_ProfileActivity";
+
+    private int checkedCount = 0;
 
     private String imageFilePath = null;
 
@@ -317,47 +320,109 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setDiets() {
-        Map<GlobalStatus.DietConstraint, Boolean> constraints = getGlobalStatus().getUserConstraints();
+        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
 
         final CheckBox vegBox = findViewById(R.id.Vegetarian);
-        vegBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Vegetarian));
+        vegBox.setChecked(constraints.get(Contract.FoodType.Vegetarian));
+        if (vegBox.isChecked()) {
+            checkedCount++;
+        }
         vegBox.setOnClickListener((l) ->
         {
+            if (vegBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!vegBox.isChecked() && checkedCount == 0) {
+                vegBox.setChecked(true);
+                showToast("Must have at least one preference");
+                checkedCount++;
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.VEGETARIAN_KEY, vegBox.isChecked());
             prefEditor.apply();
+
         });
 
         final CheckBox meatBox = findViewById(R.id.Meat);
-        meatBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Meat));
+        meatBox.setChecked(constraints.get(Contract.FoodType.Meat));
         meatBox.setOnClickListener((l) ->
         {
+            if (meatBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!meatBox.isChecked() && checkedCount == 0) {
+                meatBox.setChecked(true);
+                showToast("Must have at least one preference");
+                checkedCount++;
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.MEAT_KEY, meatBox.isChecked());
             prefEditor.apply();
         });
 
+        if (meatBox.isChecked()) {
+            checkedCount++;
+        }
+
         final CheckBox fishBox = findViewById(R.id.Fish);
-        fishBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Fish));
+        fishBox.setChecked(constraints.get(Contract.FoodType.Fish));
         fishBox.setOnClickListener((l) ->
         {
+            if (fishBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!fishBox.isChecked() && checkedCount == 0) {
+                fishBox.setChecked(true);
+                checkedCount++;
+                showToast("Must have at least one preference");
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.FISH_KEY, fishBox.isChecked());
             prefEditor.apply();
         });
 
+
+        if (fishBox.isChecked()) {
+            checkedCount++;
+        }
+
         final CheckBox veganBox = findViewById(R.id.Vegan);
-        veganBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Vegan));
+        veganBox.setChecked(constraints.get(Contract.FoodType.Vegan));
         veganBox.setOnClickListener((l) ->
         {
+
+            if (veganBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!veganBox.isChecked() && checkedCount == 0) {
+                veganBox.setChecked(true);
+                checkedCount++;
+                showToast("Must have at least one preference");
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.VEGAN_KEY, veganBox.isChecked());
             prefEditor.apply();
         });
 
-       }
+        if (veganBox.isChecked()) {
+            checkedCount++;
+        }
+
+    }
 }

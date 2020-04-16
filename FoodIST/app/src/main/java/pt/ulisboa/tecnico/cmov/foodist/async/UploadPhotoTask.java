@@ -19,6 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.AddMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
@@ -31,6 +32,8 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     private WeakReference<FoodMenuActivity> activity;
     private Context mContext;
 
+    private static final String TAG = "UPLOADPHOTO-TASK";
+
     public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, FoodMenuActivity activity) {
         this.stub = stub;
         this.activity = new WeakReference<>(activity);
@@ -42,8 +45,6 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         this.activity = new WeakReference<>(null);
         mContext = activity.getApplicationContext();
     }
-
-    private static final String TAG = "UPLOADPHOTO-TASK";
 
     @Override
     protected Boolean doInBackground(Photo... photo) {
@@ -60,13 +61,13 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
             @Override
             public void onError(Throwable throwable) {
-                System.out.println("Error uploading file, does that file already exist?" + throwable.getMessage());
+                Log.e(TAG, "Error uploading file, does that file already exist?" + throwable.getMessage());
                 finishLatch.countDown();
             }
 
             @Override
             public void onCompleted() {
-                System.out.println("File uploaded successfully");
+                Log.d(TAG, "File uploaded successfully");
                 finishLatch.countDown();
             }
         };
@@ -110,8 +111,6 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (result) {
             Log.d(TAG, "Photo uploaded successfully");
-            //TODO PUT PHOTO IN CACHE
-
         } else {
             Log.d(TAG, "Photo unable to be uploaded");
         }
@@ -119,7 +118,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             act.launchUpdateMenuTask();
         }
-        Toast toast = Toast.makeText(mContext, "Upload of photo completed", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(mContext, R.string.upload_photo_complete_message, Toast.LENGTH_SHORT);
         toast.show();
     }
 
