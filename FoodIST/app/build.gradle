@@ -46,9 +46,11 @@ dependencies {
 
     testImplementation 'junit:junit:4.13'
 
+    implementation "io.grpc:grpc-android:${grpc_version}"
     implementation "io.grpc:grpc-okhttp:${grpc_version}" // CURRENT_GRPC_VERSION
     implementation "io.grpc:grpc-protobuf-lite:${grpc_version}" // CURRENT_GRPC_VERSION
     implementation "io.grpc:grpc-stub:${grpc_version}" // CURRENT_GRPC_VERSION
     implementation "javax.annotation:javax.annotation-api:${annotation_version}"
-    implementation "io.grpc:grpc-android:${grpc_version}"
+
+    implementation 'org.conscrypt:conscrypt-android:2.4.0'
 }

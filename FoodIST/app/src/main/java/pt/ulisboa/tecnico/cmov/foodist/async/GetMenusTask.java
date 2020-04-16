@@ -46,6 +46,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
             Contract.ListMenuReply reply = this.stub.listMenu(request);
             return reply.getMenusList();
         } catch (StatusRuntimeException e) {
+            Log.e(TAG, e.getStatus().getDescription());
             return null;
         }
     }

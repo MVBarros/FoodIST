@@ -64,7 +64,7 @@ public class Main {
 
     public static File getPub() throws Exception {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        URL url = classloader.getResource("server.cert");
+        URL url = classloader.getResource("server.pem");
         Path path = Paths.get(url.toURI());
         return path.toFile();
     }
