@@ -47,6 +47,8 @@ public class ProfileActivity extends BaseActivity {
 
     private static final String TAG = "TAG_ProfileActivity";
 
+    private int checkedCount = 0;
+
     private String imageFilePath = null;
 
     private int photoView = R.id.profilePicture;
@@ -284,43 +286,105 @@ public class ProfileActivity extends BaseActivity {
 
         final CheckBox vegBox = findViewById(R.id.Vegetarian);
         vegBox.setChecked(constraints.get(Contract.FoodType.Vegetarian));
+        if (vegBox.isChecked()) {
+            checkedCount++;
+        }
         vegBox.setOnClickListener((l) ->
         {
+            if (vegBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!vegBox.isChecked() && checkedCount == 0) {
+                vegBox.setChecked(true);
+                showToast("Must have at least one preference");
+                checkedCount++;
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.VEGETARIAN_KEY, vegBox.isChecked());
             prefEditor.apply();
+
         });
 
         final CheckBox meatBox = findViewById(R.id.Meat);
         meatBox.setChecked(constraints.get(Contract.FoodType.Meat));
         meatBox.setOnClickListener((l) ->
         {
+            if (meatBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!meatBox.isChecked() && checkedCount == 0) {
+                meatBox.setChecked(true);
+                showToast("Must have at least one preference");
+                checkedCount++;
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.MEAT_KEY, meatBox.isChecked());
             prefEditor.apply();
         });
 
+        if (meatBox.isChecked()) {
+            checkedCount++;
+        }
+
         final CheckBox fishBox = findViewById(R.id.Fish);
         fishBox.setChecked(constraints.get(Contract.FoodType.Fish));
         fishBox.setOnClickListener((l) ->
         {
+            if (fishBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!fishBox.isChecked() && checkedCount == 0) {
+                fishBox.setChecked(true);
+                checkedCount++;
+                showToast("Must have at least one preference");
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.FISH_KEY, fishBox.isChecked());
             prefEditor.apply();
         });
 
+
+        if (fishBox.isChecked()) {
+            checkedCount++;
+        }
+
         final CheckBox veganBox = findViewById(R.id.Vegan);
         veganBox.setChecked(constraints.get(Contract.FoodType.Vegan));
         veganBox.setOnClickListener((l) ->
         {
+
+            if (veganBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!veganBox.isChecked() && checkedCount == 0) {
+                veganBox.setChecked(true);
+                checkedCount++;
+                showToast("Must have at least one preference");
+                return;
+            }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
             SharedPreferences.Editor prefEditor = pref.edit();
             prefEditor.putBoolean(GlobalStatus.VEGAN_KEY, veganBox.isChecked());
             prefEditor.apply();
         });
 
-       }
+        if (veganBox.isChecked()) {
+            checkedCount++;
+        }
+
+    }
 }
