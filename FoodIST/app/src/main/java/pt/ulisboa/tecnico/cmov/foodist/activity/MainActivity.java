@@ -81,6 +81,12 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     @Override
+    protected void onRestart(){
+        super.onRestart();
+        this.recreate();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (!isOnCreate) {
