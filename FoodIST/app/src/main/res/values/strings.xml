@@ -101,4 +101,5 @@
     <string name="menu_type_vegan">Vegan</string>
     <string name="menu_type_fish">Fish</string>
     <string name="menu_type_meat">Meat</string>
+    <string name="add_activity_show_all_menus">Show all menus</string>
 </resources>

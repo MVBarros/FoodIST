@@ -68,7 +68,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
                 .collect(Collectors.toList());
 
-        getActivity().setMenus(menus);
+        getActivity().setMenus(new ArrayList<>(menus));
 
         Map<Contract.FoodType, Boolean> constraints = getActivity().getGlobalStatus().getUserConstraints();
 
@@ -80,10 +80,12 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
 
         if (filteredMenus.size() !=  menus.size()) {
             getActivity().showToast("Some menus were filtered according to your dietary constraints");
+            getActivity().doShowAllButton();
         }
 
         foodServiceList.setAdapter(menuAdapter);
         Log.d(TAG, "Menus obtained successfully");
+
     }
 
     private void menuError(FoodServiceActivity activity, String message) {
