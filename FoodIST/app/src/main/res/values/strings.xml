@@ -96,4 +96,9 @@
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>
     <string name="error_menus">No Menus available</string>
+    <string name="add_menu_food_type">Food Type</string>
+    <string name="menu_type_vegetarian">Vegetarian</string>
+    <string name="menu_type_vegan">Vegan</string>
+    <string name="menu_type_fish">Fish</string>
+    <string name="menu_type_meat">Meat</string>
 </resources>

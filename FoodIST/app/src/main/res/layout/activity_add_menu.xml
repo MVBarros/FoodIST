@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.AddMenuActivity">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,36 +16,90 @@
             android:id="@+id/dishName"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
-            android:hint="@string/add_menu_dish_name"
-            android:maxLength="60"
+            android:layout_weight="1"
             android:text=""
-            android:textSize="30sp" />
+            android:textSize="20sp"
+            android:maxLength="60"
+            android:hint="@string/add_menu_dish_name" />
 
         <EditText
             android:id="@+id/dishCost"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:hint="@string/add_menu_cost"
-            android:inputType="numberDecimal"
-            android:maxLength="5"
+            android:textSize="20sp"
             android:text=""
-            android:textSize="30sp" />
+            android:inputType="numberDecimal"
+            android:maxLength="5" />
 
         <ImageView
             android:id="@+id/dishView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="12"
+            android:layout_weight="7"
             android:padding="30dp"
             android:src="@drawable/ic_add" />
+
+
+        <TextView
+            android:id="@+id/FoodTypeText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:maxLength="60"
+            android:text="@string/add_menu_food_type"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            />
+
+        <RadioGroup
+            android:id="@+id/FoodTypeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/menu_type_vegetarian"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/menu_type_meat"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/menu_type_vegan"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/menu_type_fish"
+                android:textSize="20sp" />
+        </RadioGroup>
+
 
         <Button
             android:id="@+id/add_new_menu_done_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:text="@string/add_menu_done" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

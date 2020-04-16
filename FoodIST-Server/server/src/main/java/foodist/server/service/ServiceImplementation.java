@@ -29,6 +29,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         String foodService = request.getFoodService();
         menuBuilder.setName(request.getName());
         menuBuilder.setPrice(request.getPrice());
+        menuBuilder.setType(request.getType());
         Menu menu = menuBuilder.build();
 
         Storage.addMenu(foodService, menu);
@@ -44,12 +45,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         HashMap<String, Menu> menuMap = Storage.getMenuMap(foodService);
         
         ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
-	    Iterator<Entry<String, Menu>> iterator = menuMap.entrySet().iterator();
-	    while (iterator.hasNext()) {
-	        Entry<String, Menu> entry = iterator.next();
-	        Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
-	        listMenuReplyBuilder.addMenus(menu);
-	    }
+		for (Entry<String, Menu> entry : menuMap.entrySet()) {
+			Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
+			listMenuReplyBuilder.addMenus(menu);
+		}
 	
         ListMenuReply listMenuReply = listMenuReplyBuilder.build();
         responseObserver.onNext(listMenuReply);
