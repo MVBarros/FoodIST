@@ -35,6 +35,8 @@ public class WifiPreLoadingTask extends AsyncTask<FoodISTServerServiceBlockingSt
                 if (!downloadPhoto(photoID, stub[0])) {
                     Log.d(TAG, "Thread ended - Cache is full");
                     return true;
+                } else {
+                    Log.d(TAG, "Photo with id " + photoID + " was downloaded");
                 }
             }
             return true;

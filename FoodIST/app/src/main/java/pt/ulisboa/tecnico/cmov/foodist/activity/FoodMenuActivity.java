@@ -97,9 +97,6 @@ public class FoodMenuActivity extends BaseActivity {
             Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
             getPhoto(photo);
             setPhotoView();
-        } else {
-            showToast(getString(R.string.food_menu_download_photo_failure_toast));
-
         }
     }
 
