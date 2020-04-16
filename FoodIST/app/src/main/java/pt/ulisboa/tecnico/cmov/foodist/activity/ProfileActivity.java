@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,10 +28,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -275,5 +279,47 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setDiets() {
+        Map<GlobalStatus.DietConstraint, Boolean> constraints = getGlobalStatus().getUserConstraints();
+
+        final CheckBox vegBox = findViewById(R.id.Vegetarian);
+        vegBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Vegetarian));
+        vegBox.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.VEGETARIAN_KEY, vegBox.isChecked());
+            prefEditor.apply();
+        });
+
+        final CheckBox meatBox = findViewById(R.id.Meat);
+        meatBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Meat));
+        meatBox.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.MEAT_KEY, meatBox.isChecked());
+            prefEditor.apply();
+        });
+
+        final CheckBox fishBox = findViewById(R.id.Fish);
+        fishBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Fish));
+        fishBox.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.FISH_KEY, fishBox.isChecked());
+            prefEditor.apply();
+        });
+
+        final CheckBox veganBox = findViewById(R.id.Vegan);
+        veganBox.setChecked(constraints.get(GlobalStatus.DietConstraint.Vegan));
+        veganBox.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.VEGAN_KEY, veganBox.isChecked());
+            prefEditor.apply();
+        });
+
        }
 }

@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.status;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.conscrypt.Conscrypt;
@@ -14,6 +15,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +32,17 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
 
-    public enum Diets {Meat, Vegetarian, Vegan, Fish}
+    public enum DietConstraint {Meat, Vegetarian, Vegan, Fish}
+
+    public static final String MEAT_KEY = "MEAT";
+    public static final String VEGAN_KEY = "VEGAN";
+    public static final String FISH_KEY = "FISH";
+    public static final String VEGETARIAN_KEY = "VEGETARIAN";
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub assyncStub = null;
 
     private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
-
-    //private Map<Diets, Boolean>
 
     private boolean freshBootFlag = true;
 
@@ -126,4 +131,30 @@ public class GlobalStatus extends Application {
         context.init(null, trustManagerFactory.getTrustManagers(), null);
         return context.getSocketFactory();
     }
+
+    public Map<DietConstraint, Boolean> getUserConstraints() {
+        Map<DietConstraint, Boolean> userConstraints = new HashMap<>();
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+
+        boolean vegetarian = pref.getBoolean(VEGETARIAN_KEY, true);
+        userConstraints.put(DietConstraint.Vegetarian, vegetarian);
+
+        boolean meat = pref.getBoolean(MEAT_KEY, true);
+        userConstraints.put(DietConstraint.Meat, meat);
+
+        boolean vegan = pref.getBoolean(VEGAN_KEY, true);
+        userConstraints.put(DietConstraint.Vegan, vegan);
+
+        boolean fish = pref.getBoolean(FISH_KEY, true);
+        userConstraints.put(DietConstraint.Fish, fish);
+
+        return userConstraints;
+    }
+
+
+    public void switchConstraint(DietConstraint constraint) {
+        getUserConstraints().put(constraint, getUserConstraints().get(constraint));
+    }
+
 }
