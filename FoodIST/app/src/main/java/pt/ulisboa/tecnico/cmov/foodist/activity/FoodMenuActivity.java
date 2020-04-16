@@ -98,7 +98,8 @@ public class FoodMenuActivity extends BaseActivity {
             getPhoto(photo);
             setPhotoView();
         } else {
-            Toast.makeText(getApplicationContext(), "No photos available for this menu", Toast.LENGTH_SHORT).show();
+            showToast(getString(R.string.food_menu_download_photo_failure_toast));
+
         }
     }
 
@@ -129,7 +130,7 @@ public class FoodMenuActivity extends BaseActivity {
             if (isNetworkAvailable()) {
                 askGalleryPermission();
             } else {
-                showToast("Cannot upload photo without internet");
+                showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
             }
         });
     }
@@ -160,7 +161,7 @@ public class FoodMenuActivity extends BaseActivity {
     private void initializeMenuName(String menuName) {
         if (menuName == null) {
             Log.d(TAG, "Unable to obtain menu name");
-            Toast.makeText(this, "Unable to obtain menu name", Toast.LENGTH_SHORT).show();
+            showToast(getString(R.string.food_menu_name_failure_toast));
         } else {
             this.menuName = menuName;
             TextView menuNameText = findViewById(R.id.menuName);
@@ -171,7 +172,7 @@ public class FoodMenuActivity extends BaseActivity {
     private void initializeMenuCost(Double menuCost) {
         if (menuCost == -1.0) {
             Log.d(TAG, "Unable to obtain menu cost");
-            Toast.makeText(this, "Unable to obtain menu cost", Toast.LENGTH_SHORT).show();
+            showToast(getString(R.string.food_menu_cost_failure_toast));
         } else {
             TextView menuCostText = findViewById(R.id.menuCost);
             menuCostText.setText(String.format(Locale.US, "%.2f", menuCost));
@@ -250,7 +251,7 @@ public class FoodMenuActivity extends BaseActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            showToast("Could not get image provided");
+            showToast(getString(R.string.food_menu_camera_failure_toast));
         }
 
         if (photoFile != null) {
@@ -331,7 +332,7 @@ public class FoodMenuActivity extends BaseActivity {
         if (isNetworkAvailable()) {
             new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
         } else {
-            showToast("Cannot download menu photo without network connection");
+            showToast(getString(R.string.food_menu_download_photo_failure_toast));
         }
     }
 
@@ -339,7 +340,7 @@ public class FoodMenuActivity extends BaseActivity {
         if (isNetworkAvailable()) {
             new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodService, menuName);
         } else {
-            showToast("Cannot get menu photos without internet");
+            showToast(getString(R.string.food_menu_update_menu_failure_toast));
         }
     }
 
@@ -347,7 +348,7 @@ public class FoodMenuActivity extends BaseActivity {
         if (isNetworkAvailable()) {
             new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
         } else {
-            showToast("Cannot upload menu photo without network connection");
+            showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
         }
     }
 

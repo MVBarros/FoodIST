@@ -15,26 +15,26 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:textSize="30sp"
+            android:text="@string/food_menu_dish_name"
             android:textAlignment="center"
-            android:text="@string/dish_name" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/menuCost"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:textSize="30sp"
+            android:text="@string/food_menu_cost"
             android:textAlignment="center"
-            android:text="@string/cost" />
+            android:textSize="30sp" />
 
         <ImageView
             android:id="@+id/menuPhotos"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="12"
-            android:padding="40dp"
-            android:contentDescription="@string/menu_photos" />
+            android:contentDescription="@string/food_menu_photos"
+            android:padding="40dp" />
 
         <TextView
             android:id="@+id/photoNumber"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:editable="false"
             android:gravity="center"
-            android:text="@string/number_photos"
+            android:text="@string/food_menu_number_photos"
             android:textSize="30sp" />
 
         <LinearLayout
@@ -55,14 +55,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/previous_photo" />
+                android:text="@string/food_menu_previous_photo" />
 
             <Button
                 android:id="@+id/nextPhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/next_photo" />
+                android:text="@string/food_menu_next_photo" />
         </LinearLayout>
 
         <Button
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:text="@string/add_food" />
+            android:text="@string/food_menu_add_photos" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

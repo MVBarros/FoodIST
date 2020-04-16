@@ -15,21 +15,21 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:text=""
-            android:textSize="30sp"
+            android:hint="@string/add_menu_dish_name"
             android:maxLength="60"
-            android:hint="@string/dish_name" />
+            android:text=""
+            android:textSize="30sp" />
 
         <EditText
             android:id="@+id/dishCost"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:hint="@string/cost"
-            android:textSize="30sp"
-            android:text=""
+            android:hint="@string/add_menu_cost"
             android:inputType="numberDecimal"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:text=""
+            android:textSize="30sp" />
 
         <ImageView
             android:id="@+id/dishView"
@@ -44,6 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:text="@string/done" />
+            android:text="@string/add_menu_done" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

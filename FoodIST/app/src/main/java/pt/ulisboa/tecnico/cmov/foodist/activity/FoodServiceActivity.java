@@ -122,14 +122,14 @@ public class FoodServiceActivity extends ActivityWithMap {
         this.latitude = intent.getDoubleExtra(LATITUDE, 0);
         this.longitude = intent.getDoubleExtra(LONGITUDE, 0);
         foodServiceName.setText(foodService);
-        foodServiceHours.setText(String.format("%s %s", getString(R.string.working_hours), hours));
+        foodServiceHours.setText(String.format("%s %s", getString(R.string.food_service_working_hours), hours));
     }
 
     public void updateMenus() {
         if (isNetworkAvailable()) {
             new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceName);
         } else {
-            showToast("No internet connection: Cannot get menus");
+            showToast(getString(R.string.food_service_menu_update_failure_toast));
         }
     }
 

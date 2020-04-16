@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             }
         } else {
-            showToast("Could not get services walking distance as there is no location permission and/or noInternet");
+            showToast(getString(R.string.main_update_walking_distance_failure_toast));
         }
     }
 
@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         if (hasLocationPermission() && isNetworkAvailable()) {
             guessCampusFromLocation();
         } else {
-            Toast.makeText(getApplicationContext(), "Could not infer campus as no network and/or location is avaliable, please insert it manually", Toast.LENGTH_SHORT).show();
+            showToast(getString(R.string.main_infering_location_failure_toast));
             askCampus();
         }
     }
@@ -273,7 +273,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     public List<FoodService> getAvailableServices() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        String position = pref.getString(getString(R.string.position_name), "");
+        String position = pref.getString(getString(R.string.profile_position_name), "");
 
         return getGlobalStatus().getServices().stream()
                 .filter(service -> !service.getRestrictions().contains(position))

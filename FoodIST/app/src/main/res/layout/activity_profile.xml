@@ -28,7 +28,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:autofillHints=""
-                android:hint="@string/username"
+                android:hint="@string/profile_username"
                 android:maxLength="60" />
 
 
@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:autofillHints=""
                 android:maxLength="60"
-                android:text="Profession"
+                android:text="@string/profile_profession"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/student"
+                    android:text="@string/profile_student"
                     android:textSize="20sp" />
 
                 <RadioButton
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/professor"
+                    android:text="@string/profile_professor"
                     android:textSize="20sp" />
 
                 <RadioButton
@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/staff"
+                    android:text="@string/profile_staff"
                     android:textSize="20sp" />
 
                 <RadioButton
@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/visitor"
+                    android:text="@string/profile_visitor"
                     android:textSize="20sp" />
             </RadioGroup>
 
@@ -91,7 +91,7 @@
                 android:layout_weight="1"
                 android:autofillHints=""
                 android:maxLength="60"
-                android:text="Dietary Constraints"
+                android:text="@string/profile_dietary_constraints"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
@@ -107,7 +107,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="Vegetarian"
+                    android:text="@string/profile_dietary_vegetarian"
                     android:textSize="20sp" />
 
                 <CheckBox
@@ -116,7 +116,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="Meat"
+                    android:text="@string/profile_dietary_meat"
                     android:textSize="20sp" />
 
                 <CheckBox
@@ -125,7 +125,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="Fish"
+                    android:text="@string/profile_dietary_fish"
                     android:textSize="20sp" />
 
                 <CheckBox
@@ -134,7 +134,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="Vegan"
+                    android:text="@string/profile_dietary_vegen"
                     android:textSize="20sp" />
             </LinearLayout>
 
