@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
     private static final String MENU_NAME = "Menu_name";
     private static final String MENU_PRICE = "Menu_price";
     private static final String MENU_SERVICE = "Menu_service";
+    private static final String DISPLAY_NAME = "Display_name";
+
 
     public MenuAdapter(Context context, ArrayList<Menu> menus) {
         super(context, 0, menus);
@@ -38,7 +42,14 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
         TextView menuFood = convertView.findViewById(R.id.menuFood);
         TextView menuCost = convertView.findViewById(R.id.menuCost);
 
-        menuFood.setText(menu.getMenuName());
+        SharedPreferences preferences = getContext().getSharedPreferences(getContext().getString(R.string.profile_file), 0);
+        String currentLanguage = preferences.getString(getContext().getString(R.string.profile_language_chosen), "en");
+        if(currentLanguage.equals(menu.getLanguage())){
+            menuFood.setText(menu.getMenuName());
+        }
+        else {
+            menuFood.setText(menu.getTranslatedName());
+        }
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
 
         convertView.setOnClickListener(v -> {
@@ -46,6 +57,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
             intent.putExtra(MENU_NAME, menu.getMenuName());
             intent.putExtra(MENU_PRICE, menu.getPrice());
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
+            intent.putExtra(DISPLAY_NAME, menuFood.getText());
             getContext().startActivity(intent);
 
         });

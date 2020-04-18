@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -36,10 +37,12 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
             return null;
         }
         this.foodService = foodService[0];
+        SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
 
         Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
         listMenuBuilder.setFoodService(this.foodService);
+        listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.profile_language_chosen), "en"));
 
         Contract.ListMenuRequest request = listMenuBuilder.build();
 

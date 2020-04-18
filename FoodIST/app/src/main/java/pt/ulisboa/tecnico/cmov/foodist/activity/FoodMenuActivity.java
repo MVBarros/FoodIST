@@ -48,6 +48,7 @@ public class FoodMenuActivity extends BaseActivity {
     public static final String MENU_NAME = "Menu_name";
     public static final String MENU_PRICE = "Menu_price";
     public static final String MENU_SERVICE = "Menu_service";
+    private static final String DISPLAY_NAME = "Display_name";
 
     //Camera/Gallery tags
     private static final int PICK_FROM_GALLERY = 1;
@@ -153,6 +154,7 @@ public class FoodMenuActivity extends BaseActivity {
         initializeMenuName(intent.getStringExtra(MENU_NAME));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeFoodService(intent.getStringExtra(MENU_SERVICE));
+        initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
     }
 
     private void initializeMenuName(String menuName) {
@@ -161,6 +163,16 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_name_failure_toast));
         } else {
             this.menuName = menuName;
+            //TextView menuNameText = findViewById(R.id.menuName);
+            //menuNameText.setText(menuName);
+        }
+    }
+
+    private void initializeDisplayName(String menuName){
+        if (menuName == null) {
+            Log.d(TAG, "Unable to obtain menu name");
+            showToast(getString(R.string.food_menu_name_failure_toast));
+        } else {
             TextView menuNameText = findViewById(R.id.menuName);
             menuNameText.setText(menuName);
         }

@@ -88,15 +88,17 @@ public class Storage {
 	    }
 	}
 	
-	public synchronized static Menu fetchMenuPhotos(String foodServiceName, String menuName, double menu_price) {
-		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
+	public synchronized static Menu fetchMenuPhotos(String foodServiceName, Menu menu) {
+		String foodServicePath = getFoodServiceDir(foodServiceName, menu.getName());
 		
 		File directory = new File(foodServicePath);
 		
 		Menu.Builder menuBuilder = Menu.newBuilder();
-		menuBuilder.setName(menuName);
-		menuBuilder.setPrice(menu_price);
-				
+		menuBuilder.setName(menu.getName());
+		menuBuilder.setPrice(menu.getPrice());
+		menuBuilder.setLanguage(menu.getLanguage());
+		menuBuilder.setTranslatedName(menu.getTranslatedName());
+
 	    if (directory.exists()){
 	    	    
 	        for(String filename : directory.list()) {
@@ -171,5 +173,5 @@ public class Storage {
 		StringBuilder buildPath = new StringBuilder();		
 		buildPath.append(BASE_DIR).append("/").append(foodServiceName).append("/").append(menuName).append("/");
 		return buildPath.toString();
-	}			
+	}
 }

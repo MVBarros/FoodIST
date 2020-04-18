@@ -1,5 +1,8 @@
 package foodist.server.service;
 
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 import foodist.server.data.Storage;
@@ -30,8 +33,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         menuBuilder.setName(request.getName());
         menuBuilder.setPrice(request.getPrice());
         menuBuilder.setType(request.getType());
+        menuBuilder.setLanguage(request.getLanguage());
+        String translation = requestGoogleTranslation(request.getName(), request.getLanguage(), getTargetLanguage(request.getLanguage()));
+        menuBuilder.setTranslatedName(translation);
         Menu menu = menuBuilder.build();
-
         Storage.addMenu(foodService, menu);
 
         responseObserver.onNext(null);
@@ -43,10 +48,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         String foodService = request.getFoodService();
 
         HashMap<String, Menu> menuMap = Storage.getMenuMap(foodService);
-        
+
         ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
 		for (Entry<String, Menu> entry : menuMap.entrySet()) {
-			Menu menu = Storage.fetchMenuPhotos(foodService, entry.getKey(), entry.getValue().getPrice());
+			Menu menu = Storage.fetchMenuPhotos(foodService, entry.getValue());
 			listMenuReplyBuilder.addMenus(menu.toBuilder().setType(entry.getValue().getType()));
 		}
 	
@@ -65,7 +70,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         Menu menu = menus.get(name);
         
         if(menu!=null) {
-        	Menu ret = Storage.fetchMenuPhotos(service, name, menu.getPrice());
+        	Menu ret = Storage.fetchMenuPhotos(service, menu);
         	responseObserver.onNext(ret);
             responseObserver.onCompleted();
         }
@@ -159,5 +164,30 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         responseObserver.onNext(photoReply);
         responseObserver.onCompleted();
     }
+
+    /*******************/
+	/** Aux Functions **/
+	/*******************/
+
+	public String requestGoogleTranslation(String content, String sourceLanguage, String targetLanguage){
+		Translate translate = TranslateOptions.getDefaultInstance().getService();
+
+		Translation translation = translate.translate(
+				content,
+				Translate.TranslateOption.sourceLanguage(sourceLanguage),
+				Translate.TranslateOption.targetLanguage(targetLanguage));
+
+		return translation.getTranslatedText();
+	}
+
+	//Para o Miguel Barros
+	//Sim, isto e estupido e tenho nocao, mas estou mt enervado com isto e foi um pouco a balda, pensarei numa maneira melhor depois
+
+	public String getTargetLanguage(String language){
+		if(language.equals("en")){
+			return "pt";
+		}
+		return "en";
+	}
 
 }

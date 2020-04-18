@@ -84,7 +84,9 @@ public class AddMenuActivity extends BaseActivity {
                 showToast(getString(R.string.add_menu_invalid_input_toast));
             } else {
                 Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
-                Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()), type);
+                SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+
+                Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()), type, pref.getString(getString(R.string.profile_language_chosen), "en"), "");
                 uploadMenu(menu);
             }
         });
