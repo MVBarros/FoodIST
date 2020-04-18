@@ -235,10 +235,10 @@ public class MainActivity extends BaseActivity implements LocationListener {
         name.setText(service.getName());
 
         TextView distance = v.findViewById(R.id.distance);
-        distance.setText(String.format("Walking Time: %s", service.getDistance()));
+        distance.setText(String.format("%s: %s", getString(R.string.main_walking_time), service.getDistance()));
 
         TextView queue = v.findViewById(R.id.queueTime);
-        queue.setText(String.format("Queue Time: %s", service.getTime()));
+        queue.setText(String.format("%s: %s", getString(R.string.main_queue_time), service.getTime()));
 
         v.setOnClickListener(v1 -> {
             Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
