@@ -52,6 +52,8 @@ public class FoodServicesJsonParser {
         hours.put("tuesday", hourObject.getString("tuesday"));
         hours.put("wednesday", hourObject.getString("wednesday"));
         hours.put("thursday", hourObject.getString("thursday"));
+        hours.put("friday", hourObject.getString("friday"));
+        hours.put("saturday", hourObject.getString("saturday"));
         hours.put("sunday", hourObject.getString("sunday"));
         List<String> restrictions = new ArrayList<String>();
         JSONArray arr = object.getJSONArray("restrictions");
