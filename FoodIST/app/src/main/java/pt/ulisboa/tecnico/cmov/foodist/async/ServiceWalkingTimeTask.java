@@ -59,7 +59,7 @@ public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integ
             // (If they have been overridden nothing new will happen)
             getActivity().drawServices();
         } else {
-            getActivity().showToast(getActivity().getString(R.string.unable_calculate_walking_time));
+            getActivity().showToast(getActivity().getString(R.string.service_walking_time_unable_calculate_time));
         }
     }
 }

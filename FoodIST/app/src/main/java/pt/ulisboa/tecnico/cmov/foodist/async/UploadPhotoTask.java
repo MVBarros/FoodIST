@@ -118,7 +118,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             act.launchUpdateMenuTask();
         }
-        Toast toast = Toast.makeText(mContext, R.string.upload_photo_complete_message, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(mContext, R.string.upload_photo_task_complete_message, Toast.LENGTH_SHORT);
         toast.show();
     }
 

@@ -99,6 +99,18 @@
     <string name="get_menu_task_no_menus_available_message">No menus available for this service</string>
     <string name="get_menu_filter_menu_message">Some menus were filtered according to your dietary constraints</string>
 
+    <!--Download Photo Task -->
+    <string name="download_photo_task_error_message">Unable to download photo, check connection</string>
+
+    <!-- Guess Campus Task -->
+    <string name="guess_campus_task_impossible_message">Unable to guess campus from current location</string>
+
+    <!-- Service Walking Time Task -->
+    <string name="service_walking_time_unable_calculate_time">Unable to calculate food services walking time</string>
+
+    <!-- Upload Photo Task -->
+    <string name="upload_photo_task_complete_message">Upload of photo completed</string>
+
     <!-- Google Services API Key for Directions API-->
     <string name="map_api_key">AIzaSyCwTYl8KmYZE3J4vSQj7AMm2Hdk1RhjnyQ</string>
     <string name="map_alameda">Instituto+Superior+Técnico</string>
@@ -107,9 +119,4 @@
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>
-    <string name="error_menus">No Menus available</string>
-    <string name="photo_download_error_message">Unable to download photo, check connection</string>
-    <string name="guess_campus_impossible_message">Unable to guess campus from current location</string>
-    <string name="unable_calculate_walking_time">Unable to calculate food services walking time</string>
-    <string name="upload_photo_complete_message">Upload of photo completed</string>
 </resources>
