@@ -154,19 +154,25 @@
             <RadioGroup
                 android:id="@+id/languageSelector"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="0dp"
+                android:layout_weight="2" >
 
                 <RadioButton
                     android:id="@+id/languageEnglish"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
                     android:checked="true"
                     android:text="@string/profile_language_option_english" />
 
                 <RadioButton
                     android:id="@+id/languagePortuguese"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    android:checked="true"
                     android:text="@string/profile_language_option_portuguese" />
             </RadioGroup>
 

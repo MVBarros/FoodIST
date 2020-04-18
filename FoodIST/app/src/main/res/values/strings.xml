@@ -12,6 +12,11 @@
     <string name="add_menu_dish_name">Dish Name</string>
     <string name="add_menu_cost">Cost</string>
     <string name="add_menu_done">Done</string>
+    <string name="add_menu_food_type">Constraints</string>
+    <string name="add_menu_type_vegetarian">Vegetarian</string>
+    <string name="add_menu_type_vegan">Vegan</string>
+    <string name="add_menu_type_fish">Fish</string>
+    <string name="add_menu_type_meat">Meat</string>
     <!-- Activity -->
     <string name="add_menu_invalid_input_toast">Give the menu a name and a cost!</string>
     <string name="add_menu_no_internet_access_toast">Device is not online! Please check your connection</string>
@@ -47,12 +52,12 @@
     <!-- Layout -->
     <string name="food_service_name">Food Service Name</string>
     <string name="food_service_opening_time">Open Hours: Unknown</string>
-    <string name="food_service_queue_time">Queue Time: Unknown</string>
+    <string name="food_service_queue_time">Queue Time</string>
     <string name="food_service_add_menu">Add Menu</string>
     <!-- Activity -->
     <string name="food_service_working_hours">Working Hours:</string>
     <string name="food_service_menu_update_failure_toast">No internet connection, cannot get menus</string>
-
+    <string name="food_service_show_all_menus">Show all menus</string>
 
     <!-- activity main -->
     <!-- Layout -->
@@ -89,6 +94,10 @@
     <string name="profile_position">Position</string>
     <string name="profile_language_chosen">Language</string>
 
+    <!-- Get Menu Task -->
+    <string name="get_menu_task_error_getting_menus_message">Unable to get menus from server</string>
+    <string name="get_menu_task_no_menus_available_message">No menus available for this service</string>
+    <string name="get_menu_filter_menu_message">Some menus were filtered according to your dietary constraints</string>
 
     <!-- Google Services API Key for Directions API-->
     <string name="map_api_key">AIzaSyCwTYl8KmYZE3J4vSQj7AMm2Hdk1RhjnyQ</string>
@@ -99,15 +108,6 @@
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>
     <string name="error_menus">No Menus available</string>
-    <string name="add_menu_food_type">Food Type</string>
-    <string name="menu_type_vegetarian">Vegetarian</string>
-    <string name="menu_type_vegan">Vegan</string>
-    <string name="menu_type_fish">Fish</string>
-    <string name="menu_type_meat">Meat</string>
-    <string name="add_activity_show_all_menus">Show all menus</string>
-    <string name="filter_menu_message">Some menus were filtered according to your dietary constraints</string>
-    <string name="error_getting_menus_message">Unable to get menus from server</string>
-    <string name="no_menus_avaliable_message">No menus available for this service</string>
     <string name="photo_download_error_message">Unable to download photo, check connection</string>
     <string name="guess_campus_impossible_message">Unable to guess campus from current location</string>
     <string name="unable_calculate_walking_time">Unable to calculate food services walking time</string>

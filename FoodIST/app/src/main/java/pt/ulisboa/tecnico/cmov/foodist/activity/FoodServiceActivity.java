@@ -103,7 +103,7 @@ public class FoodServiceActivity extends ActivityWithMap {
 
         Intent intent = getIntent();
         String queueValue = intent.getStringExtra(QUEUE_TIME) == null ? "" : intent.getStringExtra(QUEUE_TIME);
-        queueTime.setText(queueValue);
+        queueTime.setText(String.format("%s: %s", getString(R.string.food_service_queue_time), queueValue));
     }
 
     private void setButtons() {

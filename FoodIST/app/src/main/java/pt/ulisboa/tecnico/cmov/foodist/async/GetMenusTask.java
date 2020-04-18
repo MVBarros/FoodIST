@@ -54,12 +54,12 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
     @Override
     public void onPostExecute(List<Contract.Menu> result) {
         if (result == null) {
-            menuError(getActivity(), getActivity().getString(R.string.error_getting_menus_message));
+            menuError(getActivity(), getActivity().getString(R.string.get_menu_task_error_getting_menus_message));
             return;
         }
 
         if (result.size() == 0) {
-            getActivity().showToast(getActivity().getString(R.string.no_menus_avaliable_message));
+            getActivity().showToast(getActivity().getString(R.string.get_menu_task_no_menus_available_message));
             return;
         }
 
@@ -79,7 +79,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(filteredMenus));
 
         if (filteredMenus.size() !=  menus.size()) {
-            getActivity().showToast(getActivity().getString(R.string.filter_menu_message));
+            getActivity().showToast(getActivity().getString(R.string.get_menu_filter_menu_message));
             getActivity().doShowAllButton();
         }
 

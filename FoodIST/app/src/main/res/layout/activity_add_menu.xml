@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/menu_type_vegetarian"
+                android:text="@string/add_menu_type_vegetarian"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -74,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/menu_type_meat"
+                android:text="@string/add_menu_type_meat"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/menu_type_vegan"
+                android:text="@string/add_menu_type_vegan"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/menu_type_fish"
+                android:text="@string/add_menu_type_fish"
                 android:textSize="20sp" />
         </RadioGroup>
 
