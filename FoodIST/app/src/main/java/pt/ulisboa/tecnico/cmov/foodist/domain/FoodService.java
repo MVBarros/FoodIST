@@ -80,7 +80,7 @@ public class FoodService {
 
         String functioningHours = this.getHours().get(currentWeekday);
 
-        if (functioningHours.equals("closed")) {
+        if (functioningHours == null || functioningHours.equals("closed")) {
             return false;
         }
         return this.isTimeInRange(currentHours, functioningHours);
