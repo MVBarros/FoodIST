@@ -292,8 +292,29 @@ public class ProfileActivity extends BaseActivity {
                 language.toggle();
             }
         }
+        else{
+            getLanguage();
+        }
     }
 
+    private void getLanguage(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences.Editor prefEditor = pref.edit();
+
+        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
+
+        switch (language){
+            case "en":
+                RadioButton englishLanguage = findViewById(R.id.languageEnglish);
+                prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
+                englishLanguage.toggle();
+
+            case "pt":
+                RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
+                prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
+                portugueseLanguage.toggle();
+        }
+    }
     private void setLanguage(){
 
         final RadioButton englishLanguage = findViewById(R.id.languageEnglish);

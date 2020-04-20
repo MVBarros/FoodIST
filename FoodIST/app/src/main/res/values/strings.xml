@@ -94,6 +94,11 @@
     <string name="profile_position">Position</string>
     <string name="profile_language_chosen">Language</string>
 
+    <!-- activity choose language -->
+    <!-- Layout -->
+    <string name="choose_language_english">English</string>
+    <string name="choose_language_portuguese">Portuguese</string>
+
     <!-- Get Menu Task -->
     <string name="get_menu_task_error_getting_menus_message">Unable to get menus from server</string>
     <string name="get_menu_task_no_menus_available_message">No menus available for this service</string>
@@ -119,4 +124,7 @@
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>
     <string name="foodist_server_port">9000</string>
+
+    <!-- Language -->
+    <string name="language_first_boot">firstBoot</string>
 </resources>

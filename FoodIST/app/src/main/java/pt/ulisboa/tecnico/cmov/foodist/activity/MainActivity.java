@@ -77,6 +77,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         isOnCreate = true;
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setButtons();
+        setLanguage();
         setCurrentCampus();
     }
 
@@ -107,16 +108,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
         addReceiver(new MainNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
-    private void updateFirstBoot() {
-        boolean isFreshBoot;
-        if (getGlobalStatus().isFreshBootFlag()) {
-            getGlobalStatus().setFreshBootFlag(false);
-            isFreshBoot = true;
-        } else {
-            isFreshBoot = false;
-        }
-    }
-
     private void setButtons() {
         Button userProfileButton = findViewById(R.id.userProfile);
         userProfileButton.setOnClickListener(v -> {
@@ -130,6 +121,15 @@ public class MainActivity extends BaseActivity implements LocationListener {
         });
     }
 
+    private void setLanguage() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+
+        if (pref.getBoolean(getString(R.string.language_first_boot), true)) {
+            Intent intent = new Intent(MainActivity.this, ChooseLanguageActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
     private void setCurrentCampus() {
         Intent intent = getIntent();
         String campus = intent.getStringExtra(ChooseCampusActivity.CAMPUS);
