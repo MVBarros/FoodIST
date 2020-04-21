@@ -20,6 +20,8 @@ import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
@@ -40,7 +42,10 @@ public class UpdateMenu_ServerTest {
 		
 		String serverName = InProcessServerBuilder.generateName();
 
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();    
+        
+		grpcCleanup.register(ServerBuilder.forPort(8080).useTransportSecurity(cert, priv).addService(bindableService).build());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    

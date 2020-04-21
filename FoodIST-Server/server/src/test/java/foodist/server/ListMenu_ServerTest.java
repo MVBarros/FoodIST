@@ -39,7 +39,9 @@ public class ListMenu_ServerTest {
 		
 		String serverName = InProcessServerBuilder.generateName();
 
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();       
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    

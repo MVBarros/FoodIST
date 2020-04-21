@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
@@ -34,11 +36,13 @@ public class AddPhoto_ServerTest {
 	@BeforeClass
 	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
-
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();       
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
-    	client = new Client(channel);    	
+    	client = new Client(channel);    	    	    	      
 	}
 
 	@Test
