@@ -34,22 +34,11 @@ test {
 	useJUnit()
 
     maxHeapSize = '1G'
-    
-    afterTest {  desc ,  result  ->
-        if (result.getResultType().equals(TestResult.ResultType.FAILURE)){
-            nbTestOnError++
-        }
-    }
 }
 
 task('afterTest') {
     doLast {
-
-        if (nbTestOnError > 0) {
-
-        } else{
-            delete fileTree("photos/client")
-        }
+        delete fileTree("photos/client")
     }
 }
 
