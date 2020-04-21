@@ -2,6 +2,7 @@ package foodist.server;
 
 import com.google.protobuf.Empty;
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -42,7 +43,7 @@ public class AddMenu_ClientTest {
 						
 		}));
 	Client client;	
-
+	FoodType foodType;
 	@Before
 	public void setUp() throws Exception {   		
 		String serverName = InProcessServerBuilder.generateName();
@@ -50,13 +51,14 @@ public class AddMenu_ClientTest {
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(serviceImpl).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
-    	client = new Client(channel);        	     	
+    	client = new Client(channel);        
+    	foodType = FoodType.Vegan;
 	}
 
 	@Test
   	public void AddMenu_FoodService() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
-	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
+	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, "english");
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
 	    assertEquals(TEST_FOODSERVICE, requestCaptor.getValue().getFoodService());       
   	}
@@ -64,7 +66,7 @@ public class AddMenu_ClientTest {
 	@Test
   	public void AddMenu_MenuName() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
-	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
+	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, "portuguese");
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
 	    assertEquals(TEST_MENU, requestCaptor.getValue().getName());       
   	}
@@ -72,7 +74,7 @@ public class AddMenu_ClientTest {
 	@Test
   	public void AddMenu_Price() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
-	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE);
+	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, "portuguese");
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
 	    assertEquals(TEST_PRICE, requestCaptor.getValue().getPrice(), 0.01);       
   	}

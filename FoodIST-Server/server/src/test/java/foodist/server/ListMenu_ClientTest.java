@@ -2,6 +2,7 @@ package foodist.server;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import io.grpc.ManagedChannel;
@@ -49,13 +50,13 @@ public class ListMenu_ClientTest {
 		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(serviceImpl).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
-    	client = new Client(channel);    ;
+    	client = new Client(channel);        	
 	}
 
 	@Test
   	public void ListMenu_FoodService() {
 	    ArgumentCaptor<ListMenuRequest> requestCaptor = ArgumentCaptor.forClass(ListMenuRequest.class);
-	    client.listMenu(TEST_FOODSERVICE);
+	    client.listMenu(TEST_FOODSERVICE, "portuguese");
 	    verify(serviceImpl).listMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<ListMenuReply>>any());
 	    assertEquals(TEST_FOODSERVICE, requestCaptor.getValue().getFoodService());       
   	}
