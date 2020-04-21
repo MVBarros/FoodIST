@@ -6,6 +6,8 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,16 +34,14 @@ public class ListMenu_ServerTest {
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
         
 	Client client;	
-	final BindableService bindableService = new ServiceImplementation();
+	final BindableService bindableService = new ServiceImplementation(true);
 
 	@Before
 	public void setUp() throws Exception {   
 		
 		String serverName = InProcessServerBuilder.generateName();
-
-		File priv = Security.getPrivateKey();
-        File cert = Security.getPublicKey();       
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
+      
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    
@@ -182,5 +182,13 @@ public class ListMenu_ServerTest {
 				new File("photos/Graveli/Cheese/").list().length;
 		assertEquals(3, photos);
   	}
+	
+	@AfterClass
+	public static void Clean() throws IOException {
+		FileUtils.forceDelete(new File("photos/Burger Shop"));
+		FileUtils.forceDelete(new File("photos/Hamburger Town"));
+		FileUtils.forceDelete(new File("photos/Pizza Parlor"));		
+		FileUtils.forceDelete(new File("photos/Graveli"));
+	}
 	
 }

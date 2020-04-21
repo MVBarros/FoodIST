@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,7 +25,7 @@ import io.grpc.testing.GrpcCleanupRule;
 
 public class RequestPhotoIds_ServerTest {
 	
-	static final BindableService bindableService = new ServiceImplementation();
+	static final BindableService bindableService = new ServiceImplementation(true);
 	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    	
 	static Client client;		
 	static FoodType type;
@@ -32,9 +34,7 @@ public class RequestPhotoIds_ServerTest {
 	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
 
-		File priv = Security.getPrivateKey();
-        File cert = Security.getPublicKey();       
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);
@@ -210,4 +210,9 @@ public class RequestPhotoIds_ServerTest {
 		int right_photos = total_iterations - wrong_iterations;
 		assertEquals(3, right_photos);
   	}
+	
+	@AfterClass
+	public static void Clean() throws IOException {
+		FileUtils.forceDelete(new File("photos/Mercado"));
+	}
 }

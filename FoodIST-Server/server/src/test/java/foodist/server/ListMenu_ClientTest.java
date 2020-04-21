@@ -2,7 +2,6 @@ package foodist.server;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
-import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import io.grpc.ManagedChannel;

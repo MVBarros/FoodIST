@@ -33,7 +33,7 @@ public class Main {
         File priv = getPriv();
         File cert = getPub();
         
-        final BindableService bindableService = new ServiceImplementation();
+        final BindableService bindableService = new ServiceImplementation(false);
         int port = Integer.parseInt(args[0]);
         
         Server server = ServerBuilder
