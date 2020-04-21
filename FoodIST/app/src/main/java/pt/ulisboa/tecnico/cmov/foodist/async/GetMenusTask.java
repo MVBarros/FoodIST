@@ -21,7 +21,7 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.Menu>, FoodServiceActivity> {
 
-    private FoodISTServerServiceBlockingStub stub;
+    private final FoodISTServerServiceBlockingStub stub;
     private String foodService;
 
     public GetMenusTask(FoodServiceActivity activity) {
@@ -33,24 +33,26 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
 
     @Override
     protected List<Contract.Menu> doInBackground(String... foodService) {
-        if (foodService.length != 1) {
-            return null;
-        }
-        this.foodService = foodService[0];
-        SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
+        synchronized (stub) {
+            if (foodService.length != 1) {
+                return null;
+            }
+            this.foodService = foodService[0];
+            SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
 
-        Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
+            Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
-        listMenuBuilder.setFoodService(this.foodService);
-        listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.profile_language_chosen), "en"));
+            listMenuBuilder.setFoodService(this.foodService);
+            listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.profile_language_chosen), "en"));
 
-        Contract.ListMenuRequest request = listMenuBuilder.build();
+            Contract.ListMenuRequest request = listMenuBuilder.build();
 
-        try {
-            Contract.ListMenuReply reply = this.stub.listMenu(request);
-            return reply.getMenusList();
-        } catch (StatusRuntimeException e) {
-            return null;
+            try {
+                Contract.ListMenuReply reply = this.stub.listMenu(request);
+                return reply.getMenusList();
+            } catch (StatusRuntimeException e) {
+                return null;
+            }
         }
     }
 

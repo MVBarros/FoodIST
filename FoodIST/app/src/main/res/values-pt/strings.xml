@@ -7,6 +7,11 @@
     <string name="campus_taguspark">TagusPark</string>
     <string name="campus_alameda">Alameda</string>
 
+    <!-- activity with map -->
+    <!-- Activity -->
+    <string name="map_on_direction_failure">Não foi possível obter as direções para o restaurante</string>
+    <string name="map_no_internet_connection">Sem internet ou permissões de localização: não foi possível mostrar direções</string>
+
     <!-- activity add menu -->
     <!-- Layout -->
     <string name="add_menu_dish_name">Nome do Prato</string>

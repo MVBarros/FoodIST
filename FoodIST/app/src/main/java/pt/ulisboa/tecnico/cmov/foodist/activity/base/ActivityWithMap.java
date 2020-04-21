@@ -125,7 +125,7 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
                     @Override
                     public void onDirectionFailure(Throwable t) {
                         Log.v(TAG, "Could not get Direction");
-                        showToast("Could not get directions to food service");
+                        showToast(getString(R.string.map_on_direction_failure));
                     }
                 }));
     }
@@ -136,7 +136,7 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
             isReceiving = true;
         } else {
-            showToast("No internet or location permission: cannot show directions to service");
+            showToast(getString(R.string.map_no_internet_connection));
         }
     }
 
