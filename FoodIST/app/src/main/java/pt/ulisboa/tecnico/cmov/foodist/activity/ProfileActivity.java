@@ -326,8 +326,7 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
             prefEditor.putString(getString(R.string.profile_language_chosen), "en");
             prefEditor.apply();
-            this.recreate();
-            //this.finish();
+            this.finish();
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         });
@@ -341,7 +340,6 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
             prefEditor.putString(getString(R.string.profile_language_chosen), "pt");
             prefEditor.apply();
-            //this.recreate();
             this.finish();
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
