@@ -11,8 +11,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.TransportMode;
@@ -21,7 +19,6 @@ import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,9 +29,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.MapUpdateTask;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.MapNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class ActivityWithMap extends BaseActivity implements OnMapReadyCallback, LocationListener {
@@ -60,6 +55,10 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
         stopLocationUpdates();
     }
 
+    @Override
+    public void addReceivers() {
+        addReceiver(new MapNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    }
 
     public abstract String getMarkerName();
 
@@ -74,7 +73,6 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
     @Override
     protected void onResume() {
         super.onResume();
-        addReceiver(new MapUpdateTask(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
         initMap();
     }
     private void initMap() {

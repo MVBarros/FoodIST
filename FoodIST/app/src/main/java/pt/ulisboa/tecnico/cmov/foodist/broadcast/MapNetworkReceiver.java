@@ -7,33 +7,32 @@ import android.widget.Button;
 
 import java.util.Set;
 
-import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.ActivityWithMap;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 
-public class MapUpdateTask extends BaseNetworkReceiver  {
+public class MapNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "SERVICE-ACTIVITY-NETWORK-RECEIVER";
 
+    private ActivityWithMap activity;
 
-    public MapUpdateTask() {
+    public MapNetworkReceiver(ActivityWithMap activity) {
         super();
+        this.activity = activity;
     }
 
-    public MapUpdateTask(Set<Button> buttons) {
+    public MapNetworkReceiver(Set<Button> buttons) {
         super(buttons);
     }
 
     @Override
     protected void onNetworkUp(Context context, Intent intent) {
         Log.d(TAG, "On Network Up");
-        ActivityWithMap activity = (ActivityWithMap) context;
         activity.startLocationUpdates();
     }
 
     @Override
     protected void onNetworkDown(Context context, Intent intent) {
         Log.d(TAG, "On Network Down");
-        ActivityWithMap activity = (ActivityWithMap) context;
         activity.stopLocationUpdates();
     }
 }

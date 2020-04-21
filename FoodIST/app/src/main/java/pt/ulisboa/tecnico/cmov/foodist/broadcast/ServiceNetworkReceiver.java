@@ -13,26 +13,26 @@ import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 public class ServiceNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "SERVICE-ACTIVITY-NETWORK-RECEIVER";
 
-
-    public ServiceNetworkReceiver() {
-        super();
-    }
+    private FoodServiceActivity activity;
 
     public ServiceNetworkReceiver(Set<Button> buttons) {
         super(buttons);
     }
 
+    public ServiceNetworkReceiver(FoodServiceActivity activity) {
+        super();
+        this.activity = activity;
+    }
+
     @Override
     protected void onNetworkUp(Context context, Intent intent) {
         Log.d(TAG, "On Network Up");
-        FoodServiceActivity activity = (FoodServiceActivity) context;
         activity.updateMenus();
     }
 
     @Override
     protected void onNetworkDown(Context context, Intent intent) {
         Log.d(TAG, "On Network Down");
-        FoodServiceActivity activity = (FoodServiceActivity) context;
     }
 
 }

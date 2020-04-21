@@ -9,15 +9,17 @@ import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 
 public class MainNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "MAIN-ACTIVITY-NETWORK-RECEIVER";
+    private MainActivity activity;
 
-    public MainNetworkReceiver() {
+
+    public MainNetworkReceiver(MainActivity activity) {
         super();
+        this.activity = activity;
     }
 
     @Override
     protected void onNetworkUp(Context context, Intent intent) {
         Log.d(TAG, "On Network Up");
-        MainActivity activity = (MainActivity) context;
         activity.updateServicesWalkingDistance();
     }
 

@@ -10,10 +10,15 @@ import pt.ulisboa.tecnico.cmov.foodist.broadcast.base.BaseNetworkReceiver;
 public class MenuNetworkReceiver extends BaseNetworkReceiver {
     private final static String TAG = "MENU-ACTIVITY-NETWORK-RECEIVER";
 
+    public FoodMenuActivity activity;
+
+    public MenuNetworkReceiver(FoodMenuActivity activity) {
+        this.activity = activity;
+    }
+
     @Override
     protected void onNetworkUp(Context context, Intent intent) {
         Log.d(TAG, "On Network Up");
-        FoodMenuActivity activity = (FoodMenuActivity) context;
         activity.launchUpdateMenuTask();
     }
 

@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     public void addReceivers() {
-        addReceiver(new MainNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        addReceiver(new MainNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
     private void setButtons() {

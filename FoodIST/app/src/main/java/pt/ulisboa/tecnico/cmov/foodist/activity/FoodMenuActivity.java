@@ -85,9 +85,8 @@ public class FoodMenuActivity extends BaseActivity {
 
     @Override
     public void addReceivers() {
-        addReceiver(new MenuNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        addReceiver(new MenuNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
-
     public void setPhotoView() {
         TextView numberPhoto = findViewById(R.id.photoNumber);
         numberPhoto.setText(String.format(Locale.US, "%d/%d", numPhoto + 1, photoIDs.length));

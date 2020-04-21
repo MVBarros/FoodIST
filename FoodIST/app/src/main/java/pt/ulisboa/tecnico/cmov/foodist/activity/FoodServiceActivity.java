@@ -57,7 +57,8 @@ public class FoodServiceActivity extends ActivityWithMap {
 
     @Override
     public void addReceivers() {
-        addReceiver(new ServiceNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        super.addReceivers();
+        addReceiver(new ServiceNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
 
