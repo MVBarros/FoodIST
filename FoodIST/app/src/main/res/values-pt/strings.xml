@@ -115,16 +115,16 @@
     <string name="get_menu_filter_menu_message">Alguns menus foram filtrados de acordo com as suas restrições alimentares</string>
 
     <!--Download Photo Task -->
-    <string name="download_photo_task_error_message">Unable to download photo, check connection</string>
+    <string name="download_photo_task_error_message">Impossivel de obter foto, verifica a connexão</string>
 
     <!-- Guess Campus Task -->
-    <string name="guess_campus_task_impossible_message">Unable to guess campus from current location</string>
+    <string name="guess_campus_task_impossible_message">Impossivel de obter campus a partir da localização</string>
 
     <!-- Service Walking Time Task -->
-    <string name="service_walking_time_unable_calculate_time">Unable to calculate food services walking time</string>
+    <string name="service_walking_time_unable_calculate_time">Impossivel de obter tempo de distância a pé</string>
 
     <!-- Upload Photo Task -->
-    <string name="upload_photo_task_complete_message">Upload of photo completed</string>
+    <string name="upload_photo_task_complete_message">Envio de foto completado!</string>
 
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>
