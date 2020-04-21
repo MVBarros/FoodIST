@@ -9,6 +9,7 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.grpc.contract.Contract.AddMenuRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.DownloadPhotoRequest;
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.ListMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
@@ -41,12 +42,14 @@ class Client {
 		this.stub = FoodISTServerServiceGrpc.newBlockingStub(this.channel);
 	}  
   
-	void addMenu(String foodService, String menuName, double price) {	
+	void addMenu(String foodService, String menuName, double price, FoodType foodType, String language) {	
 		AddMenuRequest.Builder addMenuBuilder = AddMenuRequest.newBuilder();					
 	  
 		addMenuBuilder.setFoodService(foodService);
 		addMenuBuilder.setName(menuName);
-		addMenuBuilder.setPrice(price);				
+		addMenuBuilder.setPrice(price);
+		addMenuBuilder.setType(foodType);
+		addMenuBuilder.setLanguage(language);		
 	  
 		AddMenuRequest addMenuRequestExample = addMenuBuilder.build();
 		
@@ -66,9 +69,9 @@ class Client {
 		return menu;
 	}
 	
-	List<Menu> listMenu(String foodService) {	
+	List<Menu> listMenu(String foodService, String language) {	
 		
-		ListMenuRequest listMenuRequest = ListMenuRequest.newBuilder().setFoodService(foodService).build();
+		ListMenuRequest listMenuRequest = ListMenuRequest.newBuilder().setFoodService(foodService).setLanguage(language).build();
 	  		
 		ListMenuReply listMenuReply = this.stub.listMenu(listMenuRequest);    
 		List<Menu> list = listMenuReply.getMenusList();	 

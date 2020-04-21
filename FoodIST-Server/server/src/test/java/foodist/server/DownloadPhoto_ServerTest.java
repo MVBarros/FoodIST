@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.service.ServiceImplementation;
 
 @RunWith(JUnit4.class)
@@ -35,7 +36,9 @@ public class DownloadPhoto_ServerTest {
 	public static void setUp() throws Exception {   			
 		String serverName = InProcessServerBuilder.generateName();
 
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();       
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);        	          
@@ -43,11 +46,12 @@ public class DownloadPhoto_ServerTest {
 	
 	@Test
   	public void DownloadPhoto_ClientPath() {
-		client.addMenu("Tugalandia", "Farinheira", 8.00);
+		FoodType type = FoodType.Meat;
+		client.addMenu("Tugalandia", "Farinheira", 8.00, type, "portuguese");
 		client.addPhoto("Tugalandia", "Farinheira", "photos/test/farinheira.png");
 		
 	  	String photoId = "";	
-	  	photoId = client.listMenu("Tugalandia").get(0).getPhotoId(0);	  	
+	  	photoId = client.listMenu("Tugalandia", "portuguese").get(0).getPhotoId(0);	  	
 	  	client.downloadPhoto(photoId);
 	  	
 		boolean path_exists = new File("photos/client" + File.separator + photoId).exists();
@@ -55,12 +59,13 @@ public class DownloadPhoto_ServerTest {
   	}
 	
 	@Test
-  	public void DownloadPhoto_SamePhoto() {		
-		client.addMenu("Romano", "Risotto", 7.00);
+  	public void DownloadPhoto_SamePhoto() {	
+		FoodType type = FoodType.Vegetarian;
+		client.addMenu("Romano", "Risotto", 7.00, type, "portuguese");
     	client.addPhoto("Romano", "Risotto", "photos/test/risotto.jpg");    		    	
         
 	  	String photoId = "";	
-	  	photoId = client.listMenu("Romano").get(0).getPhotoId(0);	  	
+	  	photoId = client.listMenu("Romano", "portuguese").get(0).getPhotoId(0);	  	
 	  	
 		client.downloadPhoto(photoId);
 

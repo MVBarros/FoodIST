@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.service.ServiceImplementation;
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
@@ -25,30 +26,34 @@ public class RequestPhotoIds_ServerTest {
 	static final BindableService bindableService = new ServiceImplementation();
 	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    	
 	static Client client;		
+	static FoodType type;
 	
 	@BeforeClass
 	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
 
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();       
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);
+    	type = FoodType.Vegan;
 	}
 	
 	@Test
   	public void RequestPhoto_Upload0Photo() throws IOException {
-		client.addMenu("Mercado", "Alho", 0.69);											
+		client.addMenu("Mercado", "Alho", 0.69, type, "portuguese");											
 		client.requestPhotoIds();		
 		
 		boolean exists = new File("photos/Mercado/Alho").exists();
 		
-		assertFalse(exists);
+		assertFalse(exists);		
   	}
 	
 	@Test
   	public void RequestPhoto_Upload1Photo() throws IOException {
-		client.addMenu("Mercado", "Beterraba", 1.00);						
+		client.addMenu("Mercado", "Beterraba", 1.00, type, "portuguese");		
 		client.addPhoto("Mercado", "Beterraba", "photos/test/beterraba.jpg");								
 		for(String photoId : client.requestPhotoIds()) {
 			client.downloadPhoto(photoId);
@@ -85,7 +90,7 @@ public class RequestPhotoIds_ServerTest {
   	
 	@Test
   	public void RequestPhoto_Upload2Photos() throws IOException {
-		client.addMenu("Mercado", "Alface", 0.89);
+		client.addMenu("Mercado", "Alface", 0.89, type, "portuguese");
 				
 		for(int i = 1; i<=2; i++) {
 			client.addPhoto("Mercado", "Alface", "photos/test/alface_0" + i + ".jpg");			
@@ -126,7 +131,7 @@ public class RequestPhotoIds_ServerTest {
 
 	@Test
   	public void RequestPhoto_Upload3Photos() throws IOException {
-		client.addMenu("Mercado", "Cenoura", 0.79);
+		client.addMenu("Mercado", "Cenoura", 0.79, type, "portuguese");
 				
 		for(int i = 1; i<=3; i++) {
 			client.addPhoto("Mercado", "Cenoura", "photos/test/cenoura_0" + i + ".jpg");			
@@ -167,7 +172,7 @@ public class RequestPhotoIds_ServerTest {
 	
 	@Test
   	public void RequestPhoto_Upload4Photos() throws IOException {
-		client.addMenu("Mercado", "Nabo", 0.99);
+		client.addMenu("Mercado", "Nabo", 0.99, type, "portuguese");
 				
 		for(int i = 1; i<=4; i++) {
 			client.addPhoto("Mercado", "Nabo", "photos/test/nabo_0" + i + ".png");			

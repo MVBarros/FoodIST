@@ -1,5 +1,6 @@
 package foodist.server;
 
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.service.ServiceImplementation;
 
 import java.awt.image.BufferedImage;
@@ -11,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
@@ -33,16 +36,19 @@ public class AddPhoto_ServerTest {
 	@BeforeClass
 	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
-
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();       
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
-    	client = new Client(channel);
+    	client = new Client(channel);    	    	    	      
 	}
 
 	@Test
   	public void AddPhoto_PhotoPathCreated() {
-		client.addMenu("Portuguesa", "Chourico", 6.50);
+		FoodType type = FoodType.Meat;
+		client.addMenu("Portuguesa", "Chourico", 6.50, type, "portuguese");
 		client.addPhoto("Portuguesa", "Chourico", "photos/test/chourico.jpg");
 		
 		boolean path_exists = new File("photos/Portuguesa/Chourico").exists();
@@ -51,7 +57,8 @@ public class AddPhoto_ServerTest {
 	
 	@Test
   	public void AddPhoto_SamePhoto() {
-    	client.addMenu("Ristorante", "Pasta", 6.50);
+		FoodType type = FoodType.Vegetarian;
+    	client.addMenu("Ristorante", "Pasta", 6.50, type, "portuguese");
     	client.addPhoto("Ristorante", "Pasta", "photos/test/pasta.jpg");           	    	
         
 		String photoId = new File("photos/Ristorante/Pasta").list()[0];
@@ -88,7 +95,8 @@ public class AddPhoto_ServerTest {
 	
 	@Test
   	public void AddPhoto_DuplicatePhoto() {
-    	client.addMenu("Mackies", "Fries", 6.50);
+		FoodType type = FoodType.Vegan;
+    	client.addMenu("Mackies", "Fries", 6.50, type, "portuguese");
     	
     	for(int i=0; i<1024; i++) {
     		client.addPhoto("Mackies", "Fries", "photos/test/fries.jpg");

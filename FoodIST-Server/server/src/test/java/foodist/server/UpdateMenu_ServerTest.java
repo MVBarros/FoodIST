@@ -15,10 +15,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.service.ServiceImplementation;
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
@@ -29,23 +32,29 @@ public class UpdateMenu_ServerTest {
 	@Rule
 	public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
         
-	Client client;	
 	final BindableService bindableService = new ServiceImplementation();
+	
+	Client client;	
+	FoodType type;
 
 	@Before
 	public void setUp() throws Exception {   
 		
 		String serverName = InProcessServerBuilder.generateName();
 
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
+		File priv = Security.getPrivateKey();
+        File cert = Security.getPublicKey();    
+        
+		grpcCleanup.register(ServerBuilder.forPort(8080).useTransportSecurity(cert, priv).addService(bindableService).build());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    
+    	type = FoodType.Meat;
 	}
 	
 	@Test
   	public void UpdateMenu_EmptyPhotos() throws IOException {
-		client.addMenu("Mackies", "Invisible Pack", 69.99);
+		client.addMenu("Mackies", "Invisible Pack", 69.99, type, "portuguese");
 				
 		Menu menu = client.updateMenu("Mackies", "Invisible Pack");
 		
@@ -54,7 +63,7 @@ public class UpdateMenu_ServerTest {
 	
 	@Test
   	public void UpdateMenu_UploadPhotos() throws IOException {
-		client.addMenu("Mackies", "Special", 5.99);
+		client.addMenu("Mackies", "Special", 5.99, type, "portuguese");
 				
 		String[] fastfood = {"burger", "fries", "sundae"};
 		
@@ -69,7 +78,7 @@ public class UpdateMenu_ServerTest {
 	
 	@Test
   	public void UpdateMenu_DonwloadPhoto() throws IOException {
-		client.addMenu("Romano", "Pepperoni", 14.99);				
+		client.addMenu("Romano", "Pepperoni", 14.99, type, "portuguese");
 		
 		String[] format = {".jpg", ".png"};		
 		for(int i = 0; i<format.length; i++) {
