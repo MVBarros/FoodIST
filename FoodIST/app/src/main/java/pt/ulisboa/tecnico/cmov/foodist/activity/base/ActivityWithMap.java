@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MapNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
