@@ -3,3 +3,7 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore photos folder content
+./server/photos/*
+!/server/photos/test
