@@ -6,8 +6,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -181,14 +179,6 @@ public class ListMenu_ServerTest {
 				new File("photos/Graveli/Pepperoni/").list().length + 
 				new File("photos/Graveli/Cheese/").list().length;
 		assertEquals(3, photos);
-  	}
-	
-	@AfterClass
-	public static void Clean() throws IOException {
-		FileUtils.forceDelete(new File("photos/Burger Shop"));
-		FileUtils.forceDelete(new File("photos/Hamburger Town"));
-		FileUtils.forceDelete(new File("photos/Pizza Parlor"));		
-		FileUtils.forceDelete(new File("photos/Graveli"));
-	}
+  	}	
 	
 }

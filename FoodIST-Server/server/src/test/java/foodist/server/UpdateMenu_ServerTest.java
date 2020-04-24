@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -87,9 +85,4 @@ public class UpdateMenu_ServerTest {
 		assertEquals(2, new File("photos/Pavano/Pepperoni/").list().length);
   	}
 	
-	@AfterClass
-	public static void Clean() throws IOException {
-		FileUtils.forceDelete(new File("photos/Ronny\'s"));
-		FileUtils.forceDelete(new File("photos/Pavano"));
-	}
 }

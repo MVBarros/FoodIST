@@ -38,7 +38,19 @@ test {
 
 task('afterTest') {
     doLast {
-        delete fileTree("photos/client")
+    	delete "photos/Burger Shop"
+    	delete "photos/client"
+    	delete "photos/Graveli"
+    	delete "photos/Hamburger Town"
+    	delete "photos/Mackies"
+    	delete "photos/Mercado"
+    	delete "photos/Pavano"
+    	delete "photos/Pizza Parlor"
+    	delete "photos/Portuguesa"
+    	delete "photos/Ristorante"
+    	delete "photos/Romano"
+    	delete "photos/Ronny's"
+    	delete "photos/Tugalandia"
     }
 }
 

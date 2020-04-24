@@ -6,8 +6,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -97,12 +95,6 @@ public class DownloadPhoto_ServerTest {
 	@Test
 	public void DownloadPhoto_EmptyPhotoString() {
 		client.downloadPhoto("");
-	}			
-	
-	@AfterClass
-	public static void Clean() throws IOException {
-		FileUtils.forceDelete(new File("photos/Tugalandia"));
-		FileUtils.forceDelete(new File("photos/Romano"));		
-	}
+	}	
 	
 }

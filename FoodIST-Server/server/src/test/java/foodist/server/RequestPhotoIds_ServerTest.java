@@ -10,8 +10,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -211,8 +209,4 @@ public class RequestPhotoIds_ServerTest {
 		assertEquals(3, right_photos);
   	}
 	
-	@AfterClass
-	public static void Clean() throws IOException {
-		FileUtils.forceDelete(new File("photos/Mercado"));
-	}
 }

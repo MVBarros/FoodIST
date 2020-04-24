@@ -16,8 +16,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,12 +101,5 @@ public class AddPhoto_ServerTest {
         
 		assertEquals(1024, new File("photos/Mackies/Fries/").list().length);
   	}
-	
-	@AfterClass
-	public static void Clean() throws IOException {
-		FileUtils.forceDelete(new File("photos/Portuguesa"));
-		FileUtils.forceDelete(new File("photos/Ristorante"));
-		FileUtils.forceDelete(new File("photos/Mackies"));		
-	}
 	
 }
