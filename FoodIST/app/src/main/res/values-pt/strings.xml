@@ -65,7 +65,7 @@
 
     <!-- activity main -->
     <!-- Layout -->
-    <string name="main_user_profile">Prefil de Utilizador</string>
+    <string name="main_user_profile">Perfil de Utilizador</string>
     <string name="main_change_campus">Trocar de Campus</string>
     <!-- Activity -->
     <string name="main_no_selected_campus_failure_toast">Não foi possível obter localização, seleciona um Campus</string>
