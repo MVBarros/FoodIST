@@ -2,7 +2,7 @@
   "TagusPark": [
     {
       "name": "Red Bar",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.736550,
       "longitude": -9.302204,
@@ -19,7 +19,7 @@
     },
     {
       "name": "Green Bar",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.738042,
       "longitude": -9.303060,
@@ -36,7 +36,7 @@
     },
     {
       "name": "Cantina",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.737928,
       "longitude": -9.303269,
@@ -56,7 +56,7 @@
     },
     {
       "name": "Maquinas de Venda Automática",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.737129,
       "longitude": -9.303140,
@@ -75,7 +75,7 @@
   "Alameda": [
     {
       "name": "Cantina de Civil",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.737756,
       "longitude": -9.140465,
@@ -95,7 +95,7 @@
     },
     {
       "name": "Bar de Civil",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.737075,
       "longitude": -9.140010,
@@ -112,7 +112,7 @@
     },
     {
       "name": "Cantina",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.736380,
       "longitude": -9.136987,
@@ -132,7 +132,7 @@
     },
     {
       "name": "Maquina de Venda Automática",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.736261,
       "longitude": -9.137836,
@@ -149,7 +149,7 @@
     },
     {
       "name": "Bar do Pavilhão Central",
-      "distance": "Unknown",
+      "distance": "?",
       "time": "5min",
       "latitude": 38.736624,
       "longitude": -9.139594,

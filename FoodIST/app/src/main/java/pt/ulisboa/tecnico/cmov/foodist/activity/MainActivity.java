@@ -60,6 +60,10 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
 
+    private static final LatLng LOCATION_TAGUS = new LatLng(38.737050, -9.302734);
+    private static final LatLng LOCATION_ALAMEDA = new LatLng(38.736819, -9.138769);
+
+
     private boolean isOnCreate;
 
     private LocationRequestContext reqContext;
@@ -73,12 +77,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
         setButtons();
         setLanguage();
         setCurrentCampus();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        this.recreate();
     }
 
     @Override
@@ -184,9 +182,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private void updateCampusFromLocation(Location location) {
         LatLng curr = new LatLng(location.getLatitude(), location.getLongitude());
-        LatLng locationTagus = new LatLng(38.737050, -9.302734);
-        LatLng locationAlameda = new LatLng(38.736819, -9.138769);
-        launchGuessCampusTask(curr, locationAlameda, locationTagus);
+        launchGuessCampusTask(curr, LOCATION_ALAMEDA, LOCATION_TAGUS);
     }
 
     @SuppressLint("MissingPermission")

@@ -322,9 +322,10 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
             prefEditor.putString(getString(R.string.profile_language_chosen), "en");
             prefEditor.apply();
-            this.finish();
-            Intent intent = new Intent(this, ProfileActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            this.finish();
         });
 
         final RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
@@ -336,9 +337,11 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
             prefEditor.putString(getString(R.string.profile_language_chosen), "pt");
             prefEditor.apply();
-            this.finish();
-            Intent intent = new Intent(this, ProfileActivity.class);
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            this.finish();
         });
     }
 

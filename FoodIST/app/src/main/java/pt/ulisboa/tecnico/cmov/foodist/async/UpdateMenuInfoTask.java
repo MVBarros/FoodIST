@@ -47,8 +47,6 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
             Log.e(TAG, "Menu does not exist");
             return;
         }
-        FoodMenuActivity activity = getActivity();
-        String[] newPhotos = menu.getPhotoIdList().toArray(new String[0]);
-        activity.updatePhotos(newPhotos);
+        getActivity().updatePhotos(menu.getPhotoIdList());
     }
 }

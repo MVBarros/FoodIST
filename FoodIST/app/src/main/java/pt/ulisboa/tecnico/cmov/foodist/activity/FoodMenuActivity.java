@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -70,7 +71,7 @@ public class FoodMenuActivity extends BaseActivity {
     private String foodService;
     private String menuName;
 
-    private String[] photoIDs = new String[0];
+    private Set<String> photoIDs = Collections.synchronizedSet(new HashSet<>());
 
     private Set<String> downloadedPhotos = Collections.synchronizedSet(new HashSet<>());
 
@@ -97,7 +98,7 @@ public class FoodMenuActivity extends BaseActivity {
 
 
     public void launchDownloadPhotosTask() {
-        Photo[] photos = Arrays.stream(photoIDs)
+        Photo[] photos = photoIDs.stream()
                 .filter(photo -> !downloadedPhotos.contains(photo))
                 .map(photoId -> new Photo(this.foodService, this.menuName, null, photoId))
                 .toArray(Photo[]::new);
@@ -145,8 +146,8 @@ public class FoodMenuActivity extends BaseActivity {
         });
     }
 
-    public void updatePhotos(String[] newPhotos) {
-        photoIDs = newPhotos;
+    public void updatePhotos(Collection<String> newPhotos) {
+        photoIDs.addAll(newPhotos);
         launchDownloadPhotosTask();
     }
 
@@ -196,6 +197,44 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
+    public void launchUpdateMenuTask() {
+        if (isNetworkAvailable()) {
+            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodService, menuName);
+        } else {
+            showToast(getString(R.string.food_menu_update_menu_failure_toast));
+        }
+    }
+
+    private void launchUploadPhotoTask(Photo photo) {
+        if (isNetworkAvailable()) {
+            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
+        } else {
+            showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
+        }
+    }
+
+    private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
+        Bitmap tryingPhoto = BitmapFactory.decodeFile(imageFilePath);
+
+        if (tryingPhoto == null) {
+            galleryReturn(editor, data);
+        } else {
+            Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
+            launchUploadPhotoTask(photo);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss",
+                        Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -321,44 +360,5 @@ public class FoodMenuActivity extends BaseActivity {
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
         launchUploadPhotoTask(photo);
-    }
-
-    public void launchUpdateMenuTask() {
-        if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodService, menuName);
-        } else {
-            showToast(getString(R.string.food_menu_update_menu_failure_toast));
-        }
-    }
-
-    private void launchUploadPhotoTask(Photo photo) {
-        if (isNetworkAvailable()) {
-            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
-        } else {
-            showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
-        }
-    }
-
-    private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
-        Bitmap tryingPhoto = BitmapFactory.decodeFile(imageFilePath);
-
-        if (tryingPhoto == null) {
-            galleryReturn(editor, data);
-        } else {
-            Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
-            launchUploadPhotoTask(photo);
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        String timeStamp =
-                new SimpleDateFormat("yyyyMMdd_HHmmss",
-                        Locale.getDefault()).format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-
-        imageFilePath = image.getAbsolutePath();
-        return image;
     }
 }

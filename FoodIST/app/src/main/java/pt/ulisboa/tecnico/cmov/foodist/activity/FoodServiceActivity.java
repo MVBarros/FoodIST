@@ -39,6 +39,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     private static final String QUEUE_TIME = "Queue time";
     private static final String DISTANCE = "Distance";
 
+    private static final int ZOOM = 18;
+
     private String foodServiceName;
 
     private AtomicBoolean filter = new AtomicBoolean(true);
@@ -199,7 +201,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         googleMap.setIndoorEnabled(true);
 
         LatLng destination = new LatLng(getLatitude(), getLongitude());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 18));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, ZOOM));
         googleMap.addMarker(new MarkerOptions().position(destination).title(getMarkerName()));
         googleMap.setOnMapClickListener(this::mapClick);
     }
