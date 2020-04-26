@@ -71,6 +71,8 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
 
     public abstract void mapClick(LatLng latLng);
 
+    public abstract void fillTime(String time);
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -84,6 +86,8 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
     }
 
     public void fillMap(Direction direction) {
+        Long time = direction.getRouteList().get(0).getTotalDuration();
+        fillTime(timeString(time));
         List<Step> stepList = direction.getRouteList().get(0).getLegList().get(0).getStepList();
         ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(getApplicationContext(), stepList, 5, Color.RED, 3, Color.BLUE);
         for (PolylineOptions polylineOption : polylineOptionList) {
@@ -184,5 +188,28 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+
+    public String timeString(Long time) {
+        String res = "";
+        if (time > 3600) {
+            long hours = time / 3600;
+            res += Long.toString(hours);
+            String suffix = hours == 1 ? getString(R.string.hour) : getString(R.string.hours);
+            res += " " + suffix + " ";
+            time = time % 3600;
+        }
+        if (time > 60) {
+            long minutes = time / 60;
+            res += Long.toString(minutes);
+            String suffix = minutes == 1 ? getString(R.string.minute) : getString(R.string.minutes);
+            res += " " + suffix + " ";
+            time = time % 60;
+        }
+        res += Long.toString(time);
+        String suffix = time == 1 ? getString(R.string.second) : getString(R.string.seconds);
+        res += " " + suffix;
+        return res;
     }
 }

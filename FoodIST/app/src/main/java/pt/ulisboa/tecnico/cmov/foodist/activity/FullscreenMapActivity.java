@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,5 +47,11 @@ public class FullscreenMapActivity extends ActivityWithMap {
     @Override
     public void mapClick(LatLng latLng) {
         finish();
+    }
+
+    @Override
+    public void fillTime(String time) {
+        TextView textView = findViewById(R.id.map_time);
+        textView.setText(getString(R.string.fullscreen_map_time, time));
     }
 }

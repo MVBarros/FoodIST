@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.FullscreenMapActivity"></activity>
+        <activity android:name=".activity.FullscreenPhotoActivity"></activity>
+        <activity android:name=".activity.FullscreenMapActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -31,7 +32,7 @@
         <activity android:name=".activity.FoodServiceActivity" />
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.ChooseCampusActivity" />
-        <activity android:name=".activity.ChooseLanguageActivity"/>
+        <activity android:name=".activity.ChooseLanguageActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

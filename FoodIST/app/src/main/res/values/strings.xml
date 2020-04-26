@@ -133,4 +133,11 @@
     <!-- Language -->
     <string name="language_first_boot">firstBoot</string>
     <string name="food_service_walking_distance">"Walking Distance: "</string>
+    <string name="fullscreen_map_time">Distance: %1$s</string>
+    <string name="seconds"> seconds </string>
+    <string name="minutes"> minutes </string>
+    <string name="hours"> hours </string>
+    <string name="second"> second </string>
+    <string name="minute"> minute </string>
+    <string name="hour"> hour </string>
 </resources>

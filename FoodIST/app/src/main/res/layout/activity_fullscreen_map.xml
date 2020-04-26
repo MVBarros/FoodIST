@@ -5,12 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".activity.FullscreenMapActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="17"
         tools:context=".activity.FullscreenMapActivity"/>
-
+    <TextView
+        android:id="@+id/map_time"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:text="@string/fullscreen_map_time"
+        />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
