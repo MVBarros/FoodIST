@@ -361,8 +361,4 @@ public class FoodMenuActivity extends BaseActivity {
         imageFilePath = image.getAbsolutePath();
         return image;
     }
-
-    public void test() {
-        HorizontalScrollView scrollView = findViewById(R.id.food_menu_photos_scroll);
-    }
 }
