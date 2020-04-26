@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.activity;
+package pt.ulisboa.tecnico.cmov.foodist.activity.boot;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 
 public class ChooseLanguageActivity extends BaseActivity {

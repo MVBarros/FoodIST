@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.FullscreenMapActivity">
+    tools:context=".activity.fullscreen.FullscreenMapActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="17"
-            tools:context=".activity.FullscreenMapActivity" />
+            tools:context=".activity.fullscreen.FullscreenMapActivity" />
 
         <TextView
             android:id="@+id/map_time"

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.activity;
+package pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen;
 
 import android.os.Bundle;
 import android.widget.TextView;

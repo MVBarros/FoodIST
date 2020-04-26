@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.boot.ChooseLanguageActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceWalkingTimeTask;

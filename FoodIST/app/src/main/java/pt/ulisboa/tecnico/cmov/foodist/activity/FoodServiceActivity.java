@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
