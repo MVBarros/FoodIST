@@ -14,6 +14,8 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
 
     private static final String PHOTOID = "PHOTOID";
 
+    public static Bitmap photo; //Workaround for not being able to pass bitmaps to activities (> 1 Mb)
+
     private String photoId;
 
     @Override
@@ -21,9 +23,8 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen_photo);
 
-        Bitmap bitmap = getIntent().getParcelableExtra(BITMAP);
         ImageView image = findViewById(R.id.fullscreen_menu_image);
-        image.setImageBitmap(bitmap);
+        image.setImageBitmap(photo);
         this.photoId = getIntent().getStringExtra(PHOTOID);
     }
 }

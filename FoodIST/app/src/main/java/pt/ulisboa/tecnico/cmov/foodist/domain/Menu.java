@@ -60,7 +60,7 @@ public class Menu {
         return type;
     }
 
-    public boolean isConstrained(Map<Contract.FoodType, Boolean> constraints) {
+    public boolean isDesirable(Map<Contract.FoodType, Boolean> constraints) {
         return constraints.get(this.type) == true;
     }
 

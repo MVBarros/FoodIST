@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ public class FoodMenuActivity extends BaseActivity {
     public static final String MENU_PRICE = "Menu_price";
     public static final String MENU_SERVICE = "Menu_service";
     private static final String DISPLAY_NAME = "Display_name";
+    private static final String BITMAP = "BITMAP";
+    private static final String PHOTOID = "PHOTOID";
 
     //Camera/Gallery tags
     private static final int PICK_FROM_GALLERY = 1;
@@ -116,6 +119,12 @@ public class FoodMenuActivity extends BaseActivity {
         ImageView imageView = new ImageView(this);
         imageView.setImageBitmap(bitmap);
         imageView.setLayoutParams(params);
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(this, FullscreenPhotoActivity.class);
+            intent.putExtra(PHOTOID, photoId);
+            FullscreenPhotoActivity.photo = bitmap;
+            startActivity(intent);
+        });
 
         LinearLayout layout = findViewById(R.id.food_menu_photo_layout);
         layout.addView(imageView);
@@ -351,5 +360,9 @@ public class FoodMenuActivity extends BaseActivity {
 
         imageFilePath = image.getAbsolutePath();
         return image;
+    }
+
+    public void test() {
+        HorizontalScrollView scrollView = findViewById(R.id.food_menu_photos_scroll);
     }
 }

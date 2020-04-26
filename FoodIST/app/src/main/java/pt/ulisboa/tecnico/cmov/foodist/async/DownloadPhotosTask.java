@@ -15,6 +15,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
+import pt.ulisboa.tecnico.cmov.foodist.data.BitmapAndId;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
 
@@ -85,12 +86,3 @@ public class DownloadPhotosTask extends BaseAsyncTask<Photo, BitmapAndId, Boolea
 
 }
 
-class BitmapAndId {
-    public Bitmap bitmap;
-    public String photoId;
-
-    public BitmapAndId(Bitmap bitmap, String photoId) {
-        this.bitmap = bitmap;
-        this.photoId = photoId;
-    }
-}

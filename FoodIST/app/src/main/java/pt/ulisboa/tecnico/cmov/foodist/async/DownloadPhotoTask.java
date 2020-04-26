@@ -17,7 +17,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
-
+@Deprecated
 public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, FoodMenuActivity> {
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;

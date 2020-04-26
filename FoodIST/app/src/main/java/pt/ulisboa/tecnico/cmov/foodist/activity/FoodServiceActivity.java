@@ -153,7 +153,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         ArrayList<Menu> drawableMenus = new ArrayList<>(menus);
 
         if (getFilter()) {
-            drawableMenus.removeIf(menu -> menu.isConstrained(constraints));
+            drawableMenus.removeIf(menu -> !menu.isDesirable(constraints));
         }
 
         final MenuAdapter menuAdapter = new MenuAdapter(this, drawableMenus);
