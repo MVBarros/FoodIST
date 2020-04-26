@@ -12,11 +12,10 @@ import javax.imageio.ImageIO;
 
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,17 +28,15 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class AddPhoto_ServerTest { 		
   
-	static final BindableService bindableService = new ServiceImplementation();
+	static final BindableService bindableService = new ServiceImplementation(true);
 	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();    	
 	static Client client;	
 	
 	@BeforeClass
 	public static void setUp() throws Exception {   				
 		String serverName = InProcessServerBuilder.generateName();
-		
-		File priv = Security.getPrivateKey();
-        File cert = Security.getPublicKey();       
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
+		      
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);    	    	    	      

@@ -1,6 +1,5 @@
 package foodist.server;
 
-import com.google.protobuf.Empty;
 import foodist.server.grpc.contract.Contract.UpdateMenuRequest;
 import foodist.server.grpc.contract.Contract.Menu;
 import foodist.server.grpc.contract.Contract;
@@ -10,6 +9,7 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

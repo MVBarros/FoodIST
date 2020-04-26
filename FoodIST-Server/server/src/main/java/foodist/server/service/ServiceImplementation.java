@@ -25,6 +25,11 @@ import java.util.Map.Entry;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 	
+	private boolean test;
+	
+	public ServiceImplementation(boolean test) {
+		this.test = test; 
+	}
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
         Menu.Builder menuBuilder = Menu.newBuilder();
@@ -34,8 +39,11 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         menuBuilder.setPrice(request.getPrice());
         menuBuilder.setType(request.getType());
         menuBuilder.setLanguage(request.getLanguage());
-        String translation = requestGoogleTranslation(request.getName(), request.getLanguage(), getTargetLanguage(request.getLanguage()));
-        menuBuilder.setTranslatedName(translation);
+
+        if(!test) {
+        	String translation = requestGoogleTranslation(request.getName(), request.getLanguage(), getTargetLanguage(request.getLanguage()));
+        	menuBuilder.setTranslatedName(translation);
+        }        	        
         Menu menu = menuBuilder.build();
         Storage.addMenu(foodService, menu);
 

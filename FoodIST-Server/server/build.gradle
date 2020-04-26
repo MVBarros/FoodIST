@@ -25,11 +25,29 @@ dependencies {
     compile 'com.google.cloud:google-cloud-translate:1.94.5'
 }
 
+ext{
+    // counter of test cases in error
+    nbTestOnError = 0
+}
+
 test {
-    useJUnit()
+	useJUnit()
 
     maxHeapSize = '1G'
 }
+
+task('afterTest') {
+    doLast {
+        file('photos/').list().each{
+        	f ->
+        	if (!f.equals('test')) {
+                delete "photos/${f}"
+            }
+    	}
+    }
+}
+
+test.finalizedBy afterTest
 
 task startServer(type: JavaExec) {
     args = ['9000']

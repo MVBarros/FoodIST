@@ -7,7 +7,6 @@ import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
 
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,17 +27,15 @@ import foodist.server.service.ServiceImplementation;
 @RunWith(JUnit4.class)
 public class DownloadPhoto_ServerTest {
 		        
-	static final BindableService bindableService = new ServiceImplementation();
+	static final BindableService bindableService = new ServiceImplementation(true);
 	static final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 	static Client client;	
 
 	@BeforeClass
 	public static void setUp() throws Exception {   			
 		String serverName = InProcessServerBuilder.generateName();
-
-		File priv = Security.getPrivateKey();
-        File cert = Security.getPublicKey();       
-		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().useTransportSecurity(cert, priv).addService(bindableService).build().start());
+   
+		grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(bindableService).build().start());
 		ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
     	client = new Client(channel);        	          
@@ -98,6 +95,6 @@ public class DownloadPhoto_ServerTest {
 	@Test
 	public void DownloadPhoto_EmptyPhotoString() {
 		client.downloadPhoto("");
-	}			
+	}	
 	
 }
