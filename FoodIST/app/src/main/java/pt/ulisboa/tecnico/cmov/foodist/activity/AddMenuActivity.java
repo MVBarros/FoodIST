@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -171,7 +172,7 @@ public class AddMenuActivity extends BaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PICK_FROM_GALLERY:
                 // If request is cancelled, the result arrays are empty.
@@ -235,7 +236,7 @@ public class AddMenuActivity extends BaseActivity {
     }
 
     private void choiceReturn(Intent data) {
-        ImageView profilePicture = (ImageView) findViewById(photoView);
+        ImageView profilePicture = findViewById(photoView);
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
 
