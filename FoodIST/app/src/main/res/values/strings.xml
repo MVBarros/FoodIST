@@ -102,7 +102,7 @@
     <!-- activity choose language -->
     <!-- Layout -->
     <string name="choose_language_english">English</string>
-    <string name="choose_language_portuguese">Portuguese</string>
+    <string name="choose_language_portuguese">Português</string>
 
     <!-- Get Menu Task -->
     <string name="get_menu_task_error_getting_menus_message">Unable to get menus from server</string>
@@ -132,4 +132,5 @@
 
     <!-- Language -->
     <string name="language_first_boot">firstBoot</string>
+    <string name="food_service_walking_distance">"Walking Distance: "</string>
 </resources>

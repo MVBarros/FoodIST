@@ -33,6 +33,7 @@ public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integ
         WalkingTimeData resource = walkingTimeResources[0];
         Double latitude = resource.getLatitude();
         Double longitude = resource.getLongitude();
+        String language = resource.getLanguage();
         if (latitude == null || longitude == null) {
             return false;
         }
@@ -43,7 +44,7 @@ public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integ
             try {
                 double serviceLatitude = service.getLatitude();
                 double serviceLongitude = service.getLongitude();
-                String walkingTime = CoordenateUtils.getWalkingTimeTo(latitude, longitude, serviceLatitude, serviceLongitude, apiKey);
+                String walkingTime = CoordenateUtils.getWalkingTimeTo(latitude, longitude, serviceLatitude, serviceLongitude, apiKey, language);
                 service.setDistance(walkingTime);
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Unable to get walking distance to service " + service.getName() + " due to cause: " + e.getCause());

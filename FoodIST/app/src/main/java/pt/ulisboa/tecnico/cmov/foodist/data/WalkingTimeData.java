@@ -8,13 +8,15 @@ public class WalkingTimeData {
     private Double latitude;
     private Double longitude;
     private String apiKey;
+    private String language;
     private List<FoodService> services;
 
-    public WalkingTimeData(Double latitude, Double longitude, String apiKey, List<FoodService> services) {
+    public WalkingTimeData(Double latitude, Double longitude, String apiKey, List<FoodService> services, String language) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.apiKey = apiKey;
         this.services = services;
+        this.language = language;
     }
 
     public Double getLatitude() {
@@ -32,4 +34,9 @@ public class WalkingTimeData {
     public List<FoodService> getServices() {
         return services;
     }
+
+    public String getLanguage() {
+        return language;
+    }
+
 }

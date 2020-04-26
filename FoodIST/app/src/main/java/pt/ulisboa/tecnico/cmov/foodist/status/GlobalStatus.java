@@ -152,5 +152,10 @@ public class GlobalStatus extends Application {
         return userConstraints;
     }
 
+    public String getLanguage() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getString(getString(R.string.profile_language_chosen), "en");
+    }
+
 
 }

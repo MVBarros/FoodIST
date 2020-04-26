@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -157,7 +158,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         GlobalStatus status = getGlobalStatus();
         List<FoodService> services = new ArrayList<>(status.getServices());
         String apiKey = status.getApiKey();
-        WalkingTimeData data = new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services);
+        WalkingTimeData data = new WalkingTimeData(location.getLatitude(), location.getLongitude(), apiKey, services, getGlobalStatus().getLanguage());
         launchWalkingTimeTask(data);
     }
 
@@ -183,15 +184,15 @@ public class MainActivity extends BaseActivity implements LocationListener {
         new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }
 
-    private void launchGuessCampusTask(String... urls) {
-        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, urls);
+    private void launchGuessCampusTask(LatLng curr, LatLng alameda, LatLng tagus) {
+        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, alameda, tagus);
     }
 
     private void updateCampusFromLocation(Location location) {
-        String apiKey = getGlobalStatus().getApiKey();
-        String urlAlameda = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_alameda), apiKey);
-        String urlTagus = CoordenateUtils.getUrlForDistance(location, getString(R.string.map_taguspark), apiKey);
-        launchGuessCampusTask(urlAlameda, urlTagus);
+        LatLng curr = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng locationTagus =  new LatLng(38.737050, -9.302734);
+        LatLng locationAlameda =  new LatLng( 38.736819, -9.138769 );
+        launchGuessCampusTask(curr, locationAlameda, locationTagus);
     }
 
     @SuppressLint("MissingPermission")
@@ -207,7 +208,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     private void loadCurrentCampus() {
-        if (hasLocationPermission() && isNetworkAvailable()) {
+        if (hasLocationPermission()) {
             guessCampusFromLocation();
         } else {
             showToast(getString(R.string.main_infering_location_failure_toast));

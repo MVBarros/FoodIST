@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 
 import java.io.BufferedReader;
@@ -15,10 +17,13 @@ import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
-public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, MainActivity> {
+public class GuessCampusTask extends BaseAsyncTask<LatLng, Integer, String, MainActivity> {
 
-    public GuessCampusTask(MainActivity activity) {
+    private LatLng curr;
+
+    public GuessCampusTask(MainActivity activity, LatLng curr) {
         super(activity);
+        this.curr = curr;
     }
 
     private static final int NUMBER_CAMPUS = 2;
@@ -29,22 +34,18 @@ public class GuessCampusTask extends BaseAsyncTask<String, Integer, String, Main
     private static final int MAX_DISTANCE = 2000; //2 kilometers
 
     @Override
-    protected String doInBackground(String... strings) {
-        if (strings.length != NUMBER_CAMPUS) {
+    protected String doInBackground(LatLng... lngs) {
+        if (lngs.length != NUMBER_CAMPUS) {
             return null;
         }
-        try {
-            for (int i = 0; i < NUMBER_CAMPUS; ++i) {
-                int distance = CoordenateUtils.getDistance(strings[i]);
-                if (distance < MAX_DISTANCE) {
-                    return i == ALAMEDA ? "Alameda" : "TagusPark";
-                }
+        for (int i = 0; i < NUMBER_CAMPUS; ++i) {
+            int distance = CoordenateUtils.calculateDistance(curr, lngs[i]);
+            if (distance < MAX_DISTANCE) {
+                return i == ALAMEDA ? "Alameda" : "TagusPark";
             }
-            return null;
-        } catch (IOException | JSONException e) {
-            Log.d(TAG, "Error getting location from google API", e);
-            return null;
         }
+        return null;
+
     }
 
     @Override

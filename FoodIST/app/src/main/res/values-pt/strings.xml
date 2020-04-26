@@ -83,7 +83,7 @@
     <string name="profile_visitor">Visitante</string>
     <string name="profile_language">Linguagem:</string>
     <string name="profile_language_option_english">Inglês</string>
-    <string name="profile_language_option_portuguese">Portugues</string>
+    <string name="profile_language_option_portuguese">Português</string>
     <string name="profile_dietary_constraints">Restrições Alimentares</string>
     <string name="profile_dietary_vegetarian">Vegetariano</string>
     <string name="profile_dietary_meat">Carne</string>
@@ -132,4 +132,5 @@
 
     <!-- Language -->
     <string name="language_first_boot">firstBoot</string>
+    <string name="food_service_walking_distance">"Distância: "</string>
 </resources>
