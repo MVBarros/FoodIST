@@ -25,7 +25,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
-import pt.ulisboa.tecnico.cmov.foodist.async.GetMenusTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.service.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;

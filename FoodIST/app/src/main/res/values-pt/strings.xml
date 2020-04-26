@@ -113,7 +113,7 @@
     <!-- Get Menu Task -->
     <string name="get_menu_task_error_getting_menus_message">Impossivel obter menus do servidor</string>
     <string name="get_menu_task_no_menus_available_message">Não existem menus disponíveis para este serviço</string>
-    <string name="get_menu_filter_menu_message">Alguns menus foram filtrados de acordo com as suas restrições alimentares</string>
+    <string name="get_menu_filter_menu_message">Alguns menus poderão ter sido filtrados de acordo com as suas restrições alimentares</string>
 
     <!--Download Photo Task -->
     <string name="download_photo_task_error_message">Impossivel de obter foto, verifica a connexão</string>
@@ -125,7 +125,7 @@
     <string name="service_walking_time_unable_calculate_time">Impossivel de obter tempo de distância a pé</string>
 
     <!-- Upload Photo Task -->
-    <string name="upload_photo_task_complete_message">Envio de foto completado!</string>
+    <string name="upload_photo_task_complete_message">Envio de foto completo!</string>
 
     <!-- Server Interactions API -->
     <string name="foodist_server_address">10.0.2.2</string>

@@ -32,8 +32,8 @@ import java.util.Locale;
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.async.UploadMenuTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.service.UploadMenuTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
@@ -70,29 +70,39 @@ public class AddMenuActivity extends BaseActivity {
 
         Button b = findViewById(R.id.add_new_menu_done_button);
         b.setOnClickListener(v -> {
+            if (!checkMenuArgs()) {
+                return;
+            }
             TextView menuName = findViewById(R.id.dishName);
             TextView menuCost = findViewById(R.id.dishCost);
 
             Contract.FoodType type = getFoodType();
-            if (type == null) {
-                showToast("Give the menu a type!");
-                return;
-            }
-
             String foodService = getIntent().getStringExtra(SERVICE_NAME);
 
-            if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
-                showToast(getString(R.string.add_menu_invalid_input_toast));
-            } else {
-                Log.d(TAG, String.format("Menu %s was added", menuName.getText().toString()));
-                SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+            Menu menu = new Menu(foodService, menuName.getText().toString(),
+                    Double.parseDouble(menuCost.getText().toString()), type,
+                    pref.getString(getString(R.string.profile_language_chosen), "en"), "");
+            uploadMenu(menu);
 
-                Menu menu = new Menu(foodService, menuName.getText().toString(), Double.parseDouble(menuCost.getText().toString()), type, pref.getString(getString(R.string.profile_language_chosen), "en"), "");
-                uploadMenu(menu);
-            }
         });
         ImageView photoButton = findViewById(R.id.dishView);
         photoButton.setOnClickListener(v -> askGalleryPermission());
+    }
+
+    private boolean checkMenuArgs() {
+        TextView menuName = findViewById(R.id.dishName);
+        TextView menuCost = findViewById(R.id.dishCost);
+        Contract.FoodType type = getFoodType();
+        if (type == null) {
+            showToast("Give the menu a type!");
+            return false;
+        }
+        if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
+            showToast(getString(R.string.add_menu_invalid_input_toast));
+            return false;
+        }
+        return true;
     }
 
     private void uploadMenu(Menu menu) {
@@ -108,6 +118,25 @@ public class AddMenuActivity extends BaseActivity {
         }
     }
 
+    private Contract.FoodType getFoodType() {
+        RadioButton button = findViewById(R.id.add_menu_vegetarian);
+        if (button.isChecked()) {
+            return Contract.FoodType.Vegetarian;
+        }
+        button = findViewById(R.id.add_menu_meat);
+        if (button.isChecked()) {
+            return Contract.FoodType.Meat;
+        }
+        button = findViewById(R.id.add_menu_fish);
+        if (button.isChecked()) {
+            return Contract.FoodType.Fish;
+        }
+        button = findViewById(R.id.add_menu_vegan);
+        if (button.isChecked()) {
+            return Contract.FoodType.Vegan;
+        }
+        return null;
+    }
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -259,23 +288,4 @@ public class AddMenuActivity extends BaseActivity {
         return image;
     }
 
-    private Contract.FoodType getFoodType() {
-        RadioButton button = findViewById(R.id.add_menu_vegetarian);
-        if (button.isChecked()) {
-            return Contract.FoodType.Vegetarian;
-        }
-        button = findViewById(R.id.add_menu_meat);
-        if (button.isChecked()) {
-            return Contract.FoodType.Meat;
-        }
-        button = findViewById(R.id.add_menu_fish);
-        if (button.isChecked()) {
-            return Contract.FoodType.Fish;
-        }
-        button = findViewById(R.id.add_menu_vegan);
-        if (button.isChecked()) {
-            return Contract.FoodType.Vegan;
-        }
-        return null;
-    }
 }

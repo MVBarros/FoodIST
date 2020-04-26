@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.async;
+package pt.ulisboa.tecnico.cmov.foodist.async.service;
 
 import android.os.AsyncTask;
 import android.util.Log;

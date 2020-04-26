@@ -108,7 +108,7 @@
     <!-- Get Menu Task -->
     <string name="get_menu_task_error_getting_menus_message">Unable to get menus from server</string>
     <string name="get_menu_task_no_menus_available_message">No menus available for this service</string>
-    <string name="get_menu_filter_menu_message">Some menus were filtered according to your dietary constraints</string>
+    <string name="get_menu_filter_menu_message">Some menus may have been filtered according to your dietary constraints</string>
 
     <!--Download Photo Task -->
     <string name="download_photo_task_error_message">Unable to download photo, check connection</string>
