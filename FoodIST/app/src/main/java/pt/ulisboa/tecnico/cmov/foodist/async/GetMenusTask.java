@@ -2,11 +2,9 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.Contract;
@@ -14,7 +12,6 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServic
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
-import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 

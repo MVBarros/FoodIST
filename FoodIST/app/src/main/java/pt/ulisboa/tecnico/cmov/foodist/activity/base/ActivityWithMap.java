@@ -78,6 +78,7 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
         super.onResume();
         initMap();
     }
+
     private void initMap() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = getMapFragment();

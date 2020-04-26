@@ -7,7 +7,6 @@ import android.widget.Button;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class ChooseLanguageActivity extends BaseActivity {
     public static final String CAMPUS = "pt.ulisboa.tecnico.cmov.foodlist.MESSAGE";
@@ -35,7 +34,7 @@ public class ChooseLanguageActivity extends BaseActivity {
         });
     }
 
-    private void setLanguage(String language){
+    private void setLanguage(String language) {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         SharedPreferences.Editor prefEditor = pref.edit();
         prefEditor.putString(getString(R.string.profile_language_chosen), language);

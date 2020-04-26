@@ -98,7 +98,7 @@ public class CoordenateUtils {
     }
 
     public static String getUrlForDirections(String origin, String destination, String apiKey, String language) {
-        return "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&key=" + apiKey + "&mode=walking&alternatives=false" + "&language=" + language ;
+        return "https://maps.googleapis.com/maps/api/directions/json?origin=" + origin + "&destination=" + destination + "&key=" + apiKey + "&mode=walking&alternatives=false" + "&language=" + language;
     }
 
     public static String getUrlForDirections(Location location, String destination, String apiKey, String language) {

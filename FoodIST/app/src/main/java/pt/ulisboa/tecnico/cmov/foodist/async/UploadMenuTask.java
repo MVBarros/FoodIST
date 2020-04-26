@@ -22,7 +22,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
 
     @Override
     protected Boolean doInBackground(Menu... menu) {
-        synchronized (stub){
+        synchronized (stub) {
             if (menu.length != 1) {
                 return false;
             }

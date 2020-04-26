@@ -1,10 +1,10 @@
 package pt.ulisboa.tecnico.cmov.foodist.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 

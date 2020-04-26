@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,25 +18,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.async.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.ServiceWalkingTimeTask;
@@ -48,7 +42,6 @@ import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
-import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
 
 
 public class MainActivity extends BaseActivity implements LocationListener {
@@ -83,7 +76,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     @Override
-    protected void onRestart(){
+    protected void onRestart() {
         super.onRestart();
         this.recreate();
     }
@@ -131,6 +124,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
             finish();
         }
     }
+
     private void setCurrentCampus() {
         Intent intent = getIntent();
         String campus = intent.getStringExtra(ChooseCampusActivity.CAMPUS);
@@ -190,8 +184,8 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private void updateCampusFromLocation(Location location) {
         LatLng curr = new LatLng(location.getLatitude(), location.getLongitude());
-        LatLng locationTagus =  new LatLng(38.737050, -9.302734);
-        LatLng locationAlameda =  new LatLng( 38.736819, -9.138769 );
+        LatLng locationTagus = new LatLng(38.737050, -9.302734);
+        LatLng locationAlameda = new LatLng(38.736819, -9.138769);
         launchGuessCampusTask(curr, locationAlameda, locationTagus);
     }
 

@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmov.foodist.async;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

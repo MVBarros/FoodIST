@@ -14,6 +14,7 @@ public class Menu {
     private Contract.FoodType type;
     private String language;
     private String translatedName;
+
     //To send menus to the server
     public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, String language, String translatedName) {
         this.foodServiceName = foodServiceName;
@@ -63,7 +64,11 @@ public class Menu {
         return constraints.get(this.type) == true;
     }
 
-    public String getLanguage() { return this.language; }
+    public String getLanguage() {
+        return this.language;
+    }
 
-    public String getTranslatedName() { return this.translatedName; }
+    public String getTranslatedName() {
+        return this.translatedName;
+    }
 }

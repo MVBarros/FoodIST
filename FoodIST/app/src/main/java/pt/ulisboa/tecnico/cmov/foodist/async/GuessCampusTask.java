@@ -1,10 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

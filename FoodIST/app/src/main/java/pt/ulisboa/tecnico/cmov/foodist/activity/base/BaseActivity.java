@@ -7,12 +7,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -90,10 +88,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         context = context.createConfigurationContext(config);
         return context;
     }
+
     @Override
-    protected void attachBaseContext(Context base){
+    protected void attachBaseContext(Context base) {
         super.attachBaseContext(setLocale(base));
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

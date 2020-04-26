@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.content.Intent;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -18,10 +17,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
@@ -171,10 +168,6 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         } else {
             showToast(getString(R.string.food_service_menu_update_failure_toast));
         }
-    }
-
-    public ArrayList<Menu> getMenus() {
-        return menus;
     }
 
     public void setMenus(ArrayList<Menu> menus) {

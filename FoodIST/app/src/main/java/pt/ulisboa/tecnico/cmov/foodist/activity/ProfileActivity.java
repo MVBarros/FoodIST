@@ -2,11 +2,9 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -30,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -286,24 +282,23 @@ public class ProfileActivity extends BaseActivity {
 
         int currentLanguage = pref.getInt(getString(R.string.language), -1);
 
-        if(currentLanguage != -1){
+        if (currentLanguage != -1) {
             RadioButton language = findViewById(currentLanguage);
-            if(language != null){
+            if (language != null) {
                 language.toggle();
             }
-        }
-        else{
+        } else {
             getLanguage();
         }
     }
 
-    private void getLanguage(){
+    private void getLanguage() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
         SharedPreferences.Editor prefEditor = pref.edit();
 
         String language = pref.getString(getString(R.string.profile_language_chosen), "en");
 
-        switch (language){
+        switch (language) {
             case "en":
                 RadioButton englishLanguage = findViewById(R.id.languageEnglish);
                 prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
@@ -315,7 +310,8 @@ public class ProfileActivity extends BaseActivity {
                 portugueseLanguage.toggle();
         }
     }
-    private void setLanguage(){
+
+    private void setLanguage() {
 
         final RadioButton englishLanguage = findViewById(R.id.languageEnglish);
 

@@ -7,7 +7,6 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServic
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
-import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
 public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.Menu, FoodMenuActivity> {
 
