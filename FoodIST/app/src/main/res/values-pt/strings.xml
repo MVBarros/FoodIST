@@ -62,6 +62,7 @@
     <string name="food_service_working_hours">Horário Funcionamento:</string>
     <string name="food_service_menu_update_failure_toast">Impossivel de obter menus sem internet</string>
     <string name="food_service_show_all_menus">Mostrar todos os menus</string>
+    <string name="food_service_filter_menus">Filtrar menus</string>
 
     <!-- activity main -->
     <!-- Layout -->

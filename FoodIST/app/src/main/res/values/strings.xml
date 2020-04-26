@@ -63,6 +63,7 @@
     <string name="food_service_working_hours">Working Hours:</string>
     <string name="food_service_menu_update_failure_toast">No internet connection, cannot get menus</string>
     <string name="food_service_show_all_menus">Show all menus</string>
+    <string name="food_service_filter_menus">Filter menus</string>
 
     <!-- activity main -->
     <!-- Layout -->

@@ -18,7 +18,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
@@ -38,6 +43,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     private static final String DISTANCE = "Distance";
 
     private String foodServiceName;
+
+    private AtomicBoolean filter = new AtomicBoolean(true);
 
     private String distance;
 
@@ -68,6 +75,10 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     public void addReceivers() {
         super.addReceivers();
         addReceiver(new ServiceNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    }
+
+    public boolean getFilter() {
+        return filter.get();
     }
 
 
@@ -140,6 +151,20 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         foodServiceDistance.setText(String.format("%s %s", getString(R.string.food_service_walking_distance), distance));
     }
 
+    public void drawFoodServices() {
+        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
+        ArrayList<Menu> drawableMenus = new ArrayList<>(menus);
+
+        if (getFilter()) {
+            drawableMenus.removeIf(menu -> menu.isConstrained(constraints));
+        }
+
+        final MenuAdapter menuAdapter = new MenuAdapter(this, drawableMenus);
+
+        ListView foodServiceList = findViewById(R.id.menus);
+        foodServiceList.setAdapter(menuAdapter);
+    }
+
     public void updateMenus() {
         if (isNetworkAvailable()) {
             new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceName);
@@ -160,9 +185,11 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     public void doShowAllButton() {
         final Button button = findViewById(R.id.show_all_menus_button);
         button.setOnClickListener((l) -> {
-            final MenuAdapter menuAdapter = new MenuAdapter(this, menus);
-            ListView foodServiceList = findViewById(R.id.menus);
-            foodServiceList.setAdapter(menuAdapter);
+            filter.set(!filter.get());
+
+            button.setText(getString(getFilter() ? R.string.food_service_show_all_menus : R.string.food_service_filter_menus));
+
+            drawFoodServices();
         });
     }
 

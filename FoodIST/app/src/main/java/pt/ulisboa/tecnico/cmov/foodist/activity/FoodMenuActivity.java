@@ -18,8 +18,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -28,18 +28,21 @@ import androidx.core.content.FileProvider;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.async.DownloadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.DownloadPhotosTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
-import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -61,11 +64,12 @@ public class FoodMenuActivity extends BaseActivity {
 
     private String imageFilePath = null;
 
-    private int numPhoto = 0;
     private String foodService;
     private String menuName;
 
     private String[] photoIDs = new String[0];
+
+    private Set<String> downloadedPhotos = Collections.synchronizedSet(new HashSet<>());
 
 
     @Override
@@ -87,40 +91,40 @@ public class FoodMenuActivity extends BaseActivity {
     public void addReceivers() {
         addReceiver(new MenuNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
-    public void setPhotoView() {
-        TextView numberPhoto = findViewById(R.id.photoNumber);
-        numberPhoto.setText(String.format(Locale.US, "%d/%d", numPhoto + 1, photoIDs.length));
-    }
 
-    public void downloadCurrentPhoto() {
-        if (photoIDs.length > 0) {
-            Photo photo = new Photo(this.foodService, this.menuName, null, photoIDs[numPhoto]);
-            getPhoto(photo);
-            setPhotoView();
-        }
-    }
 
-    public void getPhoto(Photo photo) {
-        Bitmap cachedPhoto = getCachedPhoto(photo.getPhotoID());
-        if (cachedPhoto == null) {
-            launchDownloadPhotoTask(photo);
+    public void launchDownloadPhotosTask() {
+        Photo[] photos = Arrays.stream(photoIDs)
+                .filter(photo -> !downloadedPhotos.contains(photo))
+                .map(photoId -> new Photo(this.foodService, this.menuName, null, photoId))
+                .toArray(Photo[]::new);
+
+        if (isNetworkAvailable()) {
+            if (photos.length != 0) {
+                new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
+            }
         } else {
-            ImageView photoView = findViewById(R.id.menuPhotos);
-            photoView.setImageBitmap(cachedPhoto);
+            showToast(getString(R.string.food_menu_update_menu_failure_toast));
         }
     }
 
-    public Bitmap getCachedPhoto(String photoID) {
-        return PhotoCache.getInstance().getPhoto(photoID);
+    public void addPhoto(Bitmap bitmap, String photoId) {
+        downloadedPhotos.add(photoId);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(800,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 30, 0);
+        ImageView imageView = new ImageView(this);
+        imageView.setImageBitmap(bitmap);
+        imageView.setLayoutParams(params);
+
+        LinearLayout layout = findViewById(R.id.food_menu_photo_layout);
+        layout.addView(imageView);
+
+        TextView text = findViewById(R.id.photoNumber);
+        text.setText("");
     }
 
     protected void setButtons() {
-
-        Button previousPhoto = findViewById(R.id.previousPhoto);
-        previousPhoto.setOnClickListener(v -> previousPhoto());
-
-        Button nextPhoto = findViewById(R.id.nextPhoto);
-        nextPhoto.setOnClickListener(v -> nextPhoto());
 
         Button addPhoto = findViewById(R.id.add_photo_button);
         addPhoto.setOnClickListener(v -> {
@@ -133,20 +137,8 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     public void updatePhotos(String[] newPhotos) {
-        int newIndex = 0;
-        if (photoIDs.length != 0) {
-            int i = 0;
-            for (String photo : newPhotos) {
-                if (photo.equals(photoIDs[numPhoto])) {
-                    newIndex = i;
-                    break;
-                }
-                i++;
-            }
-        }
         photoIDs = newPhotos;
-        numPhoto = newIndex;
-        downloadCurrentPhoto();
+        launchDownloadPhotosTask();
     }
 
     private void intentInitialization(Intent intent) {
@@ -167,7 +159,7 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
-    private void initializeDisplayName(String menuName){
+    private void initializeDisplayName(String menuName) {
         if (menuName == null) {
             Log.d(TAG, "Unable to obtain menu name");
             showToast(getString(R.string.food_menu_name_failure_toast));
@@ -195,19 +187,6 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
-    private void nextPhoto() {
-        if (this.photoIDs.length != 0) {
-            numPhoto = ++numPhoto % this.photoIDs.length;
-        }
-        downloadCurrentPhoto();
-    }
-
-    private void previousPhoto() {
-        if (this.photoIDs.length != 0) {
-            numPhoto = --numPhoto == -1 ? this.photoIDs.length - 1 : numPhoto;
-        }
-        downloadCurrentPhoto();
-    }
 
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -333,15 +312,6 @@ public class FoodMenuActivity extends BaseActivity {
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
         launchUploadPhotoTask(photo);
-    }
-
-
-    private void launchDownloadPhotoTask(Photo photo) {
-        if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new DownloadPhotoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
-        } else {
-            showToast(getString(R.string.food_menu_download_photo_failure_toast));
-        }
     }
 
     public void launchUpdateMenuTask() {

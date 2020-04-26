@@ -28,42 +28,29 @@
             android:textAlignment="center"
             android:textSize="30sp" />
 
-        <ImageView
-            android:id="@+id/menuPhotos"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="12"
-            android:contentDescription="@string/food_menu_photos"
-            android:padding="40dp" />
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/food_menu_photo_layout"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/photoNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:editable="false"
             android:gravity="center"
             android:text="@string/food_menu_number_photos"
             android:textSize="30sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/previousPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/food_menu_previous_photo" />
-
-            <Button
-                android:id="@+id/nextPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/food_menu_next_photo" />
-        </LinearLayout>
 
         <Button
             android:id="@+id/add_photo_button"

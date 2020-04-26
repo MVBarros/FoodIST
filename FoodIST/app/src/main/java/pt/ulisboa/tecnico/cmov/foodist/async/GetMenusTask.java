@@ -68,27 +68,16 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
             return;
         }
 
-        ListView foodServiceList = getActivity().findViewById(R.id.menus);
         List<Menu> menus = result.stream()
                 .map(menu -> Menu.parseContractMenu(this.foodService, menu))
                 .collect(Collectors.toList());
 
         getActivity().setMenus(new ArrayList<>(menus));
-
-        Map<Contract.FoodType, Boolean> constraints = getActivity().getGlobalStatus().getUserConstraints();
-
-        List<Menu> filteredMenus = menus.stream()
-                .filter(menu -> menu.isConstrained(constraints))
-                .collect(Collectors.toList());
-
-        final MenuAdapter menuAdapter = new MenuAdapter(getActivity(), new ArrayList<>(filteredMenus));
-
-        if (filteredMenus.size() !=  menus.size()) {
+        getActivity().drawFoodServices();
+        if (getActivity().getFilter()) {
             getActivity().showToast(getActivity().getString(R.string.get_menu_filter_menu_message));
-            getActivity().doShowAllButton();
         }
-
-        foodServiceList.setAdapter(menuAdapter);
+        getActivity().doShowAllButton();
         Log.d(TAG, "Menus obtained successfully");
 
     }

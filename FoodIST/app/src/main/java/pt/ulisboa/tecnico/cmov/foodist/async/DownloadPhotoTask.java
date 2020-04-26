@@ -69,8 +69,8 @@ public class DownloadPhotoTask extends BaseAsyncTask<Photo, Integer, Bitmap, Foo
             return;
         }
 
-        ImageView photoView = getActivity().findViewById(R.id.menuPhotos);
-        photoView.setImageBitmap(result);
+        //ImageView photoView = getActivity().findViewById(R.id.menuPhotos);
+        //photoView.setImageBitmap(result);
     }
 
     private void photoError(FoodMenuActivity activity) {
