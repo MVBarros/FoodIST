@@ -31,15 +31,16 @@ import pt.ulisboa.tecnico.cmov.foodist.async.service.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
-public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallback {
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISTANCE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LATITUDE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LONGITUDE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.QUEUE_TIME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_DISPLAY_NAME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_HOURS;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_NAME;
 
-    private static final String SERVICE_NAME = "Service Name";
-    private static final String SERVICE_DISPLAY_NAME = "Service Display Name";
-    private static final String SERVICE_HOURS = "Service Hours";
-    private static final String LATITUDE = "Latitude";
-    private static final String LONGITUDE = "Longitude";
-    private static final String QUEUE_TIME = "Queue time";
-    private static final String DISTANCE = "Distance";
+
+public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallback {
 
     private static final int ZOOM = 18;
 

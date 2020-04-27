@@ -35,6 +35,8 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.CAMPUS;
+
 public class ProfileActivity extends BaseActivity {
 
     public enum UserRole {
@@ -80,7 +82,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     protected void setCampus() {
-        this.campus = getIntent().getStringExtra(ChooseCampusActivity.CAMPUS);
+        this.campus = getIntent().getStringExtra(CAMPUS);
     }
 
     @Override
@@ -208,7 +210,7 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.apply();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
+            intent.putExtra(CAMPUS, this.campus);
             startActivity(intent);
             this.finish();
         });
@@ -225,7 +227,7 @@ public class ProfileActivity extends BaseActivity {
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
+            intent.putExtra(CAMPUS, this.campus);
             startActivity(intent);
             this.finish();
         });

@@ -48,14 +48,13 @@ import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
-public class FoodMenuActivity extends BaseActivity {
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_NAME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_NAME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_SERVICE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
-    public static final String MENU_NAME = "Menu_name";
-    public static final String MENU_PRICE = "Menu_price";
-    public static final String MENU_SERVICE = "Menu_service";
-    private static final String DISPLAY_NAME = "Display_name";
-    private static final String BITMAP = "BITMAP";
-    private static final String PHOTOID = "PHOTOID";
+public class FoodMenuActivity extends BaseActivity {
 
     //Camera/Gallery tags
     private static final int PICK_FROM_GALLERY = 1;
@@ -127,7 +126,7 @@ public class FoodMenuActivity extends BaseActivity {
         imageView.setLayoutParams(params);
         imageView.setOnClickListener(v -> {
                     Intent intent = new Intent(this, FullscreenPhotoActivity.class);
-                    intent.putExtra(PHOTOID, photoId);
+                    intent.putExtra(PHOTO_ID, photoId);
                     FullscreenPhotoActivity.photo = bitmap;
                     startActivity(intent);
                 }

@@ -33,16 +33,25 @@ import java.util.stream.Collectors;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.boot.ChooseLanguageActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceWalkingTimeTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
+
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.CAMPUS;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISTANCE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LATITUDE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LONGITUDE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.QUEUE_TIME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_DISPLAY_NAME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_HOURS;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_NAME;
 
 
 public class MainActivity extends BaseActivity implements LocationListener {
@@ -51,14 +60,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private LocationManager mLocationManager;
 
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
-
-    private static final String SERVICE_NAME = "Service Name";
-    private static final String SERVICE_DISPLAY_NAME = "Service Display Name";
-    private static final String DISTANCE = "Distance";
-    private static final String QUEUE_TIME = "Queue time";
-    private static final String SERVICE_HOURS = "Service Hours";
-    private static final String LATITUDE = "Latitude";
-    private static final String LONGITUDE = "Longitude";
 
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
 
@@ -108,7 +109,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         Button userProfileButton = findViewById(R.id.userProfile);
         userProfileButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra(ChooseCampusActivity.CAMPUS, campus);
+            intent.putExtra(CAMPUS, campus);
             startActivity(intent);
         });
 
@@ -130,7 +131,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private void setCurrentCampus() {
         Intent intent = getIntent();
-        String campus = intent.getStringExtra(ChooseCampusActivity.CAMPUS);
+        String campus = intent.getStringExtra(CAMPUS);
 
         if (campus != null) {
             //Know Current Location from previous user choice

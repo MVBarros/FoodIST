@@ -9,13 +9,12 @@ import com.google.android.gms.maps.model.LatLng;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.ActivityWithMap;
 
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LATITUDE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LONGITUDE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_NAME;
+
+
 public class FullscreenMapActivity extends ActivityWithMap {
-
-    private static final String SERVICE_NAME = "Service Name";
-
-    private static final String LATITUDE_KEY = "Latitude";
-
-    private static final String LONGITUDE_KEY = "Longitude";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +29,12 @@ public class FullscreenMapActivity extends ActivityWithMap {
 
     @Override
     public double getLatitude() {
-        return getIntent().getDoubleExtra(LATITUDE_KEY, 0d);
+        return getIntent().getDoubleExtra(LATITUDE, 0d);
     }
 
     @Override
     public double getLongitude() {
-        return getIntent().getDoubleExtra(LONGITUDE_KEY, 0d);
+        return getIntent().getDoubleExtra(LONGITUDE, 0d);
     }
 
     @Override

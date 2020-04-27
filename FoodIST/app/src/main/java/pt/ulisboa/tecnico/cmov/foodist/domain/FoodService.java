@@ -5,7 +5,6 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public class FoodService {
@@ -115,7 +114,6 @@ public class FoodService {
         return time.compareTo(range.substring(0, 5)) >= 0
                 && time.compareTo(range.substring(6)) <= 0;
     }
-
 
 
 }

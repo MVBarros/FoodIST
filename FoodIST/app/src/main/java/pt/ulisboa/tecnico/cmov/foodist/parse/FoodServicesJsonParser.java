@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.parse;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,14 +43,14 @@ public class FoodServicesJsonParser {
 
     private static FoodService parseObject(JSONObject object) throws JSONException {
         Map<FoodService.Language, String> names = new HashMap<>();
-        for(FoodService.Language lang : FoodService.Language.values()) {
+        for (FoodService.Language lang : FoodService.Language.values()) {
             names.put(lang, object.getString(lang.name()));
         }
         String distance = object.getString("distance");
         String time = object.getString("time");
         double latitude = object.getDouble("latitude");
         double longitude = object.getDouble("longitude");
-        Map<String, Map<String, String>> hours =parseHours(object);
+        Map<String, Map<String, String>> hours = parseHours(object);
 
         return new FoodService(names, distance, time, latitude, longitude, hours);
     }

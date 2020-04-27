@@ -7,8 +7,9 @@ import android.widget.Button;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.CAMPUS;
+
 public class ChooseCampusActivity extends BaseActivity {
-    public static final String CAMPUS = "pt.ulisboa.tecnico.cmov.foodlist.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
