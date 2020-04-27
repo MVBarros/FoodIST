@@ -11,7 +11,7 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
-import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServicesJsonParser;
+import pt.ulisboa.tecnico.cmov.foodist.activity.parse.FoodServicesJsonParser;
 
 public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, List<FoodService>, MainActivity> {
 

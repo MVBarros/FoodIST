@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -71,6 +72,8 @@ public class ProfileActivity extends BaseActivity {
 
         setUserRoleButtons();
 
+        setLoginButton();
+
         drawScreen();
 
         setDiets();
@@ -85,6 +88,13 @@ public class ProfileActivity extends BaseActivity {
         this.campus = getIntent().getStringExtra(CAMPUS);
     }
 
+    private void setLoginButton() {
+        Button button = findViewById(R.id.profile_login_button);
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
+    }
     @Override
     protected void onPause() {
         super.onPause();

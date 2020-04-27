@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.parse;
+package pt.ulisboa.tecnico.cmov.foodist.activity.parse;
 
 import org.json.JSONArray;
 import org.json.JSONException;

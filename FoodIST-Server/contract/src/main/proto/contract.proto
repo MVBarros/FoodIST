@@ -2,7 +2,11 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 package foodist.server.grpc.contract;
 
+
 enum FoodType {Vegetarian = 0; Vegan = 1; Meat = 2; Fish = 3;}
+enum Role {Student = 0; Professor = 1; Staff = 2; Visitor = 3;}
+enum Language {Portuguese = 0; English = 1;}
+
 
 message AddMenuRequest {
     string foodService = 1;
@@ -56,6 +60,23 @@ message PhotoReply {
     repeated string photoID = 1;
 }
 
+message AccountRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message Profile {
+    string name = 1;
+    map<int32, bool> preferences = 2; //Food Preferences
+    Language language = 3;
+    Role role = 4;
+}
+
+message AccountMessage {
+    string cookie = 1;
+    Profile profile = 2;
+}
+
 service FoodISTServerService {
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
     rpc updateMenu(UpdateMenuRequest) returns (Menu);
@@ -63,5 +84,8 @@ service FoodISTServerService {
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
+    rpc register(AccountRequest) returns (AccountMessage);
+    rpc login(AccountRequest) returns (AccountMessage);
+    rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
 }
 

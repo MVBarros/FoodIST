@@ -143,4 +143,6 @@
     <string name="minute"> minuto </string>
     <string name="hour"> hora </string>
     <string name="day"> dia </string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
 </resources>
