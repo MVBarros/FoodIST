@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.parse;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,20 +49,28 @@ public class FoodServicesJsonParser {
         String time = object.getString("time");
         double latitude = object.getDouble("latitude");
         double longitude = object.getDouble("longitude");
-        Map<String, String> hours = new HashMap<>();
+        Map<String, Map<String, String>> hours =parseHours(object);
+
+
+        return new FoodService(name, distance, time, latitude, longitude, hours);
+    }
+
+    private static Map<String, Map<String, String>> parseHours(JSONObject object) throws JSONException {
+        Map<String, Map<String, String>> hours = new HashMap<>();
         JSONObject hourObject = object.getJSONObject("hours");
-        hours.put("monday", hourObject.getString("monday"));
-        hours.put("tuesday", hourObject.getString("tuesday"));
-        hours.put("wednesday", hourObject.getString("wednesday"));
-        hours.put("thursday", hourObject.getString("thursday"));
-        hours.put("friday", hourObject.getString("friday"));
-        hours.put("saturday", hourObject.getString("saturday"));
-        hours.put("sunday", hourObject.getString("sunday"));
-        List<String> restrictions = new ArrayList<String>();
-        JSONArray arr = object.getJSONArray("restrictions");
-        for (int i = 0; i < arr.length(); ++i) {
-            restrictions.add(arr.getString(i));
+        for (Iterator<String> it = hourObject.keys(); it.hasNext(); ) {
+            String key = it.next();
+            JSONObject keyHoursObject = hourObject.getJSONObject(key);
+            Map<String, String> hourMap = new HashMap<>();
+            hourMap.put("monday", keyHoursObject.getString("monday"));
+            hourMap.put("tuesday", keyHoursObject.getString("tuesday"));
+            hourMap.put("wednesday", keyHoursObject.getString("wednesday"));
+            hourMap.put("thursday", keyHoursObject.getString("thursday"));
+            hourMap.put("friday", keyHoursObject.getString("friday"));
+            hourMap.put("saturday", keyHoursObject.getString("saturday"));
+            hourMap.put("sunday", keyHoursObject.getString("sunday"));
+            hours.put(key, hourMap);
         }
-        return new FoodService(name, distance, time, latitude, longitude, hours, restrictions);
+        return hours;
     }
 }

@@ -51,10 +51,14 @@ public class ProfileActivity extends BaseActivity {
 
     private int photoView = R.id.profilePicture;
 
+    private String campus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        setCampus();
 
         getPreferences();
 
@@ -64,6 +68,10 @@ public class ProfileActivity extends BaseActivity {
         ImageView profilePicture = findViewById(R.id.profilePicture);
 
         profilePicture.setOnClickListener(v -> askGalleryPermission());
+    }
+
+    protected void setCampus() {
+        this.campus = getIntent().getStringExtra(ChooseCampusActivity.CAMPUS);
     }
 
     @Override
@@ -83,10 +91,27 @@ public class ProfileActivity extends BaseActivity {
 
         RadioButton statusButton = findViewById(status.getCheckedRadioButtonId());
         if (statusButton != null) {
-            editor.putString(getString(R.string.profile_position_name), statusButton.getText().toString());
+            editor.putString(getString(R.string.profile_position_name), getRoleForText(statusButton.getText().toString()));
         }
 
         editor.apply();
+    }
+
+    protected String getRoleForText(String text) {
+        switch (text) {
+            case "Student":
+            case "Estudante":
+                return "Student";
+            case "Professor":
+                return "Professor";
+            case "Visitor":
+            case "Visitante":
+                    return "Visitor";
+            case "Staff":
+            case "Funcionário":
+                    return "Staff";
+        }
+        return "Student";
     }
 
     private void askGalleryPermission() {
@@ -324,6 +349,7 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.apply();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
             startActivity(intent);
             this.finish();
         });
@@ -340,6 +366,7 @@ public class ProfileActivity extends BaseActivity {
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
             startActivity(intent);
             this.finish();
         });

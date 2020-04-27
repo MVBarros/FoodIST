@@ -69,6 +69,8 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private LocationRequestContext reqContext;
 
+    private String campus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +107,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         Button userProfileButton = findViewById(R.id.userProfile);
         userProfileButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra(ChooseCampusActivity.CAMPUS, campus);
             startActivity(intent);
         });
 
@@ -209,6 +212,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     public void setCampus(String campus) {
         //Update Interface
+        this.campus = campus;
         TextView textView = findViewById(R.id.currentCampus);
         textView.setText(campus);
 
@@ -238,7 +242,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
             intent.putExtra(SERVICE_NAME, name1.getText());
             intent.putExtra(DISTANCE, service.getDistance());
             intent.putExtra(QUEUE_TIME, service.getTime());
-            intent.putExtra(SERVICE_HOURS, service.getHoursForToday());
+            intent.putExtra(SERVICE_HOURS, service.getHoursForToday(getGlobalStatus().getUserRole()));
             intent.putExtra(LATITUDE, service.getLatitude());
             intent.putExtra(LONGITUDE, service.getLongitude());
             startActivity(intent);
@@ -273,12 +277,9 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     public List<FoodService> getAvailableServices() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        String position = pref.getString(getString(R.string.profile_position_name), "");
 
         return getGlobalStatus().getServices().stream()
-                .filter(service -> !service.getRestrictions().contains(position))
-                .filter(FoodService::isFoodServiceAvailable)
+                .filter(service -> service.isFoodServiceAvailable(getGlobalStatus().getUserRole()))
                 .collect(Collectors.toList());
     }
 

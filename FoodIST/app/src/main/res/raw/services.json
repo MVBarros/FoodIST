@@ -7,15 +7,43 @@
       "latitude": 38.736550,
       "longitude": -9.302204,
       "hours": {
-        "monday": "09:00-22:00",
-        "tuesday": "09:00-22:00",
-        "wednesday": "09:00-22:00",
-        "thursday": "09:00-22:00",
-        "friday": "09:00-22:00",
-        "saturday": "09:00-22:00",
-        "sunday": "closed"
-      },
-      "restrictions": []
+        "Student": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        }
+      }
     },
     {
       "name": "Green Bar",
@@ -24,15 +52,43 @@
       "latitude": 38.738042,
       "longitude": -9.303060,
       "hours": {
-        "monday": "09:00-18:00",
-        "tuesday": "09:00-18:00",
-        "wednesday": "09:00-18:00",
-        "thursday": "09:00-18:00",
-        "friday": "09:00-18:00",
-        "saturday": "closed",
-        "sunday": "closed"
-      },
-      "restrictions": []
+        "Student": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        }
+      }
     },
     {
       "name": "Cantina",
@@ -41,18 +97,43 @@
       "latitude": 38.737928,
       "longitude": -9.303269,
       "hours": {
-        "monday": "12:00-14:00",
-        "tuesday": "12:00-14:00",
-        "wednesday": "12:00-14:00",
-        "thursday": "12:00-14:00",
-        "friday": "12:00-14:00",
-        "saturday": "closed",
-        "sunday": "closed"
-      },
-      "restrictions": [
-        "Staff",
-        "Visitor"
-      ]
+        "Student": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "closed",
+          "tuesday": "closed",
+          "wednesday": "closed",
+          "thursday": "closed",
+          "friday": "closed",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        }
+      }
     },
     {
       "name": "Maquinas de Venda Automática",
@@ -61,15 +142,43 @@
       "latitude": 38.737129,
       "longitude": -9.303140,
       "hours": {
-        "monday": "00:00-23:59",
-        "tuesday": "00:00-23:59",
-        "wednesday": "00:00-23:59",
-        "thursday": "00:00-23:59",
-        "friday": "00:00-23:59",
-        "saturday": "00:00-23:59",
-        "sunday": "00:00-23:59"
-      },
-      "restrictions": []
+        "Student": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        },
+        "Visitor": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        },
+        "Professor": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        },
+        "Staff": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        }
+      }
     }
   ],
   "Alameda": [
@@ -80,18 +189,43 @@
       "latitude": 38.737756,
       "longitude": -9.140465,
       "hours": {
-        "monday": "12:00-14:00",
-        "tuesday": "12:00-14:00",
-        "wednesday": "12:00-14:00",
-        "thursday": "12:00-14:00",
-        "friday": "12:00-14:00",
-        "saturday": "closed",
-        "sunday": "closed"
-      },
-      "restrictions": [
-        "Staff",
-        "Visitor"
-      ]
+        "Student": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        }
+      }
     },
     {
       "name": "Bar de Civil",
@@ -100,15 +234,43 @@
       "latitude": 38.737075,
       "longitude": -9.140010,
       "hours": {
-        "monday": "09:00-18:00",
-        "tuesday": "09:00-18:00",
-        "wednesday": "09:00-18:00",
-        "thursday": "09:00-18:00",
-        "friday": "closed",
-        "saturday": "closed",
-        "sunday": "09:00-18:00"
-      },
-      "restrictions": []
+        "Student": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        }
+      }
     },
     {
       "name": "Cantina",
@@ -117,18 +279,43 @@
       "latitude": 38.736380,
       "longitude": -9.136987,
       "hours": {
-        "monday": "12:00-14:00",
-        "tuesday": "12:00-14:00",
-        "wednesday": "12:00-14:00",
-        "thursday": "12:00-14:00",
-        "friday": "12:00-14:00",
-        "saturday": "closed",
-        "sunday": "closed"
-      },
-      "restrictions": [
-        "Staff",
-        "Visitor"
-      ]
+        "Student": {
+          "monday": "13:00-15:00",
+          "tuesday": "13:00-15:00",
+          "wednesday": "13:00-15:00",
+          "thursday": "13:00-15:00",
+          "friday": "13:00-15:00",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "closed",
+          "tuesday": "closed",
+          "wednesday": "closed",
+          "thursday": "closed",
+          "friday": "closed",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "12:00-15:00",
+          "tuesday": "12:00-15:00",
+          "wednesday": "12:00-15:00",
+          "thursday": "12:00-15:00",
+          "friday": "12:00-15:00",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "12:00-15:00",
+          "tuesday": "12:00-15:00",
+          "wednesday": "12:00-15:00",
+          "thursday": "12:00-15:00",
+          "friday": "12:00-15:00",
+          "saturday": "closed",
+          "sunday": "closed"
+        }
+      }
     },
     {
       "name": "Maquina de Venda Automática",
@@ -137,32 +324,88 @@
       "latitude": 38.736261,
       "longitude": -9.137836,
       "hours": {
-        "monday": "00:00-23:59",
-        "tuesday": "00:00-23:59",
-        "wednesday": "00:00-23:59",
-        "thursday": "00:00-23:59",
-        "friday": "00:00-23:59",
-        "saturday": "00:00-23:59",
-        "sunday": "00:00-23:59"
-      },
-      "restrictions": []
+        "Student": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        },
+        "Visitor": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        },
+        "Professor": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        },
+        "Staff": {
+          "monday": "00:00-23:59",
+          "tuesday": "00:00-23:59",
+          "wednesday": "00:00-23:59",
+          "thursday": "00:00-23:59",
+          "friday": "00:00-23:59",
+          "saturday": "00:00-23:59",
+          "sunday": "00:00-23:59"
+        }
+      }
     },
     {
-      "name": "Bar do Pavilhão Central",
+      "name": "Cafe do Pavilhão Central",
       "distance": "?",
       "time": "5min",
       "latitude": 38.736624,
       "longitude": -9.139594,
       "hours": {
-        "monday": "09:00-18:00",
-        "tuesday": "09:00-18:00",
-        "wednesday": "09:00-18:00",
-        "thursday": "09:00-18:00",
-        "friday": "closed",
-        "saturday": "closed",
-        "sunday": "09:00-18:00"
-      },
-      "restrictions": []
+        "Student": {
+          "monday": "closed",
+          "tuesday": "closed",
+          "wednesday": "closed",
+          "thursday": "closed",
+          "friday": "closed",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Visitor": {
+          "monday": "closed",
+          "tuesday": "closed",
+          "wednesday": "closed",
+          "thursday": "closed",
+          "friday": "closed",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Professor": {
+          "monday": "08:00-20:00",
+          "tuesday": "08:00-20:00",
+          "wednesday": "08:00-20:00",
+          "thursday": "08:00-20:00",
+          "friday": "08:00-20:00",
+          "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Staff": {
+          "monday": "08:00-20:00",
+          "tuesday": "08:00-20:00",
+          "wednesday": "08:00-20:00",
+          "thursday": "08:00-20:00",
+          "friday": "08:00-20:00",
+          "saturday": "closed",
+          "sunday": "closed"
+        }
+      }
     }
   ]
 }

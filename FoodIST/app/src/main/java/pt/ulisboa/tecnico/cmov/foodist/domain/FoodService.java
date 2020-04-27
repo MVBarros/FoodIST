@@ -17,18 +17,16 @@ public class FoodService {
     private String time;
     private double latitude;
     private double longitude;
-    private Map<String, String> hours;
-    private List<String> restrictions;
+    private Map<String, Map<String, String>> hours;
 
     public FoodService(String name, String distance, String time, double latitude,
-                       double longitude, Map<String, String> hours, List<String> restictions) {
+                       double longitude, Map<String, Map<String, String>> hours) {
         this.name = name;
         this.distance = distance;
         this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
         this.hours = hours;
-        this.restrictions = restictions;
     }
 
     public String getName() {
@@ -55,19 +53,15 @@ public class FoodService {
         return longitude;
     }
 
-    public Map<String, String> getHours() {
-        return hours;
+    public Map<String, String> getHours(String role) {
+        return hours.get(role);
     }
 
-    public String getHoursForToday() {
-        return hours.get(weekdayIntToString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)));
+    public String getHoursForToday(String role) {
+        return hours.get(role).get(weekdayIntToString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)));
     }
 
-    public List<String> getRestrictions() {
-        return restrictions;
-    }
-
-    public boolean isFoodServiceAvailable() {
+    public boolean isFoodServiceAvailable(String role) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM");
 
         Calendar calendar = Calendar.getInstance();
@@ -78,7 +72,7 @@ public class FoodService {
         String currentHours = dateFormat.format(currentDate);
         String currentWeekday = this.weekdayIntToString(calendar.get(Calendar.DAY_OF_WEEK));
 
-        String functioningHours = this.getHours().get(currentWeekday);
+        String functioningHours = this.getHours(role).get(currentWeekday);
 
         if (functioningHours == null || functioningHours.equals("closed")) {
             return false;
