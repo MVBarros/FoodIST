@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import foodist.server.data.exception.StorageException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -30,12 +31,12 @@ public class Storage {
 	    HashMap<String, Menu> menuMap = foodServiceMap.get(foodService);
 	      
 	    if(menuMap!=null) {
-	    	menuMap.put(menu.getName(), menu);
+	    	menuMap.put(menu.getOriginalName(), menu);
 	    	foodServiceMap.put(foodService, menuMap);         
 	    } 
 	    else {
 	    	HashMap<String, Menu> newMenuMap = new HashMap<>();
-	    	newMenuMap.put(menu.getName(), menu);
+	    	newMenuMap.put(menu.getOriginalName(), menu);
 	    	foodServiceMap.put(foodService, newMenuMap);         
 	    } 
 	}
@@ -71,7 +72,7 @@ public class Storage {
 		System.out.println("Sucess!");
 	}
 	
-	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) throws StorageException {	    	    		
+	public synchronized static void addPhotoToMenu(String photoName, String foodServiceName, String menuName, ByteString photoByteString) throws StorageException {
 		
 		String foodServicePath = getFoodServiceDir(foodServiceName, menuName);
 		createPhotoDir(foodServicePath);	
@@ -89,12 +90,12 @@ public class Storage {
 	}
 	
 	public synchronized static Menu fetchMenuPhotos(String foodServiceName, Menu menu) {
-		String foodServicePath = getFoodServiceDir(foodServiceName, menu.getName());
+		String foodServicePath = getFoodServiceDir(foodServiceName, menu.getOriginalName());
 		
 		File directory = new File(foodServicePath);
 		
 		Menu.Builder menuBuilder = Menu.newBuilder();
-		menuBuilder.setName(menu.getName());
+		menuBuilder.setOriginalName(menu.getOriginalName());
 		menuBuilder.setPrice(menu.getPrice());
 		menuBuilder.setLanguage(menu.getLanguage());
 		menuBuilder.setTranslatedName(menu.getTranslatedName());

@@ -29,7 +29,7 @@ public class LoginTest {
     @Rule
     public final GrpcCleanupRule grpcCleanup    = new GrpcCleanupRule();
 
-    private final ServiceImplementation impl = new ServiceImplementation(true);
+    private ServiceImplementation impl;
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
@@ -39,7 +39,6 @@ public class LoginTest {
     private static final String INVALID_PASSWORD = "INVALID PASSWORD";
 
     private static Map<Contract.FoodType, Boolean> validPreferences;
-    private static Map<Contract.FoodType, Boolean> invalidPreferences;
     private static Map<Integer, Boolean> preferences;
 
     private static Contract.Profile profile;
@@ -47,12 +46,8 @@ public class LoginTest {
     @BeforeClass
     public static void oneTimeSetup() {
         validPreferences = new HashMap<>();
-        invalidPreferences = new HashMap<>();
         Arrays.stream(Contract.FoodType.values()).forEach(type -> validPreferences.put(type, true));
-        Arrays.stream(Contract.FoodType.values()).forEach(type -> invalidPreferences.put(type, true));
-        invalidPreferences.remove(Contract.FoodType.Fish);
         validPreferences.remove(Contract.FoodType.UNRECOGNIZED);
-        invalidPreferences.remove(Contract.FoodType.UNRECOGNIZED);
 
         preferences = new HashMap<>();
         preferences.put(Contract.FoodType.Vegan_VALUE, true);
@@ -62,7 +57,7 @@ public class LoginTest {
 
         profile = Contract.Profile.newBuilder()
                 .setName(USERNAME)
-                .setLanguage(Contract.Language.pt)
+                .setLanguage("pt")
                 .setRole(Contract.Role.Student)
                 .putAllPreferences(preferences)
                 .build();
@@ -72,6 +67,8 @@ public class LoginTest {
     public void setup() throws IOException {
         String serverName = InProcessServerBuilder.generateName();
 
+        impl = new ServiceImplementation();
+
         grpcCleanup.register(InProcessServerBuilder.forName(serverName).directExecutor().addService(impl).build().start());
         ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
@@ -80,18 +77,12 @@ public class LoginTest {
         stub.register(Contract.RegisterRequest.newBuilder().setProfile(profile).setPassword(PASSWORD).build());
     }
 
-    @After
-    public void teardown() {}
-
-    @AfterClass
-    public static void oneTimeTeardown() {}
-
     @Test
     public void validLoginTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
         var reply = stub.login(Contract.LoginRequest.newBuilder().setUsername(USERNAME).setPassword(PASSWORD).build());
         assertEquals(reply.getProfile().getPreferencesMap(), preferences);
         assertEquals(reply.getProfile().getRole(), Contract.Role.Student);
-        assertEquals(reply.getProfile().getLanguage(), Contract.Language.pt);
+        assertEquals(reply.getProfile().getLanguage(), "pt");
         assertEquals(reply.getProfile().getName(), USERNAME);
 
         assertTrue(impl.getSessions().containsKey(reply.getCookie()));
@@ -99,7 +90,7 @@ public class LoginTest {
 
         Account account = impl.getSessions().get(reply.getCookie());
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.pt);
+        assertEquals(account.getLaguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);

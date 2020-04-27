@@ -23,11 +23,11 @@ public class Account {
     private final byte[] password;
     private final byte[] salt;
 
-    private Contract.Language laguage;
+    private String laguage;
     private Contract.Role role;
     private Map<Contract.FoodType, Boolean> preferences;
 
-    public Account(String username, String password, Contract.Language language, Contract.Role role,
+    public Account(String username, String password, String language, Contract.Role role,
                    Map<Contract.FoodType, Boolean> preferences) throws NoSuchAlgorithmException, InvalidKeySpecException {
         checkArguments(username, password, language, role, preferences);
         this.username = username;
@@ -38,7 +38,7 @@ public class Account {
         this.preferences = preferences;
     }
 
-    public void checkArguments(String username, String password, Contract.Language language, Contract.Role role,
+    public void checkArguments(String username, String password, String language, Contract.Role role,
                                Map<Contract.FoodType, Boolean> preferences) {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException();
@@ -46,7 +46,7 @@ public class Account {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException();
         }
-        if (language == null) {
+        if (language == null || language.isBlank()) {
             throw new IllegalArgumentException();
         }
         if (role == null) {
@@ -74,7 +74,7 @@ public class Account {
         return username;
     }
 
-    public Contract.Language getLaguage() {
+    public String getLaguage() {
         return laguage;
     }
 
@@ -86,7 +86,7 @@ public class Account {
         return preferences;
     }
 
-    public synchronized void setLaguage(Contract.Language laguage) {
+    public synchronized void setLaguage(String laguage) {
         this.laguage = laguage;
     }
 

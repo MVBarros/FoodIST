@@ -1,15 +1,15 @@
 package foodist.server.service;
 
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
-import foodist.server.data.Account;
-import foodist.server.data.Storage;
-import foodist.server.data.StorageException;
+import foodist.server.data.*;
+import foodist.server.data.exception.ServiceException;
+import foodist.server.data.exception.StorageException;
 import foodist.server.grpc.contract.Contract;
-import foodist.server.grpc.contract.Contract.*;
+import foodist.server.grpc.contract.Contract.AddPhotoRequest;
+import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
+import foodist.server.grpc.contract.Contract.ListMenuReply;
+import foodist.server.grpc.contract.Contract.PhotoReply;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -17,86 +17,74 @@ import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     public static final int COOKIE_SIZE = 256;
 
-    private boolean test;
+    public static final int NUM_PHOTOS = 3;
 
     private final Map<String, Account> users = new ConcurrentHashMap<>();
     private final Map<String, Account> sessions = new ConcurrentHashMap<>();
 
+    private final Map<Long, Menu> menus = new ConcurrentHashMap<>();
+    private final Map<String, Service> services = new ConcurrentHashMap<>();
 
-    public ServiceImplementation(boolean test) {
-        this.test = test;
-    }
 
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
-        Menu.Builder menuBuilder = Menu.newBuilder();
+        try {
+            Service service = getService(request.getFoodService());
+            Menu menu = Menu.fromContract(request);
+            service.addMenu(menu);
+            menus.put(menu.getMenuId(), menu);
 
-        String foodService = request.getFoodService();
-        menuBuilder.setName(request.getName());
-        menuBuilder.setPrice(request.getPrice());
-        menuBuilder.setType(request.getType());
-        menuBuilder.setLanguage(request.getLanguage());
-
-        if (!test) {
-            String translation = requestGoogleTranslation(request.getName(), request.getLanguage().name(), getTargetLanguage(request.getLanguage()).name());
-            menuBuilder.setTranslatedName(translation);
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        } catch (ServiceException e) {
+            responseObserver.onError(Status.ALREADY_EXISTS.asRuntimeException());
+        } catch (IllegalArgumentException e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.asRuntimeException());
         }
-        Menu menu = menuBuilder.build();
-        Storage.addMenu(foodService, menu);
-
-        responseObserver.onNext(null);
-        responseObserver.onCompleted();
     }
 
     @Override
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
-        String foodService = request.getFoodService();
+        Service service = getService(request.getFoodService());
+        List<Contract.Menu> menus = service.getContractMenus(request.getLanguage());
 
-        HashMap<String, Menu> menuMap = Storage.getMenuMap(foodService);
-
-        ListMenuReply.Builder listMenuReplyBuilder = ListMenuReply.newBuilder();
-        for (Entry<String, Menu> entry : menuMap.entrySet()) {
-            Menu menu = Storage.fetchMenuPhotos(foodService, entry.getValue());
-            listMenuReplyBuilder.addMenus(menu.toBuilder().setType(entry.getValue().getType()));
-        }
-
-        ListMenuReply listMenuReply = listMenuReplyBuilder.build();
-        responseObserver.onNext(listMenuReply);
+        ListMenuReply reply = ListMenuReply.newBuilder().addAllMenus(menus).build();
+        responseObserver.onNext(reply);
         responseObserver.onCompleted();
+
     }
 
     @Override
-    public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Menu> responseObserver) {
-        String service = request.getFoodService();
-        String name = request.getMenuName();
-
-        HashMap<String, Menu> menus = Storage.getMenuMap(service);
-
-        Menu menu = menus.get(name);
-
-        if (menu != null) {
-            Menu ret = Storage.fetchMenuPhotos(service, menu);
-            responseObserver.onNext(ret);
-            responseObserver.onCompleted();
-        } else {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("No such menu").asRuntimeException());
+    public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Contract.PhotoReply> responseObserver) {
+        Long id = request.getMenuId();
+        Menu menu = menus.get(id);
+        if (menu == null) {
+            responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+            return;
         }
+
+        PhotoReply reply = PhotoReply.newBuilder()
+                .addAllPhotoID(menu.getPhotos())
+                .build();
+
+        responseObserver.onNext(reply);
+        responseObserver.onCompleted();
     }
 
     @Override
     public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
         return new StreamObserver<>() {
             private int counter = 0;
-            private ByteString photoByteString = ByteString.copyFrom(new byte[]{});
+            private ByteString photoByteString = ByteString.copyFrom(new byte[0]);
             private String menuName;
             private String foodService;
             private String photoName;
@@ -170,11 +158,19 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         }
     }
 
+    /**
+     * Fetches the oldest 3 photoIds of each Menu
+     */
     @Override
     public void requestPhotoIDs(Empty request, StreamObserver<foodist.server.grpc.contract.Contract.PhotoReply> responseObserver) {
-        // fetches the oldest three photo ids
-        PhotoReply photoReply = Storage.fetchPhotoIds(3);
-        responseObserver.onNext(photoReply);
+        List<String> photoIds = menus.values()
+                .stream()
+                .map(menu -> menu.getPhotos(NUM_PHOTOS))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        PhotoReply reply = PhotoReply.newBuilder().addAllPhotoID(photoIds).build();
+        responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
 
@@ -226,34 +222,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void changeProfile(Contract.AccountMessage request, StreamObserver<Empty> responseObserver) {
-        super.changeProfile(request, responseObserver);
+        responseObserver.onError(Status.UNIMPLEMENTED.asRuntimeException());
     }
-
-
-    /*******************/
-    /** Aux Functions **/
-    /*******************/
-
-    public String requestGoogleTranslation(String content, String sourceLanguage, String targetLanguage) {
-        Translate translate = TranslateOptions.getDefaultInstance().getService();
-
-        Translation translation = translate.translate(
-                content,
-                Translate.TranslateOption.sourceLanguage(sourceLanguage),
-                Translate.TranslateOption.targetLanguage(targetLanguage));
-
-        return translation.getTranslatedText();
-    }
-
-    public Language getTargetLanguage(Contract.Language language) {
-        if (language.equals(Language.en)) {
-            return Language.pt;
-        }
-        else {
-            return Language.en;
-        }
-    }
-
 
     private String generateRandomCookie() {
         return RandomStringUtils.random(COOKIE_SIZE);
@@ -265,5 +235,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     public Map<String, Account> getSessions() {
         return sessions;
+    }
+
+    public Service getService(String name) {
+        return services.computeIfAbsent(name, Service::new);
     }
 }

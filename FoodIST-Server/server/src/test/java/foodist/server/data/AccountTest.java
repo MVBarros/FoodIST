@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class AccountConstructorTest {
+public class AccountTest {
 
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
@@ -40,32 +40,17 @@ public class AccountConstructorTest {
 
         profile = Contract.Profile.newBuilder()
                 .setName(USERNAME)
-                .setLanguage(Contract.Language.pt)
+                .setLanguage("pt")
                 .setRole(Contract.Role.Student)
                 .putAllPreferences(preferences)
                 .build();
     }
 
-    @Before
-    public void setup() {
-
-    }
-
-    @After
-    public void teardown() {
-
-    }
-
-    @AfterClass
-    public static void oneTimeTeardown() {
-
-    }
-
     @Test
     public void validTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        Account account = new Account(USERNAME, PASSWORD, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        Account account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.pt);
+        assertEquals(account.getLaguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
@@ -73,32 +58,32 @@ public class AccountConstructorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void nullUsernameTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(null, PASSWORD, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        new Account(null, PASSWORD, "pt", Contract.Role.Student, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPasswordTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, null, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        new Account(USERNAME, null, "pt", Contract.Role.Student, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyUsername() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account("", PASSWORD, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        new Account("", PASSWORD, "pt", Contract.Role.Student, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyPassword() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, "", Contract.Language.pt, Contract.Role.Student, validPreferences);
+        new Account(USERNAME, "", "pt", Contract.Role.Student, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void blankUsername() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(" ", PASSWORD, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        new Account(" ", PASSWORD, "pt", Contract.Role.Student, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void blankPassword() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, " ", Contract.Language.pt, Contract.Role.Student, validPreferences);
+        new Account(USERNAME, " ", "pt", Contract.Role.Student, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -108,31 +93,31 @@ public class AccountConstructorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void nullRoleTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, null, Contract.Language.pt, null, validPreferences);
+        new Account(USERNAME, null, "pt", null, validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPreferenceTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, null, Contract.Language.pt, Contract.Role.Student, null);
+        new Account(USERNAME, null, "pt", Contract.Role.Student, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidPreferenceTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, null, Contract.Language.pt, Contract.Role.Student, invalidPreferences);
+        new Account(USERNAME, null, "pt", Contract.Role.Student, invalidPreferences);
     }
 
     @Test
     public void verifyWrongPasswordTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        Account account = new Account(USERNAME, PASSWORD, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        Account account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         assertFalse(account.checkPassword(INVALID_PASSWORD));
     }
 
     @Test
     public void toContractTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        Account account = new Account(USERNAME, PASSWORD, Contract.Language.pt, Contract.Role.Student, validPreferences);
+        Account account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         Contract.Profile profile = account.toProfile();
         assertEquals(profile.getName(), USERNAME);
-        assertEquals(profile.getLanguage(), Contract.Language.pt);
+        assertEquals(profile.getLanguage(), "pt");
         assertEquals(profile.getRole(), Contract.Role.Student);
         assertTrue(profile.getPreferencesOrDefault(0, false));
         assertTrue(profile.getPreferencesOrDefault(1, false));
@@ -144,7 +129,7 @@ public class AccountConstructorTest {
     public void fromContractTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
         Account account = Account.fromContract(profile, PASSWORD);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.pt);
+        assertEquals(account.getLaguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);

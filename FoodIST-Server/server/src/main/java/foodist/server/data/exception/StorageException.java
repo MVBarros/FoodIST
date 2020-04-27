@@ -1,4 +1,4 @@
-package foodist.server.data;
+package foodist.server.data.exception;
 
 public class StorageException extends Exception {
 	
