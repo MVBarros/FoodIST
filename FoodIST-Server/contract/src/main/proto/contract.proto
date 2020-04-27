@@ -60,7 +60,12 @@ message PhotoReply {
     repeated string photoID = 1;
 }
 
-message AccountRequest {
+message RegisterRequest {
+    string password = 2;
+    Profile profile = 3;
+}
+
+message LoginRequest {
     string username = 1;
     string password = 2;
 }
@@ -84,8 +89,8 @@ service FoodISTServerService {
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
-    rpc register(AccountRequest) returns (AccountMessage);
-    rpc login(AccountRequest) returns (AccountMessage);
+    rpc register(RegisterRequest) returns (AccountMessage);
+    rpc login(LoginRequest) returns (AccountMessage);
     rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
 }
 

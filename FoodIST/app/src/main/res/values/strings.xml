@@ -148,4 +148,6 @@
     <string name="profile_login">Login</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="edit">Edit</string>
+    <string name="check_preferece_warning">Must have at least one preference</string>
 </resources>

@@ -1,6 +1,5 @@
-package foodist.server.directory;
+package foodist.server.data;
 
-import foodist.server.data.Account;
 import foodist.server.grpc.contract.Contract;
 import org.junit.*;
 
@@ -10,8 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class AccountConstructorTest {
 
@@ -22,6 +20,7 @@ public class AccountConstructorTest {
     private static Map<Contract.FoodType, Boolean> validPreferences;
     private static Map<Contract.FoodType, Boolean> invalidPreferences;
 
+    private static Contract.Profile profile;
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -30,6 +29,21 @@ public class AccountConstructorTest {
         Arrays.stream(Contract.FoodType.values()).forEach(type -> validPreferences.put(type, true));
         Arrays.stream(Contract.FoodType.values()).forEach(type -> invalidPreferences.put(type, true));
         invalidPreferences.remove(Contract.FoodType.Fish);
+        validPreferences.remove(Contract.FoodType.UNRECOGNIZED);
+        invalidPreferences.remove(Contract.FoodType.UNRECOGNIZED);
+
+        Map<Integer, Boolean> preferences = new HashMap<>();
+        preferences.put(Contract.FoodType.Vegan_VALUE, true);
+        preferences.put(Contract.FoodType.Meat_VALUE, true);
+        preferences.put(Contract.FoodType.Fish_VALUE, true);
+        preferences.put(Contract.FoodType.Vegetarian_VALUE, true);
+
+        profile = Contract.Profile.newBuilder()
+                .setName(USERNAME)
+                .setLanguage(Contract.Language.Portuguese)
+                .setRole(Contract.Role.Student)
+                .putAllPreferences(preferences)
+                .build();
     }
 
     @Before
@@ -49,8 +63,12 @@ public class AccountConstructorTest {
 
     @Test
     public void validTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        new Account(USERNAME, PASSWORD, Contract.Language.Portuguese, Contract.Role.Student, validPreferences);
-        /*No exception should occur*/
+        Account account = new Account(USERNAME, PASSWORD, Contract.Language.Portuguese, Contract.Role.Student, validPreferences);
+        assertTrue(account.checkPassword(PASSWORD));
+        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getUsername(), USERNAME);
+        assertEquals(account.getRole(), Contract.Role.Student);
+        assertEquals(account.getPreferences(), validPreferences);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -104,15 +122,31 @@ public class AccountConstructorTest {
     }
 
     @Test
-    public void verifyPasswordTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        Account account = new Account(USERNAME, PASSWORD, Contract.Language.Portuguese, Contract.Role.Student, validPreferences);
-        assertTrue(account.checkPassword(PASSWORD));
-    }
-
-    @Test
     public void verifyWrongPasswordTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
         Account account = new Account(USERNAME, PASSWORD, Contract.Language.Portuguese, Contract.Role.Student, validPreferences);
         assertFalse(account.checkPassword(INVALID_PASSWORD));
     }
 
+    @Test
+    public void toContractTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        Account account = new Account(USERNAME, PASSWORD, Contract.Language.Portuguese, Contract.Role.Student, validPreferences);
+        Contract.Profile profile = account.toProfile();
+        assertEquals(profile.getName(), USERNAME);
+        assertEquals(profile.getLanguage(), Contract.Language.Portuguese);
+        assertEquals(profile.getRole(), Contract.Role.Student);
+        assertTrue(profile.getPreferencesOrDefault(0, false));
+        assertTrue(profile.getPreferencesOrDefault(1, false));
+        assertTrue(profile.getPreferencesOrDefault(2, false));
+        assertTrue(profile.getPreferencesOrDefault(3, false));
+    }
+
+    @Test
+    public void fromContractTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        Account account = Account.fromContract(profile, PASSWORD);
+        assertTrue(account.checkPassword(PASSWORD));
+        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getUsername(), USERNAME);
+        assertEquals(account.getRole(), Contract.Role.Student);
+        assertEquals(account.getPreferences(), validPreferences);
+    }
 }

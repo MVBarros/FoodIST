@@ -12,9 +12,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -53,6 +55,8 @@ public class ProfileActivity extends BaseActivity {
     private static final int GALLERY_PIC = 4;
     private static final int CAMERA_PIC = 5;
 
+    private boolean editable = false;
+
     private static final String TAG = "TAG_ProfileActivity";
 
     private int checkedCount = 0;
@@ -68,16 +72,17 @@ public class ProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        drawScreen();
         setCampus();
 
         setUserRoleButtons();
+        setLanguageButton();
+        setDietButtons();
 
+        switchEdit();
+
+        setEditButton();
         setLoginButton();
-
-        drawScreen();
-
-        setDiets();
-        setLanguage();
 
         ImageView profilePicture = findViewById(R.id.profilePicture);
 
@@ -88,6 +93,15 @@ public class ProfileActivity extends BaseActivity {
         this.campus = getIntent().getStringExtra(CAMPUS);
     }
 
+    private void setEditButton() {
+        Button editButton = findViewById(R.id.profile_edit_button);
+        editButton.setOnClickListener(v -> {
+            editable = !editable;
+            switchEdit();
+        });
+    }
+
+
     private void setLoginButton() {
         Button button = findViewById(R.id.profile_login_button);
         button.setOnClickListener(v -> {
@@ -95,6 +109,47 @@ public class ProfileActivity extends BaseActivity {
             startActivity(intent);
         });
     }
+
+    private void switchEdit() {
+
+        /*Username*/
+        EditText text = findViewById(R.id.username);
+        text.setEnabled(editable);
+
+        /*Roles*/
+        RadioButton button = findViewById(R.id.studentRadioButton);
+        button.setClickable(editable);
+
+        button = findViewById(R.id.professorRadioButton);
+        button.setClickable(editable);
+
+        button = findViewById(R.id.staffRadioButton);
+        button.setClickable(editable);
+
+        button = findViewById(R.id.visitorRadioButton);
+        button.setClickable(editable);
+
+        /*Food Preferences*/
+        CheckBox box = findViewById(R.id.Vegetarian);
+        box.setClickable(editable);
+
+        box = findViewById(R.id.Meat);
+        box.setClickable(editable);
+
+        box = findViewById(R.id.Fish);
+        box.setClickable(editable);
+
+        box = findViewById(R.id.Vegan);
+        box.setClickable(editable);
+
+        /*Language*/
+        button = findViewById(R.id.languageEnglish);
+        button.setClickable(editable);
+
+        button = findViewById(R.id.languagePortuguese);
+        button.setClickable(editable);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -127,6 +182,7 @@ public class ProfileActivity extends BaseActivity {
 
         setUserRole();
         setUserLanguage();
+        setDiets();
 
     }
 
@@ -207,7 +263,7 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
-    private void setLanguage() {
+    private void setLanguageButton() {
 
         final RadioButton englishLanguage = findViewById(R.id.languageEnglish);
 
@@ -243,15 +299,8 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
-    private void setDiets() {
-        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
-
-
+    private void setDietButtons() {
         final CheckBox vegBox = findViewById(R.id.Vegetarian);
-        vegBox.setChecked(constraints.getOrDefault(Contract.FoodType.Vegetarian, false));
-        if (vegBox.isChecked()) {
-            checkedCount++;
-        }
         vegBox.setOnClickListener((l) ->
         {
             if (vegBox.isChecked()) {
@@ -261,7 +310,7 @@ public class ProfileActivity extends BaseActivity {
             }
             if (!vegBox.isChecked() && checkedCount == 0) {
                 vegBox.setChecked(true);
-                showToast("Must have at least one preference");
+                showToast(getString(R.string.check_preferece_warning));
                 checkedCount++;
                 return;
             }
@@ -273,7 +322,6 @@ public class ProfileActivity extends BaseActivity {
         });
 
         final CheckBox meatBox = findViewById(R.id.Meat);
-        meatBox.setChecked(constraints.getOrDefault(Contract.FoodType.Meat, false));
         meatBox.setOnClickListener((l) ->
         {
             if (meatBox.isChecked()) {
@@ -283,7 +331,7 @@ public class ProfileActivity extends BaseActivity {
             }
             if (!meatBox.isChecked() && checkedCount == 0) {
                 meatBox.setChecked(true);
-                showToast("Must have at least one preference");
+                showToast(getString(R.string.check_preferece_warning));
                 checkedCount++;
                 return;
             }
@@ -293,12 +341,7 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.apply();
         });
 
-        if (meatBox.isChecked()) {
-            checkedCount++;
-        }
-
         final CheckBox fishBox = findViewById(R.id.Fish);
-        fishBox.setChecked(constraints.getOrDefault(Contract.FoodType.Fish, false));
         fishBox.setOnClickListener((l) ->
         {
             if (fishBox.isChecked()) {
@@ -309,7 +352,7 @@ public class ProfileActivity extends BaseActivity {
             if (!fishBox.isChecked() && checkedCount == 0) {
                 fishBox.setChecked(true);
                 checkedCount++;
-                showToast("Must have at least one preference");
+                showToast(getString(R.string.check_preferece_warning));
                 return;
             }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
@@ -318,13 +361,7 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.apply();
         });
 
-
-        if (fishBox.isChecked()) {
-            checkedCount++;
-        }
-
         final CheckBox veganBox = findViewById(R.id.Vegan);
-        veganBox.setChecked(constraints.getOrDefault(Contract.FoodType.Vegan, false));
         veganBox.setOnClickListener((l) ->
         {
 
@@ -336,7 +373,7 @@ public class ProfileActivity extends BaseActivity {
             if (!veganBox.isChecked() && checkedCount == 0) {
                 veganBox.setChecked(true);
                 checkedCount++;
-                showToast("Must have at least one preference");
+                showToast(getString(R.string.check_preferece_warning));
                 return;
             }
             SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
@@ -344,7 +381,32 @@ public class ProfileActivity extends BaseActivity {
             prefEditor.putBoolean(GlobalStatus.VEGAN_KEY, veganBox.isChecked());
             prefEditor.apply();
         });
+    }
 
+    private void setDiets() {
+        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
+
+
+        final CheckBox vegBox = findViewById(R.id.Vegetarian);
+        vegBox.setChecked(constraints.getOrDefault(Contract.FoodType.Vegetarian, false));
+        if (vegBox.isChecked()) {
+            checkedCount++;
+        }
+
+        final CheckBox meatBox = findViewById(R.id.Meat);
+        meatBox.setChecked(constraints.getOrDefault(Contract.FoodType.Meat, false));
+        if (meatBox.isChecked()) {
+            checkedCount++;
+        }
+
+        final CheckBox fishBox = findViewById(R.id.Fish);
+        fishBox.setChecked(constraints.getOrDefault(Contract.FoodType.Fish, false));
+        if (fishBox.isChecked()) {
+            checkedCount++;
+        }
+
+        final CheckBox veganBox = findViewById(R.id.Vegan);
+        veganBox.setChecked(constraints.getOrDefault(Contract.FoodType.Vegan, false));
         if (veganBox.isChecked()) {
             checkedCount++;
         }

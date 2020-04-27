@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,9 @@ public class Account {
     private static final int ITERATION_COUNT = 65536;
     private static final int KEY_LENGTH = SALT_SIZE * 8;
 
-    private String username;
-    private byte[] password;
-    private byte[] salt;
+    private final String username;
+    private final byte[] password;
+    private final byte[] salt;
 
     private Contract.Language laguage;
     private Contract.Role role;
@@ -30,6 +31,7 @@ public class Account {
                    Map<Contract.FoodType, Boolean> preferences) throws NoSuchAlgorithmException, InvalidKeySpecException {
         checkArguments(username, password, language, role, preferences);
         this.username = username;
+        this.salt = generateSalt();
         this.password = hashPassword(password);
         this.laguage = language;
         this.role = role;
@@ -50,23 +52,27 @@ public class Account {
         if (role == null) {
             throw new IllegalArgumentException();
         }
-        if (!preferences.keySet().containsAll(Arrays.stream(Contract.FoodType.values()).collect(Collectors.toList()))) {
+        if (!preferences.keySet().containsAll(Account.getAllFoodTypes())) {
             throw new IllegalArgumentException();
         }
     }
 
-    public byte[] hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private byte[] generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[SALT_SIZE];
         random.nextBytes(salt);
-        this.salt = salt;
+        return salt;
+    }
 
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
+    public byte[] hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), this.salt, ITERATION_COUNT, KEY_LENGTH);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-
         return factory.generateSecret(spec).getEncoded();
     }
 
+    public String getUsername() {
+        return username;
+    }
 
     public Contract.Language getLaguage() {
         return laguage;
@@ -80,15 +86,15 @@ public class Account {
         return preferences;
     }
 
-    public void setLaguage(Contract.Language laguage) {
+    public synchronized void setLaguage(Contract.Language laguage) {
         this.laguage = laguage;
     }
 
-    public void setRole(Contract.Role role) {
+    public synchronized void setRole(Contract.Role role) {
         this.role = role;
     }
 
-    public void setPreferences(Map<Contract.FoodType, Boolean> preferences) {
+    public synchronized void setPreferences(Map<Contract.FoodType, Boolean> preferences) {
         this.preferences = preferences;
     }
 
@@ -99,6 +105,50 @@ public class Account {
         byte[] hash = factory.generateSecret(spec).getEncoded();
 
         return Arrays.equals(hash, this.password);
+    }
+
+
+    public Contract.Profile toProfile() {
+        var builder = Contract.Profile.newBuilder();
+        builder.setLanguage(this.laguage);
+        builder.setName(this.username);
+        builder.setRole(this.role);
+
+        Map<Integer, Boolean> prefs = preferences.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().getNumber(),
+                        Map.Entry::getValue
+                ));
+
+        builder.putAllPreferences(prefs);
+        return builder.build();
+    }
+
+    public Contract.AccountMessage toReply(String cookie) {
+        return  Contract.AccountMessage.newBuilder()
+                .setProfile(this.toProfile())
+                .setCookie(cookie)
+                .build();
+    }
+
+    public static List<Contract.FoodType> getAllFoodTypes() {
+        var types = Contract.FoodType.values();
+        return Arrays.stream(types)
+                .filter(type -> type != Contract.FoodType.UNRECOGNIZED)
+                .collect(Collectors.toList());
+    }
+
+    public static Account fromContract(Contract.Profile profile, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        Map<Contract.FoodType, Boolean> preferences = profile.getPreferencesMap().entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> Contract.FoodType.forNumber(entry.getKey()),
+                        Map.Entry::getValue));
+
+        return new Account(profile.getName(), password,
+                profile.getLanguage(), profile.getRole(), preferences);
     }
 
 }
