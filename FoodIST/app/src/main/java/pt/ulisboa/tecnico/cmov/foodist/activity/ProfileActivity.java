@@ -16,9 +16,9 @@ import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -36,6 +36,13 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class ProfileActivity extends BaseActivity {
+
+    public enum UserRole {
+        Student,
+        Professor,
+        Visitor,
+        Staff
+    }
 
     private static final int PICK_FROM_GALLERY = 1;
     private static final int PICK_FROM_CAMERA = 2;
@@ -60,7 +67,9 @@ public class ProfileActivity extends BaseActivity {
 
         setCampus();
 
-        getPreferences();
+        setUserRoleButtons();
+
+        drawScreen();
 
         setDiets();
         setLanguage();
@@ -84,34 +93,250 @@ public class ProfileActivity extends BaseActivity {
         TextView user = findViewById(R.id.username);
 
         editor.putString(getString(R.string.profile_username), user.getText().toString());
-
-        RadioGroup status = findViewById(R.id.universityStatus);
-
-        editor.putInt(getString(R.string.profile_position), status.getCheckedRadioButtonId());
-
-        RadioButton statusButton = findViewById(status.getCheckedRadioButtonId());
-        if (statusButton != null) {
-            editor.putString(getString(R.string.profile_position_name), getRoleForText(statusButton.getText().toString()));
-        }
-
         editor.apply();
     }
 
-    protected String getRoleForText(String text) {
-        switch (text) {
-            case "Student":
-            case "Estudante":
-                return "Student";
-            case "Professor":
-                return "Professor";
-            case "Visitor":
-            case "Visitante":
-                    return "Visitor";
-            case "Staff":
-            case "Funcionário":
-                    return "Staff";
+
+    private void drawScreen() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+
+        ImageView profilePicture = findViewById(R.id.profilePicture);
+        TextView user = findViewById(R.id.username);
+
+        this.imageFilePath = pref.getString(getString(R.string.profile_user_photo), null);
+
+        if (this.imageFilePath != null) {
+            Bitmap photo = BitmapFactory.decodeFile(this.imageFilePath);
+            profilePicture.setImageBitmap(photo);
         }
-        return "Student";
+
+        String username = pref.getString(getString(R.string.profile_username), "");
+        user.setText(username);
+
+        setUserRole();
+        setUserLanguage();
+
+    }
+
+    private void setUserRole() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+        String role = pref.getString(getString(R.string.profile_position_name), UserRole.Student.name());
+        UserRole userRole = UserRole.valueOf(role);
+        RadioButton button;
+        switch (userRole) {
+            case Student:
+                button = findViewById(R.id.studentRadioButton);
+                break;
+            case Professor:
+                button = findViewById(R.id.professorRadioButton);
+                break;
+            case Staff:
+                button = findViewById(R.id.staffRadioButton);
+                break;
+            case Visitor:
+                button = findViewById(R.id.visitorRadioButton);
+                break;
+            default:
+                Log.d(TAG, "No user role");
+                button = findViewById(R.id.studentRadioButton);
+                break;
+        }
+        button.toggle();
+    }
+
+    private void setUserRoleButtons() {
+        RadioButton button = findViewById(R.id.studentRadioButton);
+        button.setOnClickListener(v -> {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(getString(R.string.profile_position_name), UserRole.Student.name());
+            editor.apply();
+        });
+
+        button = findViewById(R.id.professorRadioButton);
+        button.setOnClickListener(v -> {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(getString(R.string.profile_position_name), UserRole.Professor.name());
+            editor.apply();
+        });
+
+        button = findViewById(R.id.staffRadioButton);
+        button.setOnClickListener(v -> {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(getString(R.string.profile_position_name), UserRole.Staff.name());
+            editor.apply();
+        });
+
+        button = findViewById(R.id.visitorRadioButton);
+        button.setOnClickListener(v -> {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(getString(R.string.profile_position_name), UserRole.Visitor.name());
+            editor.apply();
+        });
+    }
+
+    private void setUserLanguage() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
+
+        switch (language) {
+            case "en":
+                RadioButton englishLanguage = findViewById(R.id.languageEnglish);
+                englishLanguage.toggle();
+                break;
+
+            case "pt":
+                RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
+                portugueseLanguage.toggle();
+                break;
+        }
+    }
+
+    private void setLanguage() {
+
+        final RadioButton englishLanguage = findViewById(R.id.languageEnglish);
+
+        englishLanguage.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
+            prefEditor.putString(getString(R.string.profile_language_chosen), "en");
+            prefEditor.apply();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
+            startActivity(intent);
+            this.finish();
+        });
+
+        final RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
+
+        portugueseLanguage.setOnClickListener((l) ->
+        {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
+            prefEditor.putString(getString(R.string.profile_language_chosen), "pt");
+            prefEditor.apply();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
+            startActivity(intent);
+            this.finish();
+        });
+    }
+
+    private void setDiets() {
+        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
+
+
+        final CheckBox vegBox = findViewById(R.id.Vegetarian);
+        vegBox.setChecked(constraints.getOrDefault(Contract.FoodType.Vegetarian, false));
+        if (vegBox.isChecked()) {
+            checkedCount++;
+        }
+        vegBox.setOnClickListener((l) ->
+        {
+            if (vegBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!vegBox.isChecked() && checkedCount == 0) {
+                vegBox.setChecked(true);
+                showToast("Must have at least one preference");
+                checkedCount++;
+                return;
+            }
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.VEGETARIAN_KEY, vegBox.isChecked());
+            prefEditor.apply();
+
+        });
+
+        final CheckBox meatBox = findViewById(R.id.Meat);
+        meatBox.setChecked(constraints.getOrDefault(Contract.FoodType.Meat, false));
+        meatBox.setOnClickListener((l) ->
+        {
+            if (meatBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!meatBox.isChecked() && checkedCount == 0) {
+                meatBox.setChecked(true);
+                showToast("Must have at least one preference");
+                checkedCount++;
+                return;
+            }
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.MEAT_KEY, meatBox.isChecked());
+            prefEditor.apply();
+        });
+
+        if (meatBox.isChecked()) {
+            checkedCount++;
+        }
+
+        final CheckBox fishBox = findViewById(R.id.Fish);
+        fishBox.setChecked(constraints.getOrDefault(Contract.FoodType.Fish, false));
+        fishBox.setOnClickListener((l) ->
+        {
+            if (fishBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!fishBox.isChecked() && checkedCount == 0) {
+                fishBox.setChecked(true);
+                checkedCount++;
+                showToast("Must have at least one preference");
+                return;
+            }
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.FISH_KEY, fishBox.isChecked());
+            prefEditor.apply();
+        });
+
+
+        if (fishBox.isChecked()) {
+            checkedCount++;
+        }
+
+        final CheckBox veganBox = findViewById(R.id.Vegan);
+        veganBox.setChecked(constraints.getOrDefault(Contract.FoodType.Vegan, false));
+        veganBox.setOnClickListener((l) ->
+        {
+
+            if (veganBox.isChecked()) {
+                checkedCount++;
+            } else {
+                checkedCount--;
+            }
+            if (!veganBox.isChecked() && checkedCount == 0) {
+                veganBox.setChecked(true);
+                checkedCount++;
+                showToast("Must have at least one preference");
+                return;
+            }
+            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+            SharedPreferences.Editor prefEditor = pref.edit();
+            prefEditor.putBoolean(GlobalStatus.VEGAN_KEY, veganBox.isChecked());
+            prefEditor.apply();
+        });
+
+        if (veganBox.isChecked()) {
+            checkedCount++;
+        }
+
     }
 
     private void askGalleryPermission() {
@@ -177,7 +402,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PICK_FROM_GALLERY:
                 // If request is cancelled, the result arrays are empty.
@@ -279,203 +504,5 @@ public class ProfileActivity extends BaseActivity {
         return image;
     }
 
-    private void getPreferences() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-
-        ImageView profilePicture = findViewById(R.id.profilePicture);
-        TextView user = findViewById(R.id.username);
-
-        this.imageFilePath = pref.getString(getString(R.string.profile_user_photo), null);
-
-        if (this.imageFilePath != null) {
-            Bitmap photo = BitmapFactory.decodeFile(this.imageFilePath);
-            profilePicture.setImageBitmap(photo);
-        }
-
-        String username = pref.getString(getString(R.string.profile_username), "");
-        user.setText(username);
-
-
-        int selectedStatus = pref.getInt(getString(R.string.profile_position), -1);
-
-        if (selectedStatus != -1) {
-            RadioButton status = findViewById(selectedStatus);
-            if (status != null) {
-                status.toggle();
-            }
-        }
-
-        int currentLanguage = pref.getInt(getString(R.string.language), -1);
-
-        if (currentLanguage != -1) {
-            RadioButton language = findViewById(currentLanguage);
-            if (language != null) {
-                language.toggle();
-            }
-        } else {
-            getLanguage();
-        }
-    }
-
-    private void getLanguage() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        SharedPreferences.Editor prefEditor = pref.edit();
-
-        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
-
-        switch (language) {
-            case "en":
-                RadioButton englishLanguage = findViewById(R.id.languageEnglish);
-                prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
-                englishLanguage.toggle();
-
-            case "pt":
-                RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
-                prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
-                portugueseLanguage.toggle();
-        }
-    }
-
-    private void setLanguage() {
-
-        final RadioButton englishLanguage = findViewById(R.id.languageEnglish);
-
-        englishLanguage.setOnClickListener((l) ->
-        {
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putInt(getString(R.string.language), englishLanguage.getId());
-            prefEditor.putString(getString(R.string.profile_language_chosen), "en");
-            prefEditor.apply();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
-            startActivity(intent);
-            this.finish();
-        });
-
-        final RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
-
-        portugueseLanguage.setOnClickListener((l) ->
-        {
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putInt(getString(R.string.language), portugueseLanguage.getId());
-            prefEditor.putString(getString(R.string.profile_language_chosen), "pt");
-            prefEditor.apply();
-
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(ChooseCampusActivity.CAMPUS, this.campus);
-            startActivity(intent);
-            this.finish();
-        });
-    }
-
-    private void setDiets() {
-        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
-
-        final CheckBox vegBox = findViewById(R.id.Vegetarian);
-        vegBox.setChecked(constraints.get(Contract.FoodType.Vegetarian));
-        if (vegBox.isChecked()) {
-            checkedCount++;
-        }
-        vegBox.setOnClickListener((l) ->
-        {
-            if (vegBox.isChecked()) {
-                checkedCount++;
-            } else {
-                checkedCount--;
-            }
-            if (!vegBox.isChecked() && checkedCount == 0) {
-                vegBox.setChecked(true);
-                showToast("Must have at least one preference");
-                checkedCount++;
-                return;
-            }
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putBoolean(GlobalStatus.VEGETARIAN_KEY, vegBox.isChecked());
-            prefEditor.apply();
-
-        });
-
-        final CheckBox meatBox = findViewById(R.id.Meat);
-        meatBox.setChecked(constraints.get(Contract.FoodType.Meat));
-        meatBox.setOnClickListener((l) ->
-        {
-            if (meatBox.isChecked()) {
-                checkedCount++;
-            } else {
-                checkedCount--;
-            }
-            if (!meatBox.isChecked() && checkedCount == 0) {
-                meatBox.setChecked(true);
-                showToast("Must have at least one preference");
-                checkedCount++;
-                return;
-            }
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putBoolean(GlobalStatus.MEAT_KEY, meatBox.isChecked());
-            prefEditor.apply();
-        });
-
-        if (meatBox.isChecked()) {
-            checkedCount++;
-        }
-
-        final CheckBox fishBox = findViewById(R.id.Fish);
-        fishBox.setChecked(constraints.get(Contract.FoodType.Fish));
-        fishBox.setOnClickListener((l) ->
-        {
-            if (fishBox.isChecked()) {
-                checkedCount++;
-            } else {
-                checkedCount--;
-            }
-            if (!fishBox.isChecked() && checkedCount == 0) {
-                fishBox.setChecked(true);
-                checkedCount++;
-                showToast("Must have at least one preference");
-                return;
-            }
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putBoolean(GlobalStatus.FISH_KEY, fishBox.isChecked());
-            prefEditor.apply();
-        });
-
-
-        if (fishBox.isChecked()) {
-            checkedCount++;
-        }
-
-        final CheckBox veganBox = findViewById(R.id.Vegan);
-        veganBox.setChecked(constraints.get(Contract.FoodType.Vegan));
-        veganBox.setOnClickListener((l) ->
-        {
-
-            if (veganBox.isChecked()) {
-                checkedCount++;
-            } else {
-                checkedCount--;
-            }
-            if (!veganBox.isChecked() && checkedCount == 0) {
-                veganBox.setChecked(true);
-                checkedCount++;
-                showToast("Must have at least one preference");
-                return;
-            }
-            SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-            SharedPreferences.Editor prefEditor = pref.edit();
-            prefEditor.putBoolean(GlobalStatus.VEGAN_KEY, veganBox.isChecked());
-            prefEditor.apply();
-        });
-
-        if (veganBox.isChecked()) {
-            checkedCount++;
-        }
-
-    }
 }
+
