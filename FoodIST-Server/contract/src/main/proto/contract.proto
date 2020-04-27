@@ -14,6 +14,10 @@ message AddMenuRequest {
     string language = 5;
 }
 
+message AddMenuReply {
+    int64 menuId = 2;
+}
+
 message AddPhotoRequest {
     int32 sequenceNumber = 1;
     bytes content = 2;
@@ -81,7 +85,7 @@ message AccountMessage {
 }
 
 service FoodISTServerService {
-    rpc addMenu(AddMenuRequest) returns (google.protobuf.Empty);
+    rpc addMenu(AddMenuRequest) returns (AddMenuReply);
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
     rpc updateMenu(UpdateMenuRequest) returns (PhotoReply);
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);

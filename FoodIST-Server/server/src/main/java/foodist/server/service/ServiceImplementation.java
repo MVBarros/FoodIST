@@ -2,7 +2,10 @@ package foodist.server.service;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
-import foodist.server.data.*;
+import foodist.server.data.Account;
+import foodist.server.data.Menu;
+import foodist.server.data.Service;
+import foodist.server.data.Storage;
 import foodist.server.data.exception.ServiceException;
 import foodist.server.data.exception.StorageException;
 import foodist.server.grpc.contract.Contract;
@@ -36,14 +39,18 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
 
     @Override
-    public void addMenu(Contract.AddMenuRequest request, StreamObserver<Empty> responseObserver) {
+    public void addMenu(Contract.AddMenuRequest request, StreamObserver<Contract.AddMenuReply> responseObserver) {
         try {
             Service service = getService(request.getFoodService());
             Menu menu = Menu.fromContract(request);
             service.addMenu(menu);
             menus.put(menu.getMenuId(), menu);
 
-            responseObserver.onNext(Empty.newBuilder().build());
+            Contract.AddMenuReply reply = Contract.AddMenuReply.newBuilder()
+                    .setMenuId(menu.getMenuId())
+                    .build();
+
+            responseObserver.onNext(reply);
             responseObserver.onCompleted();
         } catch (ServiceException e) {
             responseObserver.onError(Status.ALREADY_EXISTS.asRuntimeException());

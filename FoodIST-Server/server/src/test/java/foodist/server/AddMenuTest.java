@@ -70,7 +70,7 @@ public class AddMenuTest {
 
     @Test
     public void validTest() {
-        stub.addMenu(request);
+        Contract.AddMenuReply reply = stub.addMenu(request);
         Service service = impl.getService(SERVICE);
         List<Contract.Menu> menus = service.getContractMenus();
         assertEquals(menus.size(), 1);
@@ -82,11 +82,12 @@ public class AddMenuTest {
         assertEquals(menu.getMenuId(), MENU_ID);
         assertEquals(menu.getType(), Contract.FoodType.Meat);
         assertEquals(menu.getPrice(), PRICE, DELTA);
+        assertEquals(reply.getMenuId(), MENU_ID);
     }
 
     @Test
     public void repeatedMenu() {
-        stub.addMenu(request);
+        Contract.AddMenuReply reply = stub.addMenu(request);
         Service service = impl.getService(SERVICE);
         List<Contract.Menu> menus = service.getContractMenus();
         assertEquals(menus.size(), 1);
@@ -98,6 +99,7 @@ public class AddMenuTest {
         assertEquals(menu.getMenuId(), MENU_ID);
         assertEquals(menu.getType(), Contract.FoodType.Meat);
         assertEquals(menu.getPrice(), PRICE, DELTA);
+        assertEquals(reply.getMenuId(), MENU_ID);
 
         exceptionRule.expect(StatusRuntimeException.class);
         try {
