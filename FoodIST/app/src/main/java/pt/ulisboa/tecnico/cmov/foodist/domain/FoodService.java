@@ -10,18 +10,23 @@ import java.util.Map;
 
 public class FoodService {
 
+    public enum Language {
+        name_en,
+        name_pt
+    }
+
     private static String TAG = "FOOD-SERVICE-TAG";
 
-    private String name;
+    private Map<Language, String> names;
     private String distance;
     private String time;
     private double latitude;
     private double longitude;
     private Map<String, Map<String, String>> hours;
 
-    public FoodService(String name, String distance, String time, double latitude,
+    public FoodService(Map<Language, String> names, String distance, String time, double latitude,
                        double longitude, Map<String, Map<String, String>> hours) {
-        this.name = name;
+        this.names = names;
         this.distance = distance;
         this.time = time;
         this.latitude = latitude;
@@ -30,7 +35,11 @@ public class FoodService {
     }
 
     public String getName() {
-        return name;
+        return names.get(Language.name_pt);
+    }
+
+    public String getName(Language language) {
+        return names.get(language);
     }
 
     public String getDistance() {
@@ -106,6 +115,7 @@ public class FoodService {
         return time.compareTo(range.substring(0, 5)) >= 0
                 && time.compareTo(range.substring(6)) <= 0;
     }
+
 
 
 }

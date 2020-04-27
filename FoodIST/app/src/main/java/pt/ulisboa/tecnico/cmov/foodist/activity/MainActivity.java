@@ -228,7 +228,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         View v = vi.inflate(R.layout.food_service, null);
 
         TextView name = v.findViewById(R.id.foodServiceName);
-        name.setText(service.getName());
+        name.setText(service.getName(getGlobalStatus().getLanguageForService()));
 
         TextView distance = v.findViewById(R.id.distance);
         distance.setText(String.format("%s: %s", getString(R.string.main_walking_time), service.getDistance()));
@@ -238,8 +238,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
         v.setOnClickListener(v1 -> {
             Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
-            TextView name1 = v1.findViewById(R.id.foodServiceName);
-            intent.putExtra(SERVICE_NAME, name1.getText());
+            intent.putExtra(SERVICE_NAME, service.getName());
             intent.putExtra(DISTANCE, service.getDistance());
             intent.putExtra(QUEUE_TIME, service.getTime());
             intent.putExtra(SERVICE_HOURS, service.getHoursForToday(getGlobalStatus().getUserRole()));

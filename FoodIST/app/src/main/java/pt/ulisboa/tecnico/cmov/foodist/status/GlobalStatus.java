@@ -161,4 +161,10 @@ public class GlobalStatus extends Application {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getString(getString(R.string.profile_position_name), "Student");
     }
+
+    public FoodService.Language getLanguageForService() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        String lang = pref.getString(getString(R.string.profile_language_chosen), "en");
+        return FoodService.Language.valueOf("name_" + lang);
+    }
 }

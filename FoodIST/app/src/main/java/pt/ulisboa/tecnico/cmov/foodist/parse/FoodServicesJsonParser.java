@@ -44,15 +44,17 @@ public class FoodServicesJsonParser {
     }
 
     private static FoodService parseObject(JSONObject object) throws JSONException {
-        String name = object.getString("name");
+        Map<FoodService.Language, String> names = new HashMap<>();
+        for(FoodService.Language lang : FoodService.Language.values()) {
+            names.put(lang, object.getString(lang.name()));
+        }
         String distance = object.getString("distance");
         String time = object.getString("time");
         double latitude = object.getDouble("latitude");
         double longitude = object.getDouble("longitude");
         Map<String, Map<String, String>> hours =parseHours(object);
 
-
-        return new FoodService(name, distance, time, latitude, longitude, hours);
+        return new FoodService(names, distance, time, latitude, longitude, hours);
     }
 
     private static Map<String, Map<String, String>> parseHours(JSONObject object) throws JSONException {

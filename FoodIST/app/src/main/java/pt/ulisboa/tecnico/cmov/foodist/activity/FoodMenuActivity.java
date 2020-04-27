@@ -28,6 +28,7 @@ import androidx.core.content.FileProvider;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -38,11 +39,11 @@ import java.util.Set;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.DownloadPhotosTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
-import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
@@ -102,6 +103,11 @@ public class FoodMenuActivity extends BaseActivity {
                 .map(photoId -> new Photo(this.foodService, this.menuName, null, photoId))
                 .toArray(Photo[]::new);
 
+        //Prevent downloading the same photo twice
+        Arrays.stream(photos)
+                .map(Photo::getPhotoID)
+                .forEach(downloadedPhotos::add);
+
         if (isNetworkAvailable()) {
             if (photos.length != 0) {
                 new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
@@ -112,7 +118,7 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     public void addPhoto(Bitmap bitmap, String photoId) {
-        downloadedPhotos.add(photoId);
+        //Is a new photo (Just to be safe)
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(800,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 30, 0);
@@ -120,11 +126,12 @@ public class FoodMenuActivity extends BaseActivity {
         imageView.setImageBitmap(bitmap);
         imageView.setLayoutParams(params);
         imageView.setOnClickListener(v -> {
-            Intent intent = new Intent(this, FullscreenPhotoActivity.class);
-            intent.putExtra(PHOTOID, photoId);
-            FullscreenPhotoActivity.photo = bitmap;
-            startActivity(intent);
-        });
+                    Intent intent = new Intent(this, FullscreenPhotoActivity.class);
+                    intent.putExtra(PHOTOID, photoId);
+                    FullscreenPhotoActivity.photo = bitmap;
+                    startActivity(intent);
+                }
+        );
 
         LinearLayout layout = findViewById(R.id.food_menu_photo_layout);
         layout.addView(imageView);
