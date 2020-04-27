@@ -25,15 +25,16 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
-import pt.ulisboa.tecnico.cmov.foodist.async.service.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.service.GetMenusTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.ServiceNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallback {
 
     private static final String SERVICE_NAME = "Service Name";
+    private static final String SERVICE_DISPLAY_NAME = "Service Display Name";
     private static final String SERVICE_HOURS = "Service Hours";
     private static final String LATITUDE = "Latitude";
     private static final String LONGITUDE = "Longitude";
@@ -44,9 +45,12 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     private String foodServiceName;
 
+    private String foodServiceId;
+
     private AtomicBoolean filter = new AtomicBoolean(true);
 
     private String distance;
+    private String hours;
 
     private double latitude;
     private double longitude;
@@ -125,39 +129,34 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         Button addMenu = findViewById(R.id.add_menu_button);
 
         addMenu.setOnClickListener(v -> {
-            String serviceName = getIntent().getStringExtra("Service Name");
-
             Intent intent = new Intent(FoodServiceActivity.this, AddMenuActivity.class);
-            intent.putExtra(SERVICE_NAME, serviceName);
-
+            intent.putExtra(SERVICE_NAME, foodServiceId);
             startActivity(intent);
         });
     }
 
     private void setFoodService() {
+
+        this.foodServiceId = getIntent().getStringExtra(SERVICE_NAME) == null ? "" : getIntent().getStringExtra(SERVICE_NAME);
+        this.foodServiceName = getIntent().getStringExtra(SERVICE_DISPLAY_NAME) == null ? "" : getIntent().getStringExtra(SERVICE_DISPLAY_NAME);
+        this.distance = getIntent().getStringExtra(DISTANCE) == null ? "" : getIntent().getStringExtra(DISTANCE);
+        this.latitude = getIntent().getDoubleExtra(LATITUDE, 0);
+        this.longitude = getIntent().getDoubleExtra(LONGITUDE, 0);
+        this.hours = getIntent().getStringExtra(SERVICE_HOURS) == null ? "" : getIntent().getStringExtra(SERVICE_HOURS);
+
         TextView foodServiceName = findViewById(R.id.foodServiceName);
         TextView foodServiceHours = findViewById(R.id.openingTimes);
         TextView foodServiceDistance = findViewById(R.id.walkingDistance);
-        Intent intent = getIntent();
-        String foodService = intent.getStringExtra(SERVICE_NAME) == null ? "" : intent.getStringExtra(SERVICE_NAME);
-        String hours = intent.getStringExtra(SERVICE_HOURS) == null ? "" : intent.getStringExtra(SERVICE_HOURS);
-        String distance = intent.getStringExtra(DISTANCE) == null ? "" : intent.getStringExtra(DISTANCE);
-        this.distance = distance;
-        this.foodServiceName = foodService;
-        this.latitude = intent.getDoubleExtra(LATITUDE, 0);
-        this.longitude = intent.getDoubleExtra(LONGITUDE, 0);
-        foodServiceName.setText(foodService);
-        foodServiceHours.setText(String.format("%s %s", getString(R.string.food_service_working_hours), hours));
-        foodServiceDistance.setText(String.format("%s %s", getString(R.string.food_service_walking_distance), distance));
+
+        foodServiceDistance.setText(String.format("%s %s", getString(R.string.food_service_walking_distance), this.distance));
+        foodServiceName.setText(this.foodServiceName);
+        foodServiceHours.setText(String.format("%s %s", getString(R.string.food_service_working_hours), this.hours));
     }
 
     public void drawFoodServices() {
-        Map<Contract.FoodType, Boolean> constraints = getGlobalStatus().getUserConstraints();
         ArrayList<Menu> drawableMenus = new ArrayList<>(menus);
 
-        if (getFilter()) {
-            drawableMenus.removeIf(menu -> !menu.isDesirable(constraints));
-        }
+        filterMenus(drawableMenus, getGlobalStatus().getUserConstraints());
 
         final MenuAdapter menuAdapter = new MenuAdapter(this, drawableMenus);
 
@@ -165,35 +164,31 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         foodServiceList.setAdapter(menuAdapter);
     }
 
+    public void filterMenus(ArrayList<Menu> menus, Map<Contract.FoodType, Boolean> constraints) {
+        if (getFilter()) {
+            menus.removeIf(menu -> !menu.isDesirable(constraints));
+        }
+    }
+
     public void updateMenus() {
         if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceName);
+            new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceId);
         } else {
             showToast(getString(R.string.food_service_menu_update_failure_toast));
         }
     }
 
-    public void setMenus(ArrayList<Menu> menus) {
-        this.menus = menus;
-    }
-
-
     public void doShowAllButton() {
         final Button button = findViewById(R.id.show_all_menus_button);
         button.setOnClickListener((l) -> {
             filter.set(!filter.get());
-
             button.setText(getString(getFilter() ? R.string.food_service_show_all_menus : R.string.food_service_filter_menus));
-
             drawFoodServices();
         });
     }
 
     private void initMap() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = getMapFragment();
-
-        mapFragment.getMapAsync(this);
+        getMapFragment().getMapAsync(this);
     }
 
 
@@ -205,6 +200,10 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, ZOOM));
         googleMap.addMarker(new MarkerOptions().position(destination).title(getMarkerName()));
         googleMap.setOnMapClickListener(this::mapClick);
+    }
+
+    public void setMenus(ArrayList<Menu> menus) {
+        this.menus = menus;
     }
 
 }

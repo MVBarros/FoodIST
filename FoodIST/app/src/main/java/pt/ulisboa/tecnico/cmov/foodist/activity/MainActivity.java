@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
 
     private static final String SERVICE_NAME = "Service Name";
+    private static final String SERVICE_DISPLAY_NAME = "Service Display Name";
     private static final String DISTANCE = "Distance";
     private static final String QUEUE_TIME = "Queue time";
     private static final String SERVICE_HOURS = "Service Hours";
@@ -239,6 +240,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         v.setOnClickListener(v1 -> {
             Intent intent = new Intent(MainActivity.this, FoodServiceActivity.class);
             intent.putExtra(SERVICE_NAME, service.getName());
+            intent.putExtra(SERVICE_DISPLAY_NAME, service.getName(getGlobalStatus().getLanguageForService()));
             intent.putExtra(DISTANCE, service.getDistance());
             intent.putExtra(QUEUE_TIME, service.getTime());
             intent.putExtra(SERVICE_HOURS, service.getHoursForToday(getGlobalStatus().getUserRole()));

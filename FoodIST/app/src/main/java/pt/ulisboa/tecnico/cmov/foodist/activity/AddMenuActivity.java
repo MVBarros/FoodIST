@@ -53,7 +53,8 @@ public class AddMenuActivity extends BaseActivity {
 
     private int photoView = R.id.dishView;
 
-    private String SERVICE_NAME = "Service Name";
+    private static final String SERVICE_NAME = "Service Name";
+
 
     private String initialMenuName = "";
     private String initialPrice = "";
