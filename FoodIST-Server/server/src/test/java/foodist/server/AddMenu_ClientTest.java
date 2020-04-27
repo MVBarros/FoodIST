@@ -58,7 +58,7 @@ public class AddMenu_ClientTest {
 	@Test
   	public void AddMenu_FoodService() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
-	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, "english");
+	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, Contract.Language.en);
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
 	    assertEquals(TEST_FOODSERVICE, requestCaptor.getValue().getFoodService());       
   	}
@@ -66,7 +66,7 @@ public class AddMenu_ClientTest {
 	@Test
   	public void AddMenu_MenuName() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
-	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, "portuguese");
+	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, Contract.Language.pt);
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
 	    assertEquals(TEST_MENU, requestCaptor.getValue().getName());       
   	}
@@ -74,7 +74,7 @@ public class AddMenu_ClientTest {
 	@Test
   	public void AddMenu_Price() {
 	    ArgumentCaptor<AddMenuRequest> requestCaptor = ArgumentCaptor.forClass(AddMenuRequest.class);
-	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, "portuguese");
+	    client.addMenu(TEST_FOODSERVICE, TEST_MENU, TEST_PRICE, foodType, Contract.Language.pt);
 	    verify(serviceImpl).addMenu(requestCaptor.capture(), ArgumentMatchers.<StreamObserver<Empty>>any());
 	    assertEquals(TEST_PRICE, requestCaptor.getValue().getPrice(), 0.01);       
   	}

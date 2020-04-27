@@ -64,7 +64,7 @@ public class RegisterTest {
 
         profile = Contract.Profile.newBuilder()
                 .setName(USERNAME)
-                .setLanguage(Contract.Language.Portuguese)
+                .setLanguage(Contract.Language.pt)
                 .setRole(Contract.Role.Student)
                 .putAllPreferences(preferences)
                 .build();
@@ -95,7 +95,7 @@ public class RegisterTest {
         var reply = stub.register(Contract.RegisterRequest.newBuilder().setProfile(profile).setPassword(PASSWORD).build());
         assertEquals(reply.getProfile().getPreferencesMap(), preferences);
         assertEquals(reply.getProfile().getRole(), Contract.Role.Student);
-        assertEquals(reply.getProfile().getLanguage(), Contract.Language.Portuguese);
+        assertEquals(reply.getProfile().getLanguage(), Contract.Language.pt);
         assertEquals(reply.getProfile().getName(), USERNAME);
 
         assertTrue(impl.getSessions().containsKey(reply.getCookie()));
@@ -103,14 +103,14 @@ public class RegisterTest {
 
         Account account = impl.getSessions().get(reply.getCookie());
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getLaguage(), Contract.Language.pt);
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
 
         account = impl.getUsers().get(USERNAME);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getLaguage(), Contract.Language.pt);
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
@@ -121,7 +121,7 @@ public class RegisterTest {
         var reply = stub.register(Contract.RegisterRequest.newBuilder().setProfile(profile).setPassword(PASSWORD).build());
         assertEquals(reply.getProfile().getPreferencesMap(), preferences);
         assertEquals(reply.getProfile().getRole(), Contract.Role.Student);
-        assertEquals(reply.getProfile().getLanguage(), Contract.Language.Portuguese);
+        assertEquals(reply.getProfile().getLanguage(), Contract.Language.pt);
         assertEquals(reply.getProfile().getName(), USERNAME);
 
         assertTrue(impl.getSessions().containsKey(reply.getCookie()));
@@ -129,14 +129,14 @@ public class RegisterTest {
 
         Account account = impl.getSessions().get(reply.getCookie());
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getLaguage(), Contract.Language.pt);
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
 
         account = impl.getUsers().get(USERNAME);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getLaguage(), Contract.Language.pt);
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);

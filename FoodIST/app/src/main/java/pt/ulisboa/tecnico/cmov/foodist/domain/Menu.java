@@ -9,27 +9,18 @@ public class Menu {
     private String foodServiceName;
     private String menuName;
     private double price;
-    private int photoIdCount = 0;
-    private String[] photoID;
     private Contract.FoodType type;
-    private String language;
+    private Contract.Language language;
     private String translatedName;
 
     //To send menus to the server
-    public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, String language, String translatedName) {
+    public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, Contract.Language language, String translatedName) {
         this.foodServiceName = foodServiceName;
         this.menuName = menuName;
         this.price = price;
         this.type = type;
         this.language = language;
         this.translatedName = translatedName;
-    }
-
-    //When parsing the menus from the server
-    public Menu(String foodServiceName, String menuName, double price, int photoIdCount, List<String> photoIDs, Contract.FoodType type, String language, String translatedName) {
-        this(foodServiceName, menuName, price, type, language, translatedName);
-        this.photoIdCount = photoIdCount;
-        this.photoID = photoIDs.toArray(new String[0]);
     }
 
     public String getFoodServiceName() {
@@ -44,16 +35,8 @@ public class Menu {
         return this.price;
     }
 
-    public int getPhotoIdCount() {
-        return this.photoIdCount;
-    }
-
-    public String[] getPhotoID() {
-        return this.photoID;
-    }
-
     public static Menu parseContractMenu(String foodServiceName, Contract.Menu menu) {
-        return new Menu(foodServiceName, menu.getName(), menu.getPrice(), menu.getPhotoIdCount(), menu.getPhotoIdList(), menu.getType(), menu.getLanguage(), menu.getTranslatedName());
+        return new Menu(foodServiceName, menu.getName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName());
     }
 
     public Contract.FoodType getType() {
@@ -61,10 +44,14 @@ public class Menu {
     }
 
     public boolean isDesirable(Map<Contract.FoodType, Boolean> constraints) {
-        return constraints.get(this.type) == true;
+        return constraints.get(this.type);
     }
 
-    public String getLanguage() {
+    public String getLanguageName() {
+        return this.language.name();
+    }
+
+    public Contract.Language getLanguage() {
         return this.language;
     }
 

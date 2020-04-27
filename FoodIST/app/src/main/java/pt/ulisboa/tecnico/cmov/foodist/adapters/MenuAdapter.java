@@ -43,7 +43,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
 
         SharedPreferences preferences = getContext().getSharedPreferences(getContext().getString(R.string.profile_file), 0);
         String currentLanguage = preferences.getString(getContext().getString(R.string.profile_language_chosen), "en");
-        if (currentLanguage.equals(menu.getLanguage())) {
+        if (currentLanguage.equals(menu.getLanguageName())) {
             menuFood.setText(menu.getMenuName());
         } else {
             menuFood.setText(menu.getTranslatedName());

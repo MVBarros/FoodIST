@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import foodist.server.grpc.contract.Contract;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class UpdateMenu_ServerTest {
 	
 	@Test
   	public void UpdateMenu_EmptyPhotos() throws IOException {
-		client.addMenu("Ronny\'s", "Invisible Pack", 69.99, type, "portuguese");
+		client.addMenu("Ronny\'s", "Invisible Pack", 69.99, type, Contract.Language.pt);
 				
 		Menu menu = client.updateMenu("Ronny\'s", "Invisible Pack");
 		
@@ -54,7 +55,7 @@ public class UpdateMenu_ServerTest {
 	
 	@Test
   	public void UpdateMenu_UploadPhotos() throws IOException {
-		client.addMenu("Ronny\'s", "Special", 5.99, type, "portuguese");
+		client.addMenu("Ronny\'s", "Special", 5.99, type, Contract.Language.pt);
 				
 		String[] fastfood = {"burger", "fries", "sundae"};
 		
@@ -69,7 +70,7 @@ public class UpdateMenu_ServerTest {
 	
 	@Test
   	public void UpdateMenu_DonwloadPhoto() throws IOException {
-		client.addMenu("Pavano", "Pepperoni", 14.99, type, "portuguese");
+		client.addMenu("Pavano", "Pepperoni", 14.99, type, Contract.Language.pt);
 		
 		String[] format = {".jpg", ".png"};		
 		for(int i = 0; i<format.length; i++) {

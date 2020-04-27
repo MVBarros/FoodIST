@@ -41,13 +41,6 @@ import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.CAMPUS;
 
 public class ProfileActivity extends BaseActivity {
 
-    public enum UserRole {
-        Student,
-        Professor,
-        Visitor,
-        Staff
-    }
-
     private static final int PICK_FROM_GALLERY = 1;
     private static final int PICK_FROM_CAMERA = 2;
     private static final int REQUEST_PIC = 3;
@@ -212,12 +205,12 @@ public class ProfileActivity extends BaseActivity {
         /*Language*/
         button = findViewById(R.id.languageEnglish);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_language_chosen), "en");
+            editor.putString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
         }
 
         button = findViewById(R.id.languagePortuguese);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_language_chosen), "pt");
+            editor.putString(getString(R.string.profile_language_chosen), Contract.Language.pt.name());
         }
 
         editor.apply();
@@ -284,7 +277,7 @@ public class ProfileActivity extends BaseActivity {
                 button = findViewById(R.id.visitorRadioButton);
                 break;
             default:
-                Log.d(TAG, "No user role");
+                Log.e(TAG, "No user role found");
                 button = findViewById(R.id.studentRadioButton);
                 break;
         }
@@ -296,15 +289,16 @@ public class ProfileActivity extends BaseActivity {
 
     private void setUserLanguage() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
+        String language = pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
+        Contract.Language lang = Contract.Language.valueOf(language);
 
-        switch (language) {
-            case "en":
+        switch (lang) {
+            case en:
                 RadioButton englishLanguage = findViewById(R.id.languageEnglish);
                 englishLanguage.toggle();
                 break;
 
-            case "pt":
+            case pt:
                 RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
                 portugueseLanguage.toggle();
                 break;

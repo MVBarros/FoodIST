@@ -1,5 +1,6 @@
 package foodist.server;
 
+import foodist.server.grpc.contract.Contract;
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -48,7 +49,7 @@ public class ListMenu_ServerTest {
 	@Test
   	public void listMenu_SingleMenu() {
 		FoodType type = FoodType.Meat;
-    	client.addMenu("Burger Shop", "Burger", 3.50, type, "portuguese");
+    	client.addMenu("Burger Shop", "Burger", 3.50, type, Contract.Language.pt);
     	client.addPhoto("Burger Shop", "Burger", "photos/test/burger.png");
     	
     	List<String> menus = new ArrayList<String>();	  	
@@ -67,8 +68,8 @@ public class ListMenu_ServerTest {
 	@Test
   	public void listMenu_MultipleMenu_OnePhotoForBoth() {
 		FoodType type = FoodType.Meat;
-		client.addMenu("Hamburger Town", "Burger", 2.50, type, "portuguese");
-		client.addMenu("Hamburger Town", "Double Burger", 4.50, type, "portuguese");
+		client.addMenu("Hamburger Town", "Burger", 2.50, type, Contract.Language.pt);
+		client.addMenu("Hamburger Town", "Double Burger", 4.50, type, Contract.Language.pt);
 		
 		client.addPhoto("Hamburger Town", "Burger", "photos/test/burger.png");
 		client.addPhoto("Hamburger Town", "Double Burger", "photos/test/double_burger.jpg");
@@ -91,8 +92,8 @@ public class ListMenu_ServerTest {
 		FoodType vegetarian = FoodType.Vegetarian;
 		FoodType meat = FoodType.Meat;
 		
-		client.addMenu("Pizza Parlor", "Cheese Pizza", 9.50, vegetarian, "portuguese");
-	  	client.addMenu("Pizza Parlor", "Pepperoni Pizza", 11.00, meat, "portuguese");
+		client.addMenu("Pizza Parlor", "Cheese Pizza", 9.50, vegetarian, Contract.Language.pt);
+	  	client.addMenu("Pizza Parlor", "Pepperoni Pizza", 11.00, meat, Contract.Language.pt);
 	  	
 	  	client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/cheese_pizza.jpg");
 		client.addPhoto("Pizza Parlor", "Pepperoni Pizza", "photos/test/pepperoni_pizza.jpg");
@@ -114,8 +115,8 @@ public class ListMenu_ServerTest {
   	public void listMenu_AvoidDuplicateMenus_SameNameSameObject() {
 		FoodType type = FoodType.Vegan;
 		
-		client.addMenu("Healthy Veggies", "Salad", 2.50, type, "portuguese");
-		client.addMenu("Healthy Veggies", "Salad", 2.50, type, "portuguese");	
+		client.addMenu("Healthy Veggies", "Salad", 2.50, type, Contract.Language.pt);
+		client.addMenu("Healthy Veggies", "Salad", 2.50, type, Contract.Language.pt);
 		
 		List<String> menus = new ArrayList<String>();	  		
 
@@ -134,8 +135,8 @@ public class ListMenu_ServerTest {
   	public void listMenu_AvoidDuplicateMenus_SameNameDifferentObject() {
 		FoodType type = FoodType.Meat;
 		
-		client.addMenu("Deutsch Kuche", "Wurst", 6.50, type, "portuguese");
-		client.addMenu("Deutsch Kuche", "Wurst", 5.50, type, "portuguese");	
+		client.addMenu("Deutsch Kuche", "Wurst", 6.50, type, Contract.Language.pt);
+		client.addMenu("Deutsch Kuche", "Wurst", 5.50, type, Contract.Language.pt);
 		
 		List<String> menus = new ArrayList<String>();
 
@@ -160,8 +161,8 @@ public class ListMenu_ServerTest {
 		FoodType meat = FoodType.Meat;
 		FoodType vegetarian = FoodType.Vegetarian;
 		
-		client.addMenu("Graveli", "Pepperoni", 14.99, meat, "portuguese");
-		client.addMenu("Graveli", "Cheese", 12.99, vegetarian, "portuguese");
+		client.addMenu("Graveli", "Pepperoni", 14.99, meat, Contract.Language.pt);
+		client.addMenu("Graveli", "Cheese", 12.99, vegetarian, Contract.Language.pt);
 		
 		String[] format = {"pepperoni_pizza.jpg", "pepperoni_pizza.png"};
 		client.addPhoto("Graveli", "Cheese", "photos/test/cheese_pizza.jpg");

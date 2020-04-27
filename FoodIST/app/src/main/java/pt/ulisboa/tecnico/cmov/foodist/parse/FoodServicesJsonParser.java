@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.activity.parse;
+package pt.ulisboa.tecnico.cmov.foodist.parse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
@@ -42,9 +43,11 @@ public class FoodServicesJsonParser {
     }
 
     private static FoodService parseObject(JSONObject object) throws JSONException {
-        Map<FoodService.Language, String> names = new HashMap<>();
-        for (FoodService.Language lang : FoodService.Language.values()) {
-            names.put(lang, object.getString(lang.name()));
+        Map<Contract.Language, String> names = new HashMap<>();
+        for (Contract.Language lang : Contract.Language.values()) {
+            if (!lang.equals(Contract.Language.UNRECOGNIZED)) {
+                names.put(lang, object.getString(lang.name()));
+            }
         }
         String distance = object.getString("distance");
         String time = object.getString("time");

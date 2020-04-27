@@ -143,6 +143,12 @@
     <string name="minute"> minuto </string>
     <string name="hour"> hora </string>
     <string name="day"> dia </string>
-    <string name="login_username">Username</string>
-    <string name="login_password">Password</string>
+    <string name="login_username">Nome de Utilizador</string>
+    <string name="login_password">Palavra Passe</string>
+    <string name="profile_login">Conta</string>
+    <string name="login">Entrar</string>
+    <string name="register">Registar</string>
+    <string name="edit">Editar</string>
+    <string name="check_preferece_warning">Tens de ter pelo menos uma preferência</string>
+    <string name="commit_text_edit">Guardar alterações</string>
 </resources>

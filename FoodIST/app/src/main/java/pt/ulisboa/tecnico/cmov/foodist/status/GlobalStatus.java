@@ -34,10 +34,10 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 public class GlobalStatus extends Application {
 
 
-    public static final String MEAT_KEY = "MEAT";
-    public static final String VEGAN_KEY = "VEGAN";
-    public static final String FISH_KEY = "FISH";
-    public static final String VEGETARIAN_KEY = "VEGETARIAN";
+    public static final String MEAT_KEY = Contract.FoodType.Meat.name();
+    public static final String VEGAN_KEY = Contract.FoodType.Vegan.name();
+    public static final String FISH_KEY = Contract.FoodType.Fish.name();
+    public static final String VEGETARIAN_KEY = Contract.FoodType.Vegetarian.name();
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub assyncStub = null;
@@ -154,17 +154,17 @@ public class GlobalStatus extends Application {
 
     public String getLanguage() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
-        return pref.getString(getString(R.string.profile_language_chosen), "en");
+        return pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
     }
 
     public String getUserRole() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        return pref.getString(getString(R.string.profile_position_name), "Student");
+        return pref.getString(getString(R.string.profile_position_name), Contract.Role.Student.name());
     }
 
-    public FoodService.Language getLanguageForService() {
+    public Contract.Language getLanguageForService() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
-        String lang = pref.getString(getString(R.string.profile_language_chosen), "en");
-        return FoodService.Language.valueOf("name_" + lang);
+        String lang = pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
+        return Contract.Language.valueOf(lang);
     }
 }

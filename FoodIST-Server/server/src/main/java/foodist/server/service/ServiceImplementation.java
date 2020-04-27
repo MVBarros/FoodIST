@@ -47,7 +47,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         menuBuilder.setLanguage(request.getLanguage());
 
         if (!test) {
-            String translation = requestGoogleTranslation(request.getName(), request.getLanguage(), getTargetLanguage(request.getLanguage()));
+            String translation = requestGoogleTranslation(request.getName(), request.getLanguage().name(), getTargetLanguage(request.getLanguage()).name());
             menuBuilder.setTranslatedName(translation);
         }
         Menu menu = menuBuilder.build();
@@ -245,15 +245,15 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         return translation.getTranslatedText();
     }
 
-    //Para o Miguel Barros
-    //Sim, isto e estupido e tenho nocao, mas estou mt enervado com isto e foi um pouco a balda, pensarei numa maneira melhor depois
-
-    public String getTargetLanguage(String language) {
-        if (language.equals("en")) {
-            return "pt";
+    public Language getTargetLanguage(Contract.Language language) {
+        if (language.equals(Language.en)) {
+            return Language.pt;
         }
-        return "en";
+        else {
+            return Language.en;
+        }
     }
+
 
     private String generateRandomCookie() {
         return RandomStringUtils.random(COOKIE_SIZE);

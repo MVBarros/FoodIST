@@ -145,10 +145,10 @@
     <string name="day"> day </string>
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
-    <string name="profile_login">Login</string>
+    <string name="profile_login">Account</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="edit">Edit</string>
     <string name="check_preferece_warning">Must have at least one preference</string>
-    <string name="commit_text_edit">Commit</string>
+    <string name="commit_text_edit">Save Changes</string>
 </resources>

@@ -1,5 +1,6 @@
 package foodist.server;
 
+import foodist.server.grpc.contract.Contract;
 import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -44,7 +45,7 @@ public class DownloadPhoto_ServerTest {
 	@Test
   	public void DownloadPhoto_ClientPath() {
 		FoodType type = FoodType.Meat;
-		client.addMenu("Tugalandia", "Farinheira", 8.00, type, "portuguese");
+		client.addMenu("Tugalandia", "Farinheira", 8.00, type, Contract.Language.pt);
 		client.addPhoto("Tugalandia", "Farinheira", "photos/test/farinheira.png");
 		
 	  	String photoId = "";	
@@ -58,7 +59,7 @@ public class DownloadPhoto_ServerTest {
 	@Test
   	public void DownloadPhoto_SamePhoto() {	
 		FoodType type = FoodType.Vegetarian;
-		client.addMenu("Romano", "Risotto", 7.00, type, "portuguese");
+		client.addMenu("Romano", "Risotto", 7.00, type, Contract.Language.pt);
     	client.addPhoto("Romano", "Risotto", "photos/test/risotto.jpg");    		    	
         
 	  	String photoId = "";	

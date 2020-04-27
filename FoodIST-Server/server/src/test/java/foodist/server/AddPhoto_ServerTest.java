@@ -1,5 +1,6 @@
 package foodist.server;
 
+import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.FoodType;
 import foodist.server.service.ServiceImplementation;
 
@@ -45,7 +46,7 @@ public class AddPhoto_ServerTest {
 	@Test
   	public void AddPhoto_PhotoPathCreated() {
 		FoodType type = FoodType.Meat;
-		client.addMenu("Portuguesa", "Chourico", 6.50, type, "portuguese");
+		client.addMenu("Portuguesa", "Chourico", 6.50, type, Contract.Language.pt);
 		client.addPhoto("Portuguesa", "Chourico", "photos/test/chourico.jpg");
 		
 		boolean path_exists = new File("photos/Portuguesa/Chourico").exists();
@@ -55,7 +56,7 @@ public class AddPhoto_ServerTest {
 	@Test
   	public void AddPhoto_SamePhoto() {
 		FoodType type = FoodType.Vegetarian;
-    	client.addMenu("Ristorante", "Pasta", 6.50, type, "portuguese");
+    	client.addMenu("Ristorante", "Pasta", 6.50, type, Contract.Language.pt);
     	client.addPhoto("Ristorante", "Pasta", "photos/test/pasta.jpg");           	    	
         
 		String photoId = new File("photos/Ristorante/Pasta").list()[0];
@@ -93,7 +94,7 @@ public class AddPhoto_ServerTest {
 	@Test
   	public void AddPhoto_DuplicatePhoto() {
 		FoodType type = FoodType.Vegan;
-    	client.addMenu("Mackies", "Fries", 6.50, type, "portuguese");
+    	client.addMenu("Mackies", "Fries", 6.50, type, Contract.Language.pt);
     	
     	for(int i=0; i<1024; i++) {
     		client.addPhoto("Mackies", "Fries", "photos/test/fries.jpg");

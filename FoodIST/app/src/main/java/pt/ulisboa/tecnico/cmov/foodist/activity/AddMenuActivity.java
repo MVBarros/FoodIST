@@ -56,9 +56,6 @@ public class AddMenuActivity extends BaseActivity {
     private static final String SERVICE_NAME = "Service Name";
 
 
-    private String initialMenuName = "";
-    private String initialPrice = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +77,14 @@ public class AddMenuActivity extends BaseActivity {
             Contract.FoodType type = getFoodType();
             String foodService = getIntent().getStringExtra(SERVICE_NAME);
 
+
             SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+
+            Contract.Language language = Contract.Language.valueOf(pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name()));
+
             Menu menu = new Menu(foodService, menuName.getText().toString(),
                     Double.parseDouble(menuCost.getText().toString()), type,
-                    pref.getString(getString(R.string.profile_language_chosen), "en"), "");
+                    language, "");
             uploadMenu(menu);
 
         });
@@ -99,6 +100,8 @@ public class AddMenuActivity extends BaseActivity {
             showToast("Give the menu a type!");
             return false;
         }
+        String initialPrice = "";
+        String initialMenuName = "";
         if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
             showToast(getString(R.string.add_menu_invalid_input_toast));
             return false;

@@ -62,7 +62,7 @@ public class LoginTest {
 
         profile = Contract.Profile.newBuilder()
                 .setName(USERNAME)
-                .setLanguage(Contract.Language.Portuguese)
+                .setLanguage(Contract.Language.pt)
                 .setRole(Contract.Role.Student)
                 .putAllPreferences(preferences)
                 .build();
@@ -91,7 +91,7 @@ public class LoginTest {
         var reply = stub.login(Contract.LoginRequest.newBuilder().setUsername(USERNAME).setPassword(PASSWORD).build());
         assertEquals(reply.getProfile().getPreferencesMap(), preferences);
         assertEquals(reply.getProfile().getRole(), Contract.Role.Student);
-        assertEquals(reply.getProfile().getLanguage(), Contract.Language.Portuguese);
+        assertEquals(reply.getProfile().getLanguage(), Contract.Language.pt);
         assertEquals(reply.getProfile().getName(), USERNAME);
 
         assertTrue(impl.getSessions().containsKey(reply.getCookie()));
@@ -99,7 +99,7 @@ public class LoginTest {
 
         Account account = impl.getSessions().get(reply.getCookie());
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), Contract.Language.Portuguese);
+        assertEquals(account.getLaguage(), Contract.Language.pt);
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);

@@ -1,8 +1,8 @@
 {
   "TagusPark": [
     {
-      "name_en": "Red Bar",
-      "name_pt": "Bar Vermelho",
+      "en": "Red Bar",
+      "pt": "Bar Vermelho",
       "distance": "?",
       "time": "5min",
       "latitude": 38.736550,
@@ -47,8 +47,8 @@
       }
     },
     {
-      "name_en": "Green Bar",
-      "name_pt": "Bar Verde",
+      "en": "Green Bar",
+      "pt": "Bar Verde",
       "distance": "?",
       "time": "5min",
       "latitude": 38.738042,
@@ -93,8 +93,8 @@
       }
     },
     {
-      "name_en": "Cantina",
-      "name_pt": "Cantina",
+      "en": "Cantina",
+      "pt": "Cantina",
       "distance": "?",
       "time": "5min",
       "latitude": 38.737928,
@@ -139,8 +139,8 @@
       }
     },
     {
-      "name_en": "Vending Machines",
-      "name_pt": "Máquinas de Venda Automática",
+      "en": "Vending Machines",
+      "pt": "Máquinas de Venda Automática",
       "distance": "?",
       "time": "5min",
       "latitude": 38.737129,
@@ -187,8 +187,8 @@
   ],
   "Alameda": [
     {
-      "name_en": "Civil Cantina",
-      "name_pt": "Cantina de Civil",
+      "en": "Civil Cantina",
+      "pt": "Cantina de Civil",
       "distance": "?",
       "time": "5min",
       "latitude": 38.737756,
@@ -233,8 +233,8 @@
       }
     },
     {
-      "name_en": "Civil Bar",
-      "name_pt": "Bar de Civil",
+      "en": "Civil Bar",
+      "pt": "Bar de Civil",
       "distance": "?",
       "time": "5min",
       "latitude": 38.737075,
@@ -279,8 +279,8 @@
       }
     },
     {
-      "name_en": "Cantina",
-      "name_pt": "Cantina",
+      "en": "Cantina",
+      "pt": "Cantina",
       "distance": "?",
       "time": "5min",
       "latitude": 38.736380,
@@ -325,8 +325,8 @@
       }
     },
     {
-      "name_en": "Vending Machine",
-      "name_pt": "Maquina de Venda Automática",
+      "en": "Vending Machine",
+      "pt": "Maquina de Venda Automática",
       "distance": "?",
       "time": "5min",
       "latitude": 38.736261,
@@ -371,8 +371,8 @@
       }
     },
     {
-      "name_en": "Central Pavillion Cafe",
-      "name_pt": "Cafe do Pavilhão Central",
+      "en": "Central Pavillion Cafe",
+      "pt": "Cafe do Pavilhão Central",
       "distance": "?",
       "time": "5min",
       "latitude": 38.736624,

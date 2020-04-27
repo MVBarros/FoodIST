@@ -5,7 +5,7 @@ package foodist.server.grpc.contract;
 
 enum FoodType {Vegetarian = 0; Vegan = 1; Meat = 2; Fish = 3;}
 enum Role {Student = 0; Professor = 1; Staff = 2; Visitor = 3;}
-enum Language {Portuguese = 0; English = 1;}
+enum Language {pt = 0; en = 1;}
 
 
 message AddMenuRequest {
@@ -13,7 +13,7 @@ message AddMenuRequest {
     string name = 2;
     double price = 3;
     FoodType type = 4;
-    string language = 5;
+    Language language = 5;
 }
 
 message AddPhotoRequest {
@@ -47,7 +47,7 @@ message Menu {
     double price = 3;
     repeated string photoId = 4;
     FoodType type = 5;
-    string language = 6;
+    Language language = 6;
     string translatedName = 7;
 }
 

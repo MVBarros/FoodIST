@@ -42,14 +42,14 @@ class Client {
 		this.stub = FoodISTServerServiceGrpc.newBlockingStub(this.channel);
 	}  
   
-	void addMenu(String foodService, String menuName, double price, FoodType foodType, String language) {	
+	void addMenu(String foodService, String menuName, double price, FoodType foodType, Contract.Language language) {
 		AddMenuRequest.Builder addMenuBuilder = AddMenuRequest.newBuilder();					
 	  
 		addMenuBuilder.setFoodService(foodService);
 		addMenuBuilder.setName(menuName);
 		addMenuBuilder.setPrice(price);
 		addMenuBuilder.setType(foodType);
-		addMenuBuilder.setLanguage(language);		
+		addMenuBuilder.setLanguage(language);
 	  
 		AddMenuRequest addMenuRequestExample = addMenuBuilder.build();
 		

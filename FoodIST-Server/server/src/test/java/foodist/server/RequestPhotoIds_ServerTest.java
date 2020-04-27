@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import foodist.server.grpc.contract.Contract;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ public class RequestPhotoIds_ServerTest {
 	
 	@Test
   	public void RequestPhoto_Upload0Photo() throws IOException {
-		client.addMenu("Mercado", "Alho", 0.69, type, "portuguese");											
+		client.addMenu("Mercado", "Alho", 0.69, type, Contract.Language.pt);
 		client.requestPhotoIds();		
 		
 		boolean exists = new File("photos/Mercado/Alho").exists();
@@ -51,7 +52,7 @@ public class RequestPhotoIds_ServerTest {
 	
 	@Test
   	public void RequestPhoto_Upload1Photo() throws IOException {
-		client.addMenu("Mercado", "Beterraba", 1.00, type, "portuguese");		
+		client.addMenu("Mercado", "Beterraba", 1.00, type, Contract.Language.pt);
 		client.addPhoto("Mercado", "Beterraba", "photos/test/beterraba.jpg");								
 		for(String photoId : client.requestPhotoIds()) {
 			client.downloadPhoto(photoId);
@@ -88,7 +89,7 @@ public class RequestPhotoIds_ServerTest {
   	
 	@Test
   	public void RequestPhoto_Upload2Photos() throws IOException {
-		client.addMenu("Mercado", "Alface", 0.89, type, "portuguese");
+		client.addMenu("Mercado", "Alface", 0.89, type, Contract.Language.pt);
 				
 		for(int i = 1; i<=2; i++) {
 			client.addPhoto("Mercado", "Alface", "photos/test/alface_0" + i + ".jpg");			
@@ -129,7 +130,7 @@ public class RequestPhotoIds_ServerTest {
 
 	@Test
   	public void RequestPhoto_Upload3Photos() throws IOException {
-		client.addMenu("Mercado", "Cenoura", 0.79, type, "portuguese");
+		client.addMenu("Mercado", "Cenoura", 0.79, type, Contract.Language.pt);
 				
 		for(int i = 1; i<=3; i++) {
 			client.addPhoto("Mercado", "Cenoura", "photos/test/cenoura_0" + i + ".jpg");			
@@ -170,7 +171,7 @@ public class RequestPhotoIds_ServerTest {
 	
 	@Test
   	public void RequestPhoto_Upload4Photos() throws IOException {
-		client.addMenu("Mercado", "Nabo", 0.99, type, "portuguese");
+		client.addMenu("Mercado", "Nabo", 0.99, type, Contract.Language.pt);
 				
 		for(int i = 1; i<=4; i++) {
 			client.addPhoto("Mercado", "Nabo", "photos/test/nabo_0" + i + ".png");			

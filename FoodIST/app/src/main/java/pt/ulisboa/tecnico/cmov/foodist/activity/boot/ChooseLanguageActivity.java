@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 
+import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
@@ -23,14 +24,14 @@ public class ChooseLanguageActivity extends BaseActivity {
         englishButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseLanguageActivity.this, MainActivity.class);
             finish();
-            setLanguage("en");
+            setLanguage(Contract.Language.en.name());
             startActivity(intent);
         });
 
         portugueseButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseLanguageActivity.this, MainActivity.class);
             finish();
-            setLanguage("pt");
+            setLanguage(Contract.Language.pt.name());
             startActivity(intent);
         });
     }
