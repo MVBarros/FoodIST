@@ -53,7 +53,7 @@ public class Menu {
     }
 
     public static Menu parseContractMenu(String foodServiceName, Contract.Menu menu) {
-        return new Menu(foodServiceName, menu.getName(), menu.getPrice(), menu.getPhotoIdCount(), menu.getPhotoIdList(), menu.getType(), menu.getLanguage(), menu.getTranslations());
+        return new Menu(foodServiceName, menu.getName(), menu.getPrice(), menu.getPhotoIdCount(), menu.getPhotoIdList(), menu.getType(), menu.getLanguage(), menu.getTranslatedName());
     }
 
     public Contract.FoodType getType() {

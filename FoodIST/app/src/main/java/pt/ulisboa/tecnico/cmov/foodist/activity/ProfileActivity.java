@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -179,22 +178,22 @@ public class ProfileActivity extends BaseActivity {
         /*Roles*/
         RadioButton button = findViewById(R.id.studentRadioButton);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_position_name), UserRole.Student.name());
+            editor.putString(getString(R.string.profile_position_name), Contract.Role.Student.name());
         }
 
         button = findViewById(R.id.professorRadioButton);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_position_name), UserRole.Professor.name());
+            editor.putString(getString(R.string.profile_position_name), Contract.Role.Professor.name());
         }
 
         button = findViewById(R.id.staffRadioButton);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_position_name), UserRole.Staff.name());
+            editor.putString(getString(R.string.profile_position_name), Contract.Role.Staff.name());
         }
 
         button = findViewById(R.id.visitorRadioButton);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_position_name), UserRole.Visitor.name());
+            editor.putString(getString(R.string.profile_position_name), Contract.Role.Visitor.name());
         }
 
         /*Food Preferences*/
@@ -268,8 +267,8 @@ public class ProfileActivity extends BaseActivity {
 
     private void setUserRole() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        String role = pref.getString(getString(R.string.profile_position_name), UserRole.Student.name());
-        UserRole userRole = UserRole.valueOf(role);
+        String role = pref.getString(getString(R.string.profile_position_name), Contract.Role.Student.name());
+        Contract.Role userRole = Contract.Role.valueOf(role);
         RadioButton button;
         switch (userRole) {
             case Student:
@@ -292,7 +291,8 @@ public class ProfileActivity extends BaseActivity {
         button.toggle();
     }
 
-    private void setUserRoleButtons() {}
+    private void setUserRoleButtons() {
+    }
 
     private void setUserLanguage() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
