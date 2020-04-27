@@ -7,6 +7,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.ActivityWithMap;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.LATITUDE;
@@ -52,5 +53,6 @@ public class FullscreenMapActivity extends ActivityWithMap {
     public void fillTime(String time) {
         TextView textView = findViewById(R.id.map_time);
         textView.setText(getString(R.string.fullscreen_map_time, time));
+        FoodServiceActivity.setDistance(time);
     }
 }

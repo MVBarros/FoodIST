@@ -194,6 +194,13 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
 
     public String timeString(Long time) {
         String res = "";
+        if (time > (3600 * 24)) {
+            long days = time / (3600 * 24);
+            res += Long.toString(days);
+            String suffix = days == 1 ? getString(R.string.day) : getString(R.string.days);
+            res += " " + suffix + " ";
+            time = time % (3600 * 24);
+        }
         if (time > 3600) {
             long hours = time / 3600;
             res += Long.toString(hours);

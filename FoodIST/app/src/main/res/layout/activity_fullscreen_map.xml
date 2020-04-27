@@ -24,8 +24,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="@string/fullscreen_map_time" />
+            android:textSize="15sp"
+            android:text="" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

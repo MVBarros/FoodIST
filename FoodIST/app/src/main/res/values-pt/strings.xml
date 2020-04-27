@@ -138,7 +138,9 @@
     <string name="seconds"> segundos </string>
     <string name="minutes"> minutos </string>
     <string name="hours"> horas </string>
+    <string name="days"> dias </string>
     <string name="second"> segundo </string>
     <string name="minute"> minuto </string>
     <string name="hour"> hora </string>
+    <string name="day"> dia </string>
 </resources>

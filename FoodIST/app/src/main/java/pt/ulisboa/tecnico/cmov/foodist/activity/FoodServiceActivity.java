@@ -50,7 +50,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     private AtomicBoolean filter = new AtomicBoolean(true);
 
-    private String distance;
+    private static String distance; //So we can set it in other activities
     private String hours;
 
     private double latitude;
@@ -64,6 +64,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_service);
+        FoodServiceActivity.setDistance(getIntent().getStringExtra(DISTANCE) == null ? "" : getIntent().getStringExtra(DISTANCE));
         setFoodService();
         setQueueTime();
         setButtons();
@@ -73,6 +74,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     public void onResume() {
         super.onResume();
         initMap();
+        setDistance();
         updateMenus();
     }
 
@@ -136,20 +138,22 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         });
     }
 
+    private void setDistance() {
+        TextView foodServiceDistance = findViewById(R.id.walkingDistance);
+        foodServiceDistance.setText(String.format("%s %s", getString(R.string.food_service_walking_distance), FoodServiceActivity.getDistance()));
+    }
+
     private void setFoodService() {
 
         this.foodServiceId = getIntent().getStringExtra(SERVICE_NAME) == null ? "" : getIntent().getStringExtra(SERVICE_NAME);
         this.foodServiceName = getIntent().getStringExtra(SERVICE_DISPLAY_NAME) == null ? "" : getIntent().getStringExtra(SERVICE_DISPLAY_NAME);
-        this.distance = getIntent().getStringExtra(DISTANCE) == null ? "" : getIntent().getStringExtra(DISTANCE);
         this.latitude = getIntent().getDoubleExtra(LATITUDE, 0);
         this.longitude = getIntent().getDoubleExtra(LONGITUDE, 0);
         this.hours = getIntent().getStringExtra(SERVICE_HOURS) == null ? "" : getIntent().getStringExtra(SERVICE_HOURS);
 
         TextView foodServiceName = findViewById(R.id.foodServiceName);
         TextView foodServiceHours = findViewById(R.id.openingTimes);
-        TextView foodServiceDistance = findViewById(R.id.walkingDistance);
 
-        foodServiceDistance.setText(String.format("%s %s", getString(R.string.food_service_walking_distance), this.distance));
         foodServiceName.setText(this.foodServiceName);
         foodServiceHours.setText(String.format("%s %s", getString(R.string.food_service_working_hours), this.hours));
     }
@@ -207,5 +211,13 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         this.menus = menus;
     }
 
+
+    public static String getDistance() {
+        return distance;
+    }
+
+    public static void setDistance(String distance) {
+        FoodServiceActivity.distance = distance;
+    }
 }
 
