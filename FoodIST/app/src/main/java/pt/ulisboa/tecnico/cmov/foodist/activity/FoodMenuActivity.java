@@ -63,6 +63,13 @@ public class FoodMenuActivity extends BaseActivity {
     private static final int GALLERY_PIC = 4;
     private static final int CAMERA_PIC = 5;
 
+    private static final int MARGIN_RIGHT = 30;
+    private static final int MARGIN_LEFT = 0;
+    private static final int MARGIN_TOP = 0;
+    private static final int MARGIN_BOTTOM = 0;
+
+    private static final int PHOTO_WIDTH = 800;
+
     private static final String TAG = "TAG_FoodMenuActivity";
 
     private String imageFilePath = null;
@@ -118,9 +125,9 @@ public class FoodMenuActivity extends BaseActivity {
 
     public void addPhoto(Bitmap bitmap, String photoId) {
         //Is a new photo (Just to be safe)
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(800,
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(PHOTO_WIDTH,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, 30, 0);
+        params.setMargins(MARGIN_LEFT, MARGIN_TOP, MARGIN_RIGHT, MARGIN_BOTTOM);
         ImageView imageView = new ImageView(this);
         imageView.setImageBitmap(bitmap);
         imageView.setLayoutParams(params);
