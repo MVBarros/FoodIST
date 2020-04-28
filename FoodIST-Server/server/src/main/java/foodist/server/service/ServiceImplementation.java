@@ -2,9 +2,11 @@ package foodist.server.service;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
-import foodist.server.data.*;
+import foodist.server.data.Account;
+import foodist.server.data.Menu;
+import foodist.server.data.Photo;
+import foodist.server.data.Service;
 import foodist.server.data.exception.ServiceException;
-import foodist.server.data.exception.StorageException;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
@@ -31,9 +33,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     private final Map<String, Account> sessions = new ConcurrentHashMap<>();
 
 
-    private final Map<String, Service> services = new ConcurrentHashMap<>();
-    private final Map<Long, Menu> menus = new ConcurrentHashMap<>();
-    private final Map<Long, Photo> photos = new ConcurrentHashMap<>();
+    private Map<String, Service> services = new ConcurrentHashMap<>();
+    private Map<Long, Menu> menus = new ConcurrentHashMap<>();
+    private Map<Long, Photo> photos = new ConcurrentHashMap<>();
 
 
     @Override
@@ -254,5 +256,13 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     public Map<Long, Photo> getPhotos() {
         return photos;
+    }
+
+    public void cleanup() {
+        Menu.resetCounter();
+        Photo.resetCounter();
+        services = new ConcurrentHashMap<>();
+        menus = new ConcurrentHashMap<>();
+        photos = new ConcurrentHashMap<>();
     }
 }

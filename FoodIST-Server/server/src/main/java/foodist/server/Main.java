@@ -33,7 +33,7 @@ public class Main {
         File priv = getPriv();
         File cert = getPub();
         
-        final BindableService bindableService = new ServiceImplementation();
+        final ServiceImplementation bindableService = new ServiceImplementation();
         int port = Integer.parseInt(args[0]);
         
         Server server = ServerBuilder
@@ -56,7 +56,7 @@ public class Main {
         
         System.out.println("Starting memory cleaning thread");
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);   
-        scheduler.scheduleAtFixedRate(new Cleanup(), initial_delay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new Cleanup(bindableService), initial_delay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
         
         System.out.println("Server Started at port " + port);
         server.awaitTermination();
