@@ -43,18 +43,12 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
         TextView menuFood = convertView.findViewById(R.id.menuFood);
         TextView menuCost = convertView.findViewById(R.id.menuCost);
 
-        SharedPreferences preferences = getContext().getSharedPreferences(getContext().getString(R.string.profile_file), 0);
-        String currentLanguage = preferences.getString(getContext().getString(R.string.profile_language_chosen), "en");
-        if (currentLanguage.equals(menu.getLanguageName())) {
-            menuFood.setText(menu.getMenuName());
-        } else {
-            menuFood.setText(menu.getTranslatedName());
-        }
+        menuFood.setText(menu.getTranslatedName());
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), FoodMenuActivity.class);
-            intent.putExtra(MENU_NAME, menu.getMenuName());
+            intent.putExtra(MENU_NAME, menu.getTranslatedName());
             intent.putExtra(MENU_PRICE, menu.getPrice());
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
             intent.putExtra(MENU_ID, menu.getMenuId());
