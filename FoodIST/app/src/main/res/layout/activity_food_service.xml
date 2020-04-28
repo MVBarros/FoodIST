@@ -61,6 +61,16 @@
         android:layout_weight="12" />
 
 
+    <CheckBox
+        android:id="@+id/switch_translation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:text="@string/translate_menu_names"
+        android:checked="true"
+        />
+
+
     <Button
         android:id="@+id/show_all_menus_button"
         android:layout_width="match_parent"

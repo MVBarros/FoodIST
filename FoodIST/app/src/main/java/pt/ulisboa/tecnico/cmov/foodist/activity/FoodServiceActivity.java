@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
+import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapterNoTranslation;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.service.GetMenusTask;
@@ -45,6 +47,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     private static final int ZOOM = 18;
 
     private String foodServiceName;
+
+    private boolean translation = true;
 
     private String foodServiceId;
 
@@ -67,6 +71,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         FoodServiceActivity.setDistance(getIntent().getStringExtra(DISTANCE) == null ? "" : getIntent().getStringExtra(DISTANCE));
         setFoodService();
         setQueueTime();
+        setTranslateBox();
         setButtons();
     }
 
@@ -119,6 +124,13 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         startActivity(intent);
     }
 
+    private void setTranslateBox() {
+        CheckBox box = findViewById(R.id.switch_translation);
+        box.setOnClickListener(v -> {
+            translation = !translation;
+            drawServices();
+        });
+    }
 
     private void setQueueTime() {
         TextView queueTime = findViewById(R.id.queueTime);
@@ -169,6 +181,26 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         foodServiceList.setAdapter(menuAdapter);
     }
 
+    public void drawServices() {
+        if (translation) {
+            drawFoodServices();
+        } else {
+            drawFoodServicesNotTranslated();
+        }
+    }
+
+    public void drawFoodServicesNotTranslated() {
+        ArrayList<Menu> drawableMenus = new ArrayList<>(menus);
+
+        filterMenus(drawableMenus, getGlobalStatus().getUserConstraints());
+
+        final MenuAdapterNoTranslation menuAdapter = new MenuAdapterNoTranslation(this, drawableMenus);
+
+        ListView foodServiceList = findViewById(R.id.menus);
+        foodServiceList.setAdapter(menuAdapter);
+    }
+
+
     public void filterMenus(ArrayList<Menu> menus, Map<Contract.FoodType, Boolean> constraints) {
         if (getFilter()) {
             menus.removeIf(menu -> !menu.isDesirable(constraints));
@@ -188,7 +220,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         button.setOnClickListener((l) -> {
             filter.set(!filter.get());
             button.setText(getString(getFilter() ? R.string.food_service_show_all_menus : R.string.food_service_filter_menus));
-            drawFoodServices();
+            drawServices();
         });
     }
 

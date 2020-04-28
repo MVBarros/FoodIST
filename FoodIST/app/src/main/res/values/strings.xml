@@ -152,4 +152,5 @@
     <string name="edit">Edit</string>
     <string name="check_preferece_warning">Must have at least one preference</string>
     <string name="commit_text_edit">Save Changes</string>
+    <string name="translate_menu_names">Translate Menu Names</string>
 </resources>

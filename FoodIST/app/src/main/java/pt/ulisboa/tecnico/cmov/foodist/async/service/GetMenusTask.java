@@ -69,7 +69,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
                 .collect(Collectors.toList());
 
         getActivity().setMenus(new ArrayList<>(menus));
-        getActivity().drawFoodServices();
+        getActivity().drawServices();
         if (getActivity().getFilter()) {
             getActivity().showToast(getActivity().getString(R.string.get_menu_filter_menu_message));
         }
