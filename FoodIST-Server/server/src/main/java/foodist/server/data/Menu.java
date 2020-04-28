@@ -13,7 +13,7 @@ public class Menu {
 
     private final String name; //This name is always in english
     private final double price;
-    private final List<String> photos;
+    private final List<Long> photos;
     private final Contract.FoodType type;
     private final String language;
     private final long menuId;
@@ -66,14 +66,19 @@ public class Menu {
     }
 
     public List<String> getPhotos() {
-        return photos;
+        return photos.stream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
     }
 
     public List<String> getPhotos(int num) {
-        return photos.stream().limit(num).collect(Collectors.toList());
+        return photos.stream()
+                .limit(num)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
     }
 
-    public void addPhoto(String photo) {
+    public void addPhoto(long photo) {
         photos.add(photo);
     }
 
@@ -104,7 +109,7 @@ public class Menu {
         builder.setTranslatedName(getTranslatedName(language));
         builder.setLanguage(this.language);
         builder.setMenuId(this.menuId);
-        builder.addAllPhotoId(this.photos);
+        builder.addAllPhotoId(getPhotos());
         builder.setPrice(this.price);
         builder.setType(this.type);
 
@@ -113,16 +118,7 @@ public class Menu {
 
 
     public Contract.Menu toContract() {
-        Contract.Menu.Builder builder = Contract.Menu.newBuilder();
-        builder.setOriginalName(this.name);
-        builder.setTranslatedName(getTranslatedName(this.language));
-        builder.setLanguage(this.language);
-        builder.setMenuId(this.menuId);
-        builder.addAllPhotoId(this.photos);
-        builder.setPrice(this.price);
-        builder.setType(this.type);
-
-        return builder.build();
+        return toContract(this.language);
     }
 
     public static void resetCounter() {

@@ -2,10 +2,7 @@ package foodist.server.service;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
-import foodist.server.data.Account;
-import foodist.server.data.Menu;
-import foodist.server.data.Service;
-import foodist.server.data.Storage;
+import foodist.server.data.*;
 import foodist.server.data.exception.ServiceException;
 import foodist.server.data.exception.StorageException;
 import foodist.server.grpc.contract.Contract;
@@ -15,7 +12,6 @@ import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.PhotoReply;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import io.grpc.Status;
-import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -34,8 +30,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     private final Map<String, Account> users = new ConcurrentHashMap<>();
     private final Map<String, Account> sessions = new ConcurrentHashMap<>();
 
-    private final Map<Long, Menu> menus = new ConcurrentHashMap<>();
+
     private final Map<String, Service> services = new ConcurrentHashMap<>();
+    private final Map<Long, Menu> menus = new ConcurrentHashMap<>();
+    private final Map<Long, Photo> photos = new ConcurrentHashMap<>();
 
 
     @Override
@@ -92,9 +90,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         return new StreamObserver<>() {
             private int counter = 0;
             private ByteString photoByteString = ByteString.copyFrom(new byte[0]);
-            private String menuName;
-            private String foodService;
-            private String photoName;
+            private long menuId;
             private final Object lock = new Object();
 
 
@@ -111,9 +107,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
                     }
                     //Renew Lease
                     if (counter == 0) {
-                        menuName = value.getMenuName();
-                        foodService = value.getFoodService();
-                        photoName = value.getPhotoName();
+                        menuId = value.getMenuId();
                     }
                     photoByteString = photoByteString.concat(value.getContent());
                     counter++;
@@ -129,13 +123,20 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
             @Override
             public void onCompleted() {
                 try {
+                    Photo photo = new Photo(photoByteString.toByteArray());
+                    Menu menu = menus.get(menuId);
+                    if (menu == null) {
+                        responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+                        return;
+                    }
+                    photos.put(photo.getPhotoId(), photo);
+                    menu.addPhoto(photo.getPhotoId());
+
                     responseObserver.onNext(Empty.newBuilder().build());
-                    Storage.addPhotoToMenu(photoName, foodService, menuName, photoByteString);
                     responseObserver.onCompleted();
-                } catch (StatusRuntimeException e) {
-                    throw new IllegalArgumentException(e.getMessage());
-                } catch (StorageException e) {
-                    this.onError(e);
+
+                } catch (IllegalArgumentException e) {
+                    responseObserver.onError(Status.INVALID_ARGUMENT.asRuntimeException());
                 }
             }
         };
@@ -246,5 +247,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     public Service getService(String name) {
         return services.computeIfAbsent(name, Service::new);
+    }
+
+    public Map<Long, Photo> getPhotos() {
+        return photos;
     }
 }

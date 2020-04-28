@@ -2,7 +2,6 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 package foodist.server.grpc.contract;
 
-
 enum FoodType {Vegetarian = 0; Vegan = 1; Meat = 2; Fish = 3;}
 enum Role {Student = 0; Professor = 1; Staff = 2; Visitor = 3;}
 
@@ -21,9 +20,7 @@ message AddMenuReply {
 message AddPhotoRequest {
     int32 sequenceNumber = 1;
     bytes content = 2;
-    string foodService = 3;
-    string menuName = 4;
-    string photoName = 5;
+    int64 menuId = 3;
 }
 
 message DownloadPhotoReply {
