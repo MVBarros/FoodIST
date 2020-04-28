@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     public static final int COOKIE_SIZE = 256;
-
+    public static final int CHUNK_SIZE = 1024 * 1024;
     public static final int NUM_PHOTOS = 3;
 
     private final Map<String, Account> users = new ConcurrentHashMap<>();
@@ -144,25 +144,28 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void downloadPhoto(Contract.DownloadPhotoRequest request, StreamObserver<Contract.DownloadPhotoReply> responseObserver) {
-        String photoId = request.getPhotoId();
-
-        int sequence = 0;
-
         try {
-            byte[] photo = Storage.fetchPhotoBytes(photoId);
+            Photo photo = photos.get(Long.parseLong(request.getPhotoId()));
+            if (photo == null) {
+                responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+                return;
+            }
             //Send file 1MB chunk at a time
+            byte[] photoBytes = photo.getContent();
+            for (int i = 0, seq = 0; i < photoBytes.length; i += CHUNK_SIZE, seq++) {
+                byte[] chunk = Arrays.copyOfRange(photoBytes, i, i + CHUNK_SIZE);
 
-            for (int i = 0; i < photo.length; i += 1024 * 1024, sequence++) {
-                int chunkSize = Math.min(1024 * 1024, photo.length - i);
-                DownloadPhotoReply.Builder downloadPhotoReplyBuilder = Contract.DownloadPhotoReply.newBuilder();
-                downloadPhotoReplyBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(photo, i, i + chunkSize)));
-                downloadPhotoReplyBuilder.setSequenceNumber(sequence);
-                responseObserver.onNext(downloadPhotoReplyBuilder.build());
+                DownloadPhotoReply reply = DownloadPhotoReply.newBuilder()
+                        .setContent(ByteString.copyFrom(chunk))
+                        .setSequenceNumber(seq)
+                        .build();
+
+                responseObserver.onNext(reply);
             }
 
             responseObserver.onCompleted();
-        } catch (StorageException e) {
-            responseObserver.onError(e);
+        } catch (Exception e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.asRuntimeException());
         }
     }
 

@@ -8,6 +8,8 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.service.ServiceImplementation;
 import io.grpc.ManagedChannel;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -17,11 +19,12 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.*;
 
-public class AddPhotoTest {
+public class DownloadPhotoTest {
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
@@ -67,7 +70,7 @@ public class AddPhotoTest {
 
 
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         String serverName = InProcessServerBuilder.generateName();
 
         impl = new ServiceImplementation();
@@ -79,16 +82,7 @@ public class AddPhotoTest {
         this.asyncStub = FoodISTServerServiceGrpc.newStub(channel);
 
         menuId = stub.addMenu(request).getMenuId();
-    }
 
-    @After
-    public void teardown() {
-        Menu.resetCounter();
-        Photo.resetCounter();
-    }
-
-    @Test
-    public void validShortTest() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
             @Override
@@ -98,7 +92,6 @@ public class AddPhotoTest {
 
             @Override
             public void onError(Throwable t) {
-                assertThrowable = t;
                 latch.countDown();
 
             }
@@ -118,15 +111,9 @@ public class AddPhotoTest {
         observer.onCompleted();
 
         latch.await();
-        assertNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 1);
-        assertArrayEquals(impl.getPhotos().get(PHOTO_ID).getContent(), shortPhoto);
-    }
 
-    @Test
-    public void validLongTest() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
+        CountDownLatch latch2 = new CountDownLatch(1);
+        observer = asyncStub.addPhoto(new StreamObserver<>() {
             @Override
             public void onNext(Empty value) {
 
@@ -134,20 +121,19 @@ public class AddPhotoTest {
 
             @Override
             public void onError(Throwable t) {
-                assertThrowable = t;
-                latch.countDown();
+                latch2.countDown();
 
             }
 
             @Override
             public void onCompleted() {
-                latch.countDown();
+                latch2.countDown();
             }
         });
 
-        for (int i = 0,  seq = 0; i < LONG_PHOTO_SIZE; i += CHUNK_SIZE, seq++) {
+        for (int i = 0, seq = 0; i < LONG_PHOTO_SIZE; i += CHUNK_SIZE, seq++) {
             byte[] chunk = Arrays.copyOfRange(longPhoto, i, i + CHUNK_SIZE);
-            Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
+            request = Contract.AddPhotoRequest.newBuilder()
                     .setMenuId(menuId)
                     .setSequenceNumber(seq)
                     .setContent(ByteString.copyFrom(chunk))
@@ -157,44 +143,55 @@ public class AddPhotoTest {
         }
         observer.onCompleted();
 
-        latch.await();
-        assertNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 1);
-        assertArrayEquals(impl.getPhotos().get(PHOTO_ID).getContent(), longPhoto);
+        latch2.await();
+    }
+
+    @After
+    public void teardown() {
+        Menu.resetCounter();
+        Photo.resetCounter();
     }
 
     @Test
-    public void invalidMenuIdTest() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
-            @Override
-            public void onNext(Empty value) {
+    public void validShortTest() {
+        Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder()
+                .setPhotoId(String.valueOf(PHOTO_ID))
+                .build();
+        Iterator<Contract.DownloadPhotoReply> replyIterator = stub.downloadPhoto(request);
+        ByteString photoContent = ByteString.copyFrom(new byte[SHORT_PHOTO_SIZE]);
 
-            }
+        replyIterator.forEachRemaining(reply -> photoContent.concat(reply.getContent()));
 
-            @Override
-            public void onError(Throwable t) {
-                assertThrowable = t;
-                latch.countDown();
+        assertArrayEquals(photoContent.toByteArray(), shortPhoto);
+    }
 
-            }
+    @Test
+    public void validLongTest() {
+        Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder()
+                .setPhotoId(String.valueOf(PHOTO_ID + 1))
+                .build();
+        Iterator<Contract.DownloadPhotoReply> replyIterator = stub.downloadPhoto(request);
+        ByteString photoContent = ByteString.copyFrom(new byte[LONG_PHOTO_SIZE]);
 
-            @Override
-            public void onCompleted() {
-                latch.countDown();
-            }
-        });
+        replyIterator.forEachRemaining(reply -> photoContent.concat(reply.getContent()));
 
-        Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
-                .setMenuId(-1)
-                .setContent(ByteString.copyFrom(shortPhoto))
+        assertArrayEquals(photoContent.toByteArray(), longPhoto);
+    }
+
+    @Test
+    public void invalidMenuIdTest() {
+        Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder()
+                .setPhotoId(String.valueOf(-1))
                 .build();
 
-        observer.onNext(request);
-        observer.onCompleted();
+        Iterator<Contract.DownloadPhotoReply> replyIterator = stub.downloadPhoto(request);
 
-        latch.await();
-        assertNotNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 0);
+        exceptionRule.expect(StatusRuntimeException.class);
+        try {
+            replyIterator.forEachRemaining(reply -> {});
+        }catch (StatusRuntimeException e) {
+            assertEquals(e.getStatus(), Status.NOT_FOUND);
+            throw e;
+        }
     }
 }
