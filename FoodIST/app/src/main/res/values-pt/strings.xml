@@ -153,4 +153,8 @@
     <string name="check_preferece_warning">Tens de ter pelo menos uma preferência</string>
     <string name="commit_text_edit">Guardar alterações</string>
     <string name="translate_menu_names">Traduzir nomes dos menus</string>
+    <string name="username_exists_message">Username already exists</string>
+    <string name="unknown_error_message">An unknown error occurred</string>
+    <string name="cookie_pref_key">Cookie-Key</string>
+    <string name="non_empty_login_params_message">Need a non empty username and password</string>
 </resources>

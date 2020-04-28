@@ -3,6 +3,9 @@ package pt.ulisboa.tecnico.cmov.foodist.status;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import org.conscrypt.Conscrypt;
 
@@ -166,4 +169,63 @@ public class GlobalStatus extends Application {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getString(getString(R.string.profile_language_chosen), "en");
     }
+
+    public void saveProfile(Contract.Profile profile) {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString(getString(R.string.profile_username),profile.getName());
+        editor.putString(getString(R.string.profile_position_name), profile.getRole().name());
+        editor.putString(getString(R.string.profile_language_chosen), profile.getLanguage());
+        editor.putBoolean(GlobalStatus.VEGETARIAN_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Vegetarian_VALUE, true));
+        editor.putBoolean(GlobalStatus.MEAT_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Meat_VALUE, true));
+        editor.putBoolean(GlobalStatus.FISH_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Fish_VALUE, true));
+        editor.putBoolean(GlobalStatus.VEGAN_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Vegan_VALUE, true));
+
+        editor.apply();
+    }
+
+    public Contract.Profile loadProfile() {
+        Contract.Profile.Builder builder = Contract.Profile.newBuilder();
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+
+        String username = pref.getString(getString(R.string.profile_language_chosen), null);
+        if (username == null || username.isEmpty()) {
+            return null;
+        }
+        String position = pref.getString(getString(R.string.profile_profession), Contract.Role.Student.name());
+        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
+
+        builder.setName(username);
+        builder.setRole(Contract.Role.valueOf(position));
+        builder.setLanguage(language);
+
+        builder.putPreferences(Contract.FoodType.Vegetarian_VALUE, pref.getBoolean(GlobalStatus.VEGETARIAN_KEY, true));
+        builder.putPreferences(Contract.FoodType.Meat_VALUE, pref.getBoolean(GlobalStatus.MEAT_KEY, true));
+        builder.putPreferences(Contract.FoodType.Fish_VALUE, pref.getBoolean(GlobalStatus.FISH_KEY, true));
+        builder.putPreferences(Contract.FoodType.Vegan_VALUE, pref.getBoolean(GlobalStatus.VEGAN_KEY, true));
+
+        return builder.build();
+    }
+
+    public void saveCookie(String cookie) {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(getString(R.string.cookie_pref_key), cookie);
+        editor.apply();
+    }
+
+    public void removeCookie() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove(getString(R.string.cookie_pref_key));
+        editor.apply();
+    }
+
+
+    public boolean isLoggedIn() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getString(getString(R.string.cookie_pref_key), null) != null;
+    }
+
 }

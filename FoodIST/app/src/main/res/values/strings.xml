@@ -153,4 +153,9 @@
     <string name="check_preferece_warning">Must have at least one preference</string>
     <string name="commit_text_edit">Save Changes</string>
     <string name="translate_menu_names">Translate Menu Names</string>
+    <string name="username_exists_message">Username already exists</string>
+    <string name="unknown_error_message">An unknown error occurred</string>
+    <string name="cookie_pref_key">Cookie-Key</string>
+    <string name="non_empty_login_params_message">Need a non empty username and password</string>
+    <string name="register_success_message">Register Success</string>
 </resources>
