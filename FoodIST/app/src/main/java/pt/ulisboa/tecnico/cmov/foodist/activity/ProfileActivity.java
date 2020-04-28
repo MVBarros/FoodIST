@@ -205,12 +205,12 @@ public class ProfileActivity extends BaseActivity {
         /*Language*/
         button = findViewById(R.id.languageEnglish);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
+            editor.putString(getString(R.string.profile_language_chosen), "en");
         }
 
         button = findViewById(R.id.languagePortuguese);
         if (button.isChecked()) {
-            editor.putString(getString(R.string.profile_language_chosen), Contract.Language.pt.name());
+            editor.putString(getString(R.string.profile_language_chosen), "pt");
         }
 
         editor.apply();
@@ -289,16 +289,15 @@ public class ProfileActivity extends BaseActivity {
 
     private void setUserLanguage() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
-        String language = pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
-        Contract.Language lang = Contract.Language.valueOf(language);
+        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
 
-        switch (lang) {
-            case en:
+        switch (language) {
+            case "en":
                 RadioButton englishLanguage = findViewById(R.id.languageEnglish);
                 englishLanguage.toggle();
                 break;
 
-            case pt:
+            case "pt":
                 RadioButton portugueseLanguage = findViewById(R.id.languagePortuguese);
                 portugueseLanguage.toggle();
                 break;

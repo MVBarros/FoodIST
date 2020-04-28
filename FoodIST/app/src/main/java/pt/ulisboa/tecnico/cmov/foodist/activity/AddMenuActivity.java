@@ -80,7 +80,7 @@ public class AddMenuActivity extends BaseActivity {
 
             SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
 
-            Contract.Language language = Contract.Language.valueOf(pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name()));
+            String language = pref.getString(getString(R.string.profile_language_chosen), "en");
 
             Menu menu = new Menu(foodService, menuName.getText().toString(),
                     Double.parseDouble(menuCost.getText().toString()), type,
@@ -111,10 +111,12 @@ public class AddMenuActivity extends BaseActivity {
 
     private void uploadMenu(Menu menu) {
         if (isNetworkAvailable()) {
-            new UploadMenuTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getStub()).execute(menu);
             if (imageFilePath != null) {
-                Photo photo = new Photo(menu.getFoodServiceName(), menu.getMenuName(), imageFilePath);
-                new UploadPhotoTask(((GlobalStatus) AddMenuActivity.this.getApplicationContext()).getAssyncStub(), this).execute(photo);
+                UploadPhotoTask task = new UploadPhotoTask(this.getGlobalStatus().getAssyncStub(), this);
+                new UploadMenuTask(this.getGlobalStatus().getStub(), task, imageFilePath).execute(menu);
+
+            } else {
+                new UploadMenuTask(this.getGlobalStatus().getStub()).execute(menu);
             }
             finish();
         } else {

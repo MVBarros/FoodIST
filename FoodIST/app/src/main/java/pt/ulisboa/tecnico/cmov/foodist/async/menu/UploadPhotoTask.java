@@ -84,10 +84,8 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
                 Contract.AddPhotoRequest.Builder addPhotoRequestBuilder = Contract.AddPhotoRequest.newBuilder();
 
                 addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
-                addPhotoRequestBuilder.setMenuName(photo[0].getMenuName());
+                addPhotoRequestBuilder.setMenuId(Long.parseLong(photo[0].getMenuId()));
                 addPhotoRequestBuilder.setSequenceNumber(sequence);
-                addPhotoRequestBuilder.setFoodService(photo[0].getFoodServiceName());
-                addPhotoRequestBuilder.setPhotoName(getFileFromPath(photo[0].getPhotoPath()));
 
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;

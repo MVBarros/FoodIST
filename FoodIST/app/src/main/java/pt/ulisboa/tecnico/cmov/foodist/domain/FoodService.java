@@ -14,14 +14,14 @@ public class FoodService {
 
     private static String TAG = "FOOD-SERVICE-TAG";
 
-    private Map<Contract.Language, String> names;
+    private Map<String, String> names;
     private String distance;
     private String time;
     private double latitude;
     private double longitude;
     private Map<String, Map<String, String>> hours;
 
-    public FoodService(Map<Contract.Language, String> names, String distance, String time, double latitude,
+    public FoodService(Map<String, String> names, String distance, String time, double latitude,
                        double longitude, Map<String, Map<String, String>> hours) {
         this.names = names;
         this.distance = distance;
@@ -32,10 +32,10 @@ public class FoodService {
     }
 
     public String getName() {
-        return names.get(Contract.Language.pt);
+        return names.get("pt");
     }
 
-    public String getName(Contract.Language language) {
+    public String getName(String language) {
         return names.get(language);
     }
 

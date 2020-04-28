@@ -43,12 +43,10 @@ public class FoodServicesJsonParser {
     }
 
     private static FoodService parseObject(JSONObject object) throws JSONException {
-        Map<Contract.Language, String> names = new HashMap<>();
-        for (Contract.Language lang : Contract.Language.values()) {
-            if (!lang.equals(Contract.Language.UNRECOGNIZED)) {
-                names.put(lang, object.getString(lang.name()));
-            }
-        }
+        Map<String, String> names = new HashMap<>();
+
+        names.put("en", object.getString("en"));
+        names.put("pt", object.getString("pt"));
         String distance = object.getString("distance");
         String time = object.getString("time");
         double latitude = object.getDouble("latitude");

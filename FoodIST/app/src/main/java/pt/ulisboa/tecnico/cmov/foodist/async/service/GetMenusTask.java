@@ -19,7 +19,6 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.Menu>, FoodServiceActivity> {
 
     private final FoodISTServerServiceBlockingStub stub;
-    private String foodService;
 
     public GetMenusTask(FoodServiceActivity activity) {
         super(activity);
@@ -29,17 +28,17 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
     private static final String TAG = "GET-MENU-TASK";
 
     @Override
-    protected List<Contract.Menu> doInBackground(String... foodService) {
+    protected List<Contract.Menu> doInBackground(String... foodServices) {
         synchronized (stub) {
-            if (foodService.length != 1) {
+            if (foodServices.length != 1) {
                 return null;
             }
-            this.foodService = foodService[0];
+            String foodService = foodServices[0];
             SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
 
             Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
-            listMenuBuilder.setFoodService(this.foodService);
+            listMenuBuilder.setFoodService(foodService);
             listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.profile_language_chosen), "en"));
 
             Contract.ListMenuRequest request = listMenuBuilder.build();
@@ -66,7 +65,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         }
 
         List<Menu> menus = result.stream()
-                .map(menu -> Menu.parseContractMenu(this.foodService, menu))
+                .map(Menu::parseContractMenu)
                 .collect(Collectors.toList());
 
         getActivity().setMenus(new ArrayList<>(menus));

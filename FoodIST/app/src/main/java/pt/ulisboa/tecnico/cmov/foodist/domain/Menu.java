@@ -10,11 +10,12 @@ public class Menu {
     private String menuName;
     private double price;
     private Contract.FoodType type;
-    private Contract.Language language;
+    private String language;
     private String translatedName;
+    private String menuId;
 
     //To send menus to the server
-    public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, Contract.Language language, String translatedName) {
+    public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, String language, String translatedName) {
         this.foodServiceName = foodServiceName;
         this.menuName = menuName;
         this.price = price;
@@ -22,6 +23,17 @@ public class Menu {
         this.language = language;
         this.translatedName = translatedName;
     }
+
+    //To receive menus from the server
+    public Menu(String originalName, double price, Contract.FoodType type, String language, String translatedName, String menuId) {
+        this.price = price;
+        this.type = type;
+        this.language = language;
+        this.translatedName = translatedName;
+        this.menuName = originalName;
+        this.menuId = menuId;
+    }
+
 
     public String getFoodServiceName() {
         return this.foodServiceName;
@@ -35,8 +47,8 @@ public class Menu {
         return this.price;
     }
 
-    public static Menu parseContractMenu(String foodServiceName, Contract.Menu menu) {
-        return new Menu(foodServiceName, menu.getName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName());
+    public static Menu parseContractMenu(Contract.Menu menu) {
+        return new Menu(menu.getOriginalName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName(), String.valueOf(menu.getMenuId()));
     }
 
     public Contract.FoodType getType() {
@@ -48,14 +60,18 @@ public class Menu {
     }
 
     public String getLanguageName() {
-        return this.language.name();
+        return this.language;
     }
 
-    public Contract.Language getLanguage() {
+    public String getLanguage() {
         return this.language;
     }
 
     public String getTranslatedName() {
         return this.translatedName;
+    }
+
+    public String getMenuId() {
+        return menuId;
     }
 }

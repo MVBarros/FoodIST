@@ -154,7 +154,7 @@ public class GlobalStatus extends Application {
 
     public String getLanguage() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
-        return pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
+        return pref.getString(getString(R.string.profile_language_chosen), "en");
     }
 
     public String getUserRole() {
@@ -162,9 +162,8 @@ public class GlobalStatus extends Application {
         return pref.getString(getString(R.string.profile_position_name), Contract.Role.Student.name());
     }
 
-    public Contract.Language getLanguageForService() {
+    public String getLanguageForService() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
-        String lang = pref.getString(getString(R.string.profile_language_chosen), Contract.Language.en.name());
-        return Contract.Language.valueOf(lang);
+        return pref.getString(getString(R.string.profile_language_chosen), "en");
     }
 }

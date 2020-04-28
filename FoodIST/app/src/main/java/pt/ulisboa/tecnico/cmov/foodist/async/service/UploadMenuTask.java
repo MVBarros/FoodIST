@@ -6,25 +6,39 @@ import android.util.Log;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
+import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
+import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
 
-public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
+public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuReply> {
 
 
     private final FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
+    private final UploadPhotoTask task;
+    private final String taskPhoto;
+
     private static final String TAG = "UPLOADMENU-TASK";
 
     public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
         this.stub = stub;
+        this.task = null;
+        this.taskPhoto = null;
+    }
+
+
+    public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub, UploadPhotoTask task, String taskPhoto) {
+        this.stub = stub;
+        this.task = task;
+        this.taskPhoto = taskPhoto;
     }
 
 
     @Override
-    protected Boolean doInBackground(Menu... menu) {
+    protected Contract.AddMenuReply doInBackground(Menu... menu) {
         synchronized (stub) {
             if (menu.length != 1) {
-                return false;
+                return null;
             }
             Contract.AddMenuRequest.Builder addMenuBuilder = Contract.AddMenuRequest.newBuilder();
 
@@ -37,22 +51,25 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Boolean> {
             Contract.AddMenuRequest request = addMenuBuilder.build();
 
             try {
-                this.stub.addMenu(request);
+                return this.stub.addMenu(request);
             } catch (StatusRuntimeException e) {
-                return false;
+                return null;
             }
-            return true;
         }
 
     }
 
 
     @Override
-    protected void onPostExecute(Boolean result) {
-        if (result) {
+    protected void onPostExecute(Contract.AddMenuReply result) {
+        if (result != null) {
             Log.d(TAG, "Menu uploaded successfully");
+            if (task != null) {
+                task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
+            }
             return;
         }
         Log.d(TAG, "Menu unable to be uploaded");
+
     }
 }

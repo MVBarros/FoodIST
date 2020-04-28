@@ -24,14 +24,14 @@ public class ChooseLanguageActivity extends BaseActivity {
         englishButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseLanguageActivity.this, MainActivity.class);
             finish();
-            setLanguage(Contract.Language.en.name());
+            setLanguage("en");
             startActivity(intent);
         });
 
         portugueseButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseLanguageActivity.this, MainActivity.class);
             finish();
-            setLanguage(Contract.Language.pt.name());
+            setLanguage("pt");
             startActivity(intent);
         });
     }

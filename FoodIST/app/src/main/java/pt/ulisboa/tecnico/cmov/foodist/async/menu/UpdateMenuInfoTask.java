@@ -8,7 +8,7 @@ import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 
-public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.Menu, FoodMenuActivity> {
+public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.PhotoReply, FoodMenuActivity> {
 
     private FoodISTServerServiceBlockingStub stub;
 
@@ -21,16 +21,13 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
 
 
     @Override
-    protected Contract.Menu doInBackground(String... foodService) {
-        if (foodService.length != 2) {
+    protected Contract.PhotoReply doInBackground(String... menuId) {
+        if (menuId.length != 1) {
             return null;
         }
-        String foodService1 = foodService[0];
-        String menuName = foodService[1];
 
         Contract.UpdateMenuRequest req = Contract.UpdateMenuRequest.newBuilder()
-                .setFoodService(foodService1)
-                .setMenuName(menuName)
+                .setMenuId(Long.parseLong(menuId[0]))
                 .build();
 
 
@@ -42,11 +39,11 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
     }
 
     @Override
-    public void onPostExecute(Contract.Menu menu) {
-        if (menu == null) {
+    public void onPostExecute(Contract.PhotoReply reply) {
+        if (reply == null) {
             Log.e(TAG, "Menu does not exist");
             return;
         }
-        getActivity().updatePhotos(menu.getPhotoIdList());
+        getActivity().updatePhotos(reply.getPhotoIDList());
     }
 }

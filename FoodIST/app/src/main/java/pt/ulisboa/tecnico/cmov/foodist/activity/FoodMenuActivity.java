@@ -49,9 +49,9 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_NAME;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_NAME;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
-import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_SERVICE;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
 public class FoodMenuActivity extends BaseActivity {
@@ -74,8 +74,7 @@ public class FoodMenuActivity extends BaseActivity {
 
     private String imageFilePath = null;
 
-    private String foodService;
-    private String menuName;
+    private String menuId;
 
     private Set<String> photoIDs = Collections.synchronizedSet(new HashSet<>());
 
@@ -106,7 +105,7 @@ public class FoodMenuActivity extends BaseActivity {
     public void launchDownloadPhotosTask() {
         Photo[] photos = photoIDs.stream()
                 .filter(photo -> !downloadedPhotos.contains(photo))
-                .map(photoId -> new Photo(this.foodService, this.menuName, null, photoId))
+                .map(photoId -> new Photo(this.menuId,  null, photoId))
                 .toArray(Photo[]::new);
 
         //Prevent downloading the same photo twice
@@ -164,20 +163,17 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void intentInitialization(Intent intent) {
-        initializeMenuName(intent.getStringExtra(MENU_NAME));
+        initializeMenuId(intent.getStringExtra(MENU_ID));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
-        initializeFoodService(intent.getStringExtra(MENU_SERVICE));
         initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
     }
 
-    private void initializeMenuName(String menuName) {
-        if (menuName == null) {
+    private void initializeMenuId(String menuId) {
+        if (menuId == null) {
             Log.d(TAG, "Unable to obtain menu name");
             showToast(getString(R.string.food_menu_name_failure_toast));
         } else {
-            this.menuName = menuName;
-            //TextView menuNameText = findViewById(R.id.menuName);
-            //menuNameText.setText(menuName);
+            this.menuId = menuId;
         }
     }
 
@@ -201,17 +197,11 @@ public class FoodMenuActivity extends BaseActivity {
         }
     }
 
-    private void initializeFoodService(String foodService) {
-        if (foodService == null) {
-            Log.d(TAG, "Unable to obtain correspondent food service");
-        } else {
-            this.foodService = foodService;
-        }
-    }
+
 
     public void launchUpdateMenuTask() {
         if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodService, menuName);
+            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
         } else {
             showToast(getString(R.string.food_menu_update_menu_failure_toast));
         }
@@ -231,7 +221,7 @@ public class FoodMenuActivity extends BaseActivity {
         if (tryingPhoto == null) {
             galleryReturn(editor, data);
         } else {
-            Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
+            Photo photo = new Photo(this.menuId, this.imageFilePath);
             launchUploadPhotoTask(photo);
         }
     }
@@ -365,12 +355,12 @@ public class FoodMenuActivity extends BaseActivity {
         String absoluteFilePath = cursor.getString(columnIndex);
         cursor.close();
 
-        Photo photo = new Photo(this.foodService, this.menuName, absoluteFilePath);
+        Photo photo = new Photo(this.menuId, absoluteFilePath);
         launchUploadPhotoTask(photo);
     }
 
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
-        Photo photo = new Photo(this.foodService, this.menuName, this.imageFilePath);
+        Photo photo = new Photo(this.menuId, this.imageFilePath);
         launchUploadPhotoTask(photo);
     }
 }

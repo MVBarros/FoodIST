@@ -18,6 +18,8 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
+
 public class MenuAdapter extends ArrayAdapter<Menu> {
     private static final String MENU_NAME = "Menu_name";
     private static final String MENU_PRICE = "Menu_price";
@@ -55,6 +57,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
             intent.putExtra(MENU_NAME, menu.getMenuName());
             intent.putExtra(MENU_PRICE, menu.getPrice());
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
+            intent.putExtra(MENU_ID, menu.getMenuId());
             intent.putExtra(DISPLAY_NAME, menuFood.getText());
             getContext().startActivity(intent);
 
