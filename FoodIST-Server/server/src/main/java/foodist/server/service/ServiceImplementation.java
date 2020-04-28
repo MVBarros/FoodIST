@@ -41,6 +41,11 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     @Override
     public void addMenu(Contract.AddMenuRequest request, StreamObserver<Contract.AddMenuReply> responseObserver) {
         try {
+            if (!validateCookie(request.getCookie())) {
+                responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+                return;
+            }
+
             Service service = getService(request.getFoodService());
             Menu menu = Menu.fromContract(request);
             service.addMenu(menu);
@@ -91,6 +96,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
         return new StreamObserver<>() {
             private int counter = 0;
+            private String cookie;
             private ByteString photoByteString = ByteString.copyFrom(new byte[0]);
             private long menuId;
             private final Object lock = new Object();
@@ -110,6 +116,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
                     //Renew Lease
                     if (counter == 0) {
                         menuId = value.getMenuId();
+                        cookie = value.getCookie();
                     }
                     photoByteString = photoByteString.concat(value.getContent());
                     counter++;
@@ -125,6 +132,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
             @Override
             public void onCompleted() {
                 try {
+                    if (!validateCookie(cookie)) {
+                        responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+                        return;
+                    }
                     Photo photo = new Photo(photoByteString.toByteArray());
                     Menu menu = menus.get(menuId);
                     if (menu == null) {
@@ -240,6 +251,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     private String generateRandomCookie() {
         return RandomStringUtils.random(COOKIE_SIZE);
+    }
+
+    private boolean validateCookie(String cookie) {
+        return sessions.containsKey(cookie);
     }
 
     public Map<String, Account> getUsers() {

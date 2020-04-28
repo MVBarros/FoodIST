@@ -15,7 +15,9 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,6 +49,13 @@ public class ListMenuTest {
 
     private static Contract.ListMenuRequest listRequest;
     private static Contract.ListMenuRequest secondListRequest;
+
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
+
+    private static Contract.Profile profile;
+
+    private String cookie;
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -82,6 +91,19 @@ public class ListMenuTest {
                 .setLanguage(LANGUAGE)
                 .build();
 
+        Map<Integer, Boolean> preferences = new HashMap<>();
+        preferences.put(Contract.FoodType.Vegan_VALUE, true);
+        preferences.put(Contract.FoodType.Meat_VALUE, true);
+        preferences.put(Contract.FoodType.Fish_VALUE, true);
+        preferences.put(Contract.FoodType.Vegetarian_VALUE, true);
+
+        profile = Contract.Profile.newBuilder()
+                .setName(USERNAME)
+                .setLanguage("pt")
+                .setRole(Contract.Role.Student)
+                .putAllPreferences(preferences)
+                .build();
+
     }
 
 
@@ -95,9 +117,24 @@ public class ListMenuTest {
         ManagedChannel channel = grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
 
         this.stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
-        stub.addMenu(request);
-        stub.addMenu(secondRequest);
-        stub.addMenu(thirdRequest);
+
+        cookie = stub.register(Contract.RegisterRequest.newBuilder()
+                .setProfile(profile)
+                .setPassword(PASSWORD)
+                .build()).getCookie();
+
+
+        stub.addMenu(request.toBuilder()
+                .setCookie(cookie)
+                .build());
+
+        stub.addMenu(secondRequest.toBuilder()
+                .setCookie(cookie)
+                .build());
+
+        stub.addMenu(thirdRequest.toBuilder()
+                .setCookie(cookie)
+                .build());
     }
 
     @After

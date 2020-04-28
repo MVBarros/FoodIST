@@ -16,7 +16,9 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
@@ -62,6 +64,12 @@ public class RequestPhotoIdsTest {
 
     private final byte[] shortPhoto = new byte[SHORT_PHOTO_SIZE];
 
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
+
+    private static Contract.Profile profile;
+
+    private String cookie;
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -72,6 +80,7 @@ public class RequestPhotoIdsTest {
                 .setFoodService(SERVICE)
                 .setType(Contract.FoodType.Meat)
                 .build();
+
         request2 = Contract.AddMenuRequest.newBuilder()
                 .setName(NAME2)
                 .setPrice(PRICE)
@@ -79,6 +88,7 @@ public class RequestPhotoIdsTest {
                 .setFoodService(SERVICE)
                 .setType(Contract.FoodType.Meat)
                 .build();
+
         request3 = Contract.AddMenuRequest.newBuilder()
                 .setName(NAME3)
                 .setPrice(PRICE)
@@ -86,12 +96,26 @@ public class RequestPhotoIdsTest {
                 .setFoodService(SERVICE)
                 .setType(Contract.FoodType.Meat)
                 .build();
+
         request4 = Contract.AddMenuRequest.newBuilder()
                 .setName(NAME4)
                 .setPrice(PRICE)
                 .setLanguage(LANGUAGE)
                 .setFoodService(SERVICE)
                 .setType(Contract.FoodType.Meat)
+                .build();
+
+        Map<Integer, Boolean> preferences = new HashMap<>();
+        preferences.put(Contract.FoodType.Vegan_VALUE, true);
+        preferences.put(Contract.FoodType.Meat_VALUE, true);
+        preferences.put(Contract.FoodType.Fish_VALUE, true);
+        preferences.put(Contract.FoodType.Vegetarian_VALUE, true);
+
+        profile = Contract.Profile.newBuilder()
+                .setName(USERNAME)
+                .setLanguage("pt")
+                .setRole(Contract.Role.Student)
+                .putAllPreferences(preferences)
                 .build();
     }
 
@@ -108,10 +132,28 @@ public class RequestPhotoIdsTest {
         this.stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
         this.asyncStub = FoodISTServerServiceGrpc.newStub(channel);
 
-        menuId = stub.addMenu(request).getMenuId();
-        menuId2 = stub.addMenu(request2).getMenuId();
-        menuId3 = stub.addMenu(request3).getMenuId();
-        menuId4 = stub.addMenu(request4).getMenuId();
+        cookie = stub.register(Contract.RegisterRequest.newBuilder()
+                .setProfile(profile)
+                .setPassword(PASSWORD)
+                .build()).getCookie();
+
+        menuId = stub.addMenu(request.toBuilder()
+                .setCookie(cookie)
+                .build())
+                .getMenuId();
+
+        menuId2 = stub.addMenu(request2.toBuilder()
+                .setCookie(cookie)
+                .build())
+                .getMenuId();
+        menuId3 = stub.addMenu(request3.toBuilder()
+                .setCookie(cookie)
+                .build())
+                .getMenuId();
+        menuId4 = stub.addMenu(request4.toBuilder()
+                .setCookie(cookie)
+                .build())
+                .getMenuId();
 
         for (int i = 0; i < 4; i++) {
             CountDownLatch latch = new CountDownLatch(1);
@@ -136,6 +178,7 @@ public class RequestPhotoIdsTest {
 
             Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
                     .setMenuId(menuId)
+                    .setCookie(cookie)
                     .setContent(ByteString.copyFrom(shortPhoto))
                     .setSequenceNumber(0)
                     .build();
@@ -169,6 +212,7 @@ public class RequestPhotoIdsTest {
 
             Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
                     .setMenuId(menuId2)
+                    .setCookie(cookie)
                     .setContent(ByteString.copyFrom(shortPhoto))
                     .setSequenceNumber(0)
                     .build();
@@ -202,6 +246,7 @@ public class RequestPhotoIdsTest {
 
             Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
                     .setMenuId(menuId3)
+                    .setCookie(cookie)
                     .setContent(ByteString.copyFrom(shortPhoto))
                     .setSequenceNumber(0)
                     .build();

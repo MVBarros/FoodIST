@@ -19,7 +19,9 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.*;
@@ -56,6 +58,13 @@ public class DownloadPhotoTest {
     private final byte[] shortPhoto = new byte[SHORT_PHOTO_SIZE];
     private final byte[] longPhoto = new byte[LONG_PHOTO_SIZE];
 
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
+
+    private static Contract.Profile profile;
+
+    private String cookie;
+
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -65,6 +74,19 @@ public class DownloadPhotoTest {
                 .setLanguage(LANGUAGE)
                 .setFoodService(SERVICE)
                 .setType(Contract.FoodType.Meat)
+                .build();
+
+        Map<Integer, Boolean> preferences = new HashMap<>();
+        preferences.put(Contract.FoodType.Vegan_VALUE, true);
+        preferences.put(Contract.FoodType.Meat_VALUE, true);
+        preferences.put(Contract.FoodType.Fish_VALUE, true);
+        preferences.put(Contract.FoodType.Vegetarian_VALUE, true);
+
+        profile = Contract.Profile.newBuilder()
+                .setName(USERNAME)
+                .setLanguage("pt")
+                .setRole(Contract.Role.Student)
+                .putAllPreferences(preferences)
                 .build();
     }
 
@@ -81,7 +103,15 @@ public class DownloadPhotoTest {
         this.stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
         this.asyncStub = FoodISTServerServiceGrpc.newStub(channel);
 
-        menuId = stub.addMenu(request).getMenuId();
+        cookie = stub.register(Contract.RegisterRequest.newBuilder()
+                .setProfile(profile)
+                .setPassword(PASSWORD)
+                .build()).getCookie();
+
+        menuId = stub.addMenu(request.toBuilder()
+                .setCookie(cookie)
+                .build())
+                .getMenuId();
 
         CountDownLatch latch = new CountDownLatch(1);
         StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
@@ -105,6 +135,7 @@ public class DownloadPhotoTest {
         Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
                 .setMenuId(menuId)
                 .setContent(ByteString.copyFrom(shortPhoto))
+                .setCookie(cookie)
                 .build();
 
         observer.onNext(request);
@@ -137,6 +168,7 @@ public class DownloadPhotoTest {
                     .setMenuId(menuId)
                     .setSequenceNumber(seq)
                     .setContent(ByteString.copyFrom(chunk))
+                    .setCookie(cookie)
                     .build();
 
             observer.onNext(request);
