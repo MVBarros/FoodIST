@@ -13,7 +13,7 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
-import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
+import pt.ulisboa.tecnico.cmov.foodist.utils.CoordinateUtils;
 
 public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integer, Boolean, MainActivity> {
 
@@ -44,7 +44,7 @@ public class ServiceWalkingTimeTask extends BaseAsyncTask<WalkingTimeData, Integ
             try {
                 double serviceLatitude = service.getLatitude();
                 double serviceLongitude = service.getLongitude();
-                String walkingTime = CoordenateUtils.getWalkingTimeTo(latitude, longitude, serviceLatitude, serviceLongitude, apiKey, language);
+                String walkingTime = CoordinateUtils.getWalkingTimeTo(latitude, longitude, serviceLatitude, serviceLongitude, apiKey, language);
                 service.setDistance(walkingTime);
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Unable to get walking distance to service " + service.getName() + " due to cause: " + e.getCause());

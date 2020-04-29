@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
-import pt.ulisboa.tecnico.cmov.foodist.utils.CoordenateUtils;
+import pt.ulisboa.tecnico.cmov.foodist.utils.CoordinateUtils;
 
 
 public class GuessCampusTask extends BaseAsyncTask<LatLng, Integer, String, MainActivity> {
@@ -35,7 +35,7 @@ public class GuessCampusTask extends BaseAsyncTask<LatLng, Integer, String, Main
             return null;
         }
         for (int i = 0; i < NUMBER_CAMPUS; ++i) {
-            int distance = CoordenateUtils.calculateDistance(curr, lngs[i]);
+            int distance = CoordinateUtils.calculateDistance(curr, lngs[i]);
             if (distance < MAX_DISTANCE) {
                 return i == ALAMEDA ? "Alameda" : "TagusPark";
             }
