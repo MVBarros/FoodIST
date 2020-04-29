@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final LatLng LOCATION_TAGUS = new LatLng(38.737050, -9.302734);
     private static final LatLng LOCATION_ALAMEDA = new LatLng(38.736819, -9.138769);
 
-
     private boolean isOnCreate;
 
     private LocationRequestContext reqContext;
@@ -222,6 +221,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.global_preferences_file), 0).edit();
         editor.putString(getString(R.string.global_preferences_location), campus);
         editor.apply();
+        getGlobalStatus().setCampus(campus);
         loadServices(campus);
     }
 

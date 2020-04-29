@@ -185,4 +185,7 @@
     <string name="could_not_change_profile_message">Could not change profile</string>
     <string name="edit_no_conn_message">Must have network connection to edit profile</string>
     <string name="profile_synched_mesage">Profile synced with server</string>
+    <string name="must_login_message">Must login to perform this action</string>
+    <string name="login_dialog_positive_message">login</string>
+    <string name="login_dialog_negative_message">No thanks</string>
 </resources>

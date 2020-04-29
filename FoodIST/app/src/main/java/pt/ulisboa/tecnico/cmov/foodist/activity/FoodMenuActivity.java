@@ -46,6 +46,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.menu.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
+import pt.ulisboa.tecnico.cmov.foodist.dialog.LoginDialog;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -170,7 +171,14 @@ public class FoodMenuActivity extends BaseActivity {
 
     protected void setButtons() {
         Button addPhoto = findViewById(R.id.add_photo_button);
-        addPhoto.setOnClickListener(v -> askGalleryPermission());
+        addPhoto.setOnClickListener(v -> {
+                    if (!isLoggedIn()) {
+                        new LoginDialog(this, getGlobalStatus().getCampus()).show(getSupportFragmentManager(), "login");
+                        return;
+                    }
+                    askGalleryPermission();
+                }
+                );
     }
 
     public void updatePhotos(Collection<String> newPhotos) {
@@ -223,10 +231,7 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void launchUploadPhotoTask(Photo photo) {
-        if (!isLoggedIn()) {
-            showToast(getString(R.string.must_be_login_photo_message));
-            return;
-        }
+
         if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
             return;

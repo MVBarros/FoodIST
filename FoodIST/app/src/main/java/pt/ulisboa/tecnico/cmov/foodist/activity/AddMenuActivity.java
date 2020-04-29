@@ -33,6 +33,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.service.UploadMenuTask;
+import pt.ulisboa.tecnico.cmov.foodist.dialog.LoginDialog;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
@@ -111,7 +112,7 @@ public class AddMenuActivity extends BaseActivity {
             return;
         }
         if (!isLoggedIn()) {
-            showToast(getString(R.string.require_login_add_menu_message));
+            new LoginDialog(this, getGlobalStatus().getCampus()).show(getSupportFragmentManager(), "login");
             return;
         }
 

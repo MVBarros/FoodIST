@@ -42,6 +42,8 @@ public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
 
+    private String campus;
+
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         try {
             if (stub == null) {
@@ -62,6 +64,14 @@ public class GlobalStatus extends Application {
             Log.e("SSL-SOCKET-FACTORY", e.getMessage());
             return null;
         }
+    }
+
+    public void setCampus(String campus) {
+        this.campus = campus;
+    }
+
+    public String getCampus() {
+        return this.campus;
     }
 
     public FoodISTServerServiceGrpc.FoodISTServerServiceStub getAsyncStub() {
