@@ -145,6 +145,11 @@ public class GlobalStatus extends Application {
         return pref.getString(getString(R.string.shared_prefs_profile_language), "en");
     }
 
+    public String getUsername() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getString(getString(R.string.shared_prefs_profile_username), "");
+    }
+
     public String getUserRole() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Student.name());

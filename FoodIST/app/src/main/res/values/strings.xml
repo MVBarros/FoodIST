@@ -178,4 +178,8 @@
     <string name="require_login_add_menu_message">Must be logged in to add a menu</string>
     <string name="give_menu_type_message">Give the menu a type!</string>
     <string name="not_logged_in_text">Not Logged In</string>
+    <string name="logout_error_message">Could not logout</string>
+    <string name="logout_successful_message">Logout successful</string>
+    <string name="logout_button_message">Logout</string>
+    <string name="logout_no_connection_message">Cannot logout without a network connection</string>
 </resources>

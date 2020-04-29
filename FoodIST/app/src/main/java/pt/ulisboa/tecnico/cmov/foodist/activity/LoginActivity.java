@@ -3,12 +3,14 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.profile.LoginAsyncTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.profile.LogoutAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.profile.RegisterAsyncTask;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.CAMPUS;
@@ -25,28 +27,51 @@ public class LoginActivity extends BaseActivity {
         setButtons();
     }
 
-    private void setButtons() {
-        Button button = findViewById(R.id.login_button);
-        button.setOnClickListener(v -> {
-            if (isNetworkAvailable()) {
-                doLogin();
-            } else {
-                showToast(getString(R.string.cannot_login_network_message));
+    public void drawScreen() {
+        EditText text = findViewById(R.id.login_username);
+        text.setEnabled(!isLoggedIn());
+        if (isLoggedIn()) {
+            text.setText(getGlobalStatus().getUsername());
+        }
 
-            }
-        });
+        text = findViewById(R.id.login_password);
+        text.setEnabled(!isLoggedIn());
+
+        Button button = findViewById(R.id.login_button);
+
+        if (isLoggedIn()) {
+            button.setText(R.string.logout_button_message);
+        } else {
+            button.setText(R.string.login);
+        }
+
         button = findViewById(R.id.register_button);
-        button.setOnClickListener(v -> {
-            if (isNetworkAvailable()) {
-                doRegister();
-            } else {
-                showToast(getString(R.string.register_no_connection_message));
-            }
-        });
+        button.setEnabled(!isLoggedIn());
+
+    }
+
+    public void setButtons() {
+        drawScreen();
+        Button button = findViewById(R.id.login_button);
+        button.setOnClickListener(v -> loginButton());
+
+        button = findViewById(R.id.register_button);
+        button.setOnClickListener(v -> doRegister());
+    }
+
+    public void loginButton() {
+        if (!isLoggedIn()) {
+            doLogin();
+        } else {
+            doLogout();
+        }
     }
 
     public void doLogin() {
-
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.cannot_login_network_message));
+            return;
+        }
         TextView text = findViewById(R.id.login_username);
         String username = text.getText().toString();
 
@@ -65,8 +90,20 @@ public class LoginActivity extends BaseActivity {
         new LoginAsyncTask(this).execute(request);
     }
 
-    public void doRegister() {
+    public void doLogout() {
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.logout_no_connection_message));
+            return;
+        }
 
+        new LogoutAsyncTask(this).execute(getGlobalStatus().getCookie());
+    }
+
+    public void doRegister() {
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.register_no_connection_message));
+            return;
+        }
         TextView text = findViewById(R.id.login_username);
         String username = text.getText().toString();
 

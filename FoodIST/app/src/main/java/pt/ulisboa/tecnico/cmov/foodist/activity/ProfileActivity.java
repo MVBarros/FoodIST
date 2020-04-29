@@ -220,9 +220,10 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setUsername() {
+
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
         TextView user = findViewById(R.id.username);
-        String username = pref.getString(getString(R.string.shared_prefs_profile_username), getString(R.string.not_logged_in_text));
+        String username = isLoggedIn() ? pref.getString(getString(R.string.shared_prefs_profile_username), getString(R.string.not_logged_in_text)) : getString(R.string.not_logged_in_text);
         user.setText(String.format("%s: %s", getString(R.string.username_not_logged_in), username));
     }
 
