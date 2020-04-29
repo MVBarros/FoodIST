@@ -192,6 +192,8 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
     }
 
 
+    // I am sorry for this ugly code
+    // Signed: Miguel
     public String timeString(Long time) {
         String res = "";
         if (time > (3600 * 24)) {

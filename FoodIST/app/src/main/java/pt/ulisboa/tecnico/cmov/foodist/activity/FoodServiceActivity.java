@@ -208,11 +208,11 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     public void updateMenus() {
-        if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceId);
-        } else {
+        if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_service_menu_update_failure_toast));
+            return;
         }
+        new CancelableTask<>(new SafePostTask<>(new GetMenusTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.foodServiceId);
     }
 
     public void doShowAllButton() {

@@ -3,9 +3,6 @@ package pt.ulisboa.tecnico.cmov.foodist.status;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RadioButton;
 
 import org.conscrypt.Conscrypt;
 
@@ -43,11 +40,8 @@ public class GlobalStatus extends Application {
     public static final String VEGETARIAN_KEY = Contract.FoodType.Vegetarian.name();
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
-    private FoodISTServerServiceGrpc.FoodISTServerServiceStub assyncStub = null;
-
+    private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
-
-    private boolean freshBootFlag = true;
 
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         try {
@@ -62,7 +56,7 @@ public class GlobalStatus extends Application {
                         .sslSocketFactory(factory)
                         .build();
                 stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
-                assyncStub = FoodISTServerServiceGrpc.newStub(channel);
+                asyncStub = FoodISTServerServiceGrpc.newStub(channel);
             }
             return stub;
         } catch (Exception e) {
@@ -71,9 +65,9 @@ public class GlobalStatus extends Application {
         }
     }
 
-    public FoodISTServerServiceGrpc.FoodISTServerServiceStub getAssyncStub() {
+    public FoodISTServerServiceGrpc.FoodISTServerServiceStub getAsyncStub() {
         try {
-            if (assyncStub == null) {
+            if (asyncStub == null) {
                 Provider provider = Conscrypt.newProvider();
                 Security.insertProviderAt(provider, 1);
                 SSLSocketFactory factory = newSslSocketFactoryForCa(provider);
@@ -82,10 +76,10 @@ public class GlobalStatus extends Application {
                 ManagedChannel channel = OkHttpChannelBuilder.forAddress(address, port)
                         .sslSocketFactory(factory)
                         .build();
-                assyncStub = FoodISTServerServiceGrpc.newStub(channel);
+                asyncStub = FoodISTServerServiceGrpc.newStub(channel);
                 stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
             }
-            return assyncStub;
+            return asyncStub;
         } catch (Exception e) {
             Log.e("SSL-SOCKET-FACTORY", e.getMessage());
             return null;
@@ -102,14 +96,6 @@ public class GlobalStatus extends Application {
 
     public String getApiKey() {
         return getString(R.string.map_api_key);
-    }
-
-    public boolean isFreshBootFlag() {
-        return freshBootFlag;
-    }
-
-    public void setFreshBootFlag(boolean freshBootFlag) {
-        this.freshBootFlag = freshBootFlag;
     }
 
     public InputStream getServerCert() {
@@ -156,7 +142,7 @@ public class GlobalStatus extends Application {
     }
 
     public String getLanguage() {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.shared_prefs_profile_language), 0);
         return pref.getString(getString(R.string.profile_language_chosen), "en");
     }
 
@@ -174,9 +160,9 @@ public class GlobalStatus extends Application {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         SharedPreferences.Editor editor = pref.edit();
 
-        editor.putString(getString(R.string.profile_username),profile.getName());
-        editor.putString(getString(R.string.profile_position_name), profile.getRole().name());
-        editor.putString(getString(R.string.profile_language_chosen), profile.getLanguage());
+        editor.putString(getString(R.string.shared_prefs_profile_username), profile.getName());
+        editor.putString(getString(R.string.shared_prefs_profile_profession), profile.getRole().name());
+        editor.putString(getString(R.string.shared_prefs_profile_language), profile.getLanguage());
         editor.putBoolean(GlobalStatus.VEGETARIAN_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Vegetarian_VALUE, true));
         editor.putBoolean(GlobalStatus.MEAT_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Meat_VALUE, true));
         editor.putBoolean(GlobalStatus.FISH_KEY, profile.getPreferencesOrDefault(Contract.FoodType.Fish_VALUE, true));
@@ -189,12 +175,9 @@ public class GlobalStatus extends Application {
         Contract.Profile.Builder builder = Contract.Profile.newBuilder();
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
 
-        String username = pref.getString(getString(R.string.profile_language_chosen), null);
-        if (username == null || username.isEmpty()) {
-            return null;
-        }
-        String position = pref.getString(getString(R.string.profile_profession), Contract.Role.Student.name());
-        String language = pref.getString(getString(R.string.profile_language_chosen), "en");
+        String username = pref.getString(getString(R.string.shared_prefs_profile_username), "");
+        String position = pref.getString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Student.name());
+        String language = pref.getString(getString(R.string.shared_prefs_profile_language), "en");
 
         builder.setName(username);
         builder.setRole(Contract.Role.valueOf(position));
@@ -222,10 +205,16 @@ public class GlobalStatus extends Application {
         editor.apply();
     }
 
+    public String getCookie() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getString(getString(R.string.cookie_pref_key), "");
+    }
+
 
     public boolean isLoggedIn() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getString(getString(R.string.cookie_pref_key), null) != null;
     }
+
 
 }

@@ -17,20 +17,16 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
     private final FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
     private final UploadPhotoTask task;
     private final String taskPhoto;
+    private final String cookie;
 
     private static final String TAG = "UPLOADMENU-TASK";
 
-    public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
-        this.stub = stub;
-        this.task = null;
-        this.taskPhoto = null;
-    }
 
-
-    public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub, UploadPhotoTask task, String taskPhoto) {
+    public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub, UploadPhotoTask task, String taskPhoto, String cookie) {
         this.stub = stub;
         this.task = task;
         this.taskPhoto = taskPhoto;
+        this.cookie = cookie;
     }
 
 
@@ -47,7 +43,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
             addMenuBuilder.setPrice(menu[0].getPrice());
             addMenuBuilder.setType(menu[0].getType());
             addMenuBuilder.setLanguage(menu[0].getLanguage());
-
+            addMenuBuilder.setCookie(cookie);
             Contract.AddMenuRequest request = addMenuBuilder.build();
 
             try {
@@ -62,14 +58,14 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
 
     @Override
     protected void onPostExecute(Contract.AddMenuReply result) {
-        if (result != null) {
-            Log.d(TAG, "Menu uploaded successfully");
-            if (task != null) {
-                task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
-            }
+        if (result == null) {
+            Log.d(TAG, "Menu unable to be uploaded");
             return;
         }
-        Log.d(TAG, "Menu unable to be uploaded");
+        Log.d(TAG, "Menu uploaded successfully");
 
+        if (taskPhoto != null) {
+            task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
+        }
     }
 }

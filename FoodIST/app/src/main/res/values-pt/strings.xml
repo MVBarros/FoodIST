@@ -77,6 +77,7 @@
     <!-- activity profile -->
     <!-- Layout -->
     <string name="profile_username">Nome de Utilizador</string>
+
     <string name="profile_profession">Profissão</string>
     <string name="profile_student">Estudante</string>
     <string name="profile_professor">Professor</string>
@@ -90,6 +91,16 @@
     <string name="profile_dietary_meat">Carne</string>
     <string name="profile_dietary_fish">Peixe</string>
     <string name="profile_dietary_vegen">Vegan</string>
+
+
+    <!-- Shared Prefs -->
+    <string name="shared_prefs_profile_username">Username</string>
+    <string name="shared_prefs_profile_profession">Profession</string>
+    <string name="shared_prefs_profile_language">Language</string>
+    <string name="shared_prefs_profile_dietary_meat">Meat</string>
+    <string name="shared_prefs_profile_dietary_fish">Fish</string>
+    <string name="shared_prefs_profile_dietary_vegetarian">Vegetarian</string>
+    <string name="shared_prefs_profile_dietary_vegan">Vegan</string>
 
     <!-- Activity -->
     <string name="profile_file">profile</string>
@@ -157,4 +168,15 @@
     <string name="unknown_error_message">An unknown error occurred</string>
     <string name="cookie_pref_key">Cookie-Key</string>
     <string name="non_empty_login_params_message">Need a non empty username and password</string>
+
+    <string name="register_success_message">Register Success</string>
+    <string name="register_no_connection_message">Cannot register without internet connection</string>
+    <string name="username_not_logged_in">Nome de Utilizador</string>
+    <string name="login_successful_message">Login successful</string>
+    <string name="login_error_message">Could not login with values provided</string>
+    <string name="cannot_login_network_message">Cannot log in without a network connection</string>
+    <string name="must_be_login_photo_message">Must be logged in to upload a photo</string>
+    <string name="require_login_add_menu_message">Must be logged in to add a menu</string>
+    <string name="give_menu_type_message">Give the menu a type!</string>
+    <string name="not_logged_in_text">Not Logged In</string>
 </resources>

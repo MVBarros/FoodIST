@@ -11,6 +11,7 @@ message AddMenuRequest {
     double price = 3;
     FoodType type = 4;
     string language = 5;
+    string cookie = 6;
 }
 
 message AddMenuReply {
@@ -21,6 +22,7 @@ message AddPhotoRequest {
     int32 sequenceNumber = 1;
     bytes content = 2;
     int64 menuId = 3;
+    string cookie = 6;
 }
 
 message DownloadPhotoReply {
@@ -92,4 +94,3 @@ service FoodISTServerService {
     rpc login(LoginRequest) returns (AccountMessage);
     rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
 }
-

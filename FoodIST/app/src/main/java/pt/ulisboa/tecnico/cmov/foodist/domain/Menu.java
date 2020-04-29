@@ -24,6 +24,15 @@ public class Menu {
         this.translatedName = translatedName;
     }
 
+    //To send menus to the server
+    public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, String language) {
+        this.foodServiceName = foodServiceName;
+        this.menuName = menuName;
+        this.price = price;
+        this.type = type;
+        this.language = language;
+    }
+
     //To receive menus from the server
     public Menu(String originalName, double price, Contract.FoodType type, String language, String translatedName, String menuId) {
         this.price = price;

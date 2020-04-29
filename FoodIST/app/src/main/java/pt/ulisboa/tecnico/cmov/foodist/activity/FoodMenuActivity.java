@@ -50,7 +50,6 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_NAME;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
-import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_NAME;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
@@ -103,9 +102,14 @@ public class FoodMenuActivity extends BaseActivity {
 
 
     public void launchDownloadPhotosTask() {
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.food_menu_update_menu_failure_toast));
+            return;
+        }
+
         Photo[] photos = photoIDs.stream()
                 .filter(photo -> !downloadedPhotos.contains(photo))
-                .map(photoId -> new Photo(this.menuId,  null, photoId))
+                .map(photoId -> new Photo(this.menuId, null, photoId))
                 .toArray(Photo[]::new);
 
         //Prevent downloading the same photo twice
@@ -113,13 +117,11 @@ public class FoodMenuActivity extends BaseActivity {
                 .map(Photo::getPhotoID)
                 .forEach(downloadedPhotos::add);
 
-        if (isNetworkAvailable()) {
-            if (photos.length != 0) {
-                new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
-            }
-        } else {
-            showToast(getString(R.string.food_menu_update_menu_failure_toast));
+        if (photos.length == 0) {
+            return;
         }
+
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
     }
 
     public void addPhoto(Bitmap bitmap, String photoId) {
@@ -146,15 +148,8 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     protected void setButtons() {
-
         Button addPhoto = findViewById(R.id.add_photo_button);
-        addPhoto.setOnClickListener(v -> {
-            if (isNetworkAvailable()) {
-                askGalleryPermission();
-            } else {
-                showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
-            }
-        });
+        addPhoto.setOnClickListener(v -> askGalleryPermission());
     }
 
     public void updatePhotos(Collection<String> newPhotos) {
@@ -198,21 +193,24 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
 
-
     public void launchUpdateMenuTask() {
-        if (isNetworkAvailable()) {
-            new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
-        } else {
+        if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_menu_update_menu_failure_toast));
+            return;
         }
+        new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
     }
 
     private void launchUploadPhotoTask(Photo photo) {
-        if (isNetworkAvailable()) {
-            new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAssyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
-        } else {
-            showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
+        if (!isLoggedIn()) {
+            showToast(getString(R.string.must_be_login_photo_message));
+            return;
         }
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
+            return;
+        }
+        new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAsyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {

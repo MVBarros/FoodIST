@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -35,8 +34,6 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.service.UploadMenuTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
-import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 
 public class AddMenuActivity extends BaseActivity {
@@ -71,20 +68,8 @@ public class AddMenuActivity extends BaseActivity {
             if (!checkMenuArgs()) {
                 return;
             }
-            TextView menuName = findViewById(R.id.dishName);
-            TextView menuCost = findViewById(R.id.dishCost);
-
-            Contract.FoodType type = getFoodType();
             String foodService = getIntent().getStringExtra(SERVICE_NAME);
-
-
-            SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
-
-            String language = pref.getString(getString(R.string.profile_language_chosen), "en");
-
-            Menu menu = new Menu(foodService, menuName.getText().toString(),
-                    Double.parseDouble(menuCost.getText().toString()), type,
-                    language, "");
+            Menu menu = new Menu(foodService, getMenuName(), getMenuCostValue(), getFoodType(), getGlobalStatus().getLanguage());
             uploadMenu(menu);
 
         });
@@ -92,17 +77,28 @@ public class AddMenuActivity extends BaseActivity {
         photoButton.setOnClickListener(v -> askGalleryPermission());
     }
 
-    private boolean checkMenuArgs() {
+    private String getMenuName() {
         TextView menuName = findViewById(R.id.dishName);
+        return menuName.getText().toString();
+    }
+
+    private double getMenuCostValue() {
         TextView menuCost = findViewById(R.id.dishCost);
-        Contract.FoodType type = getFoodType();
-        if (type == null) {
-            showToast("Give the menu a type!");
+        return Double.parseDouble(menuCost.getText().toString());
+    }
+    private String getMenuCost() {
+        TextView menuCost = findViewById(R.id.dishCost);
+        return menuCost.getText().toString();
+    }
+
+    private boolean checkMenuArgs() {
+
+        if (getFoodType() == null) {
+            showToast(getString(R.string.give_menu_type_message));
             return false;
         }
-        String initialPrice = "";
-        String initialMenuName = "";
-        if (menuName.getText().toString().equals(initialMenuName) || menuCost.getText().toString().equals(initialPrice)) {
+
+        if (getMenuName().isEmpty() || getMenuCost().isEmpty()) {
             showToast(getString(R.string.add_menu_invalid_input_toast));
             return false;
         }
@@ -110,19 +106,20 @@ public class AddMenuActivity extends BaseActivity {
     }
 
     private void uploadMenu(Menu menu) {
-        if (isNetworkAvailable()) {
-            if (imageFilePath != null) {
-                UploadPhotoTask task = new UploadPhotoTask(this.getGlobalStatus().getAssyncStub(), this);
-                new UploadMenuTask(this.getGlobalStatus().getStub(), task, imageFilePath).execute(menu);
-
-            } else {
-                new UploadMenuTask(this.getGlobalStatus().getStub()).execute(menu);
-            }
-            finish();
-        } else {
+        if (!isNetworkAvailable()) {
             showToast(getString(R.string.add_menu_no_internet_access_toast));
+            return;
         }
+        if (!isLoggedIn()) {
+            showToast(getString(R.string.require_login_add_menu_message));
+            return;
+        }
+
+        UploadPhotoTask task =  new UploadPhotoTask(this.getGlobalStatus().getAsyncStub(), this);
+        new UploadMenuTask(getGlobalStatus().getStub(), task, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
+        finish();
     }
+
 
     private Contract.FoodType getFoodType() {
         RadioButton button = findViewById(R.id.add_menu_vegetarian);
@@ -141,7 +138,7 @@ public class AddMenuActivity extends BaseActivity {
         if (button.isChecked()) {
             return Contract.FoodType.Vegan;
         }
-        return null;
+        return Contract.FoodType.Meat;
     }
 
     private void askGalleryPermission() {

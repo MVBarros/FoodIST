@@ -11,7 +11,6 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 
 public class ChooseLanguageActivity extends BaseActivity {
-    public static final String CAMPUS = "pt.ulisboa.tecnico.cmov.foodlist.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -23,6 +23,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.AddMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 
 public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
@@ -30,20 +31,23 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub stub;
     private WeakReference<FoodMenuActivity> activity;
-    private Context mContext;
+    private GlobalStatus mContext;
+    private String cookie;
 
     private static final String TAG = "UPLOADPHOTO-TASK";
 
     public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, FoodMenuActivity activity) {
         this.stub = stub;
         this.activity = new WeakReference<>(activity);
-        mContext = activity.getApplicationContext();
+        mContext = activity.getGlobalStatus();
+        this.cookie = mContext.getCookie();
     }
 
     public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, AddMenuActivity activity) {
         this.stub = stub;
         this.activity = new WeakReference<>(null);
-        mContext = activity.getApplicationContext();
+        mContext = activity.getGlobalStatus();
+        this.cookie = mContext.getCookie();
     }
 
     @Override
@@ -86,6 +90,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
                 addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
                 addPhotoRequestBuilder.setMenuId(Long.parseLong(photo[0].getMenuId()));
                 addPhotoRequestBuilder.setSequenceNumber(sequence);
+                addPhotoRequestBuilder.setCookie(cookie);
 
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;
@@ -118,11 +123,5 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         }
         Toast toast = Toast.makeText(mContext, R.string.upload_photo_task_complete_message, Toast.LENGTH_SHORT);
         toast.show();
-    }
-
-    public static String getFileFromPath(String path) {
-        String[] split_path = path.split("/");
-        int position = split_path.length - 1;
-        return split_path[position];
     }
 }

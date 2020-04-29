@@ -41,6 +41,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public boolean isLoggedIn() {
+        return getGlobalStatus().isLoggedIn();
+    }
+
     public GlobalStatus getGlobalStatus() {
         return (GlobalStatus) getApplicationContext();
     }
