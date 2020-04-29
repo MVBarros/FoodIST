@@ -201,7 +201,7 @@ public class ProfileActivity extends BaseActivity {
             case R.id.languageEnglish:
                 editor.putString(getString(R.string.shared_prefs_profile_language), "en");
                 break;
-            case R.id.portuguese:
+            case R.id.languagePortuguese:
                 editor.putString(getString(R.string.shared_prefs_profile_language), "pt");
                 break;
         }
@@ -255,7 +255,7 @@ public class ProfileActivity extends BaseActivity {
             case R.id.languageEnglish:
                 language = "en";
                 break;
-            case R.id.portuguese:
+            case R.id.languagePortuguese:
                 language = "pt";
                 break;
         }
