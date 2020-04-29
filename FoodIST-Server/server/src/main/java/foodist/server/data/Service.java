@@ -28,7 +28,7 @@ public class Service {
 
 
     public void addMenu(Menu menu) throws ServiceException {
-        var curr = this.menus.putIfAbsent(menu.getName(), menu);
+        var curr = this.menus.putIfAbsent(menu.getTranslatedName("pt"), menu);
         if (curr != null) {
             throw new ServiceException();
         }

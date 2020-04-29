@@ -45,6 +45,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.menu.DownloadPhotosTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -100,8 +101,28 @@ public class FoodMenuActivity extends BaseActivity {
         addReceiver(new MenuNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
+    public void launchGetCachePhotosTask() {
+        Photo[] photos = photoIDs.stream()
+                .filter(photo -> !downloadedPhotos.contains(photo))
+                .filter(photo -> PhotoCache.getInstance().containsPhoto(photo))
+                .map(photoId -> new Photo(this.menuId, null, photoId))
+                .toArray(Photo[]::new);
+
+        //Prevent downloading the same photo twice
+        Arrays.stream(photos)
+                .map(Photo::getPhotoID)
+                .forEach(downloadedPhotos::add);
+
+        if (photos.length == 0) {
+            return;
+        }
+
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
+    }
+
 
     public void launchDownloadPhotosTask() {
+        launchGetCachePhotosTask(); //Get first the cached photos
         if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_menu_update_menu_failure_toast));
             return;

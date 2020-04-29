@@ -39,7 +39,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
             Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
             listMenuBuilder.setFoodService(foodService);
-            listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.profile_language_chosen), "en"));
+            listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.shared_prefs_profile_language), "en"));
 
             Contract.ListMenuRequest request = listMenuBuilder.build();
 

@@ -58,4 +58,9 @@ public class PhotoCache {
         addPhoto(photoID, photo);
         return getPhoto(photoID);
     }
+
+    public boolean containsPhoto(String photoID) {
+        return cache.get(photoID) != null;
+
+    }
 }

@@ -45,7 +45,7 @@ public class Menu {
         }
     }
 
-    private synchronized String getTranslatedName(String language) {
+    public synchronized String getTranslatedName(String language) {
         if (translatedNames.containsKey(language)) {
             return translatedNames.get(language);
         }

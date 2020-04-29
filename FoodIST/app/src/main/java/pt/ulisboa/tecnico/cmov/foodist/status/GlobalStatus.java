@@ -141,13 +141,13 @@ public class GlobalStatus extends Application {
     }
 
     public String getLanguage() {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.shared_prefs_profile_language), 0);
-        return pref.getString(getString(R.string.profile_language_chosen), "en");
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getString(getString(R.string.shared_prefs_profile_language), "en");
     }
 
     public String getUserRole() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.shared_prefs_profile_profession), 0);
-        return pref.getString(getString(R.string.profile_position_name), Contract.Role.Student.name());
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Student.name());
     }
 
     public void saveProfile(Contract.Profile profile) {
