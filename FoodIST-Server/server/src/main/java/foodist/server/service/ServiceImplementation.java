@@ -246,7 +246,22 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void changeProfile(Contract.AccountMessage request, StreamObserver<Empty> responseObserver) {
-        responseObserver.onError(Status.UNIMPLEMENTED.asRuntimeException());
+        try {
+            if (!validateCookie(request.getCookie())) {
+                responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+                return;
+            }
+            Account account = sessions.get(request.getCookie());
+            Account newAccount = Account.fromContract(request.getProfile(), account.getPassword(), account.getSalt());
+
+            sessions.put(request.getCookie(), newAccount);
+            users.put(account.getUsername(), newAccount);
+
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.asRuntimeException());
+        }
     }
 
     @Override

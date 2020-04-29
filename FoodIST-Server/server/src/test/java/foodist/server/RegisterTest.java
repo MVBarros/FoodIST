@@ -4,7 +4,6 @@ import foodist.server.data.Account;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.service.ServiceImplementation;
-import io.grpc.BindableService;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -105,14 +104,14 @@ public class RegisterTest {
 
         Account account = impl.getSessions().get(reply.getCookie());
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), "pt");
+        assertEquals(account.getLanguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
 
         account = impl.getUsers().get(USERNAME);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), "pt");
+        assertEquals(account.getLanguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
@@ -131,14 +130,14 @@ public class RegisterTest {
 
         Account account = impl.getSessions().get(reply.getCookie());
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), "pt");
+        assertEquals(account.getLanguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
 
         account = impl.getUsers().get(USERNAME);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), "pt");
+        assertEquals(account.getLanguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);

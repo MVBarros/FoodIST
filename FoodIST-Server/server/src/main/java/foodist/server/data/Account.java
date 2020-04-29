@@ -23,10 +23,9 @@ public class Account {
     private final String username;
     private final byte[] password;
     private final byte[] salt;
-
-    private String laguage;
-    private Contract.Role role;
-    private Map<Contract.FoodType, Boolean> preferences;
+    private final String language;
+    private final Contract.Role role;
+    private final Map<Contract.FoodType, Boolean> preferences;
 
     public Account(String username, String password, String language, Contract.Role role,
                    Map<Contract.FoodType, Boolean> preferences) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -34,10 +33,22 @@ public class Account {
         this.username = username;
         this.salt = generateSalt();
         this.password = hashPassword(password);
-        this.laguage = language;
+        this.language = language;
         this.role = role;
         this.preferences = preferences;
     }
+
+    public Account(String username, byte[] password, byte[] salt, String language, Contract.Role role,
+                   Map<Contract.FoodType, Boolean> preferences) {
+        checkArguments(language, role, preferences);
+        this.username = username;
+        this.salt = salt;
+        this.password = password;
+        this.language = language;
+        this.role = role;
+        this.preferences = preferences;
+    }
+
 
     public void checkArguments(String username, String password, String language, Contract.Role role,
                                Map<Contract.FoodType, Boolean> preferences) {
@@ -47,6 +58,11 @@ public class Account {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException();
         }
+        checkArguments(language, role, preferences);
+    }
+
+    public void checkArguments(String language, Contract.Role role,
+                               Map<Contract.FoodType, Boolean> preferences) {
         if (language == null || language.isBlank()) {
             throw new IllegalArgumentException();
         }
@@ -71,16 +87,21 @@ public class Account {
         return factory.generateSecret(spec).getEncoded();
     }
 
+    public boolean checkPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] salt = this.salt;
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(PASSWORD_HASHING_ALGORITHM);
+        byte[] hash = factory.generateSecret(spec).getEncoded();
+
+        return Arrays.equals(hash, this.password);
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public String getLaguage() {
-        return laguage;
-    }
-
-    public void setLanguage(String language) {
-        this.laguage = language;
+    public String getLanguage() {
+        return language;
     }
 
     public Contract.Role getRole() {
@@ -91,33 +112,27 @@ public class Account {
         return preferences;
     }
 
-    public synchronized void setRole(Contract.Role role) {
-        this.role = role;
+    public byte[] getPassword() {
+        return password;
     }
 
-    public synchronized void setPreferences(Map<Contract.FoodType, Boolean> preferences) {
-        this.preferences = preferences;
+    public byte[] getSalt() {
+        return salt;
     }
 
-    public boolean checkPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] salt = this.salt;
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(PASSWORD_HASHING_ALGORITHM);
-        byte[] hash = factory.generateSecret(spec).getEncoded();
-
-        return Arrays.equals(hash, this.password);
-    }
 
 
     public Contract.Profile toProfile() {
         var builder = Contract.Profile.newBuilder();
-        builder.setLanguage(this.laguage);
+        builder.setLanguage(this.language);
         builder.setName(this.username);
         builder.setRole(this.role);
+        Map<Integer, Boolean> prefs;
 
-        Map<Integer, Boolean> prefs = preferences.entrySet()
+        prefs = preferences.entrySet()
                 .stream()
                 .collect(Collectors.toMap(entry -> entry.getKey().getNumber(), Map.Entry::getValue));
+
 
         builder.putAllPreferences(prefs);
         return builder.build();
@@ -144,5 +159,15 @@ public class Account {
 
         return new Account(profile.getName(), password,
                 profile.getLanguage(), profile.getRole(), preferences);
+    }
+
+
+    public static Account fromContract(Contract.Profile profile, byte[] password, byte[] salt) {
+
+        Map<Contract.FoodType, Boolean> preferences = profile.getPreferencesMap().entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> Contract.FoodType.forNumber(entry.getKey()), Map.Entry::getValue));
+
+        return new Account(profile.getName(), password, salt, profile.getLanguage(), profile.getRole(), preferences);
     }
 }

@@ -50,7 +50,7 @@ public class AccountTest {
     public void validTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
         Account account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), "pt");
+        assertEquals(account.getLanguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
@@ -129,7 +129,7 @@ public class AccountTest {
     public void fromContractTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
         Account account = Account.fromContract(profile, PASSWORD);
         assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLaguage(), "pt");
+        assertEquals(account.getLanguage(), "pt");
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
