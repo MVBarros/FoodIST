@@ -33,9 +33,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     private final Map<String, Account> sessions = new ConcurrentHashMap<>();
 
 
-    private Map<String, Service> services = new ConcurrentHashMap<>();
-    private Map<Long, Menu> menus = new ConcurrentHashMap<>();
-    private Map<Long, Photo> photos = new ConcurrentHashMap<>();
+    private final Map<String, Service> services = new ConcurrentHashMap<>();
+    private final Map<Long, Menu> menus = new ConcurrentHashMap<>();
+    private final Map<Long, Photo> photos = new ConcurrentHashMap<>();
 
 
     @Override
@@ -287,8 +287,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     public void cleanup() {
         Menu.resetCounter();
         Photo.resetCounter();
-        services = new ConcurrentHashMap<>();
-        menus = new ConcurrentHashMap<>();
-        photos = new ConcurrentHashMap<>();
+        services.values().forEach(Service::resetMenus);
+        menus.clear();
+        photos.clear();
     }
 }

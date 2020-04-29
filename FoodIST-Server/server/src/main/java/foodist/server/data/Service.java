@@ -45,4 +45,8 @@ public class Service {
                 .map(Menu::toContract)
                 .collect(Collectors.toList());
     }
+
+    public void resetMenus() {
+        menus.clear();
+    }
 }
