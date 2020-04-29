@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static Context setLocale(Context context) {
         SharedPreferences pref = context.getSharedPreferences(context.getString(R.string.profile_file), 0);
 
-        Locale locale = new Locale(pref.getString(context.getString(R.string.profile_language_chosen), "en"));
+        Locale locale = new Locale(pref.getString(context.getString(R.string.shared_prefs_profile_language), "en"));
         Locale.setDefault(locale);
 
         Configuration config = new Configuration(context.getResources().getConfiguration());

@@ -183,4 +183,7 @@
     <string name="logout_successful_message">Logout successful</string>
     <string name="logout_button_message">Logout</string>
     <string name="logout_no_connection_message">Cannot logout without a network connection</string>
+    <string name="could_not_change_profile_message">Could not change profile</string>
+    <string name="edit_no_conn_message">Must have network connection to edit profile</string>
+    <string name="profile_synched_mesage">Profile synced with server</string>
 </resources>

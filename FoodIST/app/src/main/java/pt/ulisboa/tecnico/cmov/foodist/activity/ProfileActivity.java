@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,12 +29,14 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.profile.ChangeProfileAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.CAMPUS;
@@ -80,19 +83,30 @@ public class ProfileActivity extends BaseActivity {
         this.campus = getIntent().getStringExtra(CAMPUS);
     }
 
-    private void setEditButton() {
+    public void setEditButton() {
         Button editButton = findViewById(R.id.profile_edit_button);
-        editButton.setOnClickListener(v -> {
-            editable = !editable;
+        editButton.setOnClickListener(v -> makeEdit());
+    }
+
+    private void makeEdit() {
+        Button editButton = findViewById(R.id.profile_edit_button);
+        if (!editable) {
+            editable = true;
             switchEdit();
-            if (editButton.getText().equals(getString(R.string.commit_text_edit))) {
-                saveProfile();
-                returnToMain();
-            }
-            if (editable) {
-                editButton.setText(R.string.commit_text_edit);
-            }
-        });
+            editButton.setText(R.string.commit_text_edit);
+            return;
+        }
+        if (!isLoggedIn()) {
+            saveProfile();
+            returnToMain();
+            return;
+        }
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.edit_no_conn_message));
+            return;
+        }
+        new ChangeProfileAsyncTask(this).execute(toContract());
+
     }
 
     private void setLoginButton() {
@@ -151,57 +165,107 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void saveProfile() {
-
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
         SharedPreferences.Editor editor = pref.edit();
 
-        /*Roles*/
-        RadioButton button = findViewById(R.id.studentRadioButton);
-        if (button.isChecked()) {
-            editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Student.name());
+        RadioGroup group = findViewById(R.id.universityStatus);
+        switch (group.getCheckedRadioButtonId()) {
+            case R.id.studentRadioButton:
+                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Student.name());
+                break;
+            case R.id.professorRadioButton:
+                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Professor.name());
+                break;
+            case R.id.staffRadioButton:
+                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Staff.name());
+                break;
+            case R.id.visitorRadioButton:
+                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Visitor.name());
+                break;
         }
 
-        button = findViewById(R.id.professorRadioButton);
-        if (button.isChecked()) {
-            editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Professor.name());
+        CheckBox dietPreferenceBox = findViewById(R.id.Vegetarian);
+        editor.putBoolean(GlobalStatus.VEGETARIAN_KEY, dietPreferenceBox.isChecked());
+
+        dietPreferenceBox = findViewById(R.id.Meat);
+        editor.putBoolean(GlobalStatus.MEAT_KEY, dietPreferenceBox.isChecked());
+
+        dietPreferenceBox = findViewById(R.id.Fish);
+        editor.putBoolean(GlobalStatus.FISH_KEY, dietPreferenceBox.isChecked());
+
+        dietPreferenceBox = findViewById(R.id.Vegan);
+        editor.putBoolean(GlobalStatus.VEGAN_KEY, dietPreferenceBox.isChecked());
+
+        group = findViewById(R.id.languageSelector);
+        switch (group.getCheckedRadioButtonId()) {
+            case R.id.languageEnglish:
+                editor.putString(getString(R.string.shared_prefs_profile_language), "en");
+                break;
+            case R.id.portuguese:
+                editor.putString(getString(R.string.shared_prefs_profile_language), "pt");
+                break;
+        }
+        editor.apply();
+    }
+
+    private Contract.AccountMessage toContract() {
+        Contract.Profile profile = toProfile();
+        return Contract.AccountMessage.newBuilder()
+                .setCookie(getGlobalStatus().getCookie())
+                .setProfile(profile)
+                .build();
+    }
+
+    private Contract.Profile toProfile() {
+
+        Contract.Role role = Contract.Role.Student;
+
+        RadioGroup group = findViewById(R.id.universityStatus);
+        switch (group.getCheckedRadioButtonId()) {
+            case R.id.studentRadioButton:
+                role = Contract.Role.Student;
+                break;
+            case R.id.professorRadioButton:
+                role = Contract.Role.Professor;
+                break;
+            case R.id.staffRadioButton:
+                role = Contract.Role.Staff;
+                break;
+            case R.id.visitorRadioButton:
+                role = Contract.Role.Visitor;
+                break;
         }
 
-        button = findViewById(R.id.staffRadioButton);
-        if (button.isChecked()) {
-            editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Staff.name());
-        }
-
-        button = findViewById(R.id.visitorRadioButton);
-        if (button.isChecked()) {
-            editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Visitor.name());
-        }
-
-        /*Food Preferences*/
+        Map<Integer, Boolean> prefs = new HashMap<>();
         CheckBox box = findViewById(R.id.Vegetarian);
-        editor.putBoolean(GlobalStatus.VEGETARIAN_KEY, box.isChecked());
+        prefs.put(Contract.FoodType.Vegetarian_VALUE, box.isChecked());
 
         box = findViewById(R.id.Meat);
-        editor.putBoolean(GlobalStatus.MEAT_KEY, box.isChecked());
+        prefs.put(Contract.FoodType.Meat_VALUE, box.isChecked());
 
         box = findViewById(R.id.Fish);
-        editor.putBoolean(GlobalStatus.FISH_KEY, box.isChecked());
+        prefs.put(Contract.FoodType.Fish_VALUE, box.isChecked());
 
         box = findViewById(R.id.Vegan);
-        editor.putBoolean(GlobalStatus.VEGAN_KEY, box.isChecked());
+        prefs.put(Contract.FoodType.Vegan_VALUE, box.isChecked());
 
-        /*Language*/
-        button = findViewById(R.id.languageEnglish);
-        if (button.isChecked()) {
-            editor.putString(getString(R.string.shared_prefs_profile_language), "en");
+        String language = "en";
+        group = findViewById(R.id.languageSelector);
+        switch (group.getCheckedRadioButtonId()) {
+            case R.id.languageEnglish:
+                language = "en";
+                break;
+            case R.id.portuguese:
+                language = "pt";
+                break;
         }
 
-        button = findViewById(R.id.languagePortuguese);
-        if (button.isChecked()) {
-            editor.putString(getString(R.string.shared_prefs_profile_language), "pt");
-        }
-
-        editor.apply();
-
+        return Contract.Profile.newBuilder()
+                .setLanguage(language)
+                .putAllPreferences(prefs)
+                .setName(getGlobalStatus().getUsername())
+                .setRole(role)
+                .build();
     }
 
     public void returnToMain() {
