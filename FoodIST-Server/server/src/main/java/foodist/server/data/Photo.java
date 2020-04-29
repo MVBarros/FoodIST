@@ -6,8 +6,8 @@ public class Photo {
 
     private static final AtomicLong menuCounter = new AtomicLong(0);
 
-    private long photoId;
-    private byte[] content;
+    private final long photoId;
+    private final byte[] content;
 
     public Photo(byte[] content) {
         checkArguments(content);

@@ -3,7 +3,6 @@ package foodist.server.data;
 import foodist.server.data.exception.ServiceException;
 import foodist.server.grpc.contract.Contract;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -18,6 +18,7 @@ public class Account {
     private static final int SALT_SIZE = 16;
     private static final int ITERATION_COUNT = 65536;
     private static final int KEY_LENGTH = SALT_SIZE * 8;
+    public static final String PASSWORD_HASHING_ALGORITHM = "PBKDF2WithHmacSHA1";
 
     private final String username;
     private final byte[] password;
@@ -66,7 +67,7 @@ public class Account {
 
     public byte[] hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeySpec spec = new PBEKeySpec(password.toCharArray(), this.salt, ITERATION_COUNT, KEY_LENGTH);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(PASSWORD_HASHING_ALGORITHM);
         return factory.generateSecret(spec).getEncoded();
     }
 
@@ -78,16 +79,16 @@ public class Account {
         return laguage;
     }
 
+    public void setLanguage(String language) {
+        this.laguage = language;
+    }
+
     public Contract.Role getRole() {
         return role;
     }
 
     public Map<Contract.FoodType, Boolean> getPreferences() {
         return preferences;
-    }
-
-    public synchronized void setLaguage(String laguage) {
-        this.laguage = laguage;
     }
 
     public synchronized void setRole(Contract.Role role) {
@@ -101,7 +102,7 @@ public class Account {
     public boolean checkPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] salt = this.salt;
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(PASSWORD_HASHING_ALGORITHM);
         byte[] hash = factory.generateSecret(spec).getEncoded();
 
         return Arrays.equals(hash, this.password);
@@ -116,25 +117,21 @@ public class Account {
 
         Map<Integer, Boolean> prefs = preferences.entrySet()
                 .stream()
-                .collect(Collectors.toMap(
-                        entry -> entry.getKey().getNumber(),
-                        Map.Entry::getValue
-                ));
+                .collect(Collectors.toMap(entry -> entry.getKey().getNumber(), Map.Entry::getValue));
 
         builder.putAllPreferences(prefs);
         return builder.build();
     }
 
     public Contract.AccountMessage toReply(String cookie) {
-        return  Contract.AccountMessage.newBuilder()
+        return Contract.AccountMessage.newBuilder()
                 .setProfile(this.toProfile())
                 .setCookie(cookie)
                 .build();
     }
 
     public static List<Contract.FoodType> getAllFoodTypes() {
-        var types = Contract.FoodType.values();
-        return Arrays.stream(types)
+        return Arrays.stream(Contract.FoodType.values())
                 .filter(type -> type != Contract.FoodType.UNRECOGNIZED)
                 .collect(Collectors.toList());
     }
@@ -143,12 +140,9 @@ public class Account {
 
         Map<Contract.FoodType, Boolean> preferences = profile.getPreferencesMap().entrySet()
                 .stream()
-                .collect(Collectors.toMap(
-                        entry -> Contract.FoodType.forNumber(entry.getKey()),
-                        Map.Entry::getValue));
+                .collect(Collectors.toMap(entry -> Contract.FoodType.forNumber(entry.getKey()), Map.Entry::getValue));
 
         return new Account(profile.getName(), password,
                 profile.getLanguage(), profile.getRole(), preferences);
     }
-
 }

@@ -11,7 +11,7 @@ public class Menu {
 
     private static final AtomicLong menuCounter = new AtomicLong(0);
 
-    private final String name; //This name is always in english
+    private final String name;
     private final double price;
     private final List<Long> photos;
     private final Contract.FoodType type;
