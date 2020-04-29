@@ -33,7 +33,6 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
 
-
     public static final String MEAT_KEY = Contract.FoodType.Meat.name();
     public static final String VEGAN_KEY = Contract.FoodType.Vegan.name();
     public static final String FISH_KEY = Contract.FoodType.Fish.name();
@@ -147,13 +146,8 @@ public class GlobalStatus extends Application {
     }
 
     public String getUserRole() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getString(R.string.shared_prefs_profile_profession), 0);
         return pref.getString(getString(R.string.profile_position_name), Contract.Role.Student.name());
-    }
-
-    public String getLanguageForService() {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
-        return pref.getString(getString(R.string.profile_language_chosen), "en");
     }
 
     public void saveProfile(Contract.Profile profile) {
@@ -210,11 +204,8 @@ public class GlobalStatus extends Application {
         return pref.getString(getString(R.string.cookie_pref_key), "");
     }
 
-
     public boolean isLoggedIn() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getString(getString(R.string.cookie_pref_key), null) != null;
     }
-
-
 }
