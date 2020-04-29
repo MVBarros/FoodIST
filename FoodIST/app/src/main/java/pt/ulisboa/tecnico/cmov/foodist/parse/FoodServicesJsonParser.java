@@ -14,8 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import foodist.server.grpc.contract.Contract;
-import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
+import pt.ulisboa.tecnico.cmov.foodist.async.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 

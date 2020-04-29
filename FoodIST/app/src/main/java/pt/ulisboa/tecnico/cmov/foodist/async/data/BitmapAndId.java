@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.data;
+package pt.ulisboa.tecnico.cmov.foodist.async.data;
 
 import android.graphics.Bitmap;
 

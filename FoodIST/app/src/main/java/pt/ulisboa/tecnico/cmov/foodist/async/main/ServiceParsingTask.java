@@ -9,7 +9,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
-import pt.ulisboa.tecnico.cmov.foodist.data.FoodServiceData;
+import pt.ulisboa.tecnico.cmov.foodist.async.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.parse.FoodServicesJsonParser;
 

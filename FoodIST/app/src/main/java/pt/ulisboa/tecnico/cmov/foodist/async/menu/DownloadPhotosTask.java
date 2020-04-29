@@ -15,7 +15,7 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
-import pt.ulisboa.tecnico.cmov.foodist.data.BitmapAndId;
+import pt.ulisboa.tecnico.cmov.foodist.async.data.BitmapAndId;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 
 

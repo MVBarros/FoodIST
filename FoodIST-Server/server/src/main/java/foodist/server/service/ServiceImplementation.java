@@ -249,6 +249,17 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         responseObserver.onError(Status.UNIMPLEMENTED.asRuntimeException());
     }
 
+    @Override
+    public void logout(Contract.LogoutRequest request, StreamObserver<Empty> responseObserver) {
+        if (!validateCookie(request.getCookie())) {
+            responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+            return;
+        }
+        sessions.remove(request.getCookie());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
     private String generateRandomCookie() {
         return RandomStringUtils.random(COOKIE_SIZE);
     }

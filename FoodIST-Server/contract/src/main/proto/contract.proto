@@ -83,6 +83,10 @@ message AccountMessage {
     Profile profile = 2;
 }
 
+message LogoutRequest {
+    string cookie = 1;
+}
+
 service FoodISTServerService {
     rpc addMenu(AddMenuRequest) returns (AddMenuReply);
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
@@ -93,5 +97,6 @@ service FoodISTServerService {
     rpc register(RegisterRequest) returns (AccountMessage);
     rpc login(LoginRequest) returns (AccountMessage);
     rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
+    rpc logout(LogoutRequest) returns (google.protobuf.Empty);
 }
 

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
-import pt.ulisboa.tecnico.cmov.foodist.data.WalkingTimeData;
+import pt.ulisboa.tecnico.cmov.foodist.async.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.utils.CoordinateUtils;
 
