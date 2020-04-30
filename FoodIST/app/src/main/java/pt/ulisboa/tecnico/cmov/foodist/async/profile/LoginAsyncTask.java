@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.profile;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
