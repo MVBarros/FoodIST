@@ -21,6 +21,7 @@ public class ChooseCampusActivity extends BaseActivity {
 
         tagusparkButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(CAMPUS, getString(R.string.campus_taguspark));
             finish();
             startActivity(intent);
@@ -28,6 +29,7 @@ public class ChooseCampusActivity extends BaseActivity {
 
         alamedaButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(CAMPUS, getString(R.string.campus_alameda));
             finish();
             startActivity(intent);

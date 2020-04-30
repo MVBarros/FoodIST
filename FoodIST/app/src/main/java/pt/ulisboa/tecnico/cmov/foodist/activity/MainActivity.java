@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
         Button changeCampusButton = findViewById(R.id.changeCampus);
         changeCampusButton.setOnClickListener(v -> {
-            askCampus();
+            toCampus();
         });
     }
 
@@ -265,6 +265,12 @@ public class MainActivity extends BaseActivity implements LocationListener {
         Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
         //Must Finish Activity so that user doesn't back out of choosing campus and leaves the application without campus
         finish();
+        startActivity(intent);
+    }
+
+
+    public void toCampus() {
+        Intent intent = new Intent(MainActivity.this, ChooseCampusActivity.class);
         startActivity(intent);
     }
 

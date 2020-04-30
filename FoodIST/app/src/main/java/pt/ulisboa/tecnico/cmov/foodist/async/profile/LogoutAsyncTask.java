@@ -50,7 +50,7 @@ public class LogoutAsyncTask extends AsyncTask<String, Integer, Boolean> {
                 return;
             }
             status.removeCookie();
-            Toast.makeText(status, status.getString(R.string.logout_successful_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(status, R.string.logout_successful_message, Toast.LENGTH_SHORT).show();
         }
         LoginActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
@@ -59,6 +59,6 @@ public class LogoutAsyncTask extends AsyncTask<String, Integer, Boolean> {
     }
 
     private void errorMessage(GlobalStatus status) {
-        Toast.makeText(status, status.getString(R.string.logout_error_message), Toast.LENGTH_SHORT).show();
+        Toast.makeText(status, R.string.logout_error_message, Toast.LENGTH_SHORT).show();
     }
 }

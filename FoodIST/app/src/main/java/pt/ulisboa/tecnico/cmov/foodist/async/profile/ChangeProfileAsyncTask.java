@@ -49,12 +49,12 @@ public class ChangeProfileAsyncTask extends AsyncTask<Contract.AccountMessage, I
             return;
         }
         if (!message) {
-            Toast.makeText(status, status.getString(R.string.could_not_change_profile_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(status, R.string.could_not_change_profile_message, Toast.LENGTH_SHORT).show();
             return;
         }
         status.saveProfile(profile);
 
-        Toast.makeText(status, status.getString(R.string.profile_synched_mesage), Toast.LENGTH_SHORT).show();
+        Toast.makeText(status, R.string.profile_synched_mesage, Toast.LENGTH_SHORT).show();
 
         ProfileActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {

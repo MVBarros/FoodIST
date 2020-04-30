@@ -50,7 +50,7 @@ public class LoginAsyncTask extends AsyncTask<Contract.LoginRequest, Integer, Co
             }
             status.saveProfile(message.getProfile());
             status.saveCookie(message.getCookie());
-            Toast.makeText(status, status.getString(R.string.login_successful_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(status, R.string.login_successful_message, Toast.LENGTH_SHORT).show();
         }
         LoginActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
@@ -59,6 +59,6 @@ public class LoginAsyncTask extends AsyncTask<Contract.LoginRequest, Integer, Co
     }
 
     private void errorMessage(GlobalStatus status) {
-        Toast.makeText(status, status.getString(R.string.login_error_message), Toast.LENGTH_SHORT).show();
+        Toast.makeText(status, R.string.login_error_message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -55,7 +55,7 @@ public class RegisterAsyncTask extends AsyncTask<Contract.RegisterRequest, Integ
             }
             status.saveProfile(message.getProfile());
             status.saveCookie(message.getCookie());
-            Toast.makeText(status, status.getString(R.string.register_success_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(status, R.string.register_success_message, Toast.LENGTH_SHORT).show();
         }
         LoginActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
@@ -65,9 +65,9 @@ public class RegisterAsyncTask extends AsyncTask<Contract.RegisterRequest, Integ
 
     private void errorMessage(GlobalStatus status) {
         if (exists) {
-            Toast.makeText(status, status.getString(R.string.username_exists_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(status, R.string.username_exists_message, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(status, status.getString(R.string.username_exists_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(status, R.string.username_exists_message, Toast.LENGTH_SHORT).show();
         }
     }
 }
