@@ -10,6 +10,7 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.LoginActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class LoginAsyncTask extends AsyncTask<Contract.LoginRequest, Integer, Contract.AccountMessage> {
@@ -43,22 +44,26 @@ public class LoginAsyncTask extends AsyncTask<Contract.LoginRequest, Integer, Co
     public void onPostExecute(Contract.AccountMessage message) {
         GlobalStatus status = mContext.get();
         //Just in case...
-        if (status != null) {
-            if (message == null) {
-                errorMessage(status);
-                return;
-            }
+        if (status == null) {
+            return;
+        }
+        if (message != null) {
             status.saveProfile(message.getProfile());
             status.saveCookie(message.getCookie());
-            Toast.makeText(status, R.string.login_successful_message, Toast.LENGTH_SHORT).show();
         }
+
         LoginActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            if (message == null) {
+                errorMessage(act);
+                return;
+            }
+            act.showToast(act.getString(R.string.login_successful_message));
             act.returnToMain();
         }
     }
 
-    private void errorMessage(GlobalStatus status) {
-        Toast.makeText(status, R.string.login_error_message, Toast.LENGTH_SHORT).show();
+    private void errorMessage(BaseActivity act) {
+        act.showToast(act.getString(R.string.login_error_message));
     }
 }

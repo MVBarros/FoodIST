@@ -10,6 +10,7 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.LoginActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class LogoutAsyncTask extends AsyncTask<String, Integer, Boolean> {
@@ -44,21 +45,25 @@ public class LogoutAsyncTask extends AsyncTask<String, Integer, Boolean> {
     public void onPostExecute(Boolean message) {
         GlobalStatus status = mContext.get();
         //Just in case...
-        if (status != null) {
-            if (message == null) {
-                errorMessage(status);
-                return;
-            }
-            status.removeCookie();
-            Toast.makeText(status, R.string.logout_successful_message, Toast.LENGTH_SHORT).show();
+        if (status == null) {
+            return;
         }
+            if (message != null) {
+                status.removeCookie();
+            }
+
         LoginActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            if (message == null) {
+                errorMessage(act);
+                return;
+            }
+            act.showToast(act.getString(R.string.logout_successful_message));
             act.setButtons();
         }
     }
 
-    private void errorMessage(GlobalStatus status) {
-        Toast.makeText(status, R.string.logout_error_message, Toast.LENGTH_SHORT).show();
+    private void errorMessage(BaseActivity activity) {
+        activity.showToast(activity.getString(R.string.logout_error_message));
     }
 }

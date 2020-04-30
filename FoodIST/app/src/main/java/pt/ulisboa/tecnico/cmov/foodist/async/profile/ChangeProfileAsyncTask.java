@@ -48,16 +48,18 @@ public class ChangeProfileAsyncTask extends AsyncTask<Contract.AccountMessage, I
         if (status == null) {
             return;
         }
-        if (!message) {
-            Toast.makeText(status, R.string.could_not_change_profile_message, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        status.saveProfile(profile);
 
-        Toast.makeText(status, R.string.profile_synched_mesage, Toast.LENGTH_SHORT).show();
+        if (message) {
+            status.saveProfile(profile);
+        }
 
         ProfileActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            if (!message) {
+                act.showToast(act.getString(R.string.could_not_change_profile_message));
+                return;
+            }
+            act.showToast(act.getString( R.string.profile_synched_mesage));
             act.returnToMain();
         }
     }
