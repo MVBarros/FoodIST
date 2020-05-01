@@ -4,10 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Empty;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -16,9 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 import foodist.server.grpc.contract.Contract;
@@ -36,7 +32,8 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub stub;
-    private WeakReference<FoodMenuActivity> activity;
+    private WeakReference<FoodMenuActivity> foodMenuActivity;
+    private WeakReference<AddMenuActivity> addMenuActivity;
     private GlobalStatus mContext;
     private String cookie;
     private String photoId;
@@ -44,17 +41,20 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
 
     private static final String TAG = "UPLOADPHOTO-TASK";
 
-    public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, FoodMenuActivity activity) {
-        this.stub = stub;
-        this.activity = new WeakReference<>(activity);
+
+    public UploadPhotoTask(FoodMenuActivity activity) {
+        this.stub = activity.getGlobalStatus().getAsyncStub();
+        this.foodMenuActivity = new WeakReference<>(activity);
+        this.addMenuActivity = new WeakReference<>(null);
         mContext = activity.getGlobalStatus();
         this.cookie = mContext.getCookie();
         this.bitmap = new byte[0];
     }
 
-    public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, AddMenuActivity activity) {
-        this.stub = stub;
-        this.activity = new WeakReference<>(null);
+    public UploadPhotoTask(AddMenuActivity activity) {
+        this.stub = activity.getGlobalStatus().getAsyncStub();
+        this.foodMenuActivity = new WeakReference<>(null);
+        this.addMenuActivity = new WeakReference<>(activity);
         mContext = activity.getGlobalStatus();
         this.cookie = mContext.getCookie();
         this.bitmap = new byte[0];
@@ -136,11 +136,17 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         } else {
             Log.d(TAG, "Photo unable to be uploaded");
         }
-        FoodMenuActivity act = activity.get();
-        if (act != null && !act.isFinishing() && !act.isDestroyed()) {
-            act.updatePhoto(photoId);
-            act.launchGetCachePhotosTask();
-            act.showToast(act.getString(R.string.upload_photo_task_complete_message));
+        FoodMenuActivity foodMenuAct = foodMenuActivity.get();
+        if (foodMenuAct != null && !foodMenuAct.isFinishing() && !foodMenuAct.isDestroyed()) {
+            foodMenuAct.updatePhoto(photoId);
+            foodMenuAct.launchGetCachePhotosTask();
+            foodMenuAct.showToast(foodMenuAct.getString(R.string.upload_photo_task_complete_message));
+            return;
+        }
+        AddMenuActivity addMenuAct = addMenuActivity.get();
+        if (addMenuAct != null && !addMenuAct.isFinishing() && !addMenuAct.isDestroyed()) {
+            addMenuAct.showToast(addMenuAct.getString(R.string.Menu_uploaded_successfully_message));
+            addMenuAct.finish();
         }
     }
 }

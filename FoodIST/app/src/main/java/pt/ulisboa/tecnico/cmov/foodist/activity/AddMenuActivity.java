@@ -117,9 +117,11 @@ public class AddMenuActivity extends BaseActivity {
             return;
         }
 
-        UploadPhotoTask task = new UploadPhotoTask(this.getGlobalStatus().getAsyncStub(), this);
-        new UploadMenuTask(getGlobalStatus().getStub(), task, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
-        finish();
+        UploadPhotoTask task = new UploadPhotoTask(this);
+        new UploadMenuTask(this, task, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
+        Button b = findViewById(R.id.add_new_menu_done_button);
+        //Do not allow another menu to be enabled
+        b.setEnabled(false);
     }
 
 

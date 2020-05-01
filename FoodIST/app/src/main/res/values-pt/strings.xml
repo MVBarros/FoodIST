@@ -189,4 +189,5 @@
     <string name="must_login_message">Necessário login para fazer esta ação</string>
     <string name="login_dialog_positive_message">Entrar</string>
     <string name="login_dialog_negative_message">Não obrigado</string>
+    <string name="Menu_uploaded_successfully_message">Upload de menu completado</string>
 </resources>

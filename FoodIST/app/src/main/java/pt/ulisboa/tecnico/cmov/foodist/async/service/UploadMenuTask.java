@@ -3,9 +3,13 @@ package pt.ulisboa.tecnico.cmov.foodist.async.service;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
+
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
+import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.activity.AddMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
@@ -15,6 +19,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
 
 
     private final FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
+    private final WeakReference<AddMenuActivity> activity;
     private final UploadPhotoTask task;
     private final String taskPhoto;
     private final String cookie;
@@ -22,17 +27,17 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
     private static final String TAG = "UPLOADMENU-TASK";
 
 
-    public UploadMenuTask(FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub, UploadPhotoTask task, String taskPhoto, String cookie) {
-        this.stub = stub;
+    public UploadMenuTask(AddMenuActivity activity, UploadPhotoTask task, String taskPhoto, String cookie) {
+        this.stub = activity.getGlobalStatus().getStub();
         this.task = task;
         this.taskPhoto = taskPhoto;
         this.cookie = cookie;
+        this.activity = new WeakReference<>(activity);
     }
 
 
     @Override
     protected Contract.AddMenuReply doInBackground(Menu... menu) {
-        synchronized (stub) {
             if (menu.length != 1) {
                 return null;
             }
@@ -51,8 +56,6 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
             } catch (StatusRuntimeException e) {
                 return null;
             }
-        }
-
     }
 
 
@@ -66,6 +69,12 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
 
         if (taskPhoto != null) {
             task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
+            return;
+        }
+        AddMenuActivity act = activity.get();
+        if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            act.showToast(act.getString(R.string.Menu_uploaded_successfully_message));
+            act.finish();
         }
     }
 }

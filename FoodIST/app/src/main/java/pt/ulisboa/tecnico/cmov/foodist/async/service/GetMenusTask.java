@@ -29,26 +29,24 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
 
     @Override
     protected List<Contract.Menu> doInBackground(String... foodServices) {
-        synchronized (stub) {
-            if (foodServices.length != 1) {
-                return null;
-            }
-            String foodService = foodServices[0];
-            SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
+        if (foodServices.length != 1) {
+            return null;
+        }
+        String foodService = foodServices[0];
+        SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
 
-            Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
+        Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
-            listMenuBuilder.setFoodService(foodService);
-            listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.shared_prefs_profile_language), "en"));
+        listMenuBuilder.setFoodService(foodService);
+        listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.shared_prefs_profile_language), "en"));
 
-            Contract.ListMenuRequest request = listMenuBuilder.build();
+        Contract.ListMenuRequest request = listMenuBuilder.build();
 
-            try {
-                Contract.ListMenuReply reply = this.stub.listMenu(request);
-                return reply.getMenusList();
-            } catch (StatusRuntimeException e) {
-                return null;
-            }
+        try {
+            Contract.ListMenuReply reply = this.stub.listMenu(request);
+            return reply.getMenusList();
+        } catch (StatusRuntimeException e) {
+            return null;
         }
     }
 

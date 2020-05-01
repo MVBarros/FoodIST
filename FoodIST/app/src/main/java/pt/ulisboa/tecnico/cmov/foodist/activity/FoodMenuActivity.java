@@ -287,7 +287,7 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
             return;
         }
-        new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAsyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
+        new UploadPhotoTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
     }
 
 
