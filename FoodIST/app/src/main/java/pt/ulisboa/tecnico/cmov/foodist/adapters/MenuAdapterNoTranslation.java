@@ -19,6 +19,7 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PHOTO_IDS;
 
 public class MenuAdapterNoTranslation extends ArrayAdapter<Menu> {
     private static final String MENU_NAME = "Menu_name";
@@ -53,6 +54,7 @@ public class MenuAdapterNoTranslation extends ArrayAdapter<Menu> {
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
             intent.putExtra(MENU_ID, menu.getMenuId());
             intent.putExtra(DISPLAY_NAME, menuFood.getText());
+            intent.putStringArrayListExtra(MENU_PHOTO_IDS, menu.getPhotoIds());
             getContext().startActivity(intent);
 
         });

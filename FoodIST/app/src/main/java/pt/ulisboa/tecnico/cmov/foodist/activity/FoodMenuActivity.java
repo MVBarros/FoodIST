@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -33,8 +32,10 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -54,6 +55,7 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_NAME;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PHOTO_IDS;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
@@ -72,17 +74,17 @@ public class FoodMenuActivity extends BaseActivity {
     private static final int MARGIN_BOTTOM = 0;
 
     private static final int PHOTO_WIDTH = 800;
+    private static final int PHOTO_DOWNLOAD_LIMIT = 3;
 
     private static final String TAG = "TAG_FoodMenuActivity";
 
     private String imageFilePath = null;
-
     private String menuId;
 
     private Set<String> photoIDs = Collections.synchronizedSet(new HashSet<>());
-
     private Set<String> downloadedPhotos = Collections.synchronizedSet(new HashSet<>());
 
+    private boolean isOnCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,22 +94,31 @@ public class FoodMenuActivity extends BaseActivity {
         setScroll();
         intentInitialization(getIntent());
         setButtons();
+
+        isOnCreate = true;
     }
 
     public void setScroll() {
         HorizontalScrollView scrollView = findViewById(R.id.food_menu_photos_scroll);
-        scrollView.setOnScrollChangeListener((a,b,c,d,e) -> {
-            if (!scrollView.canScrollHorizontally(1)) {
-                //Reached limit
-            }
-
+        scrollView.setOnScrollChangeListener((a, b, c, d, e) -> {
+            checkScrollLimit(scrollView);
         });
+    }
+
+    public void checkScrollLimit(HorizontalScrollView scrollView) {
+        if (!scrollView.canScrollHorizontally(1)) {
+            //Reached limit
+            launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        launchUpdateMenuTask();
+        if (!isOnCreate) {
+            //Update menu ids when screen returns
+            launchUpdateMenuTask();
+        }
     }
 
     @Override
@@ -115,46 +126,56 @@ public class FoodMenuActivity extends BaseActivity {
         addReceiver(new MenuNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
-    public void launchGetCachePhotosTask() {
+    public boolean launchGetCachePhotosTask(int limit) {
         Photo[] photos = photoIDs.stream()
                 .filter(photo -> !downloadedPhotos.contains(photo))
                 .filter(photo -> PhotoCache.getInstance().containsPhoto(photo))
                 .map(photoId -> new Photo(this.menuId, null, photoId))
+                .limit(limit)
                 .toArray(Photo[]::new);
+
+        if (photos.length == 0) {
+            return false;
+        }
 
         //Prevent downloading the same photo twice
         Arrays.stream(photos)
                 .map(Photo::getPhotoID)
                 .forEach(downloadedPhotos::add);
 
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
+        return true;
+    }
+
+
+    public void launchDownloadPhotosTask(int limit) {
+        //Get first the cached photos
+        if (launchGetCachePhotosTask(limit)) {
+            return;
+        }
+
+
+        Photo[] photos = photoIDs.stream()
+                .filter(photo -> !downloadedPhotos.contains(photo))
+                .map(photoId -> new Photo(this.menuId, null, photoId))
+                .limit(limit)
+                .toArray(Photo[]::new);
+
         if (photos.length == 0) {
             return;
         }
 
-        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
-    }
-
-
-    public void launchDownloadPhotosTask() {
-        launchGetCachePhotosTask(); //Get first the cached photos
         if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_menu_update_menu_failure_toast));
             return;
         }
 
-        Photo[] photos = photoIDs.stream()
-                .filter(photo -> !downloadedPhotos.contains(photo))
-                .map(photoId -> new Photo(this.menuId, null, photoId))
-                .toArray(Photo[]::new);
-
         //Prevent downloading the same photo twice
         Arrays.stream(photos)
                 .map(Photo::getPhotoID)
                 .forEach(downloadedPhotos::add);
 
-        if (photos.length == 0) {
-            return;
-        }
+
 
         new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
     }
@@ -191,18 +212,25 @@ public class FoodMenuActivity extends BaseActivity {
                     }
                     askGalleryPermission();
                 }
-                );
+        );
     }
 
-    public void updatePhotos(Collection<String> newPhotos) {
-        photoIDs.addAll(newPhotos);
-        launchDownloadPhotosTask();
+    public void updatePhotos(Collection<String> photos) {
+        boolean shouldDownload = photoIDs.size() == 0;
+        photoIDs.addAll(photos);
+        if (shouldDownload) {
+            launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
+        } else {
+            HorizontalScrollView scrollView = findViewById(R.id.food_menu_photos_scroll);
+            checkScrollLimit(scrollView);
+        }
     }
 
     private void intentInitialization(Intent intent) {
         initializeMenuId(intent.getStringExtra(MENU_ID));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
+        initializePhotoIds(intent.getStringArrayListExtra(MENU_PHOTO_IDS));
     }
 
     private void initializeMenuId(String menuId) {
@@ -232,6 +260,14 @@ public class FoodMenuActivity extends BaseActivity {
             TextView menuCostText = findViewById(R.id.menuCost);
             menuCostText.setText(String.format(Locale.US, "%.2f", menuCost));
         }
+    }
+    private void initializePhotoIds(List<String> photoIds) {
+        if (photoIds == null) {
+            Log.d(TAG, "No menus from food service activity");
+            launchUpdateMenuTask();
+            return;
+        }
+        updatePhotos(photoIds);
     }
 
 

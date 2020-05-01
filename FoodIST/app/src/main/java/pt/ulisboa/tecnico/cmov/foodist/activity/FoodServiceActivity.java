@@ -156,7 +156,6 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     private void setFoodService() {
-
         this.foodServiceId = getIntent().getStringExtra(SERVICE_NAME) == null ? "" : getIntent().getStringExtra(SERVICE_NAME);
         this.foodServiceName = getIntent().getStringExtra(SERVICE_DISPLAY_NAME) == null ? "" : getIntent().getStringExtra(SERVICE_DISPLAY_NAME);
         this.latitude = getIntent().getDoubleExtra(LATITUDE, 0);

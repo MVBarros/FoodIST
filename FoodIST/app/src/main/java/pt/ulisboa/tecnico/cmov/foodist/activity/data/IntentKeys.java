@@ -15,4 +15,5 @@ public class IntentKeys {
     public static final String MENU_ID = "Menu ID";
     public static final String DISPLAY_NAME = "Display_name";
     public static final String PHOTO_ID = "Photo Id";
+    public static final String MENU_PHOTO_IDS = "Photo Ids";
 }
