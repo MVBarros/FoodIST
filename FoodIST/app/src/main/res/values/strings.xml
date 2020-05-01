@@ -62,7 +62,7 @@
     <!-- Activity -->
     <string name="food_service_working_hours">Working Hours:</string>
     <string name="food_service_menu_update_failure_toast">No internet connection, cannot get menus</string>
-    <string name="food_service_show_all_menus">Show all menus</string>
+    <string name="food_service_show_all_menus">Filter menus i\'m not interested in</string>
     <string name="food_service_filter_menus">Filter menus</string>
 
     <!-- activity main -->
@@ -189,4 +189,5 @@
     <string name="login_dialog_positive_message">login</string>
     <string name="login_dialog_negative_message">No thanks</string>
     <string name="Menu_uploaded_successfully_message">Menu uploaded successfully</string>
+    <string name="menu_upload_error_message">Menu unable to be uploaded</string>
 </resources>

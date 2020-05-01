@@ -61,7 +61,7 @@
     <!-- Activity -->
     <string name="food_service_working_hours">Horário Funcionamento:</string>
     <string name="food_service_menu_update_failure_toast">Impossivel de obter menus sem internet</string>
-    <string name="food_service_show_all_menus">Mostrar todos os menus</string>
+    <string name="food_service_show_all_menus">Filtrar menus que não me interessam</string>
     <string name="food_service_filter_menus">Filtrar menus</string>
 
     <!-- activity main -->
@@ -190,4 +190,5 @@
     <string name="login_dialog_positive_message">Entrar</string>
     <string name="login_dialog_negative_message">Não obrigado</string>
     <string name="Menu_uploaded_successfully_message">Upload de menu completado</string>
+    <string name="menu_upload_error_message">Não foi possível fazer upload desse menu</string>
 </resources>

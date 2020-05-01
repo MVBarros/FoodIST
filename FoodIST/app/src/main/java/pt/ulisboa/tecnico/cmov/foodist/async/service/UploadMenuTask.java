@@ -61,18 +61,18 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
 
     @Override
     protected void onPostExecute(Contract.AddMenuReply result) {
-        if (result == null) {
-            Log.d(TAG, "Menu unable to be uploaded");
-            return;
-        }
-        Log.d(TAG, "Menu uploaded successfully");
-
         if (taskPhoto != null) {
-            task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
-            return;
+            if (result != null) {
+                task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
+                return;
+            }
         }
         AddMenuActivity act = activity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            if (result == null) {
+               act.showToast(act.getString(R.string.menu_upload_error_message));
+               return;
+            }
             act.showToast(act.getString(R.string.Menu_uploaded_successfully_message));
             act.finish();
         }

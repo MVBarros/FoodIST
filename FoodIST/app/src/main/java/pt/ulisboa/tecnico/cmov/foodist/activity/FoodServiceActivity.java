@@ -72,6 +72,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         setFoodService();
         setQueueTime();
         setTranslateBox();
+        doShowAllButton();
         setButtons();
     }
 
@@ -215,10 +216,9 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     public void doShowAllButton() {
-        final Button button = findViewById(R.id.show_all_menus_button);
-        button.setOnClickListener((l) -> {
-            filter.set(!filter.get());
-            button.setText(getString(getFilter() ? R.string.food_service_show_all_menus : R.string.food_service_filter_menus));
+        final CheckBox checkBox = findViewById(R.id.show_all_menus_button);
+        checkBox.setOnClickListener((l) -> {
+            filter.set(checkBox.isChecked());
             drawServices();
         });
     }

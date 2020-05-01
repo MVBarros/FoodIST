@@ -16,7 +16,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
-public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.Menu>, FoodServiceActivity> {
+public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Menu>, FoodServiceActivity> {
 
     private final FoodISTServerServiceBlockingStub stub;
 
@@ -28,7 +28,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
     private static final String TAG = "GET-MENU-TASK";
 
     @Override
-    protected List<Contract.Menu> doInBackground(String... foodServices) {
+    protected List<Menu> doInBackground(String... foodServices) {
         if (foodServices.length != 1) {
             return null;
         }
@@ -44,14 +44,16 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
 
         try {
             Contract.ListMenuReply reply = this.stub.listMenu(request);
-            return reply.getMenusList();
+            return reply.getMenusList().stream()
+                    .map(Menu::parseContractMenu)
+                    .collect(Collectors.toList());
         } catch (StatusRuntimeException e) {
             return null;
         }
     }
 
     @Override
-    public void onPostExecute(List<Contract.Menu> result) {
+    public void onPostExecute(List<Menu> result) {
         if (result == null) {
             menuError(getActivity(), getActivity().getString(R.string.get_menu_task_error_getting_menus_message));
             return;
@@ -62,16 +64,8 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
             return;
         }
 
-        List<Menu> menus = result.stream()
-                .map(Menu::parseContractMenu)
-                .collect(Collectors.toList());
-
-        getActivity().setMenus(new ArrayList<>(menus));
+        getActivity().setMenus(new ArrayList<>(result));
         getActivity().drawServices();
-        if (getActivity().getFilter()) {
-            getActivity().showToast(getActivity().getString(R.string.get_menu_filter_menu_message));
-        }
-        getActivity().doShowAllButton();
         Log.d(TAG, "Menus obtained successfully");
 
     }
