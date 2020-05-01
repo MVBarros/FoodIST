@@ -85,6 +85,8 @@ public class FoodMenuActivity extends BaseActivity {
 
     private boolean isOnCreate;
 
+    private boolean downloading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +109,9 @@ public class FoodMenuActivity extends BaseActivity {
     public void checkScrollLimit(HorizontalScrollView scrollView) {
         if (!scrollView.canScrollHorizontally(1)) {
             //Reached limit
-            launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
+            if (!downloading) {
+                launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
+            }
         }
     }
 
@@ -434,5 +438,9 @@ public class FoodMenuActivity extends BaseActivity {
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         Photo photo = new Photo(this.menuId, this.imageFilePath);
         launchUploadPhotoTask(photo);
+    }
+
+    public void setDownloading(boolean downloading) {
+        this.downloading = downloading;
     }
 }

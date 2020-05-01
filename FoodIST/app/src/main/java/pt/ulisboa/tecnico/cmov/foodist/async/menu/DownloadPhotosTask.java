@@ -23,11 +23,11 @@ public class DownloadPhotosTask extends BaseAsyncTask<Photo, BitmapAndId, Boolea
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
-
     public DownloadPhotosTask(FoodMenuActivity activity) {
         super(activity);
 
         this.stub = activity.getGlobalStatus().getStub();
+        activity.setDownloading(true);
     }
 
     private static final String TAG = "DOWNLOAD-PHOTOS-TASK";
@@ -68,6 +68,7 @@ public class DownloadPhotosTask extends BaseAsyncTask<Photo, BitmapAndId, Boolea
 
     @Override
     public void onPostExecute(Boolean result) {
+        getActivity().setDownloading(false);
         if (result == null) {
             photoError(getActivity());
         }
