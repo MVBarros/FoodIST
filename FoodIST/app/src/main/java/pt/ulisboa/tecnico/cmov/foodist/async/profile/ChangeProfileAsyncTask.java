@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.profile;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -9,7 +8,6 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.activity.LoginActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.ProfileActivity;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -59,7 +57,7 @@ public class ChangeProfileAsyncTask extends AsyncTask<Contract.AccountMessage, I
                 act.showToast(act.getString(R.string.could_not_change_profile_message));
                 return;
             }
-            act.showToast(act.getString( R.string.profile_synched_mesage));
+            act.showToast(act.getString(R.string.profile_synched_mesage));
             act.returnToMain();
         }
     }

@@ -32,8 +32,7 @@
                 android:maxLength="60"
                 android:textSize="20sp"
                 android:textAlignment="center"
-                android:text="@string/username_not_logged_in"
-                />
+                android:text="@string/username_not_logged_in" />
 
 
             <TextView
@@ -51,8 +50,7 @@
                 android:id="@+id/universityStatus"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4"
-                >
+                android:layout_weight="4">
 
 
                 <RadioButton
@@ -62,7 +60,7 @@
                     android:layout_weight="1"
                     android:text="@string/profile_student"
                     android:textSize="20sp"
-                    android:clickable="false"/>
+                    android:clickable="false" />
 
                 <RadioButton
                     android:id="@+id/professorRadioButton"
@@ -71,8 +69,7 @@
                     android:layout_weight="1"
                     android:text="@string/profile_professor"
                     android:textSize="20sp"
-                    android:clickable="false"
-                    />
+                    android:clickable="false" />
 
                 <RadioButton
                     android:id="@+id/staffRadioButton"
@@ -81,8 +78,7 @@
                     android:layout_weight="1"
                     android:text="@string/profile_staff"
                     android:textSize="20sp"
-                    android:clickable="false"
-                    />
+                    android:clickable="false" />
 
                 <RadioButton
                     android:id="@+id/visitorRadioButton"
@@ -182,8 +178,7 @@
                     android:checked="true"
                     android:text="@string/profile_language_option_english"
                     android:textSize="20sp"
-                    android:clickable="false"
-                    />
+                    android:clickable="false" />
 
                 <RadioButton
                     android:id="@+id/languagePortuguese"
@@ -193,8 +188,7 @@
                     android:checked="true"
                     android:text="@string/profile_language_option_portuguese"
                     android:textSize="20sp"
-                    android:clickable="false"
-                    />
+                    android:clickable="false" />
             </RadioGroup>
         </LinearLayout>
     </ScrollView>

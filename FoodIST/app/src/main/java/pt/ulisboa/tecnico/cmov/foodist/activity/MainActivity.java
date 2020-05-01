@@ -35,12 +35,12 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.boot.ChooseLanguageActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.data.FoodServiceData;
+import pt.ulisboa.tecnico.cmov.foodist.async.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
-import pt.ulisboa.tecnico.cmov.foodist.async.data.FoodServiceData;
-import pt.ulisboa.tecnico.cmov.foodist.async.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 

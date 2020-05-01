@@ -67,8 +67,7 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:text="@string/translate_menu_names"
-        android:checked="true"
-        />
+        android:checked="true" />
 
 
     <Button

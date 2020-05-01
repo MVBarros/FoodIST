@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.profile;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -48,9 +47,9 @@ public class LogoutAsyncTask extends AsyncTask<String, Integer, Boolean> {
         if (status == null) {
             return;
         }
-            if (message != null) {
-                status.removeCookie();
-            }
+        if (message != null) {
+            status.removeCookie();
+        }
 
         LoginActivity act = mActivity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {

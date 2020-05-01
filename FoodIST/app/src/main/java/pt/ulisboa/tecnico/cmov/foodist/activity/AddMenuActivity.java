@@ -87,6 +87,7 @@ public class AddMenuActivity extends BaseActivity {
         TextView menuCost = findViewById(R.id.dishCost);
         return Double.parseDouble(menuCost.getText().toString());
     }
+
     private String getMenuCost() {
         TextView menuCost = findViewById(R.id.dishCost);
         return menuCost.getText().toString();
@@ -116,7 +117,7 @@ public class AddMenuActivity extends BaseActivity {
             return;
         }
 
-        UploadPhotoTask task =  new UploadPhotoTask(this.getGlobalStatus().getAsyncStub(), this);
+        UploadPhotoTask task = new UploadPhotoTask(this.getGlobalStatus().getAsyncStub(), this);
         new UploadMenuTask(getGlobalStatus().getStub(), task, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
         finish();
     }

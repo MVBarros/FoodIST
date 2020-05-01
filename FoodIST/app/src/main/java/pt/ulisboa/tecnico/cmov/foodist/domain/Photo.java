@@ -7,13 +7,13 @@ public class Photo {
     private String photoID;
 
     //To download photos from the server
-    public Photo(String menuId,  String photoPath, String photoID) {
+    public Photo(String menuId, String photoPath, String photoID) {
         this(menuId, photoPath);
         this.photoID = photoID;
     }
 
     //To send photos to the server
-    public Photo(String menuId,  String photoPath) {
+    public Photo(String menuId, String photoPath) {
         this.menuId = menuId;
         this.photoPath = photoPath;
     }

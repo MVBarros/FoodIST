@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -176,7 +175,6 @@ public class FoodMenuActivity extends BaseActivity {
                 .forEach(downloadedPhotos::add);
 
 
-
         new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
     }
 
@@ -261,6 +259,7 @@ public class FoodMenuActivity extends BaseActivity {
             menuCostText.setText(String.format(Locale.US, "%.2f", menuCost));
         }
     }
+
     private void initializePhotoIds(List<String> photoIds) {
         if (photoIds == null) {
             Log.d(TAG, "No menus from food service activity");

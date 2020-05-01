@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.menu;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
