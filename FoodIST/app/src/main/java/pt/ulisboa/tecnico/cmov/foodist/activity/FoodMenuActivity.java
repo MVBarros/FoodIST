@@ -17,8 +17,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -87,8 +89,19 @@ public class FoodMenuActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_menu);
 
+        setScroll();
         intentInitialization(getIntent());
         setButtons();
+    }
+
+    public void setScroll() {
+        HorizontalScrollView scrollView = findViewById(R.id.food_menu_photos_scroll);
+        scrollView.setOnScrollChangeListener((a,b,c,d,e) -> {
+            if (!scrollView.canScrollHorizontally(1)) {
+                //Reached limit
+            }
+
+        });
     }
 
     @Override

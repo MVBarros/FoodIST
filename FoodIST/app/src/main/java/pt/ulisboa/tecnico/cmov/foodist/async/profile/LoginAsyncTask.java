@@ -14,7 +14,6 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class LoginAsyncTask extends AsyncTask<Contract.LoginRequest, Integer, Contract.AccountMessage> {
 
-
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
     private WeakReference<GlobalStatus> mContext;
     private WeakReference<LoginActivity> mActivity;
