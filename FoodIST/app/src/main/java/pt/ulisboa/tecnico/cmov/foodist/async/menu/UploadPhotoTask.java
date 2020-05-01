@@ -1,19 +1,24 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.menu;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 import foodist.server.grpc.contract.Contract;
@@ -34,7 +39,8 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     private WeakReference<FoodMenuActivity> activity;
     private GlobalStatus mContext;
     private String cookie;
-
+    private String photoId;
+    private byte[] bitmap;
 
     private static final String TAG = "UPLOADPHOTO-TASK";
 
@@ -43,6 +49,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         this.activity = new WeakReference<>(activity);
         mContext = activity.getGlobalStatus();
         this.cookie = mContext.getCookie();
+        this.bitmap = new byte[0];
     }
 
     public UploadPhotoTask(FoodISTServerServiceGrpc.FoodISTServerServiceStub stub, AddMenuActivity activity) {
@@ -50,6 +57,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         this.activity = new WeakReference<>(null);
         mContext = activity.getGlobalStatus();
         this.cookie = mContext.getCookie();
+        this.bitmap = new byte[0];
     }
 
     @Override
@@ -60,9 +68,10 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         final CountDownLatch finishLatch = new CountDownLatch(1);
         int sequence = 0;
 
-        StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
+        StreamObserver<Contract.UploadPhotoReply> responseObserver = new StreamObserver<Contract.UploadPhotoReply>() {
             @Override
-            public void onNext(Empty empty) {
+            public void onNext(Contract.UploadPhotoReply reply) {
+                photoId = reply.getPhotoID();
             }
 
             @Override
@@ -89,19 +98,27 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
             while ((numRead = in.read(data)) >= 0) {
                 Contract.AddPhotoRequest.Builder addPhotoRequestBuilder = Contract.AddPhotoRequest.newBuilder();
 
-                addPhotoRequestBuilder.setContent(ByteString.copyFrom(Arrays.copyOfRange(data, 0, numRead)));
+                byte[] content = Arrays.copyOfRange(data, 0, numRead);
+                addPhotoRequestBuilder.setContent(ByteString.copyFrom(content));
                 addPhotoRequestBuilder.setMenuId(Long.parseLong(photo[0].getMenuId()));
                 addPhotoRequestBuilder.setSequenceNumber(sequence);
                 addPhotoRequestBuilder.setCookie(cookie);
 
                 requestObserver.onNext(addPhotoRequestBuilder.build());
                 sequence++;
+                //ArrayUtils.a(bitmap, Arrays.copyOfRange(data, 0, numRead));
+                bitmap = ArrayUtils.addAll(bitmap, content);
             }
 
             requestObserver.onCompleted();
 
             //Wait for server to finish saving file to Database
             finishLatch.await();
+
+            //Add recently uploaded photo to cache
+            Bitmap photoBitmap = BitmapFactory.decodeByteArray(bitmap, 0, bitmap.length);
+            PhotoCache.getInstance().addAndGetPhoto(photoId, photoBitmap);
+
             return true;
         } catch (FileNotFoundException e) {
             Log.d(TAG, String.format("File with filename: %s not found.", photo[0].getPhotoPath()));
@@ -121,7 +138,8 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         }
         FoodMenuActivity act = activity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
-            act.launchUpdateMenuTask();
+            act.updatePhoto(photoId);
+            act.launchGetCachePhotosTask();
             act.showToast(act.getString(R.string.upload_photo_task_complete_message));
         }
     }

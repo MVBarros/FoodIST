@@ -93,7 +93,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     }
 
     @Override
-    public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Empty> responseObserver) {
+    public StreamObserver<Contract.AddPhotoRequest> addPhoto(StreamObserver<Contract.UploadPhotoReply> responseObserver) {
         return new StreamObserver<>() {
             private int counter = 0;
             private String cookie;
@@ -145,7 +145,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
                     photos.put(photo.getPhotoId(), photo);
                     menu.addPhoto(photo.getPhotoId());
 
-                    responseObserver.onNext(Empty.newBuilder().build());
+                    responseObserver.onNext(Contract.UploadPhotoReply.newBuilder()
+                            .setPhotoID(String.valueOf(photo.getPhotoId()))
+                            .build());
                     responseObserver.onCompleted();
 
                 } catch (IllegalArgumentException e) {

@@ -159,7 +159,7 @@ public class RequestPhotoIdsTest {
             CountDownLatch latch = new CountDownLatch(1);
             StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
                 @Override
-                public void onNext(Empty value) {
+                public void onNext(Contract.UploadPhotoReply value) {
 
                 }
 
@@ -193,7 +193,7 @@ public class RequestPhotoIdsTest {
             CountDownLatch latch = new CountDownLatch(1);
             StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
                 @Override
-                public void onNext(Empty value) {
+                public void onNext(Contract.UploadPhotoReply value) {
 
                 }
 
@@ -227,7 +227,7 @@ public class RequestPhotoIdsTest {
             CountDownLatch latch = new CountDownLatch(1);
             StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
                 @Override
-                public void onNext(Empty value) {
+                public void onNext(Contract.UploadPhotoReply value) {
 
                 }
 

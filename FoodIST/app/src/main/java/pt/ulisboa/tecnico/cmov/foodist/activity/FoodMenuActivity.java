@@ -79,7 +79,9 @@ public class FoodMenuActivity extends BaseActivity {
     private String imageFilePath = null;
     private String menuId;
 
-    /**These two sets form a set data structure whose removed elements cannot be added back*/
+    /**
+     * These two sets form a set data structure whose removed elements cannot be added back
+     */
     private Set<String> photosNotDownloaded = Collections.synchronizedSet(new HashSet<>());
     private Set<String> photosDownloaded = Collections.synchronizedSet(new HashSet<>());
 
@@ -118,10 +120,8 @@ public class FoodMenuActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isOnCreate) {
-            //Update menu ids when screen returns
-            launchUpdateMenuTask();
-        }
+        //Update menu ids when screen returns
+        launchUpdateMenuTask();
     }
 
     @Override
@@ -222,6 +222,13 @@ public class FoodMenuActivity extends BaseActivity {
             //If there were no previous photos displayed and there are some now download some
             launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
         }
+    }
+
+    public void updatePhoto(String photoId) {
+        if (photosDownloaded.contains(photoId)) {
+            return;
+        }
+        photosNotDownloaded.add(photoId);
     }
 
     private void intentInitialization(Intent intent) {
