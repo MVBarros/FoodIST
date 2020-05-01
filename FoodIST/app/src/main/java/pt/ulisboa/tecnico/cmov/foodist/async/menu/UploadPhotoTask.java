@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
 
@@ -21,6 +22,7 @@ import io.grpc.stub.StreamObserver;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.AddMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
+import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -32,6 +34,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     private WeakReference<FoodMenuActivity> activity;
     private GlobalStatus mContext;
     private String cookie;
+
 
     private static final String TAG = "UPLOADPHOTO-TASK";
 
@@ -119,8 +122,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         FoodMenuActivity act = activity.get();
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             act.launchUpdateMenuTask();
+            act.showToast(act.getString(R.string.upload_photo_task_complete_message));
         }
-        Toast toast = Toast.makeText(mContext, R.string.upload_photo_task_complete_message, Toast.LENGTH_SHORT);
-        toast.show();
     }
 }

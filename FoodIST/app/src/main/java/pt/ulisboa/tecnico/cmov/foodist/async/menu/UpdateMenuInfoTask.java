@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist.async.menu;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
@@ -44,6 +46,6 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
             Log.e(TAG, "Menu does not exist");
             return;
         }
-        getActivity().updatePhotos(reply.getPhotoIDList());
+        getActivity().updatePhotos(new ArrayList<>(reply.getPhotoIDList()));
     }
 }

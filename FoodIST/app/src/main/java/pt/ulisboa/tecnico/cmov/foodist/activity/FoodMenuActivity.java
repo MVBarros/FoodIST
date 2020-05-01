@@ -72,17 +72,16 @@ public class FoodMenuActivity extends BaseActivity {
     private static final int MARGIN_LEFT = 0;
     private static final int MARGIN_TOP = 0;
     private static final int MARGIN_BOTTOM = 0;
-
     private static final int PHOTO_WIDTH = 800;
     private static final int PHOTO_DOWNLOAD_LIMIT = 3;
-
     private static final String TAG = "TAG_FoodMenuActivity";
 
     private String imageFilePath = null;
     private String menuId;
 
-    private Set<String> photoIDs = Collections.synchronizedSet(new HashSet<>());
-    private Set<String> downloadedPhotos = Collections.synchronizedSet(new HashSet<>());
+    /**These two sets form a set data structure whose removed elements cannot be added back*/
+    private Set<String> photosNotDownloaded = Collections.synchronizedSet(new HashSet<>());
+    private Set<String> photosDownloaded = Collections.synchronizedSet(new HashSet<>());
 
     private boolean isOnCreate;
 
@@ -130,12 +129,10 @@ public class FoodMenuActivity extends BaseActivity {
         addReceiver(new MenuNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
-    public boolean launchGetCachePhotosTask(int limit) {
-        Photo[] photos = photoIDs.stream()
-                .filter(photo -> !downloadedPhotos.contains(photo))
+    public boolean launchGetCachePhotosTask() {
+        Photo[] photos = photosNotDownloaded.stream()
                 .filter(photo -> PhotoCache.getInstance().containsPhoto(photo))
                 .map(photoId -> new Photo(this.menuId, null, photoId))
-                .limit(limit)
                 .toArray(Photo[]::new);
 
         if (photos.length == 0) {
@@ -145,7 +142,7 @@ public class FoodMenuActivity extends BaseActivity {
         //Prevent downloading the same photo twice
         Arrays.stream(photos)
                 .map(Photo::getPhotoID)
-                .forEach(downloadedPhotos::add);
+                .forEach(this::acceptDownload);
 
         new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
         return true;
@@ -153,16 +150,15 @@ public class FoodMenuActivity extends BaseActivity {
 
 
     public void launchDownloadPhotosTask(int limit) {
-        //Get first the cached photos
-        if (launchGetCachePhotosTask(limit)) {
+        //Prioritize cached photos
+        if (launchGetCachePhotosTask()) {
             return;
         }
 
 
-        Photo[] photos = photoIDs.stream()
-                .filter(photo -> !downloadedPhotos.contains(photo))
-                .map(photoId -> new Photo(this.menuId, null, photoId))
+        Photo[] photos = photosNotDownloaded.stream()
                 .limit(limit)
+                .map(photoId -> new Photo(this.menuId, null, photoId))
                 .toArray(Photo[]::new);
 
         if (photos.length == 0) {
@@ -177,8 +173,7 @@ public class FoodMenuActivity extends BaseActivity {
         //Prevent downloading the same photo twice
         Arrays.stream(photos)
                 .map(Photo::getPhotoID)
-                .forEach(downloadedPhotos::add);
-
+                .forEach(this::acceptDownload);
 
         new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
     }
@@ -219,13 +214,13 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     public void updatePhotos(Collection<String> photos) {
-        boolean shouldDownload = photoIDs.size() == 0;
-        photoIDs.addAll(photos);
+        boolean shouldDownload = photosNotDownloaded.size() == 0;
+        photos.removeAll(photosDownloaded);
+        photosNotDownloaded.addAll(photos);
+        shouldDownload = shouldDownload && photosNotDownloaded.size() != 0;
         if (shouldDownload) {
+            //If there were no previous photos displayed and there are some now download some
             launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
-        } else {
-            HorizontalScrollView scrollView = findViewById(R.id.food_menu_photos_scroll);
-            checkScrollLimit(scrollView);
         }
     }
 
@@ -238,7 +233,6 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void initializeMenuId(String menuId) {
         if (menuId == null) {
-            Log.d(TAG, "Unable to obtain menu name");
             showToast(getString(R.string.food_menu_name_failure_toast));
         } else {
             this.menuId = menuId;
@@ -247,7 +241,6 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void initializeDisplayName(String menuName) {
         if (menuName == null) {
-            Log.d(TAG, "Unable to obtain menu name");
             showToast(getString(R.string.food_menu_name_failure_toast));
         } else {
             TextView menuNameText = findViewById(R.id.menuName);
@@ -257,7 +250,6 @@ public class FoodMenuActivity extends BaseActivity {
 
     private void initializeMenuCost(Double menuCost) {
         if (menuCost == -1.0) {
-            Log.d(TAG, "Unable to obtain menu cost");
             showToast(getString(R.string.food_menu_cost_failure_toast));
         } else {
             TextView menuCostText = findViewById(R.id.menuCost);
@@ -284,12 +276,21 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     private void launchUploadPhotoTask(Photo photo) {
-
         if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
             return;
         }
         new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAsyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
+    }
+
+
+    public void setDownloading(boolean downloading) {
+        this.downloading = downloading;
+    }
+
+    private void acceptDownload(String photo) {
+        photosDownloaded.add(photo);
+        photosNotDownloaded.remove(photo);
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
@@ -441,7 +442,4 @@ public class FoodMenuActivity extends BaseActivity {
         launchUploadPhotoTask(photo);
     }
 
-    public void setDownloading(boolean downloading) {
-        this.downloading = downloading;
-    }
 }
