@@ -84,6 +84,17 @@ public class MenuTest {
         assertEquals(menu2.getFlagCount(), 1);
     }
 
+    @Test
+    public void repeatedFlagCount() {
+        Menu menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        for(int i = 0; i < 6; i++) {
+            menu.flag("0");
+            assertEquals(menu.getFlagCount(), 1);
+        }
+        assertEquals(account.getFlagCount(), 0);
+        Menu menu2 = new Menu(NAME2, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        assertEquals(menu2.getFlagCount(), 0);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullName() {

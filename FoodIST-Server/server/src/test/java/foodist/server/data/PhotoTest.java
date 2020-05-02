@@ -82,6 +82,18 @@ public class PhotoTest {
     }
 
     @Test
+    public void repeatedFlagCount() {
+        Photo photo = new Photo(PHOTO_CONTENT, account);
+        for(int i = 0; i < 6; i++) {
+            photo.flag("0");
+            assertEquals(photo.getFlagCount(), 1);
+        }
+        assertEquals(account.getFlagCount(), 0);
+        Photo photo2 = new Photo(PHOTO_CONTENT, account);
+        assertEquals(photo2.getFlagCount(), 0);
+    }
+
+    @Test
     public void tooManyFlagsGetPhotoTest() {
         Photo photo = new Photo(PHOTO_CONTENT, account);
         Photo photo2 = new Photo(PHOTO_CONTENT, account);
