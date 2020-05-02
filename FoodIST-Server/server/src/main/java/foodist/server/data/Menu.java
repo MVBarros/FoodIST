@@ -21,7 +21,7 @@ public class Menu {
     private final Account account;
 
     public Menu(String name, double price, Contract.FoodType type, String language, long menuId, Account account) {
-        checkArguments(name, price, type, language);
+        checkArguments(name, price, type, language, account);
         this.price = price;
         this.type = type;
         this.language = language;
@@ -33,7 +33,10 @@ public class Menu {
         account.addMenu(this);
     }
 
-    public void checkArguments(String name, double price, Contract.FoodType type, String language) {
+    public void checkArguments(String name, double price, Contract.FoodType type, String language, Account account) {
+        if (account == null) {
+            throw new IllegalArgumentException();
+        }
         if (price < 0) {
             throw new IllegalArgumentException();
         }

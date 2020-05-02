@@ -188,4 +188,11 @@ public class Account {
         return new Account(profile.getName(), password, salt, profile.getLanguage(), profile.getRole(), preferences);
     }
 
+    public CircularFifoQueue<Menu> getRecentMenus() {
+        return recentMenus;
+    }
+
+    public CircularFifoQueue<Photo> getRecentPhotos() {
+        return recentPhotos;
+    }
 }
