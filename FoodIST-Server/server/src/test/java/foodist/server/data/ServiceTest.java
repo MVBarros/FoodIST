@@ -93,7 +93,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void tooManyFlagsTest() throws ServiceException {
+    public void tooManyFlagsGetMenuTest() throws ServiceException {
         Service service = new Service(NAME);
         service.addMenu(menu);
         service.addMenu(menu2);
@@ -110,7 +110,7 @@ public class ServiceTest {
 
 
     @Test
-    public void toManyMenusFlagTest() throws ServiceException {
+    public void getMenuOrderTest() throws ServiceException {
         Menu menu3 = new Menu(NAME3, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         Menu menu4 = new Menu(NAME4, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         Menu menu5 = new Menu(NAME5, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
@@ -124,30 +124,32 @@ public class ServiceTest {
         service.addMenu(menu5);
         service.addMenu(menu6);
 
-        menu.flag();
-        menu.flag();
-        menu.flag();
-        menu2.flag();
-        menu2.flag();
-        menu2.flag();
-        menu3.flag();
-        menu3.flag();
-        menu3.flag();
-        menu4.flag();
-        menu4.flag();
-        menu5.flag();
-        menu5.flag();
+        for(int i = 0; i <3; i++) {
+            menu.flag();
+            menu2.flag();
+            menu3.flag();
+
+        }
+        for(int i = 0; i <2; i++) {
+            menu4.flag();
+            menu5.flag();
+        }
         menu6.flag();
 
         Set<Long> seen = new HashSet<>();
         assertEquals(service.getContractMenus().size(), 6);
-        for(int i = 0; i < 3; i++) {
+        assertEquals(service.getContractMenus().get(0).getMenuId(), 5);
+        seen.add(service.getContractMenus().get(0).getMenuId());
+
+        for(int i = 1; i < 3; i++) {
+            //The two following menus are 4 and 5 in any order
             assertTrue(service.getContractMenus().get(i).getMenuId() >= 3);
-            assertTrue(service.getContractMenus().get(i).getMenuId() <= 5);
+            assertTrue(service.getContractMenus().get(i).getMenuId() <= 4);
             assertFalse(seen.contains(service.getContractMenus().get(i).getMenuId()));
             seen.add(service.getContractMenus().get(i).getMenuId());
         }
         for(int i = 3; i < 6; i++) {
+            //The two following menus are 0, 1 and 2 in any order
             assertTrue(service.getContractMenus().get(i).getMenuId() >= 0);
             assertTrue(service.getContractMenus().get(i).getMenuId() <= 2);
             assertFalse(seen.contains(service.getContractMenus().get(i).getMenuId()));

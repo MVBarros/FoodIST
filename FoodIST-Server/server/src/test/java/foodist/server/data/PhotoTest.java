@@ -2,6 +2,7 @@ package foodist.server.data;
 
 import foodist.server.grpc.contract.Contract;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,16 +27,15 @@ public class PhotoTest {
 
     private static final String NAME = "NAME";
     private static final double PRICE = 2.0d;
-    private static final double DELTA = 0.01d;
     private static final String LANGUAGE = "pt";
-    private static final long MENU_ID = 0;
+
 
     private static Contract.AddMenuRequest request;
     private static Account account;
     private static Menu menu;
 
     @BeforeClass
-    public static void oneTimeSetup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static void oneTimeSetup() {
         validPreferences = new HashMap<>();
         Arrays.stream(Contract.FoodType.values()).forEach(type -> validPreferences.put(type, true));
         validPreferences.remove(Contract.FoodType.UNRECOGNIZED);
@@ -46,15 +46,18 @@ public class PhotoTest {
                 .setLanguage(LANGUAGE)
                 .setType(Contract.FoodType.Meat)
                 .build();
+    }
+
+    @Before
+    public void setup() throws InvalidKeySpecException, NoSuchAlgorithmException {
         account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
-
-
     }
 
     @After
     public void teardown() {
         Menu.resetCounter();
+        Photo.resetCounter();
     }
 
     @Test
@@ -63,6 +66,46 @@ public class PhotoTest {
         assertArrayEquals(photo.getContent(), PHOTO_CONTENT);
         assertEquals(photo.getPhotoId(), PHOTO_ID);
         assertEquals(photo.getFlagCount(), 0);
+    }
+
+
+    @Test
+    public void flagPhotoTest() {
+        Photo photo = new Photo(PHOTO_CONTENT, account);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 1);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 2);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 3);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 4);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 5);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 6);
+        photo.flag();
+        assertEquals(photo.getFlagCount(), 7);
+
+        assertEquals(account.getFlagCount(), 1);
+        Photo photo2 = new Photo(PHOTO_CONTENT, account);
+        assertEquals(photo2.getFlagCount(), 1);
+    }
+
+    @Test
+    public void tooManyFlagsGetPhotoTest() {
+        Photo photo = new Photo(PHOTO_CONTENT, account);
+        Photo photo2 = new Photo(PHOTO_CONTENT, account);
+        menu.addPhoto(photo);
+        menu.addPhoto(photo2);
+        for (int i = 0; i < 5; i++) {
+            photo.flag();
+        }
+        photo2.flag();
+
+        assertEquals(menu.getPhotos().size(), 1);
+        assertEquals(menu.getPhotos().get(0), "1");
+        assertEquals(account.getFlagCount(), 1);
     }
 
     @Test(expected = IllegalArgumentException.class)

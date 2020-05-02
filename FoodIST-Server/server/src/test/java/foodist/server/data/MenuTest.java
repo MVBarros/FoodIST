@@ -20,6 +20,7 @@ public class MenuTest {
 
 
     private static final String NAME = "NAME";
+    private static final String NAME2 = "NAME2";
     private static final double PRICE = 2.0d;
     private static final double DELTA = 0.01d;
     private static final String LANGUAGE = "pt";
@@ -69,6 +70,30 @@ public class MenuTest {
         assertEquals(contractMenu.getPrice(), PRICE, DELTA);
         assertEquals(contractMenu.getType(), Contract.FoodType.Meat);
         assertEquals(contractMenu.getPhotoIdList().size(), 0);
+    }
+
+    @Test
+    public void menuFlagTest() {
+        Menu menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        assertEquals(menu.getFlagCount(), 0);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 1);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 2);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 3);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 4);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 5);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 6);
+        menu.flag();
+        assertEquals(menu.getFlagCount(), 7);
+
+        assertEquals(account.getFlagCount(), 1);
+        Menu menu2 = new Menu(NAME2, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        assertEquals(menu2.getFlagCount(), 1);
     }
 
 
