@@ -1,0 +1,4 @@
+# Beacon setup
+newdevice Beacon
+creategroup Beacon ()
+

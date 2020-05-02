@@ -1,0 +1,11 @@
+# Termite supports scripts
+newdevice Client
+list emus
+assignaddr e1
+binddevice Client e1
+move Client (Beacon)
+joingroup Client (Beacon)
+commit 
+wait 10
+move Client ()
+commit
