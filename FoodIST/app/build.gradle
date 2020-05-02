@@ -56,4 +56,5 @@ dependencies {
     implementation "javax.annotation:javax.annotation-api:${annotation_version}"
 
     implementation 'org.conscrypt:conscrypt-android:2.4.0'
+    implementation project(path: ':Termite-WifiP2P-API')
 }
