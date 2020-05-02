@@ -5,7 +5,6 @@ import foodist.server.utils.TranslationUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,8 @@ public class Menu {
     private final long menuId;
     private final Map<String, String> translatedNames;
     private final Account account;
-    private final AtomicInteger flagCount;
+    private final int initialFlagCount;
+    private final Set<String> userFlags;
 
     public Menu(String name, double price, Contract.FoodType type, String language, Account account) {
         checkArguments(name, price, type, language, account);
@@ -33,7 +33,8 @@ public class Menu {
         this.photos = Collections.synchronizedList(new ArrayList<>());
         this.name = name;
         this.account = account;
-        this.flagCount = new AtomicInteger(account.getFlagCount());
+        this.initialFlagCount = account.getFlagCount();
+        this.userFlags = Collections.synchronizedSet(new HashSet<>());
         account.addMenu(this);
     }
 
@@ -140,15 +141,16 @@ public class Menu {
         return toContract(this.language);
     }
 
+    public int getFlagCount() {
+        return initialFlagCount + userFlags.size();
+    }
+
+    public void flag(String username) {
+        userFlags.add(username);
+    }
+
     public static void resetCounter() {
         menuCounter.set(0);
     }
 
-    public int getFlagCount() {
-        return flagCount.get();
-    }
-
-    public void flag() {
-        flagCount.addAndGet(1);
-    }
 }

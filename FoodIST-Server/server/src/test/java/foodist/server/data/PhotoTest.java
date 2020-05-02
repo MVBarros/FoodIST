@@ -72,21 +72,10 @@ public class PhotoTest {
     @Test
     public void flagPhotoTest() {
         Photo photo = new Photo(PHOTO_CONTENT, account);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 1);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 2);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 3);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 4);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 5);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 6);
-        photo.flag();
-        assertEquals(photo.getFlagCount(), 7);
-
+        for(int i = 0; i < 6; i++) {
+            photo.flag(String.valueOf(i));
+            assertEquals(photo.getFlagCount(), i + 1);
+        }
         assertEquals(account.getFlagCount(), 1);
         Photo photo2 = new Photo(PHOTO_CONTENT, account);
         assertEquals(photo2.getFlagCount(), 1);
@@ -99,9 +88,9 @@ public class PhotoTest {
         menu.addPhoto(photo);
         menu.addPhoto(photo2);
         for (int i = 0; i < 5; i++) {
-            photo.flag();
+            photo.flag(String.valueOf(i));
         }
-        photo2.flag();
+        photo2.flag("0");
 
         assertEquals(menu.getPhotos().size(), 1);
         assertEquals(menu.getPhotos().get(0), "1");

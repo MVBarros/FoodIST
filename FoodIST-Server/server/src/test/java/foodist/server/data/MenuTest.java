@@ -75,22 +75,10 @@ public class MenuTest {
     @Test
     public void menuFlagTest() {
         Menu menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
-        assertEquals(menu.getFlagCount(), 0);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 1);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 2);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 3);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 4);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 5);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 6);
-        menu.flag();
-        assertEquals(menu.getFlagCount(), 7);
-
+        for(int i = 0; i < 6; i++) {
+            menu.flag(String.valueOf(i));
+            assertEquals(menu.getFlagCount(), i + 1);
+        }
         assertEquals(account.getFlagCount(), 1);
         Menu menu2 = new Menu(NAME2, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         assertEquals(menu2.getFlagCount(), 1);

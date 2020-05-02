@@ -81,9 +81,9 @@ public class ServiceTest {
         Service service = new Service(NAME);
         service.addMenu(menu);
         service.addMenu(menu2);
-        menu.flag();
-        menu.flag();
-        menu2.flag();
+        menu.flag("0");
+        menu.flag("1");
+        menu2.flag("2");
 
         assertEquals(service.getContractMenus().size(), 2);
         assertEquals(service.getContractMenus().get(0).getMenuId(), 1);
@@ -98,9 +98,9 @@ public class ServiceTest {
         service.addMenu(menu);
         service.addMenu(menu2);
         for (int i = 0; i < 5; i++) {
-            menu.flag();
+            menu.flag(String.valueOf(i));
         }
-        menu2.flag();
+        menu2.flag("0");
 
         assertEquals(service.getContractMenus().size(), 1);
         assertEquals(service.getContractMenus().get(0).getMenuId(), 1);
@@ -125,16 +125,16 @@ public class ServiceTest {
         service.addMenu(menu6);
 
         for(int i = 0; i <3; i++) {
-            menu.flag();
-            menu2.flag();
-            menu3.flag();
+            menu.flag(String.valueOf(i));
+            menu2.flag(String.valueOf(i));
+            menu3.flag(String.valueOf(i));
 
         }
         for(int i = 0; i <2; i++) {
-            menu4.flag();
-            menu5.flag();
+            menu4.flag(String.valueOf(i));
+            menu5.flag(String.valueOf(i));
         }
-        menu6.flag();
+        menu6.flag("0");
 
         Set<Long> seen = new HashSet<>();
         assertEquals(service.getContractMenus().size(), 6);

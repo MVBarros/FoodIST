@@ -1,6 +1,8 @@
 package foodist.server.data;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Photo {
@@ -9,14 +11,16 @@ public class Photo {
     private final long photoId;
     private final byte[] content;
     private final Account account;
-    private final AtomicInteger flagCount;
+    private final int initialFlagCount;
+    private final Set<String> userFlags;
 
     public Photo(byte[] content, Account account) {
         checkArguments(content, account);
         this.photoId = menuCounter.getAndIncrement();
         this.content = content;
         this.account = account;
-        this.flagCount = new AtomicInteger(account.getFlagCount());
+        this.initialFlagCount = account.getFlagCount();
+        this.userFlags = Collections.synchronizedSet(new HashSet<>());
         account.addPhoto(this);
     }
 
@@ -42,10 +46,10 @@ public class Photo {
     }
 
     public int getFlagCount() {
-        return flagCount.get();
+        return initialFlagCount + userFlags.size();
     }
 
-    public void flag() {
-        flagCount.addAndGet(1);
+    public void flag(String username) {
+        userFlags.add(username);
     }
 }
