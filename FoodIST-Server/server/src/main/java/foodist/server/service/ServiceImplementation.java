@@ -202,6 +202,24 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void flagMenu(Contract.FlagMenuRequest request, StreamObserver<Empty> responseObserver) {
+        if (!validateCookie(request.getCookie())) {
+            responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+            return;
+        }
+        Account account = sessions.get(request.getCookie());
+        long menuId = request.getMenuId();
+        Menu menu = menus.get(menuId);
+        if (menu == null) {
+            responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+            return;
+        }
+        menu.flag(account.getUsername());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
     /**
      * Fetches the best 3 photoIds of each Menu
      */
@@ -309,6 +327,10 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     public Map<String, Account> getSessions() {
         return sessions;
+    }
+
+    public Map<Long, Menu> getMenus() {
+        return menus;
     }
 
     public Service getService(String name) {

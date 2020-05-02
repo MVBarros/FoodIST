@@ -98,6 +98,11 @@ message FlagRequest {
     int64 photoId = 2;
 }
 
+message FlagMenuRequest {
+    string cookie = 1;
+    int64 menuId = 2;
+}
+
 service FoodISTServerService {
     rpc addMenu(AddMenuRequest) returns (AddMenuReply);
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
@@ -105,6 +110,7 @@ service FoodISTServerService {
     rpc addPhoto(stream AddPhotoRequest) returns (UploadPhotoReply);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc flagPhoto(FlagRequest) returns (google.protobuf.Empty);
+    rpc flagMenu(FlagMenuRequest) returns (google.protobuf.Empty);
     rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
     rpc register(RegisterRequest) returns (AccountMessage);
     rpc login(LoginRequest) returns (AccountMessage);
