@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-
 public class Account {
     private static final int NUM_MENUS = 3;
     private static final int NUM_PHOTOS = 6;

@@ -3,6 +3,7 @@ package foodist.server.data;
 import foodist.server.data.exception.ServiceException;
 import foodist.server.grpc.contract.Contract;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,21 +27,23 @@ public class Service {
     }
 
 
-    public void addMenu(Menu menu) throws ServiceException {
+    public synchronized void addMenu(Menu menu) throws ServiceException {
         var curr = this.menus.putIfAbsent(menu.getTranslatedName("pt"), menu);
         if (curr != null) {
             throw new ServiceException();
         }
     }
 
-    public List<Contract.Menu> getContractMenus(String language) {
+    public synchronized List<Contract.Menu> getContractMenus(String language) {
         return this.menus.values().stream()
+                .sorted(Comparator.comparing(Menu::getFlagCount))
                 .map(menu -> menu.toContract(language))
                 .collect(Collectors.toList());
     }
 
-    public List<Contract.Menu> getContractMenus() {
+    public synchronized List<Contract.Menu> getContractMenus() {
         return this.menus.values().stream()
+                .sorted(Comparator.comparing(Menu::getFlagCount))
                 .map(Menu::toContract)
                 .collect(Collectors.toList());
     }

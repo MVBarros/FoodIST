@@ -143,7 +143,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
                         return;
                     }
                     photos.put(photo.getPhotoId(), photo);
-                    menu.addPhoto(photo.getPhotoId());
+                    menu.addPhoto(photo);
 
                     responseObserver.onNext(Contract.UploadPhotoReply.newBuilder()
                             .setPhotoID(String.valueOf(photo.getPhotoId()))

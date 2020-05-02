@@ -62,17 +62,16 @@ public class PhotoTest {
         Photo photo = new Photo(PHOTO_CONTENT, account);
         assertArrayEquals(photo.getContent(), PHOTO_CONTENT);
         assertEquals(photo.getPhotoId(), PHOTO_ID);
+        assertEquals(photo.getFlagCount(), 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullContentTest() {
-        Photo photo = new Photo(null, account);
+        new Photo(null, account);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullAccountTest() {
-        Photo photo = new Photo(PHOTO_CONTENT, null);
+        new Photo(PHOTO_CONTENT, null);
     }
-
-
 }

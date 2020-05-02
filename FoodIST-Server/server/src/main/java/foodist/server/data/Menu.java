@@ -4,6 +4,7 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.utils.TranslationUtils;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ public class Menu {
 
     private final String name;
     private final double price;
-    private final List<Long> photos;
+    private final List<Photo> photos;
     private final Contract.FoodType type;
     private final String language;
     private final long menuId;
@@ -28,7 +29,7 @@ public class Menu {
         this.type = type;
         this.language = language;
         this.menuId = menuId;
-        this.translatedNames = new HashMap<>();
+        this.translatedNames = new ConcurrentHashMap<>();
         this.photos = Collections.synchronizedList(new ArrayList<>());
         this.name = name;
         this.account = account;
@@ -74,20 +75,24 @@ public class Menu {
         return price;
     }
 
-    public List<String> getPhotos() {
+    public synchronized List<String> getPhotos() {
         return photos.stream()
+                .sorted(Comparator.comparing(Photo::getFlagCount))
+                .map(Photo::getPhotoId)
                 .map(String::valueOf)
                 .collect(Collectors.toList());
     }
 
-    public List<String> getPhotos(int num) {
+    public synchronized List<String> getPhotos(int num) {
         return photos.stream()
+                .sorted(Comparator.comparing(Photo::getFlagCount))
                 .limit(num)
+                .map(Photo::getPhotoId)
                 .map(String::valueOf)
                 .collect(Collectors.toList());
     }
 
-    public void addPhoto(long photo) {
+    public synchronized void addPhoto(Photo photo) {
         photos.add(photo);
     }
 
