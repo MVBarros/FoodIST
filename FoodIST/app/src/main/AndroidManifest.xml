@@ -50,7 +50,7 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
-
+        <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

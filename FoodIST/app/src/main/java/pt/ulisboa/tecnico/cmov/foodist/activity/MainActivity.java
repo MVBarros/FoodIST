@@ -2,8 +2,11 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +15,8 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +35,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.boot.ChooseLanguageActivity;
@@ -41,6 +49,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.main.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -72,6 +81,30 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private String campus;
 
+    private SimWifiP2pBroadcastReceiver mReceiver;
+    private SimWifiP2pManager mManager = null;
+    private SimWifiP2pManager.Channel mChannel = null;
+    private Messenger mService = null;
+    //Dont think we need Bound but oh well
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        // callbacks for service binding, passed to bindService()
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = new Messenger(service);
+            mManager = new SimWifiP2pManager(mService);
+            mChannel = mManager.initialize(getApplication(), getMainLooper(), null);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mService = null;
+            mManager = null;
+            mChannel = null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +114,14 @@ public class MainActivity extends BaseActivity implements LocationListener {
         setButtons();
         setLanguage();
         setCurrentCampus();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
+        mReceiver = new SimWifiP2pBroadcastReceiver(this);
+        registerReceiver(mReceiver, filter);
+
+        Intent intent = new Intent(this, SimWifiP2pService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
