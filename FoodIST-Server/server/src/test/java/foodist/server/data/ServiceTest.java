@@ -34,11 +34,6 @@ public class ServiceTest {
     private Account account;
     private Menu menu;
     private Menu menu2;
-    private Menu menu3;
-    private Menu menu4;
-    private Menu menu5;
-    private Menu menu6;
-
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -52,10 +47,6 @@ public class ServiceTest {
         account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         menu2 = new Menu(NAME2, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
-        menu3 = new Menu(NAME3, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
-        menu4 = new Menu(NAME4, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
-        menu5 = new Menu(NAME5, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
-        menu6 = new Menu(NAME6, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
     }
 
     @After
@@ -97,7 +88,7 @@ public class ServiceTest {
         assertEquals(service.getContractMenus().size(), 2);
         assertEquals(service.getContractMenus().get(0).getMenuId(), 1);
         assertEquals(service.getContractMenus().get(1).getMenuId(), 0);
-        assertEquals(account.getFlagCount(), 1);
+        assertEquals(account.getFlagCount(), 0);
         //No Exception is thrown
     }
 
@@ -114,13 +105,17 @@ public class ServiceTest {
         assertEquals(service.getContractMenus().size(), 1);
         assertEquals(service.getContractMenus().get(0).getMenuId(), 1);
         //No Exception is thrown
-        assertEquals(account.getFlagCount(), 3);
-
+        assertEquals(account.getFlagCount(), 1);
     }
 
 
     @Test
     public void toManyMenusFlagTest() throws ServiceException {
+        Menu menu3 = new Menu(NAME3, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        Menu menu4 = new Menu(NAME4, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        Menu menu5 = new Menu(NAME5, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        Menu menu6 = new Menu(NAME6, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+
         Service service = new Service(NAME);
         service.addMenu(menu);
         service.addMenu(menu2);
@@ -164,7 +159,6 @@ public class ServiceTest {
         assertEquals(account.getRecentMenus().get(1).getMenuId(), 4);
         assertEquals(account.getRecentMenus().get(2).getMenuId(), 5);
         assertEquals(account.getFlagCount(), 1);
-
     }
 
 }

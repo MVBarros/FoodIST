@@ -196,12 +196,10 @@ public class Account {
     }
 
     public synchronized int getFlagCount() {
-        if (recentMenus.size() == 0 && recentPhotos.size() == 0) {
-            return 0;
-        }
         int sumMenus = recentMenus.stream().mapToInt(Menu::getFlagCount).sum();
         int sumPhotos = recentPhotos.stream().mapToInt(Photo::getFlagCount).sum();
         int totalSum = sumMenus + sumPhotos;
-        return (totalSum / (recentMenus.size() + recentPhotos.size()));
+        float val =  ((float) totalSum) / ((float) (NUM_PHOTOS + NUM_MENUS));
+        return Math.round(val);
     }
 }
