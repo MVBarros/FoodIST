@@ -16,7 +16,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 public class Account {
     public static final int NUM_MENUS = 3;
-    public static final int NUM_PHOTOS = 6;
+    public static final int NUM_PHOTOS = 5;
 
     private static final int SALT_SIZE = 16;
     private static final int ITERATION_COUNT = 65536;

@@ -16,9 +16,6 @@ public class MenuTest {
 
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
-    private static Map<Contract.FoodType, Boolean> validPreferences;
-
-
     private static final String NAME = "NAME";
     private static final String NAME2 = "NAME2";
     private static final double PRICE = 2.0d;
@@ -26,11 +23,12 @@ public class MenuTest {
     private static final String LANGUAGE = "pt";
     private static final long MENU_ID = 0;
 
+    private static Map<Contract.FoodType, Boolean> validPreferences;
     private static Contract.AddMenuRequest request;
     private static Account account;
 
     @BeforeClass
-    public static void oneTimeSetup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static void oneTimeSetup() {
         validPreferences = new HashMap<>();
         Arrays.stream(Contract.FoodType.values()).forEach(type -> validPreferences.put(type, true));
         validPreferences.remove(Contract.FoodType.UNRECOGNIZED);
@@ -41,10 +39,14 @@ public class MenuTest {
                 .setLanguage(LANGUAGE)
                 .setType(Contract.FoodType.Meat)
                 .build();
-        account = new Account(USERNAME, PASSWORD, LANGUAGE, Contract.Role.Student, validPreferences);
 
     }
 
+    @Before
+    public void setup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        account = new Account(USERNAME, PASSWORD, LANGUAGE, Contract.Role.Student, validPreferences);
+
+    }
     @After
     public void teardown() {
         Menu.resetCounter();

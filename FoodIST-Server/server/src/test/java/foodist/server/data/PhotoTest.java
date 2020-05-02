@@ -8,29 +8,22 @@ import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static foodist.server.data.Account.NUM_PHOTOS;
+import static org.junit.Assert.*;
 
 public class PhotoTest {
 
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
-    private static Map<Contract.FoodType, Boolean> validPreferences;
-
-
     private static final byte[] PHOTO_CONTENT = new byte[0];
     private static final long PHOTO_ID = 0;
-
     private static final String NAME = "NAME";
     private static final double PRICE = 2.0d;
     private static final String LANGUAGE = "pt";
 
-
-    private static Contract.AddMenuRequest request;
+    private static Map<Contract.FoodType, Boolean> validPreferences;
     private static Account account;
     private static Menu menu;
 
@@ -39,13 +32,6 @@ public class PhotoTest {
         validPreferences = new HashMap<>();
         Arrays.stream(Contract.FoodType.values()).forEach(type -> validPreferences.put(type, true));
         validPreferences.remove(Contract.FoodType.UNRECOGNIZED);
-
-        request = Contract.AddMenuRequest.newBuilder()
-                .setName(NAME)
-                .setPrice(PRICE)
-                .setLanguage(LANGUAGE)
-                .setType(Contract.FoodType.Meat)
-                .build();
     }
 
     @Before
@@ -72,7 +58,7 @@ public class PhotoTest {
     @Test
     public void flagPhotoTest() {
         Photo photo = new Photo(PHOTO_CONTENT, account);
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             photo.flag(String.valueOf(i));
             assertEquals(photo.getFlagCount(), i + 1);
         }
@@ -84,7 +70,7 @@ public class PhotoTest {
     @Test
     public void repeatedFlagCount() {
         Photo photo = new Photo(PHOTO_CONTENT, account);
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             photo.flag("0");
             assertEquals(photo.getFlagCount(), 1);
         }
@@ -117,5 +103,62 @@ public class PhotoTest {
     @Test(expected = IllegalArgumentException.class)
     public void nullAccountTest() {
         new Photo(PHOTO_CONTENT, null);
+    }
+
+    @Test
+    public void getPhotoOrderTest() {
+        Photo photo = new Photo(PHOTO_CONTENT, account);
+        Photo photo2 = new Photo(PHOTO_CONTENT, account);
+        Photo photo3 = new Photo(PHOTO_CONTENT, account);
+        Photo photo4 = new Photo(PHOTO_CONTENT, account);
+        Photo photo5 = new Photo(PHOTO_CONTENT, account);
+        Photo photo6 = new Photo(PHOTO_CONTENT, account);
+
+        menu.addPhoto(photo);
+        menu.addPhoto(photo2);
+        menu.addPhoto(photo3);
+        menu.addPhoto(photo4);
+        menu.addPhoto(photo5);
+        menu.addPhoto(photo6);
+
+
+        for (int i = 0; i < 4; i++) {
+            photo.flag(String.valueOf(i));
+            photo2.flag(String.valueOf(i));
+            photo3.flag(String.valueOf(i));
+        }
+
+        for (int i = 0; i < 2; i++) {
+            photo4.flag(String.valueOf(i));
+            photo5.flag(String.valueOf(i));
+        }
+        photo6.flag("0");
+
+        Set<String> seen = new HashSet<>();
+        assertEquals(menu.getPhotos().size(), 6);
+        assertEquals(menu.getPhotos().get(0), "5");
+        seen.add(menu.getPhotos().get(0));
+
+        for (int i = 1; i < 3; i++) {
+            //The two following menus are 4 and 5 in any order
+            assertTrue(menu.getPhotos().get(i).equals("3") || menu.getPhotos().get(i).equals("4"));
+            assertFalse(seen.contains(menu.getPhotos().get(i)));
+            seen.add(menu.getPhotos().get(i));
+        }
+        for (int i = 3; i < 6; i++) {
+            //The two following menus are 0, 1 and 2 in any order
+            assertTrue(menu.getPhotos().get(i).equals("0") || menu.getPhotos().get(i).equals("1") || menu.getPhotos().get(i).equals("2"));
+            assertFalse(seen.contains(menu.getPhotos().get(i)));
+            seen.add(menu.getPhotos().get(i));
+        }
+
+        assertEquals(account.getRecentPhotos().size(), NUM_PHOTOS);
+        assertEquals(account.getRecentPhotos().get(0).getPhotoId(), 1);
+        assertEquals(account.getRecentPhotos().get(1).getPhotoId(), 2);
+        assertEquals(account.getRecentPhotos().get(2).getPhotoId(), 3);
+        assertEquals(account.getRecentPhotos().get(3).getPhotoId(), 4);
+        assertEquals(account.getRecentPhotos().get(4).getPhotoId(), 5);
+
+        assertEquals(account.getFlagCount(), 2);
     }
 }

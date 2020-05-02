@@ -19,7 +19,6 @@ public class AccountTest {
 
     private static Map<Contract.FoodType, Boolean> validPreferences;
     private static Map<Contract.FoodType, Boolean> invalidPreferences;
-
     private static Contract.Profile profile;
 
     @BeforeClass
