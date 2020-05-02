@@ -40,7 +40,7 @@ public class MenuTest {
                 .setLanguage(LANGUAGE)
                 .setType(Contract.FoodType.Meat)
                 .build();
-        account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
+        account = new Account(USERNAME, PASSWORD, LANGUAGE, Contract.Role.Student, validPreferences);
 
     }
 
@@ -51,7 +51,7 @@ public class MenuTest {
 
     @Test
     public void validTest() {
-        Menu menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, MENU_ID, account);
+        Menu menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         assertEquals(menu.getName(), NAME);
         assertEquals(menu.getLanguage(), LANGUAGE);
         assertEquals(menu.getMenuId(), MENU_ID);
@@ -74,28 +74,28 @@ public class MenuTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void nullName() {
-        new Menu(null, PRICE, Contract.FoodType.Meat, LANGUAGE, MENU_ID, account);
+        new Menu(null, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
     }
 
 
     @Test(expected = IllegalArgumentException.class)
     public void nullType() {
-        new Menu(NAME, PRICE, null, LANGUAGE, MENU_ID, account);
+        new Menu(NAME, PRICE, null, LANGUAGE, account);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullLanguage() {
-        new Menu(NAME, PRICE, Contract.FoodType.Meat, null, MENU_ID, account);
+        new Menu(NAME, PRICE, Contract.FoodType.Meat, null, account);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullAccount() {
-        new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, MENU_ID, null);
+        new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void negativePrice() {
-        new Menu(NAME, -5d, Contract.FoodType.Meat, null, MENU_ID, account);
+        new Menu(NAME, -5d, Contract.FoodType.Meat, null, account);
     }
 
     @Test

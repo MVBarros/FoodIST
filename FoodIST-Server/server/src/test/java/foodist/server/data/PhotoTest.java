@@ -47,7 +47,7 @@ public class PhotoTest {
                 .setType(Contract.FoodType.Meat)
                 .build();
         account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
-        menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, MENU_ID, account);
+        menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
 
 
     }

@@ -38,7 +38,7 @@ public class Service {
 
     public synchronized List<Contract.Menu> getContractMenus(String language) {
         return this.menus.values().stream()
-                .filter(menu -> menu.getFlagCount() >= MAX_FLAG_COUNT)
+                .filter(menu -> menu.getFlagCount() < MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Menu::getFlagCount))
                 .map(menu -> menu.toContract(language))
                 .collect(Collectors.toList());
@@ -46,6 +46,7 @@ public class Service {
 
     public synchronized List<Contract.Menu> getContractMenus() {
         return this.menus.values().stream()
+                .filter(menu -> menu.getFlagCount() < MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Menu::getFlagCount))
                 .map(Menu::toContract)
                 .collect(Collectors.toList());

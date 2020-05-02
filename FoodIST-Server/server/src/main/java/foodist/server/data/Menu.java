@@ -23,12 +23,12 @@ public class Menu {
     private final Account account;
     private final AtomicInteger flagCount;
 
-    public Menu(String name, double price, Contract.FoodType type, String language, long menuId, Account account) {
+    public Menu(String name, double price, Contract.FoodType type, String language, Account account) {
         checkArguments(name, price, type, language, account);
         this.price = price;
         this.type = type;
         this.language = language;
-        this.menuId = menuId;
+        this.menuId = menuCounter.getAndIncrement();
         this.translatedNames = new ConcurrentHashMap<>();
         this.photos = Collections.synchronizedList(new ArrayList<>());
         this.name = name;
@@ -77,7 +77,7 @@ public class Menu {
 
     public synchronized List<String> getPhotos() {
         return photos.stream()
-                .filter(photo -> photo.getFlagCount() >= MAX_FLAG_COUNT)
+                .filter(photo -> photo.getFlagCount() < MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Photo::getFlagCount))
                 .map(Photo::getPhotoId)
                 .map(String::valueOf)
@@ -86,7 +86,7 @@ public class Menu {
 
     public synchronized List<String> getPhotos(int num) {
         return photos.stream()
-                .filter(photo -> photo.getFlagCount() >= MAX_FLAG_COUNT)
+                .filter(photo -> photo.getFlagCount() < MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Photo::getFlagCount))
                 .limit(num)
                 .map(Photo::getPhotoId)
@@ -119,8 +119,7 @@ public class Menu {
         double price = request.getPrice();
         Contract.FoodType type = request.getType();
         String language = request.getLanguage();
-        long menuId = menuCounter.getAndIncrement();
-        return new Menu(name, price, type, language, menuId, account);
+        return new Menu(name, price, type, language, account);
     }
 
     public Contract.Menu toContract(String language) {
