@@ -196,7 +196,7 @@
     <string name="flag_photo_error_message">Unable to flag menu</string>
     <string name="no_internet_conn_flag_photo_error">Need network connection to flag photo</string>
     <string name="photo_flag_successfull_message">Photo flagged successfully</string>
-    <string name="flag_menu_button_text">Flag photo</string>
+    <string name="flag_menu_button_text">Flag menu</string>
     <string name="flag_menu_no_conn_erro_message">Cannot flag menu without internet connection</string>
     <string name="flag_food_menu_error_message">Could not flag menu</string>
     <string name="flag_food_menu_success_message">Menu flagged successfully</string>
