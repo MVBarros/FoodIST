@@ -54,6 +54,8 @@ public class AccountTest {
         assertEquals(account.getUsername(), USERNAME);
         assertEquals(account.getRole(), Contract.Role.Student);
         assertEquals(account.getPreferences(), validPreferences);
+        assertEquals(account.getFlagCount(), 0);
+
     }
 
     @Test(expected = IllegalArgumentException.class)

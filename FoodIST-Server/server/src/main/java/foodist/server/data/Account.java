@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 public class Account {
-    private static final int NUM_MENUS = 3;
-    private static final int NUM_PHOTOS = 6;
+    public static final int NUM_MENUS = 3;
+    public static final int NUM_PHOTOS = 6;
 
     private static final int SALT_SIZE = 16;
     private static final int ITERATION_COUNT = 65536;
@@ -196,7 +196,12 @@ public class Account {
     }
 
     public synchronized int getFlagCount() {
-        return recentMenus.stream().mapToInt(Menu::getFlagCount).sum()
-                + recentPhotos.stream().mapToInt(Photo::getFlagCount).sum();
+        if (recentMenus.size() == 0 && recentPhotos.size() == 0) {
+            return 0;
+        }
+        int sumMenus = recentMenus.stream().mapToInt(Menu::getFlagCount).sum();
+        int sumPhotos = recentPhotos.stream().mapToInt(Photo::getFlagCount).sum();
+        int totalSum = sumMenus + sumPhotos;
+        return (totalSum / (recentMenus.size() + recentPhotos.size()));
     }
 }
