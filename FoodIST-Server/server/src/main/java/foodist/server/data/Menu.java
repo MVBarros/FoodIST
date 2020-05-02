@@ -4,6 +4,7 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.utils.TranslationUtils;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class Menu {
     private final long menuId;
     private final Map<String, String> translatedNames;
     private final Account account;
+    private final AtomicInteger flagCount;
 
     public Menu(String name, double price, Contract.FoodType type, String language, long menuId, Account account) {
         checkArguments(name, price, type, language, account);
@@ -30,10 +32,11 @@ public class Menu {
         this.photos = Collections.synchronizedList(new ArrayList<>());
         this.name = name;
         this.account = account;
+        this.flagCount = new AtomicInteger(account.getFlagCount());
         account.addMenu(this);
     }
 
-    public void checkArguments(String name, double price, Contract.FoodType type, String language, Account account) {
+    public static void checkArguments(String name, double price, Contract.FoodType type, String language, Account account) {
         if (account == null) {
             throw new IllegalArgumentException();
         }
@@ -135,4 +138,11 @@ public class Menu {
         menuCounter.set(0);
     }
 
+    public int getFlagCount() {
+        return flagCount.get();
+    }
+
+    public void flag() {
+        flagCount.addAndGet(1);
+    }
 }

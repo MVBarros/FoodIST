@@ -60,7 +60,7 @@ public class Account {
     }
 
 
-    public void checkArguments(String username, String password, String language, Contract.Role role,
+    public static void checkArguments(String username, String password, String language, Contract.Role role,
                                Map<Contract.FoodType, Boolean> preferences) {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException();
@@ -71,7 +71,7 @@ public class Account {
         checkArguments(language, role, preferences);
     }
 
-    public void checkArguments(String language, Contract.Role role,
+    public static void checkArguments(String language, Contract.Role role,
                                Map<Contract.FoodType, Boolean> preferences) {
         if (language == null || language.isBlank()) {
             throw new IllegalArgumentException();
@@ -131,11 +131,11 @@ public class Account {
     }
 
 
-    public void addMenu(Menu menu) {
+    public synchronized void addMenu(Menu menu) {
         recentMenus.add(menu);
     }
 
-    public void addPhoto(Photo photo) {
+    public synchronized void addPhoto(Photo photo) {
         recentPhotos.add(photo);
     }
 
@@ -194,5 +194,10 @@ public class Account {
 
     public CircularFifoQueue<Photo> getRecentPhotos() {
         return recentPhotos;
+    }
+
+    public synchronized int getFlagCount() {
+        return recentMenus.stream().mapToInt(Menu::getFlagCount).sum()
+                + recentPhotos.stream().mapToInt(Photo::getFlagCount).sum();
     }
 }
