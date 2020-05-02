@@ -37,15 +37,18 @@
     <!-- Layout -->
     <string name="food_menu_dish_name">Dish Name</string>
     <string name="food_menu_cost">Cost</string>
+    <string name="food_menu_rating">Rating</string>
     <string name="food_menu_number_photos">No Photos Available</string>
     <string name="food_menu_previous_photo">Previous Photo</string>
     <string name="food_menu_next_photo">Next Photo</string>
+    <string name="food_menu_add_rating">Add Rating</string>
     <string name="food_menu_add_photos">Add Photos</string>
     <string name="food_menu_photos">Menu Photos</string>
 
     <!-- Activity -->
     <string name="food_menu_no_photos_available_toast">No photos available for this menu</string>
     <string name="food_menu_photo_upload_no_internet_failure_toast">Cannot upload photo without internet</string>
+    <string name="food_menu_rating_upload_no_internet_failure_toast">Cannot upload rating without internet</string>
     <string name="food_menu_name_failure_toast">Unable to obtain menu name</string>
     <string name="food_menu_cost_failure_toast">Unable to obtain menu cost</string>
     <string name="food_menu_camera_failure_toast">Unable to get photo taken from camera</string>
@@ -56,6 +59,7 @@
     <!-- activity food service -->
     <!-- Layout -->
     <string name="food_service_name">Food Service Name</string>
+    <string name="food_service_rating">Food Service Rating</string>
     <string name="food_service_opening_time">Open Hours: Unknown</string>
     <string name="food_service_queue_time">Queue Time</string>
     <string name="food_service_add_menu">Add Menu</string>

@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -250,6 +251,24 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     public static void setDistance(String distance) {
         FoodServiceActivity.distance = distance;
+    }
+
+    public void setRating(List<Menu> menus) {
+        double average = 0;
+        int i = 0;
+        for(Menu menu : menus) {
+            if(menu.getRating()!=-1.0) {
+                average+=menu.getRating();
+                i++;
+            }
+        }
+
+        if(i!=0) {
+            average = average / i;
+            TextView foodServiceRating = findViewById(R.id.foodServiceRating);
+            foodServiceRating.setText(getGlobalStatus().formatRating(average));
+        }
+
     }
 }
 

@@ -13,6 +13,7 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class GlobalStatus extends Application {
     private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
 
     private String campus;
+    private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         try {
@@ -222,5 +224,9 @@ public class GlobalStatus extends Application {
     public boolean isLoggedIn() {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getString(getString(R.string.cookie_pref_key), null) != null;
+    }
+
+    public String formatRating(double rating) {
+        return decimalFormat.format(rating);
     }
 }

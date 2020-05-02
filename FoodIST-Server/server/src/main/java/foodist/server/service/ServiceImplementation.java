@@ -12,10 +12,13 @@ import foodist.server.grpc.contract.Contract.AddPhotoRequest;
 import foodist.server.grpc.contract.Contract.DownloadPhotoReply;
 import foodist.server.grpc.contract.Contract.ListMenuReply;
 import foodist.server.grpc.contract.Contract.PhotoReply;
+import foodist.server.grpc.contract.Contract.UpdateMenuReply;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceImplBase;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import org.apache.commons.lang3.RandomStringUtils;
+
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,18 +79,18 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     }
 
     @Override
-    public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Contract.PhotoReply> responseObserver) {
+    public void updateMenu(Contract.UpdateMenuRequest request, StreamObserver<Contract.UpdateMenuReply> responseObserver) {
         Long id = request.getMenuId();
         Menu menu = menus.get(id);
         if (menu == null) {
             responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
             return;
         }
-
-        PhotoReply reply = PhotoReply.newBuilder()
+        
+        UpdateMenuReply reply = UpdateMenuReply.newBuilder().setRating(menu.averageRating())
                 .addAllPhotoID(menu.getPhotos())
                 .build();
-
+	
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }
@@ -273,6 +276,26 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         sessions.remove(request.getCookie());
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
+    }
+    
+    @Override
+    public void uploadRating(Contract.RatingRequest request, StreamObserver<com.google.protobuf.Empty> responseObserver) {
+    	if (!validateCookie(request.getCookie())) {
+            responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+            return;
+        }
+    	else {
+    		long id = request.getMenuId();
+            Menu menu = menus.get(id);
+            if (menu == null) {
+                responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+                return;
+            }        
+            
+            menu.addRating(request.getUsername(), request.getRating());
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+    	}    	
     }
 
     private String generateRandomCookie() {

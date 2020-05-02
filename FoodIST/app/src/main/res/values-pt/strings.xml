@@ -36,15 +36,18 @@
     <!-- Layout -->
     <string name="food_menu_dish_name">Nome do Prato</string>
     <string name="food_menu_cost">Preço</string>
+    <string name="food_menu_rating">Qualificação</string>
     <string name="food_menu_number_photos">Sem Fotos Disponíveis</string>
     <string name="food_menu_previous_photo">Foto Anterior</string>
     <string name="food_menu_next_photo">Próxima Foto</string>
+    <string name="food_menu_add_rating">Adicionar Qualificação</string>
     <string name="food_menu_add_photos">Adicionar Foto</string>
     <string name="food_menu_photos">Menu de Fotos</string>
 
     <!-- Activity -->
     <string name="food_menu_no_photos_available_toast">Não ha fotos disponíveis para este menu</string>
-    <string name="food_menu_photo_upload_no_internet_failure_toast">Impossivel de enviar foto sem internet</string>
+    <string name="food_menu_photo_upload_no_internet_failure_toast">Impossivel enviar foto sem internet</string>
+    <string name="food_menu_rating_upload_no_internet_failure_toast">Impossivel enviar rating sem internet</string>
     <string name="food_menu_name_failure_toast">Impossivel de obter nome do menu</string>
     <string name="food_menu_cost_failure_toast">Impossivel de obter preço do menu</string>
     <string name="food_menu_camera_failure_toast">Impossivel de obter a fotografia da câmara</string>
@@ -55,6 +58,7 @@
     <!-- activity food service -->
     <!-- Layout -->
     <string name="food_service_name">Nome Restaurante</string>
+    <string name="food_service_rating">Qualidade Restaurante</string>
     <string name="food_service_opening_time">Horas de Abertura:</string>
     <string name="food_service_queue_time">Tempo de espera</string>
     <string name="food_service_add_menu">Adicionar Menu</string>

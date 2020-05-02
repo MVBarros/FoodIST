@@ -73,6 +73,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Contract.M
         if (getActivity().getFilter()) {
             getActivity().showToast(getActivity().getString(R.string.get_menu_filter_menu_message));
         }
+        getActivity().setRating(menus);
         getActivity().doShowAllButton();
         Log.d(TAG, "Menus obtained successfully");
 

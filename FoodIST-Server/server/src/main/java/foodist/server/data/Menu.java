@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class Menu {
 
     private static final AtomicLong menuCounter = new AtomicLong(0);
-
+     
     private final String name;
     private final double price;
     private final List<Long> photos;
@@ -18,7 +18,8 @@ public class Menu {
     private final String language;
     private final long menuId;
     private final Map<String, String> translatedNames;
-
+    private final Map<String, Double> userRatings;    
+    
     public Menu(String name, double price, Contract.FoodType type, String language, long menuId) {
         checkArguments(name, price, type, language);
         this.price = price;
@@ -26,8 +27,9 @@ public class Menu {
         this.language = language;
         this.menuId = menuId;
         this.translatedNames = new HashMap<>();
-        this.photos = Collections.synchronizedList(new ArrayList<>());
+        this.photos = Collections.synchronizedList(new ArrayList<>()); 
         this.name = name;
+        this.userRatings = new HashMap<String, Double>(); 
     }
 
     public void checkArguments(String name, double price, Contract.FoodType type, String language) {
@@ -112,6 +114,7 @@ public class Menu {
         builder.addAllPhotoId(getPhotos());
         builder.setPrice(this.price);
         builder.setType(this.type);
+        builder.setRating(averageRating());
 
         return builder.build();
     }
@@ -123,6 +126,18 @@ public class Menu {
 
     public static void resetCounter() {
         menuCounter.set(0);
+    }
+    
+    public synchronized void addRating(String username, double rating) {
+    	userRatings.put(username, rating);
+    }
+    
+    public synchronized double averageRating() {
+    	double average = -1.0;     	
+    	if(!userRatings.isEmpty()) {    		
+    		average = userRatings.entrySet().stream().mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN); 
+    	}
+    	return average;
     }
 
 }

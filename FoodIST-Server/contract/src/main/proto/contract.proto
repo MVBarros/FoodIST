@@ -51,6 +51,7 @@ message Menu {
     string language = 6;
     string translatedName = 7;
     int64 menuId = 8;
+    double rating = 9;
 }
 
 message UpdateMenuRequest {
@@ -87,10 +88,22 @@ message LogoutRequest {
     string cookie = 1;
 }
 
+message RatingRequest {
+    string username = 1;
+    string cookie = 2;
+    int64 menuId = 3;
+    double rating = 4;
+}
+
+message UpdateMenuReply {
+    repeated string photoID = 1;
+    double rating = 2;
+}
+
 service FoodISTServerService {
     rpc addMenu(AddMenuRequest) returns (AddMenuReply);
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
-    rpc updateMenu(UpdateMenuRequest) returns (PhotoReply);
+    rpc updateMenu(UpdateMenuRequest) returns (UpdateMenuReply);
     rpc addPhoto(stream AddPhotoRequest) returns (google.protobuf.Empty);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc requestPhotoIDs(google.protobuf.Empty) returns (PhotoReply);
@@ -98,5 +111,6 @@ service FoodISTServerService {
     rpc login(LoginRequest) returns (AccountMessage);
     rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
     rpc logout(LogoutRequest) returns (google.protobuf.Empty);
+    rpc uploadRating(RatingRequest) returns (google.protobuf.Empty);
 }
 

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -15,10 +16,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -27,13 +31,16 @@ import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
@@ -44,6 +51,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.DownloadPhotosTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadRatingTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.dialog.LoginDialog;
@@ -53,6 +61,7 @@ import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_NAME;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_RATING;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
 public class FoodMenuActivity extends BaseActivity {
@@ -172,13 +181,27 @@ public class FoodMenuActivity extends BaseActivity {
     protected void setButtons() {
         Button addPhoto = findViewById(R.id.add_photo_button);
         addPhoto.setOnClickListener(v -> {
-                    if (!isLoggedIn()) {
-                        new LoginDialog(this, getGlobalStatus().getCampus()).show(getSupportFragmentManager(), "login");
-                        return;
-                    }
+                loginConfirmation();
+                // precisavas disto a seguir senao da para fazer upload na mesma
+                if(isLoggedIn()) {
                     askGalleryPermission();
                 }
-                );
+            }
+        );
+
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if(fromUser) {
+                    loginConfirmation();
+                    if(isLoggedIn()) {
+                        launchAddRatingTask(rating);
+                    }
+
+                }
+            }
+        });
     }
 
     public void updatePhotos(Collection<String> newPhotos) {
@@ -186,10 +209,18 @@ public class FoodMenuActivity extends BaseActivity {
         launchDownloadPhotosTask();
     }
 
+    public synchronized void setRating(double menuRating) {
+        if(menuRating!=-1.0) {
+            TextView ratingView = findViewById(R.id.menuRating);
+            ratingView.setText(getGlobalStatus().formatRating(menuRating));
+        }
+    }
+
     private void intentInitialization(Intent intent) {
         initializeMenuId(intent.getStringExtra(MENU_ID));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
+        setRating(intent.getDoubleExtra(MENU_RATING, -1.0));
     }
 
     private void initializeMenuId(String menuId) {
@@ -220,8 +251,6 @@ public class FoodMenuActivity extends BaseActivity {
             menuCostText.setText(String.format(Locale.US, "%.2f", menuCost));
         }
     }
-
-
     public void launchUpdateMenuTask() {
         if (!isNetworkAvailable()) {
             showToast(getString(R.string.food_menu_update_menu_failure_toast));
@@ -236,7 +265,16 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
             return;
         }
+
         new UploadPhotoTask(((GlobalStatus) FoodMenuActivity.this.getApplicationContext()).getAsyncStub(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
+    }
+
+    private void launchAddRatingTask(double rating) {
+        if (!isNetworkAvailable()) {
+            showToast(getString(R.string.food_menu_rating_upload_no_internet_failure_toast));
+            return;
+        }
+        new CancelableTask<>(new SafePostTask<>(new UploadRatingTask(getGlobalStatus().getUsername(), this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rating);
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
@@ -261,7 +299,12 @@ public class FoodMenuActivity extends BaseActivity {
         imageFilePath = image.getAbsolutePath();
         return image;
     }
-
+    private void loginConfirmation() {
+        if (!isLoggedIn()) {
+            new LoginDialog(this, getGlobalStatus().getCampus()).show(getSupportFragmentManager(), "login");
+            return;
+        }
+    }
     private void askGalleryPermission() {
         int galleryPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (galleryPermission != PackageManager.PERMISSION_GRANTED) {
@@ -386,5 +429,9 @@ public class FoodMenuActivity extends BaseActivity {
     private void cameraReturn(SharedPreferences.Editor editor, Intent data) {
         Photo photo = new Photo(this.menuId, this.imageFilePath);
         launchUploadPhotoTask(photo);
+    }
+
+    public String getMenuId() {
+        return this.menuId;
     }
 }

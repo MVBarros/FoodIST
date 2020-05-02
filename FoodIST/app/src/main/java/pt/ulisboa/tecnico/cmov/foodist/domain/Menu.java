@@ -13,6 +13,7 @@ public class Menu {
     private String language;
     private String translatedName;
     private String menuId;
+    private double rating;
 
     //To send menus to the server
     public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, String language, String translatedName) {
@@ -34,15 +35,15 @@ public class Menu {
     }
 
     //To receive menus from the server
-    public Menu(String originalName, double price, Contract.FoodType type, String language, String translatedName, String menuId) {
+    public Menu(String originalName, double price, Contract.FoodType type, String language, String translatedName, String menuId, double rating) {
         this.price = price;
         this.type = type;
         this.language = language;
         this.translatedName = translatedName;
         this.menuName = originalName;
         this.menuId = menuId;
+        this.rating = rating;
     }
-
 
     public String getFoodServiceName() {
         return this.foodServiceName;
@@ -57,7 +58,7 @@ public class Menu {
     }
 
     public static Menu parseContractMenu(Contract.Menu menu) {
-        return new Menu(menu.getOriginalName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName(), String.valueOf(menu.getMenuId()));
+        return new Menu(menu.getOriginalName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName(), String.valueOf(menu.getMenuId()), menu.getRating());
     }
 
     public Contract.FoodType getType() {
@@ -83,4 +84,6 @@ public class Menu {
     public String getMenuId() {
         return menuId;
     }
+
+    public double getRating() { return rating; }
 }

@@ -111,7 +111,7 @@ public class UpdateMenuTest {
 
     @Test
     public void validTest() {
-        Contract.PhotoReply reply = stub.updateMenu(updateRequest);
+        Contract.UpdateMenuReply reply = stub.updateMenu(updateRequest);
         assertEquals(reply.getPhotoIDCount(), 0);
     }
 
