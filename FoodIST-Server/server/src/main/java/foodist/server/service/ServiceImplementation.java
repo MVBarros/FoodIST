@@ -32,7 +32,6 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     private final Map<String, Account> users = new ConcurrentHashMap<>();
     private final Map<String, Account> sessions = new ConcurrentHashMap<>();
 
-
     private final Map<String, Service> services = new ConcurrentHashMap<>();
     private final Map<Long, Menu> menus = new ConcurrentHashMap<>();
     private final Map<Long, Photo> photos = new ConcurrentHashMap<>();
@@ -45,9 +44,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
                 responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
                 return;
             }
-
+            Account account = sessions.get(request.getCookie());
             Service service = getService(request.getFoodService());
-            Menu menu = Menu.fromContract(request);
+            Menu menu = Menu.fromContract(request, account);
             service.addMenu(menu);
             menus.put(menu.getMenuId(), menu);
 
@@ -136,7 +135,8 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
                         responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
                         return;
                     }
-                    Photo photo = new Photo(photoByteString.toByteArray());
+                    Account account = sessions.get(cookie);
+                    Photo photo = new Photo(photoByteString.toByteArray(), account);
                     Menu menu = menus.get(menuId);
                     if (menu == null) {
                         responseObserver.onError(Status.NOT_FOUND.asRuntimeException());

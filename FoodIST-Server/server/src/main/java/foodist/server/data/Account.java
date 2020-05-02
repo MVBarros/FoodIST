@@ -12,8 +12,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+
 
 public class Account {
+    private static final int NUM_MENUS = 3;
+    private static final int NUM_PHOTOS = 6;
 
     private static final int SALT_SIZE = 16;
     private static final int ITERATION_COUNT = 65536;
@@ -26,6 +30,8 @@ public class Account {
     private final String language;
     private final Contract.Role role;
     private final Map<Contract.FoodType, Boolean> preferences;
+    private final CircularFifoQueue<Menu> recentMenus;
+    private final CircularFifoQueue<Photo> recentPhotos;
 
     public Account(String username, String password, String language, Contract.Role role,
                    Map<Contract.FoodType, Boolean> preferences) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -36,6 +42,8 @@ public class Account {
         this.language = language;
         this.role = role;
         this.preferences = preferences;
+        this.recentMenus = new CircularFifoQueue<>(NUM_MENUS);
+        this.recentPhotos = new CircularFifoQueue<>(NUM_PHOTOS);
     }
 
     public Account(String username, byte[] password, byte[] salt, String language, Contract.Role role,
@@ -47,6 +55,8 @@ public class Account {
         this.language = language;
         this.role = role;
         this.preferences = preferences;
+        this.recentMenus = new CircularFifoQueue<>();
+        this.recentPhotos = new CircularFifoQueue<>();
     }
 
 
@@ -121,6 +131,13 @@ public class Account {
     }
 
 
+    public void addMenu(Menu menu) {
+        recentMenus.add(menu);
+    }
+
+    public void addPhoto(Photo photo) {
+        recentPhotos.add(photo);
+    }
 
     public Contract.Profile toProfile() {
         var builder = Contract.Profile.newBuilder();
@@ -170,4 +187,5 @@ public class Account {
 
         return new Account(profile.getName(), password, salt, profile.getLanguage(), profile.getRole(), preferences);
     }
+
 }

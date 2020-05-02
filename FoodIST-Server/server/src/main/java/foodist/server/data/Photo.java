@@ -8,11 +8,14 @@ public class Photo {
 
     private final long photoId;
     private final byte[] content;
+    private final Account account;
 
-    public Photo(byte[] content) {
+    public Photo(byte[] content, Account account) {
         checkArguments(content);
         this.photoId = menuCounter.getAndIncrement();
         this.content = content;
+        this.account = account;
+        account.addPhoto(this);
     }
 
     public void checkArguments(byte[] content) {

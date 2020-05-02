@@ -115,6 +115,7 @@ public class AddMenuTest {
         assertEquals(menu.getType(), Contract.FoodType.Meat);
         assertEquals(menu.getPrice(), PRICE, DELTA);
         assertEquals(reply.getMenuId(), MENU_ID);
+
     }
 
     @Test

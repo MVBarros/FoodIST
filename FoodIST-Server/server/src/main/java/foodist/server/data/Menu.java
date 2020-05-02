@@ -18,8 +18,9 @@ public class Menu {
     private final String language;
     private final long menuId;
     private final Map<String, String> translatedNames;
+    private final Account account;
 
-    public Menu(String name, double price, Contract.FoodType type, String language, long menuId) {
+    public Menu(String name, double price, Contract.FoodType type, String language, long menuId, Account account) {
         checkArguments(name, price, type, language);
         this.price = price;
         this.type = type;
@@ -28,6 +29,8 @@ public class Menu {
         this.translatedNames = new HashMap<>();
         this.photos = Collections.synchronizedList(new ArrayList<>());
         this.name = name;
+        this.account = account;
+        account.addMenu(this);
     }
 
     public void checkArguments(String name, double price, Contract.FoodType type, String language) {
@@ -94,13 +97,17 @@ public class Menu {
         return menuId;
     }
 
-    public static Menu fromContract(Contract.AddMenuRequest request) {
+    public Account getAccount() {
+        return account;
+    }
+
+    public static Menu fromContract(Contract.AddMenuRequest request, Account account) {
         String name = request.getName();
         double price = request.getPrice();
         Contract.FoodType type = request.getType();
         String language = request.getLanguage();
         long menuId = menuCounter.getAndIncrement();
-        return new Menu(name, price, type, language, menuId);
+        return new Menu(name, price, type, language, menuId, account);
     }
 
     public Contract.Menu toContract(String language) {
