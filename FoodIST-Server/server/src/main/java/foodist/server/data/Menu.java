@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class Menu {
-
+    private static final int MAX_FLAG_COUNT = 5;
     private static final AtomicLong menuCounter = new AtomicLong(0);
 
     private final String name;
@@ -77,6 +77,7 @@ public class Menu {
 
     public synchronized List<String> getPhotos() {
         return photos.stream()
+                .filter(photo -> photo.getFlagCount() >= MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Photo::getFlagCount))
                 .map(Photo::getPhotoId)
                 .map(String::valueOf)
@@ -85,6 +86,7 @@ public class Menu {
 
     public synchronized List<String> getPhotos(int num) {
         return photos.stream()
+                .filter(photo -> photo.getFlagCount() >= MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Photo::getFlagCount))
                 .limit(num)
                 .map(Photo::getPhotoId)

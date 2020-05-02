@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 public class Service {
 
+    private static final int MAX_FLAG_COUNT = 5;
+
     private final String name;
     private final Map<String, Menu> menus;
 
@@ -36,6 +38,7 @@ public class Service {
 
     public synchronized List<Contract.Menu> getContractMenus(String language) {
         return this.menus.values().stream()
+                .filter(menu -> menu.getFlagCount() >= MAX_FLAG_COUNT)
                 .sorted(Comparator.comparing(Menu::getFlagCount))
                 .map(menu -> menu.toContract(language))
                 .collect(Collectors.toList());

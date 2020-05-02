@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Photo {
-
     private static final AtomicLong menuCounter = new AtomicLong(0);
 
     private final long photoId;
