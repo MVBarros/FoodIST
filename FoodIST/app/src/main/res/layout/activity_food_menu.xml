@@ -51,13 +51,26 @@
             android:text="@string/food_menu_number_photos"
             android:textSize="30sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/add_photo_button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             android:text="@string/food_menu_add_photos" />
+
+        <Button
+            android:id="@+id/flag_menu_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="@string/flag_menu_button_text" />
+    </LinearLayout>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

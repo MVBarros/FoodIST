@@ -46,13 +46,13 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivi
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.DownloadPhotosTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.menu.FlagMenuTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UpdateMenuInfoTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.menu.UploadPhotoTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MenuNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.cache.PhotoCache;
 import pt.ulisboa.tecnico.cmov.foodist.dialog.LoginDialog;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Photo;
-import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_NAME;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
@@ -122,6 +122,7 @@ public class FoodMenuActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         //Update menu ids when screen returns
+        setFlagClickable();
         launchUpdateMenuTask();
     }
 
@@ -212,6 +213,26 @@ public class FoodMenuActivity extends BaseActivity {
                     askGalleryPermission();
                 }
         );
+        Button flagMenuButton = findViewById(R.id.flag_menu_button);
+        flagMenuButton.setOnClickListener(v -> {
+            if (!isLoggedIn()) {
+                new LoginDialog(this, getGlobalStatus().getCampus()).show(getSupportFragmentManager(), "login");
+                return;
+            }
+            if (!isNetworkAvailable()) {
+                showToast(getString(R.string.flag_menu_no_conn_erro_message));
+                return;
+            }
+            new FlagMenuTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
+        });
+    }
+
+
+    public void setFlagClickable() {
+        if (isLoggedIn()) {
+            Button button = findViewById(R.id.flag_menu_button);
+            button.setEnabled(!getGlobalStatus().isMenuFlagged(menuId));
+        }
     }
 
     public void updatePhotos(Collection<String> photos) {

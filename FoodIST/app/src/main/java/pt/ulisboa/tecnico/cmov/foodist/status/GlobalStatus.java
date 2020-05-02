@@ -235,4 +235,16 @@ public class GlobalStatus extends Application {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getBoolean(getString(R.string.shared_prefs_flagged_photo_key, photoId, getUsername()), false);
     }
+
+    public void setMenuFlagged(String menuId) {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(getString(R.string.shared_prefs_flagged_menu_key, menuId, getUsername()), true);
+        editor.apply();
+    }
+
+    public boolean isMenuFlagged(String menuId) {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        return pref.getBoolean(getString(R.string.shared_prefs_flagged_menu_key, menuId, getUsername()), false);
+    }
 }
