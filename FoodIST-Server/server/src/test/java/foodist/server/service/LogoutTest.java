@@ -1,6 +1,5 @@
-package foodist.server;
+package foodist.server.service;
 
-import foodist.server.data.Account;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.service.ServiceImplementation;
@@ -10,24 +9,25 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class LoginTest {
+public class LogoutTest {
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
     @Rule
-    public final GrpcCleanupRule grpcCleanup    = new GrpcCleanupRule();
+    public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
     private ServiceImplementation impl;
 
@@ -42,6 +42,8 @@ public class LoginTest {
     private static Map<Integer, Boolean> preferences;
 
     private static Contract.Profile profile;
+
+    private String cookie;
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -74,47 +76,24 @@ public class LoginTest {
 
         this.stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
 
-        stub.register(Contract.RegisterRequest.newBuilder().setProfile(profile).setPassword(PASSWORD).build());
+        cookie = stub.register(Contract.RegisterRequest.newBuilder().setProfile(profile).setPassword(PASSWORD).build()).getCookie();
     }
 
     @Test
-    public void validLoginTest() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        var reply = stub.login(Contract.LoginRequest.newBuilder().setUsername(USERNAME).setPassword(PASSWORD).build());
-        assertEquals(reply.getProfile().getPreferencesMap(), preferences);
-        assertEquals(reply.getProfile().getRole(), Contract.Role.Student);
-        assertEquals(reply.getProfile().getLanguage(), "pt");
-        assertEquals(reply.getProfile().getName(), USERNAME);
-
-        assertTrue(impl.getSessions().containsKey(reply.getCookie()));
-        assertTrue(impl.getUsers().containsKey(USERNAME));
-
-        Account account = impl.getSessions().get(reply.getCookie());
-        assertTrue(account.checkPassword(PASSWORD));
-        assertEquals(account.getLanguage(), "pt");
-        assertEquals(account.getUsername(), USERNAME);
-        assertEquals(account.getRole(), Contract.Role.Student);
-        assertEquals(account.getPreferences(), validPreferences);
+    public void validLogoutTest() {
+        stub.logout(Contract.LogoutRequest.newBuilder().setCookie(cookie).build());
+        assertEquals(impl.getSessions().size(), 0);
     }
 
     @Test
-    public void invalidUsernameTest() {
+    public void invalidLogoutTest() {
         exceptionRule.expect(StatusRuntimeException.class);
         try {
-            stub.login(Contract.LoginRequest.newBuilder().setUsername(INVALID_USERNAME).setPassword(PASSWORD).build());
-        }catch (StatusRuntimeException e) {
+            stub.logout(Contract.LogoutRequest.newBuilder().setCookie("").build());
+        } catch (StatusRuntimeException e) {
             assertEquals(e.getStatus(), Status.UNAUTHENTICATED);
             throw e;
         }
     }
 
-    @Test
-    public void invalidPasswordTest() {
-        exceptionRule.expect(StatusRuntimeException.class);
-        try {
-            stub.login(Contract.LoginRequest.newBuilder().setUsername(USERNAME).setPassword(INVALID_PASSWORD).build());
-        }catch (StatusRuntimeException e) {
-            assertEquals(e.getStatus(), Status.INVALID_ARGUMENT);
-            throw e;
-        }
-    }
 }

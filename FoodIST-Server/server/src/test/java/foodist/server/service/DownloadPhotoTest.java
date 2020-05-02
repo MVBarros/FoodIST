@@ -1,4 +1,4 @@
-package foodist.server;
+package foodist.server.service;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;
@@ -8,6 +8,8 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.service.ServiceImplementation;
 import io.grpc.ManagedChannel;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -18,12 +20,13 @@ import org.junit.rules.ExpectedException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.*;
 
-public class AddPhotoTest {
+public class DownloadPhotoTest {
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
@@ -55,13 +58,13 @@ public class AddPhotoTest {
     private final byte[] shortPhoto = new byte[SHORT_PHOTO_SIZE];
     private final byte[] longPhoto = new byte[LONG_PHOTO_SIZE];
 
-
     private static final String USERNAME = "USERNAME";
     private static final String PASSWORD = "PASSWORD";
 
     private static Contract.Profile profile;
 
     private String cookie;
+
 
     @BeforeClass
     public static void oneTimeSetup() {
@@ -72,7 +75,6 @@ public class AddPhotoTest {
                 .setFoodService(SERVICE)
                 .setType(Contract.FoodType.Meat)
                 .build();
-
 
         Map<Integer, Boolean> preferences = new HashMap<>();
         preferences.put(Contract.FoodType.Vegan_VALUE, true);
@@ -86,12 +88,11 @@ public class AddPhotoTest {
                 .setRole(Contract.Role.Student)
                 .putAllPreferences(preferences)
                 .build();
-
     }
 
 
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         String serverName = InProcessServerBuilder.generateName();
 
         impl = new ServiceImplementation();
@@ -111,6 +112,70 @@ public class AddPhotoTest {
                 .setCookie(cookie)
                 .build())
                 .getMenuId();
+
+        CountDownLatch latch = new CountDownLatch(1);
+        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
+            @Override
+            public void onNext(Contract.UploadPhotoReply value) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                latch.countDown();
+
+            }
+
+            @Override
+            public void onCompleted() {
+                latch.countDown();
+            }
+        });
+
+        Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
+                .setMenuId(menuId)
+                .setContent(ByteString.copyFrom(shortPhoto))
+                .setCookie(cookie)
+                .build();
+
+        observer.onNext(request);
+        observer.onCompleted();
+
+        latch.await();
+
+        CountDownLatch latch2 = new CountDownLatch(1);
+        observer = asyncStub.addPhoto(new StreamObserver<>() {
+            @Override
+            public void onNext(Contract.UploadPhotoReply value) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                latch2.countDown();
+
+            }
+
+            @Override
+            public void onCompleted() {
+                latch2.countDown();
+            }
+        });
+
+        for (int i = 0, seq = 0; i < LONG_PHOTO_SIZE; i += CHUNK_SIZE, seq++) {
+            byte[] chunk = Arrays.copyOfRange(longPhoto, i, i + CHUNK_SIZE);
+            request = Contract.AddPhotoRequest.newBuilder()
+                    .setMenuId(menuId)
+                    .setSequenceNumber(seq)
+                    .setContent(ByteString.copyFrom(chunk))
+                    .setCookie(cookie)
+                    .build();
+
+            observer.onNext(request);
+        }
+        observer.onCompleted();
+
+        latch2.await();
     }
 
     @After
@@ -120,152 +185,45 @@ public class AddPhotoTest {
     }
 
     @Test
-    public void validShortTest() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
-            @Override
-            public void onNext(Contract.UploadPhotoReply value) {
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                assertThrowable = t;
-                latch.countDown();
-
-            }
-
-            @Override
-            public void onCompleted() {
-                latch.countDown();
-            }
-        });
-
-        Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
-                .setMenuId(menuId)
-                .setCookie(cookie)
-                .setContent(ByteString.copyFrom(shortPhoto))
+    public void validShortTest() {
+        Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder()
+                .setPhotoId(String.valueOf(PHOTO_ID))
                 .build();
+        Iterator<Contract.DownloadPhotoReply> replyIterator = stub.downloadPhoto(request);
+        ByteString photoContent = ByteString.copyFrom(new byte[SHORT_PHOTO_SIZE]);
 
-        observer.onNext(request);
-        observer.onCompleted();
+        replyIterator.forEachRemaining(reply -> photoContent.concat(reply.getContent()));
 
-        latch.await();
-        assertNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 1);
-        assertArrayEquals(impl.getPhotos().get(PHOTO_ID).getContent(), shortPhoto);
+        assertArrayEquals(photoContent.toByteArray(), shortPhoto);
     }
 
     @Test
-    public void validLongTest() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
-            @Override
-            public void onNext(Contract.UploadPhotoReply value) {
+    public void validLongTest() {
+        Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder()
+                .setPhotoId(String.valueOf(PHOTO_ID + 1))
+                .build();
+        Iterator<Contract.DownloadPhotoReply> replyIterator = stub.downloadPhoto(request);
+        ByteString photoContent = ByteString.copyFrom(new byte[LONG_PHOTO_SIZE]);
 
-            }
+        replyIterator.forEachRemaining(reply -> photoContent.concat(reply.getContent()));
 
-            @Override
-            public void onError(Throwable t) {
-                assertThrowable = t;
-                latch.countDown();
+        assertArrayEquals(photoContent.toByteArray(), longPhoto);
+    }
 
-            }
+    @Test
+    public void invalidMenuIdTest() {
+        Contract.DownloadPhotoRequest request = Contract.DownloadPhotoRequest.newBuilder()
+                .setPhotoId(String.valueOf(-1))
+                .build();
 
-            @Override
-            public void onCompleted() {
-                latch.countDown();
-            }
-        });
+        Iterator<Contract.DownloadPhotoReply> replyIterator = stub.downloadPhoto(request);
 
-        for (int i = 0,  seq = 0; i < LONG_PHOTO_SIZE; i += CHUNK_SIZE, seq++) {
-            byte[] chunk = Arrays.copyOfRange(longPhoto, i, i + CHUNK_SIZE);
-            Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
-                    .setMenuId(menuId)
-                    .setSequenceNumber(seq)
-                    .setCookie(cookie)
-                    .setContent(ByteString.copyFrom(chunk))
-                    .build();
-
-            observer.onNext(request);
+        exceptionRule.expect(StatusRuntimeException.class);
+        try {
+            replyIterator.forEachRemaining(reply -> {});
+        }catch (StatusRuntimeException e) {
+            assertEquals(e.getStatus(), Status.NOT_FOUND);
+            throw e;
         }
-        observer.onCompleted();
-
-        latch.await();
-        assertNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 1);
-        assertArrayEquals(impl.getPhotos().get(PHOTO_ID).getContent(), longPhoto);
     }
-
-    @Test
-    public void invalidMenuIdTest() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
-            @Override
-            public void onNext(Contract.UploadPhotoReply value) {
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                assertThrowable = t;
-                latch.countDown();
-
-            }
-
-            @Override
-            public void onCompleted() {
-                latch.countDown();
-            }
-        });
-
-        Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
-                .setMenuId(-1)
-                .setCookie(cookie)
-                .setContent(ByteString.copyFrom(shortPhoto))
-                .build();
-
-        observer.onNext(request);
-        observer.onCompleted();
-
-        latch.await();
-        assertNotNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 0);
-    }
-
-    @Test
-    public void invalidCookieTest() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        StreamObserver<Contract.AddPhotoRequest> observer = asyncStub.addPhoto(new StreamObserver<>() {
-            @Override
-            public void onNext(Contract.UploadPhotoReply value) {
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                assertThrowable = t;
-                latch.countDown();
-
-            }
-
-            @Override
-            public void onCompleted() {
-                latch.countDown();
-            }
-        });
-
-        Contract.AddPhotoRequest request = Contract.AddPhotoRequest.newBuilder()
-                .setMenuId(menuId)
-                .setContent(ByteString.copyFrom(shortPhoto))
-                .build();
-
-        observer.onNext(request);
-        observer.onCompleted();
-
-        latch.await();
-        assertNotNull(assertThrowable);
-        assertEquals(impl.getPhotos().size(), 0);
-    }
-
 }

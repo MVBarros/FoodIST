@@ -1,4 +1,4 @@
-package foodist.server;
+package foodist.server.service;
 
 import foodist.server.data.Account;
 import foodist.server.grpc.contract.Contract;

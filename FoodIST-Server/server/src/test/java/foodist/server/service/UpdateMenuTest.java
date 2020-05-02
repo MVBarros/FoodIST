@@ -1,5 +1,6 @@
-package foodist.server;
+package foodist.server.service;
 
+import foodist.server.data.Menu;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import foodist.server.service.ServiceImplementation;
@@ -9,20 +10,16 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.testing.GrpcCleanupRule;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class LogoutTest {
+public class UpdateMenuTest {
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
@@ -30,16 +27,23 @@ public class LogoutTest {
     public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
     private ServiceImplementation impl;
-
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
-    private static final String USERNAME = "USERNAME";
-    private static final String INVALID_USERNAME = "INVALID USERNAME";
-    private static final String PASSWORD = "PASSWORD";
-    private static final String INVALID_PASSWORD = "INVALID PASSWORD";
 
-    private static Map<Contract.FoodType, Boolean> validPreferences;
-    private static Map<Integer, Boolean> preferences;
+    private static final String NAME = "NAME";
+    private static final double PRICE = 2.0d;
+    private static final double DELTA = 0.01d;
+    private static final String LANGUAGE = "pt";
+    private static final String SERVICE = "SERVICE";
+    private static final long MENU_ID = 0;
+
+    private static Contract.AddMenuRequest request;
+
+    private static Contract.UpdateMenuRequest updateRequest;
+    private static Contract.UpdateMenuRequest invalidUpdateRequest;
+
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
 
     private static Contract.Profile profile;
 
@@ -47,11 +51,23 @@ public class LogoutTest {
 
     @BeforeClass
     public static void oneTimeSetup() {
-        validPreferences = new HashMap<>();
-        Arrays.stream(Contract.FoodType.values()).forEach(type -> validPreferences.put(type, true));
-        validPreferences.remove(Contract.FoodType.UNRECOGNIZED);
+        request = Contract.AddMenuRequest.newBuilder()
+                .setName(NAME)
+                .setPrice(PRICE)
+                .setLanguage(LANGUAGE)
+                .setFoodService(SERVICE)
+                .setType(Contract.FoodType.Meat)
+                .build();
 
-        preferences = new HashMap<>();
+        updateRequest = Contract.UpdateMenuRequest.newBuilder()
+                .setMenuId(MENU_ID)
+                .build();
+
+        invalidUpdateRequest = Contract.UpdateMenuRequest.newBuilder()
+                .setMenuId(MENU_ID + 1)
+                .build();
+
+        Map<Integer, Boolean> preferences = new HashMap<>();
         preferences.put(Contract.FoodType.Vegan_VALUE, true);
         preferences.put(Contract.FoodType.Meat_VALUE, true);
         preferences.put(Contract.FoodType.Fish_VALUE, true);
@@ -65,6 +81,7 @@ public class LogoutTest {
                 .build();
     }
 
+
     @Before
     public void setup() throws IOException {
         String serverName = InProcessServerBuilder.generateName();
@@ -76,24 +93,36 @@ public class LogoutTest {
 
         this.stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
 
-        cookie = stub.register(Contract.RegisterRequest.newBuilder().setProfile(profile).setPassword(PASSWORD).build()).getCookie();
+
+        cookie = stub.register(Contract.RegisterRequest.newBuilder()
+                .setProfile(profile)
+                .setPassword(PASSWORD)
+                .build()).getCookie();
+
+        stub.addMenu(request.toBuilder()
+                .setCookie(cookie)
+                .build());
+    }
+
+    @After
+    public void teardown() {
+        Menu.resetCounter();
     }
 
     @Test
-    public void validLogoutTest() {
-        stub.logout(Contract.LogoutRequest.newBuilder().setCookie(cookie).build());
-        assertEquals(impl.getSessions().size(), 0);
+    public void validTest() {
+        Contract.PhotoReply reply = stub.updateMenu(updateRequest);
+        assertEquals(reply.getPhotoIDCount(), 0);
     }
 
     @Test
-    public void invalidLogoutTest() {
+    public void invalidIdTest() {
         exceptionRule.expect(StatusRuntimeException.class);
         try {
-            stub.logout(Contract.LogoutRequest.newBuilder().setCookie("").build());
+            stub.updateMenu(invalidUpdateRequest);
         } catch (StatusRuntimeException e) {
-            assertEquals(e.getStatus(), Status.UNAUTHENTICATED);
+            assertEquals(e.getStatus(), Status.NOT_FOUND);
             throw e;
         }
     }
-
 }

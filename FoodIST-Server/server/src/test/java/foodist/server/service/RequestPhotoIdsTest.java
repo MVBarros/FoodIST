@@ -1,4 +1,4 @@
-package foodist.server;
+package foodist.server.service;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Empty;

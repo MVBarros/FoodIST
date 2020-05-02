@@ -184,6 +184,24 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         }
     }
 
+    @Override
+    public void flagPhoto(Contract.FlagRequest request, StreamObserver<Empty> responseObserver) {
+        if (!validateCookie(request.getCookie())) {
+            responseObserver.onError(Status.UNAUTHENTICATED.asRuntimeException());
+            return;
+        }
+        Account account = sessions.get(request.getCookie());
+        long photoId = request.getPhotoId();
+        Photo photo = photos.get(photoId);
+        if (photo == null) {
+            responseObserver.onError(Status.NOT_FOUND.asRuntimeException());
+            return;
+        }
+        photo.flag(account.getUsername());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
     /**
      * Fetches the oldest 3 photoIds of each Menu
      */
