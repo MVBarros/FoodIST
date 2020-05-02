@@ -56,6 +56,35 @@ public class PhotoTest {
 
 
     @Test
+    public void flagSinglePhotoTest() {
+        Photo photo = new Photo(PHOTO_CONTENT, account);
+        photo.flag(String.valueOf(0));
+        assertEquals(photo.getFlagCount(), 1);
+
+        Photo photo2 = new Photo(PHOTO_CONTENT, account);
+        photo2.flag(String.valueOf(0));
+        photo2.flag(String.valueOf(1));
+        assertEquals(photo2.getFlagCount(), 2);
+
+
+        Photo photo3 = new Photo(PHOTO_CONTENT, account);
+        photo3.flag(String.valueOf(0));
+        photo3.flag(String.valueOf(1));
+        photo3.flag(String.valueOf(2));
+        assertEquals(photo3.getFlagCount(), 3);
+
+        menu.addPhoto(photo2);
+        menu.addPhoto(photo);
+        menu.addPhoto(photo3);
+
+        Contract.Menu contractMenu = menu.toContract();
+        //Get photos ordered by flag count
+        assertEquals(contractMenu.getPhotoId(0), "0");
+        assertEquals(contractMenu.getPhotoId(1), "1");
+        assertEquals(contractMenu.getPhotoId(2), "2");
+    }
+
+    @Test
     public void flagPhotoTest() {
         Photo photo = new Photo(PHOTO_CONTENT, account);
         for (int i = 0; i < 6; i++) {
@@ -93,6 +122,7 @@ public class PhotoTest {
         assertEquals(menu.getPhotos().size(), 1);
         assertEquals(menu.getPhotos().get(0), "1");
         assertEquals(account.getFlagCount(), 1);
+
     }
 
     @Test(expected = IllegalArgumentException.class)

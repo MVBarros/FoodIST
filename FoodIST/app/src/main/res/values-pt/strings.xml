@@ -191,4 +191,9 @@
     <string name="login_dialog_negative_message">Não obrigado</string>
     <string name="Menu_uploaded_successfully_message">Upload de menu completado</string>
     <string name="menu_upload_error_message">Não foi possível fazer upload desse menu</string>
+    <string name="flag_photo_button_text">Flag Photo</string>
+    <string name="flag_menu_error_message">Unable to flag menu</string>
+    <string name="no_internet_conn_flag_photo_error">Need network connection to flag photo</string>
+    <string name="shared_prefs_flagged_photo_key">Flagged-photo-%1$s-%2$s</string>
+    <string name="menu_flag_successfull_message">Menu flagged successfully</string>
 </resources>

@@ -203,7 +203,7 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
     }
 
     /**
-     * Fetches the oldest 3 photoIds of each Menu
+     * Fetches the best 3 photoIds of each Menu
      */
     @Override
     public void requestPhotoIDs(Empty request, StreamObserver<foodist.server.grpc.contract.Contract.PhotoReply> responseObserver) {

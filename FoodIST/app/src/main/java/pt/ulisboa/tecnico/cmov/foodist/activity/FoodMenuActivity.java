@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -82,7 +83,7 @@ public class FoodMenuActivity extends BaseActivity {
     /**
      * These two sets form a set data structure whose removed elements cannot be added back
      */
-    private Set<String> photosNotDownloaded = Collections.synchronizedSet(new HashSet<>());
+    private Set<String> photosNotDownloaded = Collections.synchronizedSet(new LinkedHashSet<>()); //Keep insertion order
     private Set<String> photosDownloaded = Collections.synchronizedSet(new HashSet<>());
 
     private boolean isOnCreate;
