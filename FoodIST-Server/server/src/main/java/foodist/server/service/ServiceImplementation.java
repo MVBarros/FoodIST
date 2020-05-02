@@ -345,7 +345,5 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         services.values().forEach(Service::resetMenus);
         menus.clear();
         photos.clear();
-        Menu.resetCounter();
-        Photo.resetCounter();
     }
 }
