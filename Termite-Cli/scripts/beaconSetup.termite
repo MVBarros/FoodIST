@@ -1,4 +1,9 @@
 # Beacon setup
-newdevice Beacon
-creategroup Beacon ()
-
+newdevice Bar_Vermelho
+newdevice Bar_Verde
+newdevice Cantina_Taguspark
+newdevice Máquinas_de_Venda_Automática
+newdevice Cantina_de_Civil
+newdevice Bar_de_Civil
+newdevice Cantina_Alameda
+newdevice Cafe_do_Pavilhão_Central

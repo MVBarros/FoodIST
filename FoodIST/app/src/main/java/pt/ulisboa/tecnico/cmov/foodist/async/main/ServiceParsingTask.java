@@ -45,6 +45,7 @@ public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, 
             getActivity().drawServices();
             //After it is done try to update walking distance
             getActivity().updateServicesWalkingDistance();
+            getActivity().setWifiDirectListener(services);
         }
     }
 }

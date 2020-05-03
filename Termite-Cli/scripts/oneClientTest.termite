@@ -1,11 +1,6 @@
 # Termite supports scripts
-newdevice Client
-list emus
-assignaddr e1
-binddevice Client e1
-move Client (Beacon)
-joingroup Client (Beacon)
+move Client1 (Máquinas_de_Venda_Automática)
 commit 
 wait 10
-move Client ()
+move Client1 ()
 commit

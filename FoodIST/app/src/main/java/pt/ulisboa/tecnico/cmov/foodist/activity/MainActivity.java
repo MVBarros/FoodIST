@@ -115,9 +115,17 @@ public class MainActivity extends BaseActivity implements LocationListener {
         setLanguage();
         setCurrentCampus();
 
+    }
+
+    public void setWifiDirectListener(List<FoodService> services){
+        List<String> foodServiceName = services.stream()
+                                        .map(FoodService::getName)
+                                        .collect(Collectors.toList());
+
+        Log.d("TAG", "NumberFoodService: " + foodServiceName.size());
         IntentFilter filter = new IntentFilter();
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
-        mReceiver = new SimWifiP2pBroadcastReceiver(this);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mReceiver = new SimWifiP2pBroadcastReceiver(this, foodServiceName);
         registerReceiver(mReceiver, filter);
 
         Intent intent = new Intent(this, SimWifiP2pService.class);
