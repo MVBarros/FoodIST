@@ -103,6 +103,18 @@ message FlagMenuRequest {
     int64 menuId = 2;
 }
 
+message QueueRequest {
+    string foodService = 1;
+}
+
+message QueueTimeRequest {
+    repeated string foodService = 1;
+}
+
+message QueueTimeResponse {
+    repeated string queueTime = 1;
+}
+
 service FoodISTServerService {
     rpc addMenu(AddMenuRequest) returns (AddMenuReply);
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
@@ -116,4 +128,7 @@ service FoodISTServerService {
     rpc login(LoginRequest) returns (AccountMessage);
     rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
     rpc logout(LogoutRequest) returns (google.protobuf.Empty);
+    rpc addToQueue(QueueRequest) returns (google.protobuf.Empty);
+    rpc removeFromQueue(QueueRequest) returns (google.protobuf.Empty);
+    rpc getQueueTime(QueueTimeRequest) returns (QueueTimeResponse);
 }

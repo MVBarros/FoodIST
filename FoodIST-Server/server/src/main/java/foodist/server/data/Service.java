@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Service {
@@ -15,6 +16,7 @@ public class Service {
 
     private final String name;
     private final Map<String, Menu> menus;
+    private AtomicInteger queue = new AtomicInteger(0);
 
     public Service(String name) {
         checkArguments(name);
@@ -55,4 +57,11 @@ public class Service {
     public void resetMenus() {
         menus.clear();
     }
+
+    public void addToQueue() { queue.incrementAndGet(); }
+
+    public void removeFromQueue() { queue.decrementAndGet(); }
+
+    public String getQueueTime() { return Integer.toString(queue.get()); }
+
 }
