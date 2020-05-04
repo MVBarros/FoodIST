@@ -4,7 +4,7 @@
       "en": "Red Bar",
       "pt": "Bar Vermelho",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.736550,
       "longitude": -9.302204,
       "hours": {
@@ -50,7 +50,7 @@
       "en": "Green Bar",
       "pt": "Bar Verde",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.738042,
       "longitude": -9.303060,
       "hours": {
@@ -96,7 +96,7 @@
       "en": "Cantina Taguspark",
       "pt": "Cantina Taguspark",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.737928,
       "longitude": -9.303269,
       "hours": {
@@ -142,7 +142,7 @@
       "en": "Vending Machines",
       "pt": "Máquinas de Venda Automática",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.737129,
       "longitude": -9.303140,
       "hours": {
@@ -190,7 +190,7 @@
       "en": "Civil Cantina",
       "pt": "Cantina de Civil",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.737756,
       "longitude": -9.140465,
       "hours": {
@@ -236,7 +236,7 @@
       "en": "Civil Bar",
       "pt": "Bar de Civil",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.737075,
       "longitude": -9.140010,
       "hours": {
@@ -282,7 +282,7 @@
       "en": "Cantina Alameda",
       "pt": "Cantina Alameda",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.736380,
       "longitude": -9.136987,
       "hours": {
@@ -328,7 +328,7 @@
       "en": "Vending Machine",
       "pt": "Maquina de Venda Automática",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.736261,
       "longitude": -9.137836,
       "hours": {
@@ -374,7 +374,7 @@
       "en": "Central Pavillion Cafe",
       "pt": "Cafe do Pavilhão Central",
       "distance": "?",
-      "time": "5min",
+      "time": "?",
       "latitude": 38.736624,
       "longitude": -9.139594,
       "hours": {
