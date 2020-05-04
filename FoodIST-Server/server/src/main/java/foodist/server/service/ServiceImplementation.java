@@ -314,6 +314,27 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void addToQueue(Contract.QueueRequest request, StreamObserver<Empty> responseObserver) {
+        Service service = services.computeIfAbsent(request.getFoodService(), Service::new);
+        service.addToQueue(request.getUuid());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void removeFromQueue(Contract.QueueRequest request, StreamObserver<Empty> responseObserver) {
+        Service service = services.computeIfAbsent(request.getFoodService(), Service::new);
+        service.removeFromQueue(request.getUuid());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getQueueTime(Contract.QueueTimeRequest request, StreamObserver<Contract.QueueTimeResponse> responseObserver) {
+        super.getQueueTime(request, responseObserver);
+    }
+
     private String generateRandomCookie() {
         return RandomStringUtils.random(COOKIE_SIZE);
     }

@@ -69,6 +69,7 @@ public class Service {
     }
 
     public void addToQueue(String uuid) {
+        queue.remove(uuid); //Just in case...
         QueuePosition entry = new QueuePosition(LocalDateTime.now(), queue.size());
         queue.put(uuid, entry);
     }

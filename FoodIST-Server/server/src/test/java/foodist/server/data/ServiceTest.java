@@ -173,10 +173,23 @@ public class ServiceTest {
         service.addToQueue("3");
         service.addToQueue("4");
         Map<String, QueuePosition> positions = service.getQueue();
+        assertEquals(positions.size(), 4);
         assertEquals(positions.get("1").getNumberOfPeople(), 0);
         assertEquals(positions.get("2").getNumberOfPeople(), 1);
         assertEquals(positions.get("3").getNumberOfPeople(), 2);
         assertEquals(positions.get("4").getNumberOfPeople(), 3);
+    }
+
+    @Test
+    public void addToQueueRepeated() {
+        Service service = new Service(NAME);
+        service.addToQueue("1");
+        service.addToQueue("1");
+        service.addToQueue("1");
+        service.addToQueue("1");
+        Map<String, QueuePosition> positions = service.getQueue();
+        assertEquals(positions.size(), 1);
+        assertEquals(positions.get("1").getNumberOfPeople(), 0);
     }
 
     @Test
