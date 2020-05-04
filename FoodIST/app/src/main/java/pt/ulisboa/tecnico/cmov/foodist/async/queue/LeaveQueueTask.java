@@ -7,14 +7,14 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
 
-public class JoinQueueTask extends AsyncTask<String, Integer, Boolean> {
+public class LeaveQueueTask extends AsyncTask<String, Integer, Boolean> {
 
-    private static final String TAG = "JOIN-QUEUE-TASK";
+    private static final String TAG = "REMOVE-QUEUE-TASK";
 
     private String uuid;
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
 
-    public JoinQueueTask(String uuid, FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
+    public LeaveQueueTask(String uuid, FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub) {
         this.uuid = uuid;
         this.stub = stub;
     }
@@ -29,7 +29,7 @@ public class JoinQueueTask extends AsyncTask<String, Integer, Boolean> {
                 .setUuid(uuid)
                 .build();
         try {
-            stub.addToQueue(request);
+            stub.removeFromQueue(request);
         } catch (StatusRuntimeException e) {
             return false;
         }
@@ -44,9 +44,9 @@ public class JoinQueueTask extends AsyncTask<String, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
-            Log.d(TAG, "Joined queue successfully");
+            Log.d(TAG, "Left queue successfully");
         } else {
-            Log.d(TAG, "Could not join queue");
+            Log.d(TAG, "Could not leave queue");
         }
     }
 }
