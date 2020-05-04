@@ -1,12 +1,12 @@
 # Termite supports scripts
-move Client1 (Máquinas_de_Venda_Automática)
+move Client1 (Bar_Vermelho)
+move Client2 (Bar_Vermelho)
 commit
 wait 5
 move Client1 ()
+move Client2 ()
 commit
 wait 5
 move Client1 (Bar_Vermelho)
-commit
-wait 5
-move Client1 ()
+move Client2 (Bar_Vermelho)
 commit
