@@ -30,15 +30,20 @@ public class FoodServicesJsonParser {
         return new JSONObject(responseStrBuilder.toString());
     }
 
-    public static List<FoodService> parse(FoodServiceData resource) throws IOException, JSONException {
+    public static Map<String, List<FoodService>> parse(FoodServiceData resource) throws IOException, JSONException {
         JSONObject object = readFile(resource.getIs());
-        JSONArray arr = object.getJSONArray(resource.getCampus());
-        List<FoodService> services = new ArrayList<>();
-        for (int i = 0; i < arr.length(); ++i) {
-            FoodService service = parseObject(arr.getJSONObject(i));
-            services.add(service);
+        Map<String, List<FoodService>> serviceMap = new HashMap<>();
+        for (Iterator<String> it = object.keys(); it.hasNext(); ) {
+            String key = it.next();
+            JSONArray arr = object.getJSONArray(key);
+            List<FoodService> services = new ArrayList<>();
+            for (int i = 0; i < arr.length(); ++i) {
+                FoodService service = parseObject(arr.getJSONObject(i));
+                services.add(service);
+            }
+            serviceMap.put(key, services);
         }
-        return services;
+        return serviceMap;
     }
 
     private static FoodService parseObject(JSONObject object) throws JSONException {
