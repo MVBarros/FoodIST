@@ -58,10 +58,11 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Left line of food service " + currentFoodService);
                 isInQueue = false;
                 new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
+                currentFoodService = null;
             }
         } else {
             String foodService = foodServiceBeacons.iterator().next();
-            if (!foodService.equals(currentFoodService)) {
+            if (!foodService.equals(currentFoodService) && currentFoodService != null) {
                 //Somehow moved to different foodService (probably disconnected my wifi)
                 new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
                 isInQueue = false;

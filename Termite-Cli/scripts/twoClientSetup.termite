@@ -1,0 +1,8 @@
+# One Client Setup
+newdevice Client1
+newdevice Client2
+list emus
+assignaddr e1
+binddevice Client1 e1
+assignaddr e2
+binddevice Client2 e2
