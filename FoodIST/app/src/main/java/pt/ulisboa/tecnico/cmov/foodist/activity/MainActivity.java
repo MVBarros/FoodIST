@@ -253,13 +253,13 @@ public class MainActivity extends BaseActivity implements LocationListener {
         new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }
 
-    private void launchGuessCampusTask(LatLng curr, LatLng alameda, LatLng tagus) {
-        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, alameda, tagus);
+    private void launchGuessCampusTask(LatLng curr) {
+        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, MainActivity.LOCATION_ALAMEDA, MainActivity.LOCATION_TAGUS);
     }
 
     private void updateCampusFromLocation(Location location) {
         LatLng curr = new LatLng(location.getLatitude(), location.getLongitude());
-        launchGuessCampusTask(curr, LOCATION_ALAMEDA, LOCATION_TAGUS);
+        launchGuessCampusTask(curr);
     }
 
     @SuppressLint("MissingPermission")
