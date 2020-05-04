@@ -69,9 +69,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private LocationManager mLocationManager;
 
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
-
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
-
     private static final LatLng LOCATION_TAGUS = new LatLng(38.737050, -9.302734);
     private static final LatLng LOCATION_ALAMEDA = new LatLng(38.736819, -9.138769);
 

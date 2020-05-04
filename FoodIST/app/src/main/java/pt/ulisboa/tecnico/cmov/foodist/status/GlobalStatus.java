@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -41,7 +42,7 @@ public class GlobalStatus extends Application {
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
-    private List<FoodService> services = Collections.synchronizedList(new ArrayList<>());
+    private Map<String, FoodService> services = new ConcurrentHashMap<>();
 
     private String campus;
 
@@ -97,11 +98,13 @@ public class GlobalStatus extends Application {
     }
 
     public List<FoodService> getServices() {
-        return services;
+        return new ArrayList<>(this.services.values());
     }
 
     public void setServices(List<FoodService> services) {
-        this.services = Collections.synchronizedList(services);
+        Map<String, FoodService> serviceMap = new ConcurrentHashMap<>();
+        services.forEach(service -> serviceMap.put(service.getName(), service));
+        this.services = serviceMap;
     }
 
     public String getApiKey() {
