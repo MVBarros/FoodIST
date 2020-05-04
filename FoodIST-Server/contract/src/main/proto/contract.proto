@@ -105,6 +105,7 @@ message FlagMenuRequest {
 
 message QueueRequest {
     string foodService = 1;
+    string uuid = 2;
 }
 
 message QueueTimeRequest {
@@ -112,7 +113,7 @@ message QueueTimeRequest {
 }
 
 message QueueTimeResponse {
-    repeated string queueTime = 1;
+    map<string, int32> queueTime = 1;
 }
 
 service FoodISTServerService {

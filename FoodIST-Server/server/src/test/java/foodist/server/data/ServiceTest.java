@@ -1,6 +1,8 @@
 package foodist.server.data;
 
 import foodist.server.data.exception.ServiceException;
+import foodist.server.data.queue.Mean;
+import foodist.server.data.queue.QueuePosition;
 import foodist.server.grpc.contract.Contract;
 import org.junit.After;
 import org.junit.Before;
@@ -163,4 +165,99 @@ public class ServiceTest {
         assertEquals(account.getFlagCount(), 1);
     }
 
+    @Test
+    public void addToQueueTest() {
+        Service service = new Service(NAME);
+        service.addToQueue("1");
+        service.addToQueue("2");
+        service.addToQueue("3");
+        service.addToQueue("4");
+        Map<String, QueuePosition> positions = service.getQueue();
+        assertEquals(positions.get("1").getNumberOfPeople(), 0);
+        assertEquals(positions.get("2").getNumberOfPeople(), 1);
+        assertEquals(positions.get("3").getNumberOfPeople(), 2);
+        assertEquals(positions.get("4").getNumberOfPeople(), 3);
+    }
+
+    @Test
+    public void removeFromQueueDoesNotExist() {
+        Service service = new Service(NAME);
+        service.addToQueue("1");
+        service.removeFromQueue("2");
+        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        assertEquals(positions.size(), 0);
+    }
+
+    @Test
+    public void removeOneUserFromQueue() throws InterruptedException {
+        Service service = new Service(NAME);
+        service.addToQueue("1");
+        Thread.sleep(1000);
+        service.removeFromQueue("1");
+        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        assertEquals(positions.size(), 1);
+        assertTrue(positions.containsKey(0));
+        assertEquals(positions.get(0).getCurrValue(), 1, 0.0001);
+    }
+
+    @Test
+    public void removeOneUserQuickly() throws InterruptedException {
+        Service service = new Service(NAME);
+        service.addToQueue("1");
+        Thread.sleep(200);
+        service.removeFromQueue("1");
+        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        assertEquals(positions.size(), 1);
+        assertTrue(positions.containsKey(0));
+        assertEquals(positions.get(0).getCurrValue(), 0, 0.0001);
+    }
+
+    @Test
+    public void variousUsersEnterAndLeave() throws InterruptedException {
+        Service service = new Service(NAME);
+        for(int i = 0; i < 4; i++) {
+            service.addToQueue(String.valueOf(i));
+        }
+
+        for(int i = 0; i < 4; i++) {
+            Thread.sleep(1000);
+            service.removeFromQueue(String.valueOf(i));
+        }
+
+        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        assertEquals(positions.size(), 4);
+        for(int i = 0; i < 4; i++) {
+            assertTrue(positions.containsKey(i));
+            assertEquals(positions.get(i).getCurrValue(), i + 1 , 0.0001);
+        }
+    }
+
+    @Test
+    public void variousUsersEnterAndLeaveMultipleTimes() throws InterruptedException {
+        Service service = new Service(NAME);
+        for(int i = 0; i < 4; i++) {
+            service.addToQueue(String.valueOf(i));
+        }
+
+        for(int i = 0; i < 4; i++) {
+            Thread.sleep(1000);
+            service.removeFromQueue(String.valueOf(i));
+        }
+
+        for(int i = 0; i < 4; i++) {
+            service.addToQueue(String.valueOf(i));
+        }
+
+        for(int i = 0; i < 4; i++) {
+            Thread.sleep(2000);
+            service.removeFromQueue(String.valueOf(i));
+        }
+
+        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        assertEquals(positions.size(), 4);
+        for(int i = 0; i < 4; i++) {
+            assertTrue(positions.containsKey(i));
+            assertEquals(positions.get(i).getCurrValue(), (i + 1) * 1.5 , 0.0001);
+        }
+    }
 }

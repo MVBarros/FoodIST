@@ -63,20 +63,6 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         }
     }
 
-    @Override
-    public void addToQueue(Contract.QueueRequest request, StreamObserver<Empty> responseObserver){
-        getService(request.getFoodService()).addToQueue();
-    }
-
-    @Override
-    public void removeFromQueue(Contract.QueueRequest request, StreamObserver<Empty> responseObserver){
-        getService(request.getFoodService()).removeFromQueue();
-    }
-
-    @Override
-    public void getQueueTime(Contract.QueueTimeRequest request, StreamObserver<Contract.QueueTimeResponse> responseObserver){
-
-    }
 
     @Override
     public void listMenu(Contract.ListMenuRequest request, StreamObserver<Contract.ListMenuReply> responseObserver) {
