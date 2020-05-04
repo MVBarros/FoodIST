@@ -42,8 +42,6 @@ public class GetQueueTimeTest {
 
     private static Contract.Profile profile;
 
-    private String cookie;
-
     @BeforeClass
     public static void oneTimeSetup() {
         request = Contract.AddMenuRequest.newBuilder()
@@ -81,7 +79,7 @@ public class GetQueueTimeTest {
 
         this.stub = FoodISTServerServiceGrpc.newBlockingStub(channel);
 
-        cookie = stub.register(Contract.RegisterRequest.newBuilder()
+        String cookie = stub.register(Contract.RegisterRequest.newBuilder()
                 .setProfile(profile)
                 .setPassword(PASSWORD)
                 .build()).getCookie();
@@ -121,7 +119,7 @@ public class GetQueueTimeTest {
 
 
     @Test
-    public void parcialValidGetQueueTime() {
+    public void partialValidGetQueueTime() {
         impl.getService(SERVICE).getQueueWaitTimes().put(0, new Mean(0));
         Contract.QueueTimeRequest request = Contract.QueueTimeRequest.newBuilder().addFoodService(SERVICE).addFoodService(SERVICE2).build();
         Contract.QueueTimeResponse response = stub.getQueueTime(request);
@@ -130,7 +128,7 @@ public class GetQueueTimeTest {
     }
 
     @Test
-    public void parcialPredictGetQueueTime() {
+    public void partialPredictGetQueueTime() {
         impl.getService(SERVICE).getQueueWaitTimes().put(1, new Mean(4));
         impl.getService(SERVICE).getQueueWaitTimes().put(2, new Mean(6));
 
