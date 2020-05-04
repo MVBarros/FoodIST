@@ -30,9 +30,11 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.InputStream;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
@@ -236,6 +238,14 @@ public class MainActivity extends BaseActivity implements LocationListener {
         else {
             showToast(getString(R.string.no_network_avaliable_queue_time_message));
         }
+    }
+
+
+    public void setFoodServiceQueueTimes(Map<String, String> times) {
+        times = times.entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), timeString(Long.parseLong(entry.getValue()))))
+                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+        getGlobalStatus().setQueueTimes(times);
     }
 
 

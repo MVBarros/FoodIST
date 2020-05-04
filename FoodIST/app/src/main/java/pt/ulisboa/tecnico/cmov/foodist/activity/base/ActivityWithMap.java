@@ -190,36 +190,4 @@ public abstract class ActivityWithMap extends BaseActivity implements OnMapReady
     public void onProviderDisabled(String provider) {
 
     }
-
-
-    // I am sorry for this ugly code
-    // Signed: Miguel
-    public String timeString(Long time) {
-        String res = "";
-        if (time > (3600 * 24)) {
-            long days = time / (3600 * 24);
-            res += Long.toString(days);
-            String suffix = days == 1 ? getString(R.string.day) : getString(R.string.days);
-            res += " " + suffix + " ";
-            time = time % (3600 * 24);
-        }
-        if (time > 3600) {
-            long hours = time / 3600;
-            res += Long.toString(hours);
-            String suffix = hours == 1 ? getString(R.string.hour) : getString(R.string.hours);
-            res += " " + suffix + " ";
-            time = time % 3600;
-        }
-        if (time > 60) {
-            long minutes = time / 60;
-            res += Long.toString(minutes);
-            String suffix = minutes == 1 ? getString(R.string.minute) : getString(R.string.minutes);
-            res += " " + suffix + " ";
-            time = time % 60;
-        }
-        res += Long.toString(time);
-        String suffix = time == 1 ? getString(R.string.second) : getString(R.string.seconds);
-        res += " " + suffix;
-        return res;
-    }
 }

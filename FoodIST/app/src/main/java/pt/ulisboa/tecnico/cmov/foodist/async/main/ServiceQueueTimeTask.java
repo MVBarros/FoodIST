@@ -45,7 +45,7 @@ public class ServiceQueueTimeTask extends BaseAsyncTask<String, Integer, Map<Str
             getActivity().showToast(getActivity().getString(R.string.could_not_get_queue_time_message));
             return;
         }
-        getActivity().getGlobalStatus().setQueueTimes(result);
+        getActivity().setFoodServiceQueueTimes(result);
         //Services of global status are now updated, just need to draw them
         // (If they have been overridden nothing new will happen)
         getActivity().drawServices();
