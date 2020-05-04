@@ -16,8 +16,10 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,6 +45,7 @@ public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private Map<String, FoodService> services = new ConcurrentHashMap<>();
+    private Set<String> serviceNames = Collections.synchronizedSet(new HashSet<>());
 
     private String campus;
 
@@ -272,5 +275,13 @@ public class GlobalStatus extends Application {
     public boolean isMenuFlagged(String menuId) {
         SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
         return pref.getBoolean(getString(R.string.shared_prefs_flagged_menu_key, menuId, getUsername()), false);
+    }
+
+    public Set<String> getServiceNames() {
+        return serviceNames;
+    }
+
+    public void setServiceNames(Set<String> serviceNames) {
+        this.serviceNames = Collections.synchronizedSet(serviceNames);
     }
 }

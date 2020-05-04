@@ -71,6 +71,8 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private LocationManager mLocationManager;
 
+    private static boolean isServiceStarted = false;
+
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
     private static final LatLng LOCATION_TAGUS = new LatLng(38.737050, -9.302734);
@@ -82,29 +84,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private String campus;
 
-    private SimWifiP2pBroadcastReceiver mReceiver;
-    private SimWifiP2pManager mManager = null;
-    private SimWifiP2pManager.Channel mChannel = null;
-    private Messenger mService = null;
-    //Dont think we need Bound but oh well
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        // callbacks for service binding, passed to bindService()
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = new Messenger(service);
-            mManager = new SimWifiP2pManager(mService);
-            mChannel = mManager.initialize(getApplication(), getMainLooper(), null);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mService = null;
-            mManager = null;
-            mChannel = null;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,21 +95,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
         setLanguage();
         setCurrentCampus();
 
-    }
-
-    public void setWifiDirectListener(List<FoodService> services){
-        List<String> foodServiceName = services.stream()
-                                        .map(FoodService::getName)
-                                        .collect(Collectors.toList());
-
-        Log.d("TAG", "NumberFoodService: " + foodServiceName.size());
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mReceiver = new SimWifiP2pBroadcastReceiver(this, foodServiceName);
-        registerReceiver(mReceiver, filter);
-
-        Intent intent = new Intent(this, SimWifiP2pService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

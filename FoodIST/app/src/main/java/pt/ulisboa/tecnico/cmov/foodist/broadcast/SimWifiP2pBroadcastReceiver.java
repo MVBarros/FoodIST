@@ -19,21 +19,27 @@ import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.JoinQueueTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.LeaveQueueTask;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
-
-    private final String uuid;
-    private final FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
     private final static String TAG = "WIFI-DIRECT-RECEIVER";
+
+    private static SimWifiP2pBroadcastReceiver instance = null;
+
+    private GlobalStatus status;
     private boolean isInQueue = false;
-    private List<String> foodServiceNames;
     private String currentFoodService;
 
-    public SimWifiP2pBroadcastReceiver(BaseActivity activity, List<String> foodServiceNames) {
+    private SimWifiP2pBroadcastReceiver(BaseActivity activity) {
         super();
-        this.uuid = activity.getGlobalStatus().getUUID();
-        this.stub = activity.getGlobalStatus().getStub();
-        this.foodServiceNames = foodServiceNames;
+        this.status = activity.getGlobalStatus();
+    }
+
+    public static SimWifiP2pBroadcastReceiver getInstance(BaseActivity activity) {
+        if (instance == null) {
+            instance = new SimWifiP2pBroadcastReceiver(activity);
+        }
+        return instance;
     }
 
     //Network is always available for this broadcast receiver
@@ -50,28 +56,28 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
                 .stream()
                 .filter(Objects::nonNull)
                 .map(device -> device.deviceName.replaceAll("_", " "))
-                .filter(deviceName -> foodServiceNames.contains(deviceName))
+                .filter(deviceName -> status.getServiceNames().contains(deviceName))
                 .collect(Collectors.toSet());
 
         if (foodServiceBeacons.isEmpty()) {
             if (isInQueue) {
                 Log.d(TAG, "Left line of food service " + currentFoodService);
                 isInQueue = false;
-                new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
+                new LeaveQueueTask(status.getUUID(), status.getStub()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
                 currentFoodService = null;
             }
         } else {
             String foodService = foodServiceBeacons.iterator().next();
             if (!foodService.equals(currentFoodService) && currentFoodService != null) {
                 //Somehow moved to different foodService (probably disconnected my wifi)
-                new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
+                new LeaveQueueTask(status.getUUID(), status.getStub()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
                 isInQueue = false;
             }
             if (!isInQueue) {
                 Log.d(TAG, "Entered line of food service " + foodService);
                 currentFoodService = foodService;
                 isInQueue = true;
-                new JoinQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
+                new JoinQueueTask(status.getUUID(), status.getStub()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
             }
         }
     }

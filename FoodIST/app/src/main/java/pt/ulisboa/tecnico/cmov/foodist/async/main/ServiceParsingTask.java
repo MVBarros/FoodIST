@@ -7,6 +7,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import pt.ulisboa.tecnico.cmov.foodist.activity.MainActivity;
@@ -20,6 +21,7 @@ public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, 
     private static final String TAG = "FOOD-SERVICE-PARSING";
 
     private String campus;
+
     public ServiceParsingTask(MainActivity activity) {
         super(activity);
     }
@@ -45,17 +47,23 @@ public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, 
     @Override
     public void onPostExecute(Map<String, List<FoodService>> services) {
         if (services != null) {
-            getActivity().getGlobalStatus().setServices(services.get(campus));
-            getActivity().drawServices();
-            //After it is done try to update walking distance
-            getActivity().updateServicesQueueTime();
-            getActivity().updateServicesWalkingDistance();
+            if (services.containsKey(campus)) {
+                getActivity().getGlobalStatus().setServices(services.get(campus));
+                getActivity().drawServices();
+                //After it is done try to update walking distance
+                getActivity().updateServicesQueueTime();
+                getActivity().updateServicesWalkingDistance();
 
-            List<FoodService> allServices = services.values().stream()
-                    .flatMap(List::stream)
-                    .collect(Collectors.toList());
+                Set<String> serviceNames = services.values().stream()
+                        .flatMap(List::stream)
+                        .map(FoodService::getName)
+                        .collect(Collectors.toSet());
+                getActivity().getGlobalStatus().setServiceNames(serviceNames);
 
-            getActivity().setWifiDirectListener(allServices);
+                getActivity().setWifiDirectListener();
+            } else {
+                Log.e(TAG, "Campus does not exist");
+            }
         }
     }
 }

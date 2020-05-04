@@ -2,8 +2,11 @@ package pt.ulisboa.tecnico.cmov.foodist.activity.base;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -11,6 +14,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,13 +27,38 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.PreLoadingNetworkReceiver;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+
+    private SimWifiP2pManager mManager = null;
+    private SimWifiP2pManager.Channel mChannel = null;
+    private Messenger mService = null;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = new Messenger(service);
+            mManager = new SimWifiP2pManager(mService);
+            mChannel = mManager.initialize(getApplication(), getMainLooper(), null);
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mService = null;
+            mManager = null;
+            mChannel = null;
+        }
+    };
+
     private Set<AsyncTask> tasks = Collections.synchronizedSet(new HashSet<>());
     private Set<BroadcastReceiver> receivers = new HashSet<>();
+    private SimWifiP2pBroadcastReceiver receiver;
 
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -108,13 +138,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         cancelReceivers();
+        unregisterReceiver(receiver);
+        unbindService(mConnection);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         addReceivers();
+        setWifiDirectListener();
         addReceiver(new PreLoadingNetworkReceiver(), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        Intent intent = new Intent(this, SimWifiP2pService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
 
@@ -145,5 +180,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         String suffix = time == 1 ? getString(R.string.second) : getString(R.string.seconds);
         res += " " + suffix;
         return res;
+    }
+
+
+    public void setWifiDirectListener(){
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+        receiver = SimWifiP2pBroadcastReceiver.getInstance(this);
+        registerReceiver(receiver, filter);
     }
 }
