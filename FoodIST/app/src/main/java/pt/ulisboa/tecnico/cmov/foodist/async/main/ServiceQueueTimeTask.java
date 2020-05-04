@@ -26,7 +26,7 @@ public class ServiceQueueTimeTask extends BaseAsyncTask<String, Integer, Map<Str
 
     @Override
     protected Map<String, String> doInBackground(String... services) {
-        if (services == null || services.length != 1) {
+        if (services == null || services.length == 0) {
             return null;
         }
         try {
