@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -35,6 +36,7 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
         this.foodServiceNames = foodServiceNames;
     }
 
+    //Network is always available for this broadcast receiver
     @Override
     public void onReceive(Context context, Intent intent) {
         SimWifiP2pDeviceList deviceInfo = (SimWifiP2pDeviceList) intent.getSerializableExtra(SimWifiP2pBroadcast.EXTRA_DEVICE_LIST);
@@ -44,37 +46,26 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
             Log.d(TAG, "Device info was null");
             return;
         }
-        List<String> foodServiceBeacons = deviceInfo.getDeviceList()
+        Set<String> foodServiceBeacons = deviceInfo.getDeviceList()
                 .stream()
                 .filter(Objects::nonNull)
                 .map(device -> device.deviceName.replaceAll("_", " "))
                 .filter(deviceName -> foodServiceNames.contains(deviceName))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        if (foodServiceBeacons.size() > 0) {
-            if (!isInQueue) {
-                Log.d(TAG, "Entered line of food service " + foodServiceBeacons.get(0));
-                if (isNetworkAvailable(context)) {
-                    currentFoodService = foodServiceBeacons.get(0);
-                    Log.d(TAG, "Internet! Telling server to add me to queue " + currentFoodService);
-
-                    isInQueue = true;
-                    new JoinQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
-                } else {
-                    Log.d(TAG, "No internet, could not tell server to add me to queue " + foodServiceBeacons.get(0));
-                }
-
+        if (foodServiceBeacons.isEmpty()) {
+            if (isInQueue) {
+                Log.d(TAG, "Left line of food service " + currentFoodService);
+                isInQueue = false;
+                new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
             }
         } else {
-            if (isInQueue) {
-                Log.d(TAG, "Left line of food service");
-                isInQueue = false;
-                if (isNetworkAvailable(context)) {
-                    Log.d(TAG, "Internet! Telling server to remove from the queue for service " + currentFoodService);
-                    new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
-                } else {
-                    Log.d(TAG, "No internet, could not tell server to remove me from queue to service " + currentFoodService);
-                }
+            String foodService = foodServiceBeacons.iterator().next();
+            if (!isInQueue) {
+                Log.d(TAG, "Entered line of food service " + foodService);
+                currentFoodService = foodService;
+                isInQueue = true;
+                new JoinQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
             }
         }
     }
