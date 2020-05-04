@@ -21,7 +21,7 @@ public class Mean {
         return this.currValue;
     }
 
-    public double getCurrValue() {
+    public synchronized double getCurrValue() {
         return currValue;
     }
 }

@@ -1,6 +1,7 @@
 package foodist.server.data;
 
 import foodist.server.data.exception.ServiceException;
+import foodist.server.data.queue.LinearRegression;
 import foodist.server.data.queue.Mean;
 import foodist.server.data.queue.QueuePosition;
 import foodist.server.grpc.contract.Contract;
@@ -83,6 +84,29 @@ public class Service {
 
         double delta = (double) ChronoUnit.SECONDS.between(entry.getEntryTime(), currTime);
         queueWaitTimes.computeIfAbsent(entry.getNumberOfPeople(), key -> new Mean()).add(delta);
+    }
+
+    public String currentQueueWaitTime() {
+        if (queueWaitTimes.size() == 0) {
+            return null;
+        }
+        int queueSize = queue.size();
+        Mean waitTime = queueWaitTimes.get(queueSize);
+        if (waitTime != null) {
+            return String.valueOf((int)waitTime.getCurrValue());
+        } else {
+            return predictQueueWaitTime();
+        }
+    }
+
+    private String predictQueueWaitTime() {
+        synchronized (queueWaitTimes) {
+            int queueSize = queue.size();
+            double[] xAxis = queueWaitTimes.keySet().stream().mapToDouble(Integer::doubleValue).toArray();
+            double[] yAxis = queueWaitTimes.values().stream().mapToDouble(Mean::getCurrValue).toArray();
+            double value = new LinearRegression(xAxis, yAxis).predict(queueSize);
+            return String.valueOf((int)value);
+        }
     }
 
     public Map<String, QueuePosition> getQueue() {

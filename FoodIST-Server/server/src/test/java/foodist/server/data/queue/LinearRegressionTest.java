@@ -38,4 +38,20 @@ public class LinearRegressionTest {
         assertEquals(regression.intercept(), 1, DELTA);
         assertEquals(regression.predict(5), 11, DELTA);
     }
+
+    @Test
+    public void yEqualsZeroFunction() {
+        LinearRegression regression = new LinearRegression(new double[]{1, 2, 3}, new double[]{0, 0, 0});
+        assertEquals(regression.slope(), 0, DELTA);
+        assertEquals(regression.intercept(), 0, DELTA);
+        assertEquals(regression.predict(5), 0, DELTA);
+    }
+
+    @Test
+    public void yEqualsOneFunction() {
+        LinearRegression regression = new LinearRegression(new double[]{1, 2, 3}, new double[]{1, 1, 1});
+        assertEquals(regression.slope(), 0, DELTA);
+        assertEquals(regression.intercept(), 1, DELTA);
+        assertEquals(regression.predict(5), 1, DELTA);
+    }
 }

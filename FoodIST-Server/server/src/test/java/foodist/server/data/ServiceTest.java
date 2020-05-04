@@ -36,7 +36,7 @@ public class ServiceTest {
     private Account account;
     private Menu menu;
     private Menu menu2;
-
+    private Service service;
     @BeforeClass
     public static void oneTimeSetup() {
         validPreferences = new HashMap<>();
@@ -49,6 +49,8 @@ public class ServiceTest {
         account = new Account(USERNAME, PASSWORD, "pt", Contract.Role.Student, validPreferences);
         menu = new Menu(NAME, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         menu2 = new Menu(NAME2, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
+        service = new Service(NAME);
+
     }
 
     @After
@@ -58,7 +60,6 @@ public class ServiceTest {
 
     @Test
     public void validTest() {
-        Service service = new Service(NAME);
         assertEquals(service.getContractMenus().size(), 0);
         //No Exception is thrown
     }
@@ -71,7 +72,6 @@ public class ServiceTest {
 
     @Test
     public void getMenusTest() throws ServiceException {
-        Service service = new Service(NAME);
         service.addMenu(menu);
         assertEquals(service.getContractMenus().size(), 1);
         assertEquals(service.getContractMenus().get(0).getMenuId(), 0);
@@ -80,7 +80,6 @@ public class ServiceTest {
 
     @Test
     public void flagGetMenuTest() throws ServiceException {
-        Service service = new Service(NAME);
         service.addMenu(menu);
         service.addMenu(menu2);
         menu.flag("0");
@@ -96,7 +95,6 @@ public class ServiceTest {
 
     @Test
     public void tooManyFlagsGetMenuTest() throws ServiceException {
-        Service service = new Service(NAME);
         service.addMenu(menu);
         service.addMenu(menu2);
         for (int i = 0; i < 5; i++) {
@@ -118,7 +116,6 @@ public class ServiceTest {
         Menu menu5 = new Menu(NAME5, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
         Menu menu6 = new Menu(NAME6, PRICE, Contract.FoodType.Meat, LANGUAGE, account);
 
-        Service service = new Service(NAME);
         service.addMenu(menu);
         service.addMenu(menu2);
         service.addMenu(menu3);
@@ -167,7 +164,6 @@ public class ServiceTest {
 
     @Test
     public void addToQueueTest() {
-        Service service = new Service(NAME);
         service.addToQueue("1");
         service.addToQueue("2");
         service.addToQueue("3");
@@ -182,7 +178,6 @@ public class ServiceTest {
 
     @Test
     public void addToQueueRepeated() {
-        Service service = new Service(NAME);
         service.addToQueue("1");
         service.addToQueue("1");
         service.addToQueue("1");
@@ -194,7 +189,6 @@ public class ServiceTest {
 
     @Test
     public void removeFromQueueDoesNotExist() {
-        Service service = new Service(NAME);
         service.addToQueue("1");
         service.removeFromQueue("2");
         Map<Integer, Mean> positions = service.getQueueWaitTimes();
@@ -203,7 +197,6 @@ public class ServiceTest {
 
     @Test
     public void removeOneUserFromQueue() throws InterruptedException {
-        Service service = new Service(NAME);
         service.addToQueue("1");
         Thread.sleep(1000);
         service.removeFromQueue("1");
@@ -217,7 +210,6 @@ public class ServiceTest {
 
     @Test
     public void removeOneUserQuickly() throws InterruptedException {
-        Service service = new Service(NAME);
         service.addToQueue("1");
         Thread.sleep(200);
         service.removeFromQueue("1");
@@ -231,7 +223,6 @@ public class ServiceTest {
 
     @Test
     public void variousUsersEnterAndLeave() throws InterruptedException {
-        Service service = new Service(NAME);
         for(int i = 0; i < 4; i++) {
             service.addToQueue(String.valueOf(i));
         }
@@ -253,7 +244,6 @@ public class ServiceTest {
 
     @Test
     public void variousUsersEnterAndLeaveMultipleTimes() throws InterruptedException {
-        Service service = new Service(NAME);
         for(int i = 0; i < 4; i++) {
             service.addToQueue(String.valueOf(i));
         }
@@ -281,4 +271,40 @@ public class ServiceTest {
         Map<String, QueuePosition> queue = service.getQueue();
         assertEquals(queue.size(), 0);
     }
+
+    @Test
+    public void unkownQueueTime() {
+        Service service = new Service(NAME);
+        assertNull(service.currentQueueWaitTime());
+    }
+
+    @Test
+    public void knownQueueWaitTime() {
+        Service service = new Service(NAME);
+        service.getQueueWaitTimes().put(0, new Mean(1));
+        assertEquals(String.valueOf(1), service.currentQueueWaitTime());
+    }
+
+    @Test
+    public void predictQueueWaitTime() {
+        Service service = new Service(NAME);
+        service.getQueueWaitTimes().put(1, new Mean(2.4));
+        service.getQueueWaitTimes().put(2, new Mean(3.4));
+        service.getQueueWaitTimes().put(3, new Mean(4.4));
+        service.getQueueWaitTimes().put(4, new Mean(5.4));
+
+        assertEquals(String.valueOf(1), service.currentQueueWaitTime());
+    }
+
+    @Test
+    public void predictQueueWaitTimeConstant() {
+        Service service = new Service(NAME);
+        service.getQueueWaitTimes().put(7, new Mean(6));
+        service.getQueueWaitTimes().put(8, new Mean(6));
+        service.getQueueWaitTimes().put(9, new Mean(6));
+        service.getQueueWaitTimes().put(10, new Mean(6));
+
+        assertEquals(String.valueOf(6), service.currentQueueWaitTime());
+    }
+
 }
