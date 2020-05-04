@@ -211,6 +211,8 @@ public class ServiceTest {
         assertEquals(positions.size(), 1);
         assertTrue(positions.containsKey(0));
         assertEquals(positions.get(0).getCurrValue(), 1, 0.0001);
+        Map<String, QueuePosition> queue = service.getQueue();
+        assertEquals(queue.size(), 0);
     }
 
     @Test
@@ -223,6 +225,8 @@ public class ServiceTest {
         assertEquals(positions.size(), 1);
         assertTrue(positions.containsKey(0));
         assertEquals(positions.get(0).getCurrValue(), 0, 0.0001);
+        Map<String, QueuePosition> queue = service.getQueue();
+        assertEquals(queue.size(), 0);
     }
 
     @Test
@@ -243,6 +247,8 @@ public class ServiceTest {
             assertTrue(positions.containsKey(i));
             assertEquals(positions.get(i).getCurrValue(), i + 1 , 0.0001);
         }
+        Map<String, QueuePosition> queue = service.getQueue();
+        assertEquals(queue.size(), 0);
     }
 
     @Test
@@ -272,5 +278,7 @@ public class ServiceTest {
             assertTrue(positions.containsKey(i));
             assertEquals(positions.get(i).getCurrValue(), (i + 1) * 1.5 , 0.0001);
         }
+        Map<String, QueuePosition> queue = service.getQueue();
+        assertEquals(queue.size(), 0);
     }
 }

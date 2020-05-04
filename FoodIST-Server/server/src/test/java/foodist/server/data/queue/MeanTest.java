@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Compute average of list of values in O(1)
+* */
 public class MeanTest {
     private static final double DELTA = 0.00001;
 
