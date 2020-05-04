@@ -116,4 +116,8 @@ public class Service {
     public Map<Integer, Mean> getQueueWaitTimes() {
         return queueWaitTimes;
     }
+
+    public String getName() {
+        return name;
+    }
 }

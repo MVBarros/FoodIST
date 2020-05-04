@@ -332,7 +332,17 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 
     @Override
     public void getQueueTime(Contract.QueueTimeRequest request, StreamObserver<Contract.QueueTimeResponse> responseObserver) {
-        super.getQueueTime(request, responseObserver);
+        Contract.QueueTimeResponse.Builder builder = Contract.QueueTimeResponse.newBuilder();
+        request.getFoodServiceList().stream()
+                .map(this::getService)
+                .forEach(service -> {
+                    String waitTime = service.currentQueueWaitTime();
+                    if (waitTime != null) {
+                        builder.putQueueTime(service.getName(), waitTime);
+                    }
+                });
+        responseObserver.onNext(builder.build());
+        responseObserver.onCompleted();
     }
 
     private String generateRandomCookie() {
