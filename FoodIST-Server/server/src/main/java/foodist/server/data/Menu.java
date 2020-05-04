@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class Menu {
     private static final int MAX_FLAG_COUNT = 5;
     private static final AtomicLong menuCounter = new AtomicLong(0);
-
+     
     private final String name;
     private final double price;
     private final List<Photo> photos;
@@ -22,7 +22,8 @@ public class Menu {
     private final Account account;
     private final int initialFlagCount;
     private final Set<String> userFlags;
-
+    private final Map<String, Double> userRatings;
+    
     public Menu(String name, double price, Contract.FoodType type, String language, Account account) {
         checkArguments(name, price, type, language, account);
         this.price = price;
@@ -36,8 +37,9 @@ public class Menu {
         this.initialFlagCount = account.getFlagCount();
         this.userFlags = Collections.synchronizedSet(new HashSet<>());
         account.addMenu(this);
+        this.userRatings = new HashMap<String, Double>();
     }
-
+        
     public static void checkArguments(String name, double price, Contract.FoodType type, String language, Account account) {
         if (account == null) {
             throw new IllegalArgumentException();
@@ -132,6 +134,7 @@ public class Menu {
         builder.addAllPhotoId(getPhotos());
         builder.setPrice(this.price);
         builder.setType(this.type);
+        builder.setRating(averageRating());
 
         return builder.build();
     }
@@ -151,6 +154,18 @@ public class Menu {
 
     public static void resetCounter() {
         menuCounter.set(0);
+    }
+    
+    public synchronized void addRating(String username, double rating) {
+    	userRatings.put(username, rating);
+    }
+    
+    public synchronized double averageRating() {
+    	double average = -1.0;     	
+    	if(!userRatings.isEmpty()) {    		
+    		average = userRatings.entrySet().stream().mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN); 
+    	}
+    	return average;
     }
 
 }
