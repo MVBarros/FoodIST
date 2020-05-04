@@ -235,7 +235,7 @@ public class FoodMenuActivity extends BaseActivity {
             new FlagMenuTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
         });
 
-        RatingBar ratingBar = findViewById(R.id.ratingBar);
+        RatingBar ratingBar = findViewById(R.id.userStarRating);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -277,8 +277,8 @@ public class FoodMenuActivity extends BaseActivity {
 
     public synchronized void setRating(double menuRating) {
         if(menuRating!=-1.0) {
-            TextView ratingView = findViewById(R.id.menuRating);
-            ratingView.setText(getGlobalStatus().formatRating(menuRating));
+            RatingBar ratingBar = findViewById(R.id.averageFoodMenuRating);
+            ratingBar.setRating(Float.valueOf(getGlobalStatus().formatRating(menuRating)));
         }
     }
 

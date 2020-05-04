@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -263,8 +264,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         }
         if(i!=0) {
             average = average / i;
-            TextView foodServiceRating = findViewById(R.id.foodServiceRating);
-            foodServiceRating.setText(getGlobalStatus().formatRating(average));
+            RatingBar foodServiceRating = findViewById(R.id.averageFoodServiceRating);
+            foodServiceRating.setRating(Float.valueOf(getGlobalStatus().formatRating(average)));
         }
 
     }
