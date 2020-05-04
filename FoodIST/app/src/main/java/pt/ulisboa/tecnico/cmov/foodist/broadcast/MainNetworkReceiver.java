@@ -21,6 +21,7 @@ public class MainNetworkReceiver extends BaseNetworkReceiver {
     protected void onNetworkUp(Context context, Intent intent) {
         Log.d(TAG, "On Network Up");
         activity.updateServicesWalkingDistance();
+        activity.updateServicesQueueTime();
     }
 
     @Override
