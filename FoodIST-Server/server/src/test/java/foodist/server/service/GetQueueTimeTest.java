@@ -2,7 +2,6 @@ package foodist.server.service;
 
 import foodist.server.data.Menu;
 import foodist.server.data.queue.Mean;
-import foodist.server.data.queue.QueuePosition;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -114,7 +113,7 @@ public class GetQueueTimeTest {
 
     @Test
     public void insuficientInfoGetQueueTime() {
-        impl.getService(SERVICE).getQueueWaitTimes().put(0, new Mean(0));
+        impl.getService(SERVICE).getQueueWaitTimes().put(1, new Mean(0));
         Contract.QueueTimeRequest request = Contract.QueueTimeRequest.newBuilder().addFoodService(SERVICE).addFoodService(SERVICE2).build();
         Contract.QueueTimeResponse response = stub.getQueueTime(request);
         assertEquals(response.getQueueTimeCount(), 0);
