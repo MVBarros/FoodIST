@@ -201,4 +201,5 @@
     <string name="flag_menu_no_conn_erro_message">Impossivel reportar menu sem conexão a internet</string>
     <string name="flag_food_menu_error_message">Impossivel reportar menu</string>
     <string name="flag_food_menu_success_message">Menu reportado com sucesso</string>
+    <string name="shared_prefs_user_uuid">UUID</string>
 </resources>

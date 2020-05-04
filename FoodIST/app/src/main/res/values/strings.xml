@@ -200,4 +200,5 @@
     <string name="flag_menu_no_conn_erro_message">Cannot flag menu without internet connection</string>
     <string name="flag_food_menu_error_message">Could not flag menu</string>
     <string name="flag_food_menu_success_message">Menu flagged successfully</string>
+    <string name="shared_prefs_user_uuid">UUID</string>
 </resources>

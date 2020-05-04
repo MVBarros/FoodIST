@@ -1,3 +1,4 @@
 rootProject.name='FoodIST'
-include ':app', ':Termite-WifiP2P-API'
+include ':app'
+include ':Termite-WifiP2P-API'
 include ':contract'

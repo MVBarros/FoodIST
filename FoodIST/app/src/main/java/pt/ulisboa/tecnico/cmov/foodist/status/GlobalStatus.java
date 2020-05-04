@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -198,6 +199,19 @@ public class GlobalStatus extends Application {
         builder.putPreferences(Contract.FoodType.Vegan_VALUE, pref.getBoolean(GlobalStatus.VEGAN_KEY, true));
 
         return builder.build();
+    }
+
+
+    public String getUUID() {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        String uuid = pref.getString(getString(R.string.shared_prefs_user_uuid), null);
+        if (uuid == null) {
+            SharedPreferences.Editor editor = pref.edit();
+            uuid = UUID.randomUUID().toString();
+            editor.putString(getString(R.string.shared_prefs_user_uuid), uuid);
+            editor.apply();
+        }
+        return uuid;
     }
 
     public void saveCookie(String cookie) {

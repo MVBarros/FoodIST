@@ -10,7 +10,6 @@ public class QueuePosition {
     public QueuePosition(LocalDateTime entryTime, int numberOfPeople) {
         this.entryTime = entryTime;
         this.numberOfPeople = numberOfPeople;
-
     }
 
     public LocalDateTime getEntryTime() {
