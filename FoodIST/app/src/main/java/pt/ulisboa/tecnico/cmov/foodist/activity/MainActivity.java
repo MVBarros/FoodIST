@@ -137,6 +137,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         if (!isOnCreate) {
             drawServices();
             updateServicesWalkingDistance();
+            updateServicesQueueTime();
         }
         isOnCreate = false;
     }
