@@ -201,4 +201,6 @@
     <string name="flag_food_menu_error_message">Could not flag menu</string>
     <string name="flag_food_menu_success_message">Menu flagged successfully</string>
     <string name="shared_prefs_user_uuid">UUID</string>
+    <string name="no_network_avaliable_queue_time_message">Could not get queue time as there is no network avaliable</string>
+    <string name="could_not_get_queue_time_message">Could not get services queue time</string>
 </resources>

@@ -47,6 +47,7 @@ import pt.ulisboa.tecnico.cmov.foodist.async.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.async.data.WalkingTimeData;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.GuessCampusTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceParsingTask;
+import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceQueueTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
@@ -220,6 +221,19 @@ public class MainActivity extends BaseActivity implements LocationListener {
             }
         } else {
             showToast(getString(R.string.main_update_walking_distance_failure_toast));
+        }
+    }
+
+
+    public void updateServicesQueueTime() {
+        if (isNetworkAvailable()) {
+            String[] foodServiceNames = getGlobalStatus().getServices().stream()
+                    .map(FoodService::getName)
+                    .toArray(String[]::new);
+            new CancelableTask<>(new SafePostTask<>(new ServiceQueueTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodServiceNames);
+        }
+        else {
+            showToast(getString(R.string.no_network_avaliable_queue_time_message));
         }
     }
 

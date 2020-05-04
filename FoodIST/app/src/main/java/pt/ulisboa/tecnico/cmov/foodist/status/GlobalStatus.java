@@ -107,6 +107,15 @@ public class GlobalStatus extends Application {
         this.services = serviceMap;
     }
 
+    public void setQueueTimes(Map<String, String> times) {
+        times.forEach((name, time) -> {
+            FoodService service = this.services.get(name);
+            if (service != null) {
+                service.setTime(time);
+            }
+        });
+    }
+
     public String getApiKey() {
         return getString(R.string.map_api_key);
     }

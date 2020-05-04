@@ -112,4 +112,7 @@ public class FoodService {
     }
 
 
+    public void setTime(String time) {
+        this.time = time;
+    }
 }

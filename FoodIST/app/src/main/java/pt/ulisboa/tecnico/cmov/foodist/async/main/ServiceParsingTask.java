@@ -48,6 +48,7 @@ public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, 
             getActivity().getGlobalStatus().setServices(services.get(campus));
             getActivity().drawServices();
             //After it is done try to update walking distance
+            getActivity().updateServicesQueueTime();
             getActivity().updateServicesWalkingDistance();
 
             List<FoodService> allServices = services.values().stream()
