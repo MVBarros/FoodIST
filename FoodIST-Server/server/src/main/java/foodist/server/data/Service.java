@@ -104,8 +104,12 @@ public class Service {
             int queueSize = queue.size();
             double[] xAxis = queueWaitTimes.keySet().stream().mapToDouble(Integer::doubleValue).toArray();
             double[] yAxis = queueWaitTimes.values().stream().mapToDouble(Mean::getCurrValue).toArray();
-            double value = new LinearRegression(xAxis, yAxis).predict(queueSize);
-            return String.valueOf((int)value);
+            LinearRegression regression = new LinearRegression(xAxis, yAxis);
+            if (regression.isValid()) {
+                return String.valueOf((int) regression.predict(queueSize));
+            } else {
+                return null;
+            }
         }
     }
 

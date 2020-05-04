@@ -286,6 +286,13 @@ public class ServiceTest {
     }
 
     @Test
+    public void predictInsufficientInfo() {
+        Service service = new Service(NAME);
+        service.getQueueWaitTimes().put(1, new Mean(2.4));
+        assertNull(service.currentQueueWaitTime());
+    }
+
+    @Test
     public void predictQueueWaitTime() {
         Service service = new Service(NAME);
         service.getQueueWaitTimes().put(1, new Mean(2.4));

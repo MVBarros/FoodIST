@@ -86,6 +86,9 @@ public class LinearRegression {
         return slope;
     }
 
+    public boolean isValid() {
+        return !Double.isNaN(slope) && ! Double.isNaN(intercept);
+    }
     /**
      * Returns the coefficient of determination <em>R</em><sup>2</sup>.
      *
