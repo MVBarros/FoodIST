@@ -51,6 +51,7 @@ message Menu {
     string language = 6;
     string translatedName = 7;
     int64 menuId = 8;
+    double rating = 9;
 }
 
 message UpdateMenuRequest {
@@ -116,10 +117,22 @@ message QueueTimeResponse {
     map<string, string> queueTime = 1;
 }
 
+message RatingRequest {
+    string username = 1;
+    string cookie = 2;
+    int64 menuId = 3;
+    double rating = 4;
+}
+
+message UpdateMenuReply {
+    repeated string photoID = 1;
+    double rating = 2;
+}
+
 service FoodISTServerService {
     rpc addMenu(AddMenuRequest) returns (AddMenuReply);
     rpc listMenu(ListMenuRequest) returns(ListMenuReply);
-    rpc updateMenu(UpdateMenuRequest) returns (PhotoReply);
+    rpc updateMenu(UpdateMenuRequest) returns (UpdateMenuReply);
     rpc addPhoto(stream AddPhotoRequest) returns (UploadPhotoReply);
     rpc downloadPhoto(DownloadPhotoRequest) returns (stream DownloadPhotoReply);
     rpc flagPhoto(FlagRequest) returns (google.protobuf.Empty);
@@ -132,5 +145,6 @@ service FoodISTServerService {
     rpc addToQueue(QueueRequest) returns (google.protobuf.Empty);
     rpc removeFromQueue(QueueRequest) returns (google.protobuf.Empty);
     rpc getQueueTime(QueueTimeRequest) returns (QueueTimeResponse);
+    rpc uploadRating(RatingRequest) returns (google.protobuf.Empty);
 }
 
