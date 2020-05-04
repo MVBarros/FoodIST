@@ -2,11 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,8 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager;
-import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.boot.ChooseLanguageActivity;
@@ -52,7 +44,6 @@ import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceQueueTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -70,8 +61,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
     public enum LocationRequestContext {CAMPUS, DISTANCE}
 
     private LocationManager mLocationManager;
-
-    private static boolean isServiceStarted = false;
 
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
@@ -198,8 +187,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
                     .map(FoodService::getName)
                     .toArray(String[]::new);
             new CancelableTask<>(new SafePostTask<>(new ServiceQueueTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodServiceNames);
-        }
-        else {
+        } else {
             showToast(getString(R.string.no_network_avaliable_queue_time_message));
         }
     }
