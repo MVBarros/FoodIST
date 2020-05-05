@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PHOTO_IDS;
+import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_RATING;
 
 public class MenuAdapterNoTranslation extends ArrayAdapter<Menu> {
     private static final String MENU_NAME = "Menu_name";
@@ -42,9 +44,12 @@ public class MenuAdapterNoTranslation extends ArrayAdapter<Menu> {
 
         TextView menuFood = convertView.findViewById(R.id.menuFood);
         TextView menuCost = convertView.findViewById(R.id.menuCost);
+        RatingBar ratingBar = convertView.findViewById(R.id.foodMenuRating);
 
         menuFood.setText(menu.getMenuName());
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
+        ratingBar.setRating((float)menu.getRating());
+
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), FoodMenuActivity.class);
@@ -52,6 +57,7 @@ public class MenuAdapterNoTranslation extends ArrayAdapter<Menu> {
             intent.putExtra(MENU_PRICE, menu.getPrice());
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
             intent.putExtra(MENU_ID, menu.getMenuId());
+            intent.putExtra(MENU_RATING, menu.getRating());
             intent.putExtra(DISPLAY_NAME, menuFood.getText());
             intent.putStringArrayListExtra(MENU_PHOTO_IDS, menu.getPhotoIds());
             getContext().startActivity(intent);

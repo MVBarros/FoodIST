@@ -111,6 +111,7 @@
 
     <!-- Activity -->
     <string name="profile_file">profile</string>
+    <string name="flag_file">flags</string>
     <string name="profile_position_name">Position Name</string>
     <string name="profile_position_camera_failure_toast">Unable to get photo taken from camera</string>
     <string name="profile_user_photo">User Photo</string>

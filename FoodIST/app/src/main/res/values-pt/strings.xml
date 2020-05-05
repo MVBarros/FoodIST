@@ -110,6 +110,7 @@
 
     <!-- Activity -->
     <string name="profile_file">profile</string>
+    <string name="flag_file">flags</string>
     <string name="profile_position_name">Position Name</string>
     <string name="profile_position_camera_failure_toast">Impossivel de obter foto de câmara</string>
     <string name="profile_user_photo">User Photo</string>
@@ -206,7 +207,7 @@
     <string name="flag_food_menu_error_message">Impossivel reportar menu</string>
     <string name="flag_food_menu_success_message">Menu reportado com sucesso</string>
     <string name="shared_prefs_user_uuid">UUID</string>
-    <string name="no_network_avaliable_queue_time_message">Could not get queue time as there is no network avaliable</string>
-    <string name="could_not_get_queue_time_message">Could not get services queue time</string>
-    <string name="rate_this_menu_text">Rate this menu:</string>
+    <string name="no_network_avaliable_queue_time_message">Impossivel obter tempo de espera: sem conexão</string>
+    <string name="could_not_get_queue_time_message">Impossivel obter tempo de espera</string>
+    <string name="rate_this_menu_text">Classificar menu:</string>
 </resources>

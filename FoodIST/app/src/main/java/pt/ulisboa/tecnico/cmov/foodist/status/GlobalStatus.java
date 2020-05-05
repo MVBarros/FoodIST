@@ -15,7 +15,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +40,13 @@ public class GlobalStatus extends Application {
     public static final String FISH_KEY = Contract.FoodType.Fish.name();
     public static final String VEGETARIAN_KEY = Contract.FoodType.Vegetarian.name();
 
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
+
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private Map<String, FoodService> services = new ConcurrentHashMap<>();
 
     private String campus;
-    private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         try {
@@ -253,29 +253,30 @@ public class GlobalStatus extends Application {
     }
 
     public void setFlagged(String photoId) {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.flag_file), 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(getString(R.string.shared_prefs_flagged_photo_key, photoId, getUsername()), true);
         editor.apply();
     }
 
     public boolean isFlagged(String photoId) {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.flag_file), 0);
         return pref.getBoolean(getString(R.string.shared_prefs_flagged_photo_key, photoId, getUsername()), false);
     }
 
     public void setMenuFlagged(String menuId) {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.flag_file), 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(getString(R.string.shared_prefs_flagged_menu_key, menuId, getUsername()), true);
         editor.apply();
     }
 
     public boolean isMenuFlagged(String menuId) {
-        SharedPreferences pref = getSharedPreferences(getString(R.string.profile_file), 0);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.flag_file), 0);
         return pref.getBoolean(getString(R.string.shared_prefs_flagged_menu_key, menuId, getUsername()), false);
     }
+
     public String formatRating(double rating) {
-        return decimalFormat.format(rating);
+        return DECIMAL_FORMAT.format(rating);
     }
 }

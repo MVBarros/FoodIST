@@ -236,16 +236,13 @@ public class FoodMenuActivity extends BaseActivity {
         });
 
         RatingBar ratingBar = findViewById(R.id.userStarRating);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if(fromUser) {
-                    loginConfirmation();
-                    if(isLoggedIn()) {
-                        launchAddRatingTask(rating);
-                    }
-
+        ratingBar.setOnRatingBarChangeListener((ratingBar1, rating, fromUser) -> {
+            if(fromUser) {
+                loginConfirmation();
+                if(isLoggedIn()) {
+                    launchAddRatingTask(rating);
                 }
+
             }
         });
     }
@@ -282,6 +279,7 @@ public class FoodMenuActivity extends BaseActivity {
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
         initializePhotoIds(intent.getStringArrayListExtra(MENU_PHOTO_IDS));
+        initializeRatings(intent.getDoubleExtra(MENU_RATING, 0.0));
     }
 
     private void initializeMenuId(String menuId) {
@@ -317,6 +315,11 @@ public class FoodMenuActivity extends BaseActivity {
             return;
         }
         updatePhotos(photoIds);
+    }
+
+    private void initializeRatings(double rating) {
+        RatingBar ratingBar = findViewById(R.id.userStarRating);
+        ratingBar.setRating((float) rating);
     }
 
     public void launchUpdateMenuTask() {
@@ -378,7 +381,6 @@ public class FoodMenuActivity extends BaseActivity {
     private void loginConfirmation() {
         if (!isLoggedIn()) {
             new LoginDialog(this, getGlobalStatus().getCampus()).show(getSupportFragmentManager(), "login");
-            return;
         }
     }
     private void askGalleryPermission() {
