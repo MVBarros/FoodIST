@@ -23,13 +23,14 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
     private final UploadPhotoTask task;
     private final String taskPhoto;
     private final String cookie;
-
+    private final boolean hasPhotoTaken;
     private static final String TAG = "UPLOADMENU-TASK";
 
 
-    public UploadMenuTask(AddMenuActivity activity, UploadPhotoTask task, String taskPhoto, String cookie) {
+    public UploadMenuTask(AddMenuActivity activity, UploadPhotoTask task, boolean hasPhotoTaken, String taskPhoto, String cookie) {
         this.stub = activity.getGlobalStatus().getStub();
         this.task = task;
+        this.hasPhotoTaken = hasPhotoTaken;
         this.taskPhoto = taskPhoto;
         this.cookie = cookie;
         this.activity = new WeakReference<>(activity);
@@ -61,7 +62,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
 
     @Override
     protected void onPostExecute(Contract.AddMenuReply result) {
-        if (taskPhoto != null) {
+        if (hasPhotoTaken && taskPhoto != null) {
             if (result != null) {
                 task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
                 return;

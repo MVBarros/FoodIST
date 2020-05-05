@@ -48,7 +48,7 @@ public class AddMenuActivity extends BaseActivity {
     private static final String TAG = "TAG_AddMenuActivity";
 
     private String imageFilePath = null;
-
+    private boolean hasPhotoTaken = false;
     private int photoView = R.id.dishView;
 
     private static final String SERVICE_NAME = "Service Name";
@@ -118,7 +118,7 @@ public class AddMenuActivity extends BaseActivity {
         }
 
         UploadPhotoTask task = new UploadPhotoTask(this);
-        new UploadMenuTask(this, task, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
+        new UploadMenuTask(this, task, hasPhotoTaken, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
         Button b = findViewById(R.id.add_new_menu_done_button);
         //Do not allow another menu to be enabled
         b.setEnabled(false);
@@ -262,6 +262,7 @@ public class AddMenuActivity extends BaseActivity {
 
         ImageView profile = (ImageView) findViewById(photoView);
         profile.setImageBitmap(BitmapFactory.decodeFile(imageFilePath));
+        hasPhotoTaken = true;
     }
 
     private void cameraReturn() {
@@ -269,6 +270,7 @@ public class AddMenuActivity extends BaseActivity {
 
         Bitmap photo = BitmapFactory.decodeFile(imageFilePath);
         profilePicture.setImageBitmap(photo);
+        hasPhotoTaken = true;
     }
 
     private void choiceReturn(Intent data) {
@@ -280,6 +282,7 @@ public class AddMenuActivity extends BaseActivity {
             galleryReturn(data);
         } else {
             profilePicture.setImageBitmap(photo);
+            hasPhotoTaken = true;
         }
     }
 
