@@ -87,7 +87,8 @@
     <string name="profile_student">Student</string>
     <string name="profile_professor">Professor</string>
     <string name="profile_staff">Staff</string>
-    <string name="profile_visitor">Visitor</string>
+    <string name="profile_visitor">Public</string>
+    <string name="profile_researcher">Researcher</string>
     <string name="profile_language">Language</string>
     <string name="profile_language_option_english">English</string>
     <string name="profile_language_option_portuguese">Portuguese</string>

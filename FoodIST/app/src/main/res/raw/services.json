@@ -17,7 +17,7 @@
           "saturday": "09:00-22:00",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -36,6 +36,15 @@
           "sunday": "closed"
         },
         "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Researcher": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -63,7 +72,7 @@
           "saturday": "09:00-22:00",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -82,6 +91,15 @@
           "sunday": "closed"
         },
         "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Researcher": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -109,7 +127,7 @@
           "saturday": "09:00-22:00",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "closed",
           "tuesday": "closed",
           "wednesday": "closed",
@@ -128,6 +146,15 @@
           "sunday": "closed"
         },
         "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Researcher": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -155,7 +182,7 @@
           "saturday": "00:00-23:59",
           "sunday": "00:00-23:59"
         },
-        "Visitor": {
+        "Public": {
           "monday": "00:00-23:59",
           "tuesday": "00:00-23:59",
           "wednesday": "00:00-23:59",
@@ -181,6 +208,15 @@
           "friday": "00:00-23:59",
           "saturday": "00:00-23:59",
           "sunday": "00:00-23:59"
+        },
+        "Researcher": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
         }
       }
     }
@@ -203,7 +239,7 @@
           "saturday": "09:00-22:00",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -222,6 +258,15 @@
           "sunday": "closed"
         },
         "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Researcher": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -249,7 +294,7 @@
           "saturday": "09:00-22:00",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -268,6 +313,15 @@
           "sunday": "closed"
         },
         "Staff": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
+        },
+        "Researcher": {
           "monday": "09:00-22:00",
           "tuesday": "09:00-22:00",
           "wednesday": "09:00-22:00",
@@ -295,7 +349,7 @@
           "saturday": "closed",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "closed",
           "tuesday": "closed",
           "wednesday": "closed",
@@ -320,6 +374,15 @@
           "thursday": "12:00-15:00",
           "friday": "12:00-15:00",
           "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Researcher": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
           "sunday": "closed"
         }
       }
@@ -341,7 +404,7 @@
           "saturday": "00:00-23:59",
           "sunday": "00:00-23:59"
         },
-        "Visitor": {
+        "Public": {
           "monday": "00:00-23:59",
           "tuesday": "00:00-23:59",
           "wednesday": "00:00-23:59",
@@ -367,6 +430,15 @@
           "friday": "00:00-23:59",
           "saturday": "00:00-23:59",
           "sunday": "00:00-23:59"
+        },
+        "Researcher": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
+          "sunday": "closed"
         }
       }
     },
@@ -387,7 +459,7 @@
           "saturday": "closed",
           "sunday": "closed"
         },
-        "Visitor": {
+        "Public": {
           "monday": "closed",
           "tuesday": "closed",
           "wednesday": "closed",
@@ -412,6 +484,15 @@
           "thursday": "08:00-20:00",
           "friday": "08:00-20:00",
           "saturday": "closed",
+          "sunday": "closed"
+        },
+        "Researcher": {
+          "monday": "09:00-22:00",
+          "tuesday": "09:00-22:00",
+          "wednesday": "09:00-22:00",
+          "thursday": "09:00-22:00",
+          "friday": "09:00-22:00",
+          "saturday": "09:00-22:00",
           "sunday": "closed"
         }
       }

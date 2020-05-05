@@ -137,6 +137,10 @@ public class ProfileActivity extends BaseActivity {
         button.setClickable(editable);
         button.setEnabled(editable);
 
+        button = findViewById(R.id.researcherRadioButton);
+        button.setClickable(editable);
+        button.setEnabled(editable);
+
         /*Food Preferences*/
         CheckBox box = findViewById(R.id.Vegetarian);
         box.setClickable(editable);
@@ -180,7 +184,10 @@ public class ProfileActivity extends BaseActivity {
                 editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Staff.name());
                 break;
             case R.id.visitorRadioButton:
-                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Visitor.name());
+                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Public.name());
+                break;
+            case R.id.researcherRadioButton:
+                editor.putString(getString(R.string.shared_prefs_profile_profession), Contract.Role.Researcher.name());
                 break;
         }
 
@@ -232,7 +239,10 @@ public class ProfileActivity extends BaseActivity {
                 role = Contract.Role.Staff;
                 break;
             case R.id.visitorRadioButton:
-                role = Contract.Role.Visitor;
+                role = Contract.Role.Public;
+                break;
+            case R.id.researcherRadioButton:
+                role = Contract.Role.Researcher;
                 break;
         }
 
@@ -306,8 +316,11 @@ public class ProfileActivity extends BaseActivity {
             case Staff:
                 button = findViewById(R.id.staffRadioButton);
                 break;
-            case Visitor:
+            case Public:
                 button = findViewById(R.id.visitorRadioButton);
+                break;
+            case Researcher:
+                button = findViewById(R.id.researcherRadioButton);
                 break;
             default:
                 Log.e(TAG, "No user role found");
