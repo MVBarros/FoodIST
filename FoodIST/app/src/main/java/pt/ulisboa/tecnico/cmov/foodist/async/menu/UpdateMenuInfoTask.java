@@ -47,6 +47,5 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
             return;
         }
         getActivity().updatePhotos(new ArrayList<>(reply.getPhotoIDList()));
-        getActivity().setRating(reply.getRating());
     }
 }

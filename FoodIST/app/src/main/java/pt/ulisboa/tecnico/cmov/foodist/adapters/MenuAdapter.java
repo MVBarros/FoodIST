@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,9 +44,11 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
 
         TextView menuFood = convertView.findViewById(R.id.menuFood);
         TextView menuCost = convertView.findViewById(R.id.menuCost);
+        RatingBar ratingBar = convertView.findViewById(R.id.foodMenuRating);
 
         menuFood.setText(menu.getTranslatedName());
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
+        ratingBar.setRating((float)menu.getRating());
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), FoodMenuActivity.class);

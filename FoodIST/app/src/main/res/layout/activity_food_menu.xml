@@ -27,15 +27,7 @@
             android:text="@string/food_menu_cost"
             android:textAlignment="center"
             android:textSize="30sp" />
-        <RatingBar
-            android:id="@+id/averageFoodMenuRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:isIndicator="true"
-            />
+
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -60,13 +52,30 @@
             android:text="@string/food_menu_number_photos"
             android:textSize="30sp" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/rateMenuMessage"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/rate_this_menu_text"
+            android:textSize="20sp" />
         <RatingBar
             android:id="@+id/userStarRating"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:numStars="5"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             android:stepSize="0.5" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

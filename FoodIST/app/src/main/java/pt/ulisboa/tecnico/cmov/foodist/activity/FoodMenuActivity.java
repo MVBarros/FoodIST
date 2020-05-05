@@ -275,19 +275,13 @@ public class FoodMenuActivity extends BaseActivity {
         photosNotDownloaded.add(photoId);
     }
 
-    public synchronized void setRating(double menuRating) {
-        if(menuRating!=-1.0) {
-            RatingBar ratingBar = findViewById(R.id.averageFoodMenuRating);
-            ratingBar.setRating(Float.valueOf(getGlobalStatus().formatRating(menuRating)));
-        }
-    }
+
 
     private void intentInitialization(Intent intent) {
         initializeMenuId(intent.getStringExtra(MENU_ID));
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
         initializePhotoIds(intent.getStringArrayListExtra(MENU_PHOTO_IDS));
-        setRating(intent.getDoubleExtra(MENU_RATING, -1.0));
     }
 
     private void initializeMenuId(String menuId) {

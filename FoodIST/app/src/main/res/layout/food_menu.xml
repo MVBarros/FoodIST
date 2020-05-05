@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/foodMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    app:layout_constraintStart_toStartOf="parent"
-    tools:layout_editor_absoluteY="131dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/menuFood"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/foodMenu"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="131dp">
+
+        <TextView
+            android:id="@+id/menuFood"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Tosta Mista"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/menuCost"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="10.00€"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <RatingBar
+        android:id="@+id/foodMenuRating"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:layout_weight="1"
-        android:text="Tosta Mista"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/menuCost"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_weight="1"
-        android:gravity="right"
-        android:text="10.00€"
-        android:textSize="20sp" />
+        android:layout_gravity="center"
+        android:scaleY="0.5"
+        android:scaleX="0.5"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:isIndicator="true" />
 </LinearLayout>
