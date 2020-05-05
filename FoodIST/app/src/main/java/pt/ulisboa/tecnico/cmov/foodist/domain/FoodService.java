@@ -5,6 +5,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class FoodService {
@@ -17,10 +18,10 @@ public class FoodService {
     private String time;
     private double latitude;
     private double longitude;
-    private Map<String, Map<String, String>> hours;
+    private Map<String, Map<String, List<String>>> hours;
 
     public FoodService(Map<String, String> names, String distance, String time, double latitude,
-                       double longitude, Map<String, Map<String, String>> hours) {
+                       double longitude, Map<String, Map<String, List<String>>> hours) {
         this.names = names;
         this.distance = distance;
         this.time = time;
@@ -57,12 +58,12 @@ public class FoodService {
         return longitude;
     }
 
-    public Map<String, String> getHours(String role) {
+    public Map<String, List<String>> getHours(String role) {
         return hours.get(role);
     }
 
     public String getHoursForToday(String role) {
-        return hours.get(role).get(weekdayIntToString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)));
+        return this.hoursToString(hours.get(role).get(weekdayIntToString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))));
     }
 
     public boolean isFoodServiceAvailable(String role) {
@@ -76,12 +77,13 @@ public class FoodService {
         String currentHours = dateFormat.format(currentDate);
         String currentWeekday = this.weekdayIntToString(calendar.get(Calendar.DAY_OF_WEEK));
 
-        String functioningHours = this.getHours(role).get(currentWeekday);
+        List<String> functioningHours = this.getHours(role).get(currentWeekday);
 
         if (functioningHours == null || functioningHours.equals("closed")) {
             return false;
         }
-        return this.isTimeInRange(currentHours, functioningHours);
+        return functioningHours.stream()
+                .anyMatch(hour -> this.isTimeInRange(currentHours, hour));
     }
 
     private String weekdayIntToString(int weekday) {
@@ -114,5 +116,11 @@ public class FoodService {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    private String hoursToString(List<String> hours) {
+        StringBuilder builder = new StringBuilder();
+        hours.forEach(hour -> builder.append(hour).append(" "));
+        return builder.toString();
     }
 }

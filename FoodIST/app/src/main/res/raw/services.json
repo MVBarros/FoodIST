@@ -9,49 +9,49 @@
       "longitude": -9.302204,
       "hours": {
         "Student": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-23:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Public": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Professor": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Staff": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -64,49 +64,49 @@
       "longitude": -9.303060,
       "hours": {
         "Student": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Public": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Professor": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Staff": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -119,49 +119,49 @@
       "longitude": -9.303269,
       "hours": {
         "Student": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Public": {
-          "monday": "closed",
-          "tuesday": "closed",
-          "wednesday": "closed",
-          "thursday": "closed",
-          "friday": "closed",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": [],
+          "tuesday": [],
+          "wednesday": [],
+          "thursday": [],
+          "friday": [],
+          "saturday": [],
+          "sunday": []
         },
         "Professor": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Staff": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -174,49 +174,49 @@
       "longitude": -9.303140,
       "hours": {
         "Student": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Public": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Professor": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Staff": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     }
@@ -231,49 +231,49 @@
       "longitude": -9.140465,
       "hours": {
         "Student": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Public": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Professor": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Staff": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -286,49 +286,49 @@
       "longitude": -9.140010,
       "hours": {
         "Student": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Public": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Professor": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Staff": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -341,49 +341,49 @@
       "longitude": -9.136987,
       "hours": {
         "Student": {
-          "monday": "13:00-15:00",
-          "tuesday": "13:00-15:00",
-          "wednesday": "13:00-15:00",
-          "thursday": "13:00-15:00",
-          "friday": "13:00-15:00",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": ["13:00-15:00"],
+          "tuesday": ["13:00-15:00"],
+          "wednesday": ["13:00-15:00"],
+          "thursday": ["13:00-15:00"],
+          "friday": ["13:00-15:00"],
+          "saturday": [],
+          "sunday": []
         },
         "Public": {
-          "monday": "closed",
-          "tuesday": "closed",
-          "wednesday": "closed",
-          "thursday": "closed",
-          "friday": "closed",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": [],
+          "tuesday": [],
+          "wednesday": [],
+          "thursday": [],
+          "friday": [],
+          "saturday": [],
+          "sunday": []
         },
         "Professor": {
-          "monday": "12:00-15:00",
-          "tuesday": "12:00-15:00",
-          "wednesday": "12:00-15:00",
-          "thursday": "12:00-15:00",
-          "friday": "12:00-15:00",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": ["12:00-15:00"],
+          "tuesday": ["12:00-15:00"],
+          "wednesday": ["12:00-15:00"],
+          "thursday": ["12:00-15:00"],
+          "friday": ["12:00-15:00"],
+          "saturday": [],
+          "sunday": []
         },
         "Staff": {
-          "monday": "12:00-15:00",
-          "tuesday": "12:00-15:00",
-          "wednesday": "12:00-15:00",
-          "thursday": "12:00-15:00",
-          "friday": "12:00-15:00",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": ["12:00-15:00"],
+          "tuesday": ["12:00-15:00"],
+          "wednesday": ["12:00-15:00"],
+          "thursday": ["12:00-15:00"],
+          "friday": ["12:00-15:00"],
+          "saturday": [],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -396,49 +396,49 @@
       "longitude": -9.137836,
       "hours": {
         "Student": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Public": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Professor": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Staff": {
-          "monday": "00:00-23:59",
-          "tuesday": "00:00-23:59",
-          "wednesday": "00:00-23:59",
-          "thursday": "00:00-23:59",
-          "friday": "00:00-23:59",
-          "saturday": "00:00-23:59",
-          "sunday": "00:00-23:59"
+          "monday": ["00:00-23:59"],
+          "tuesday": ["00:00-23:59"],
+          "wednesday": ["00:00-23:59"],
+          "thursday": ["00:00-23:59"],
+          "friday": ["00:00-23:59"],
+          "saturday": ["00:00-23:59"],
+          "sunday": ["00:00-23:59"]
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     },
@@ -451,49 +451,49 @@
       "longitude": -9.139594,
       "hours": {
         "Student": {
-          "monday": "closed",
-          "tuesday": "closed",
-          "wednesday": "closed",
-          "thursday": "closed",
-          "friday": "closed",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": [],
+          "tuesday": [],
+          "wednesday": [],
+          "thursday": [],
+          "friday": [],
+          "saturday": [],
+          "sunday": []
         },
         "Public": {
-          "monday": "closed",
-          "tuesday": "closed",
-          "wednesday": "closed",
-          "thursday": "closed",
-          "friday": "closed",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": [],
+          "tuesday": [],
+          "wednesday": [],
+          "thursday": [],
+          "friday": [],
+          "saturday": [],
+          "sunday": []
         },
         "Professor": {
-          "monday": "08:00-20:00",
-          "tuesday": "08:00-20:00",
-          "wednesday": "08:00-20:00",
-          "thursday": "08:00-20:00",
-          "friday": "08:00-20:00",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": ["08:00-20:00"],
+          "tuesday": ["08:00-20:00"],
+          "wednesday": ["08:00-20:00"],
+          "thursday": ["08:00-20:00"],
+          "friday": ["08:00-20:00"],
+          "saturday": [],
+          "sunday": []
         },
         "Staff": {
-          "monday": "08:00-20:00",
-          "tuesday": "08:00-20:00",
-          "wednesday": "08:00-20:00",
-          "thursday": "08:00-20:00",
-          "friday": "08:00-20:00",
-          "saturday": "closed",
-          "sunday": "closed"
+          "monday": ["08:00-20:00"],
+          "tuesday": ["08:00-20:00"],
+          "wednesday": ["08:00-20:00"],
+          "thursday": ["08:00-20:00"],
+          "friday": ["08:00-20:00"],
+          "saturday": [],
+          "sunday": []
         },
         "Researcher": {
-          "monday": "09:00-22:00",
-          "tuesday": "09:00-22:00",
-          "wednesday": "09:00-22:00",
-          "thursday": "09:00-22:00",
-          "friday": "09:00-22:00",
-          "saturday": "09:00-22:00",
-          "sunday": "closed"
+          "monday": ["09:00-22:00"],
+          "tuesday": ["09:00-22:00"],
+          "wednesday": ["09:00-22:00"],
+          "thursday": ["09:00-22:00"],
+          "friday": ["09:00-22:00"],
+          "saturday": ["09:00-22:00"],
+          "sunday": []
         }
       }
     }

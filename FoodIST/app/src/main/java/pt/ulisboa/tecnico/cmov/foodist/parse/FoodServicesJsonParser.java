@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,8 @@ import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 
 public class FoodServicesJsonParser {
+
+    private static final String[] WEEK_DAYS = new String[]{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
 
     private static JSONObject readFile(InputStream is) throws IOException, JSONException {
         BufferedReader streamReader = new BufferedReader(new InputStreamReader(is));
@@ -55,25 +58,26 @@ public class FoodServicesJsonParser {
         String time = object.getString("time");
         double latitude = object.getDouble("latitude");
         double longitude = object.getDouble("longitude");
-        Map<String, Map<String, String>> hours = parseHours(object);
+        Map<String, Map<String, List<String>>> hours = parseHours(object);
 
         return new FoodService(names, distance, time, latitude, longitude, hours);
     }
 
-    private static Map<String, Map<String, String>> parseHours(JSONObject object) throws JSONException {
-        Map<String, Map<String, String>> hours = new HashMap<>();
+    private static Map<String, Map<String, List<String>>> parseHours(JSONObject object) throws JSONException {
+        Map<String, Map<String, List<String>>> hours = new HashMap<>();
         JSONObject hourObject = object.getJSONObject("hours");
         for (Iterator<String> it = hourObject.keys(); it.hasNext(); ) {
             String key = it.next();
             JSONObject keyHoursObject = hourObject.getJSONObject(key);
-            Map<String, String> hourMap = new HashMap<>();
-            hourMap.put("monday", keyHoursObject.getString("monday"));
-            hourMap.put("tuesday", keyHoursObject.getString("tuesday"));
-            hourMap.put("wednesday", keyHoursObject.getString("wednesday"));
-            hourMap.put("thursday", keyHoursObject.getString("thursday"));
-            hourMap.put("friday", keyHoursObject.getString("friday"));
-            hourMap.put("saturday", keyHoursObject.getString("saturday"));
-            hourMap.put("sunday", keyHoursObject.getString("sunday"));
+            Map<String, List<String>> hourMap = new HashMap<>();
+            for (String day : WEEK_DAYS) {
+                JSONArray array = keyHoursObject.getJSONArray(day);
+                List<String> hourList = new ArrayList<>();
+                for (int i = 0; i < array.length(); i++) {
+                    hourList.add(array.getString(i));
+                }
+                hourMap.put(day, hourList);
+            }
             hours.put(key, hourMap);
         }
         return hours;
