@@ -31,10 +31,9 @@ public class UploadRatingTask extends AsyncTask<Double, Integer, Empty> {
     private double rating;
     private WeakReference<FoodMenuActivity> activity;
 
-    public UploadRatingTask(String username, FoodMenuActivity activity) {
+    public UploadRatingTask(FoodMenuActivity activity) {
         this.stub = activity.getGlobalStatus().getStub();
         this.menuId = activity.getMenuId();
-        this.username = username;
         this.status = new WeakReference<>(activity.getGlobalStatus());
         this.cookie = activity.getGlobalStatus().getCookie();
         this.activity = new WeakReference<>(activity);
@@ -49,7 +48,6 @@ public class UploadRatingTask extends AsyncTask<Double, Integer, Empty> {
         this.rating = doubles[0];
         Contract.RatingRequest.Builder ratingRequestBuilder = Contract.RatingRequest.newBuilder();
 
-        ratingRequestBuilder.setUsername(username);
         ratingRequestBuilder.setMenuId(Long.parseLong(menuId));
         ratingRequestBuilder.setCookie(cookie);
         ratingRequestBuilder.setRating(this.rating);

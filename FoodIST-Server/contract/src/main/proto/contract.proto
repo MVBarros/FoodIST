@@ -118,7 +118,6 @@ message QueueTimeResponse {
 }
 
 message RatingRequest {
-    string username = 1;
     string cookie = 2;
     int64 menuId = 3;
     double rating = 4;

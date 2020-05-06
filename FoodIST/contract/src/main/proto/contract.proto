@@ -118,7 +118,6 @@ message QueueTimeResponse {
 }
 
 message RatingRequest {
-    string username = 1;
     string cookie = 2;
     int64 menuId = 3;
     double rating = 4;
@@ -143,6 +142,7 @@ service FoodISTServerService {
     rpc changeProfile(AccountMessage) returns (google.protobuf.Empty);
     rpc logout(LogoutRequest) returns (google.protobuf.Empty);
     rpc addToQueue(QueueRequest) returns (google.protobuf.Empty);
+    rpc cancelQueueJoin(QueueRequest) returns (google.protobuf.Empty);
     rpc removeFromQueue(QueueRequest) returns (google.protobuf.Empty);
     rpc getQueueTime(QueueTimeRequest) returns (QueueTimeResponse);
     rpc uploadRating(RatingRequest) returns (google.protobuf.Empty);
