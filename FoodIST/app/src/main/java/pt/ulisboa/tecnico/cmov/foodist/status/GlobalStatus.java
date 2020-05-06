@@ -260,8 +260,26 @@ public class GlobalStatus extends Application {
     }
 
     public boolean isFlagged(String photoId) {
+        if (!isLoggedIn()) {
+            return false;
+        }
         SharedPreferences pref = getSharedPreferences(getString(R.string.flag_file), 0);
         return pref.getBoolean(getString(R.string.shared_prefs_flagged_photo_key, photoId, getUsername()), false);
+    }
+
+    public void setRated(String menuId, float value) {
+        SharedPreferences pref = getSharedPreferences(getString(R.string.shared_prefs_ratings_file), 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putFloat(getString(R.string.shared_prefs_rated_menu_key, menuId, getUsername()), value);
+        editor.apply();
+    }
+
+    public float getRating(String menuId) {
+        if (!isLoggedIn()) {
+            return  0f;
+        }
+        SharedPreferences pref = getSharedPreferences(getString(R.string.shared_prefs_ratings_file), 0);
+        return pref.getFloat(getString(R.string.shared_prefs_rated_menu_key, menuId, getUsername()), 0f);
     }
 
     public void setMenuFlagged(String menuId) {

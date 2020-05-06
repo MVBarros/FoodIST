@@ -11,6 +11,8 @@ import java.util.Set;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
+import io.grpc.StatusRuntimeException;
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
@@ -22,6 +24,7 @@ public class UploadRatingTask extends BaseAsyncTask<Double, Integer, Empty, Food
     private String cookie;
     private String menuId;
     private String username;
+    private double rating;
 
     public UploadRatingTask(String username, FoodMenuActivity activity) {
         super(activity);
@@ -36,25 +39,36 @@ public class UploadRatingTask extends BaseAsyncTask<Double, Integer, Empty, Food
 
     @Override
     protected Empty doInBackground(Double... doubles) {
-        synchronized (stub) {
-            Contract.RatingRequest.Builder ratingRequestBuilder = Contract.RatingRequest.newBuilder();
-
-            ratingRequestBuilder.setUsername(username);
-            ratingRequestBuilder.setMenuId(Long.parseLong(menuId));
-            ratingRequestBuilder.setCookie(cookie);
-            ratingRequestBuilder.setRating(doubles[0]);
-
-            Contract.RatingRequest request = ratingRequestBuilder.build();
-
-            return this.stub.uploadRating(request);
+        if (doubles.length == 0) {
+            return null;
         }
+        this.rating = doubles[0];
+        Contract.RatingRequest.Builder ratingRequestBuilder = Contract.RatingRequest.newBuilder();
+
+        ratingRequestBuilder.setUsername(username);
+        ratingRequestBuilder.setMenuId(Long.parseLong(menuId));
+        ratingRequestBuilder.setCookie(cookie);
+        ratingRequestBuilder.setRating(this.rating);
+
+        Contract.RatingRequest request = ratingRequestBuilder.build();
+
+        try {
+            return this.stub.uploadRating(request);
+        } catch (StatusRuntimeException e) {
+            return null;
+        }
+
     }
 
     @Override
     public void onPostExecute(Empty result) {
-        FoodMenuActivity act = getActivity();
-        if (act != null && !act.isFinishing() && !act.isDestroyed()) {
-            act.launchUpdateMenuTask();
+        if (result != null) {
+            mContext.setRated(menuId, (float) rating);
+            getActivity().launchUpdateMenuTask();
+        } else {
+            getActivity().showToast(getActivity().getString(R.string.rate_menu_test));
         }
+        
     }
+
 }

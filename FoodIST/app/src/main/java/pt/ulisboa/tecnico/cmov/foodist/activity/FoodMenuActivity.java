@@ -279,7 +279,7 @@ public class FoodMenuActivity extends BaseActivity {
         initializeMenuCost(intent.getDoubleExtra(MENU_PRICE, -1.0));
         initializeDisplayName(intent.getStringExtra(DISPLAY_NAME));
         initializePhotoIds(intent.getStringArrayListExtra(MENU_PHOTO_IDS));
-        initializeRatings(intent.getDoubleExtra(MENU_RATING, 0.0));
+        initializeRatings(intent.getStringExtra(MENU_ID));
     }
 
     private void initializeMenuId(String menuId) {
@@ -317,9 +317,9 @@ public class FoodMenuActivity extends BaseActivity {
         updatePhotos(photoIds);
     }
 
-    private void initializeRatings(double rating) {
+    private void initializeRatings(String menuId) {
         RatingBar ratingBar = findViewById(R.id.userStarRating);
-        ratingBar.setRating((float) rating);
+        ratingBar.setRating(getGlobalStatus().getRating(menuId));
     }
 
     public void launchUpdateMenuTask() {
@@ -353,7 +353,7 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_rating_upload_no_internet_failure_toast));
             return;
         }
-        new CancelableTask<>(new SafePostTask<>(new UploadRatingTask(getGlobalStatus().getUsername(), this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rating);
+       new CancelableTask<>(new SafePostTask<>(new UploadRatingTask(getGlobalStatus().getUsername(), this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rating);
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {

@@ -108,6 +108,8 @@
     <string name="shared_prefs_profile_dietary_vegan">Vegan</string>
     <string name="shared_prefs_flagged_photo_key">Flagged-photo-%1$s-%2$s</string>
     <string name="shared_prefs_flagged_menu_key">Flagged-menu-%1$s-%2$s</string>
+    <string name="shared_prefs_ratings_file">ratings_file</string>
+    <string name="shared_prefs_rated_menu_key">Rated-menu-%1$s-%2$s</string>
 
 
     <!-- Activity -->
@@ -212,4 +214,5 @@
     <string name="rate_this_menu_text">Rate this menu:</string>
     <string name="campus3">CTN</string>
     <string name="campus_ctn">CTN</string>
+    <string name="rate_menu_test">Unable to rate menu</string>
 </resources>
