@@ -353,7 +353,7 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_rating_upload_no_internet_failure_toast));
             return;
         }
-       new CancelableTask<>(new SafePostTask<>(new UploadRatingTask(getGlobalStatus().getUsername(), this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rating);
+       new UploadRatingTask(getGlobalStatus().getUsername(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rating);
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {
