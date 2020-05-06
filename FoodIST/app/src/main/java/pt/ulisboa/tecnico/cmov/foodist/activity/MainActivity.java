@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
     private static final LatLng LOCATION_TAGUS = new LatLng(38.737050, -9.302734);
     private static final LatLng LOCATION_ALAMEDA = new LatLng(38.736819, -9.138769);
+    private static final LatLng LOCATION_CTN = new LatLng( 38.811936, -9.094336 );
 
     private boolean isOnCreate;
 
@@ -254,7 +255,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     private void launchGuessCampusTask(LatLng curr) {
-        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, MainActivity.LOCATION_ALAMEDA, MainActivity.LOCATION_TAGUS);
+        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, MainActivity.LOCATION_ALAMEDA, MainActivity.LOCATION_TAGUS, MainActivity.LOCATION_CTN);
     }
 
     private void updateCampusFromLocation(Location location) {

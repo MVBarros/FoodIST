@@ -18,6 +18,7 @@ public class ChooseCampusActivity extends BaseActivity {
 
         Button tagusparkButton = findViewById(R.id.taguspark);
         Button alamedaButton = findViewById(R.id.alameda);
+        Button ctnButton = findViewById(R.id.ctn);
 
         tagusparkButton.setOnClickListener(v -> {
             Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
@@ -35,5 +36,12 @@ public class ChooseCampusActivity extends BaseActivity {
             startActivity(intent);
         });
 
+        ctnButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ChooseCampusActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(CAMPUS, getString(R.string.campus_ctn));
+            finish();
+            startActivity(intent);
+        });
     }
 }

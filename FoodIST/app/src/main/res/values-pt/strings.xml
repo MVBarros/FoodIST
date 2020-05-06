@@ -211,4 +211,6 @@
     <string name="no_network_avaliable_queue_time_message">Impossivel obter tempo de espera: sem conexão</string>
     <string name="could_not_get_queue_time_message">Impossivel obter tempo de espera</string>
     <string name="rate_this_menu_text">Classificar menu:</string>
+    <string name="campus3">CTN</string>
+    <string name="campus_ctn">CTN</string>
 </resources>

@@ -15,19 +15,20 @@ import pt.ulisboa.tecnico.cmov.foodist.utils.CoordinateUtils;
 
 public class GuessCampusTask extends BaseAsyncTask<LatLng, Integer, String, MainActivity> {
 
+    private static final int NUMBER_CAMPUS = 3;
+    private static final int ALAMEDA = 0;
+    private static final int TAGUSPARK = 1;
+    private static final int CTN = 2;
+    private static final String TAG = "LOCATION-TASK";
+    private static final int MAX_DISTANCE = 2000; //2 kilometers
+
+
     private LatLng curr;
 
     public GuessCampusTask(MainActivity activity, LatLng curr) {
         super(activity);
         this.curr = curr;
     }
-
-    private static final int NUMBER_CAMPUS = 2;
-    private static final int ALAMEDA = 0;
-
-    private static final String TAG = "LOCATION-TASK";
-
-    private static final int MAX_DISTANCE = 2000; //2 kilometers
 
     @Override
     protected String doInBackground(LatLng... lngs) {
@@ -37,7 +38,14 @@ public class GuessCampusTask extends BaseAsyncTask<LatLng, Integer, String, Main
         for (int i = 0; i < NUMBER_CAMPUS; ++i) {
             int distance = CoordinateUtils.calculateDistance(curr, lngs[i]);
             if (distance < MAX_DISTANCE) {
-                return i == ALAMEDA ? "Alameda" : "TagusPark";
+                switch (i) {
+                    case ALAMEDA:
+                        return "Alameda";
+                    case TAGUSPARK:
+                        return "TagusPark";
+                    case CTN:
+                        return "CTN";
+                }
             }
         }
         return null;
