@@ -72,15 +72,26 @@ public class Service {
 	}
 
 	public void removeFromQueue(String uuid) {
-		LocalDateTime currTime = LocalDateTime.now();
-		QueuePosition entry = queue.remove(uuid);
+		QueuePosition entry = removeQueueEntry(uuid);
 		if (entry == null) {
 			return;
 		}
-
+		//Remove previous entries for this service (if this user entered other users entered)
+		queue.entrySet().stream()
+		.filter(e -> e.getValue().getEntryTime().isBefore(entry.getEntryTime()))
+		.map(e -> e.getKey())
+		.forEach(this::removeQueueEntry);
+	}
+	
+	public QueuePosition removeQueueEntry(String uuid) {
+		QueuePosition entry = queue.remove(uuid);
+		if (entry == null) {
+			return null;
+		}
+		LocalDateTime currTime = LocalDateTime.now();
 		double delta = (double) ChronoUnit.SECONDS.between(entry.getEntryTime(), currTime);
 		queueWaitTimes.add(new Point(entry.getNumberOfPeople(), delta));
-
+		return entry;
 	}
 
 	public void cancelQueueJoin(String uuid) {
