@@ -344,6 +344,14 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
     }
+    
+    @Override
+    public void cancelQueueJoin(Contract.QueueRequest request, StreamObserver<Empty> responseObserver) {
+        Service service = services.computeIfAbsent(request.getFoodService(), Service::new);
+        service.cancelQueueJoin(request.getUuid());
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
+    }
 
     @Override
     public void removeFromQueue(Contract.QueueRequest request, StreamObserver<Empty> responseObserver) {

@@ -66,7 +66,7 @@ public class Service {
 	}
 
 	public void addToQueue(String uuid) {
-		queue.remove(uuid); // Just in case...
+		queue.remove(uuid); // Remove entry from this user if it exists
 		QueuePosition entry = new QueuePosition(LocalDateTime.now(), queue.size());
 		queue.put(uuid, entry);
 	}

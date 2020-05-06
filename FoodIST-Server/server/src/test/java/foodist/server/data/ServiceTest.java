@@ -234,7 +234,7 @@ public class ServiceTest {
 
         List<Point> positions = service.getQueueWaitTimes();
         assertEquals(positions.size(), 4);
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 4; i++) {	
             assertEquals(positions.get(i).getY(), i + 1 , 0.0001);
         }
         Map<String, QueuePosition> queue = service.getQueue();
