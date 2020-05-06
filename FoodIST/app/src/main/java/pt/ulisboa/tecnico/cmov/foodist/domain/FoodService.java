@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class FoodService {
@@ -67,7 +68,7 @@ public class FoodService {
     }
 
     public boolean isFoodServiceAvailable(String role) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:MM");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
 
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
