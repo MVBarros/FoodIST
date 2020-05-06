@@ -17,6 +17,7 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.async.queue.CancelJoinTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.JoinQueueTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.LeaveQueueTask;
 
@@ -64,7 +65,7 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
             String foodService = foodServiceBeacons.iterator().next();
             if (!foodService.equals(currentFoodService) && currentFoodService != null) {
                 //Somehow moved to different foodService (probably disconnected my wifi)
-                new LeaveQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
+                new CancelJoinTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
                 isInQueue = false;
             }
             if (!isInQueue) {
