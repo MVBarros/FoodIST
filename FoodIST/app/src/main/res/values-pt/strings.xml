@@ -216,4 +216,6 @@
     <string name="campus3">CTN</string>
     <string name="campus_ctn">CTN</string>
     <string name="rate_menu_test">Unable to rate menu</string>
+    <string name="rate_menu_error_string">Error Rating menu</string>
+    <string name="menu_rated_success_successfully">Menu Rated Successfully</string>
 </resources>

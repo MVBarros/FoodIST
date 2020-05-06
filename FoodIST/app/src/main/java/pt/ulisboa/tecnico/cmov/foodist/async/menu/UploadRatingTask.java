@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.async.menu;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,28 +15,31 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
-public class UploadRatingTask extends BaseAsyncTask<Double, Integer, Empty, FoodMenuActivity> {
+public class UploadRatingTask extends AsyncTask<Double, Integer, Empty> {
+
+    private static final String TAG = "UPLOAD-RATING-TASK";
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
-    private GlobalStatus mContext;
+    private WeakReference<GlobalStatus> status;
     private String cookie;
     private String menuId;
     private String username;
     private double rating;
+    private WeakReference<FoodMenuActivity> activity;
 
     public UploadRatingTask(String username, FoodMenuActivity activity) {
-        super(activity);
         this.stub = activity.getGlobalStatus().getStub();
         this.menuId = activity.getMenuId();
         this.username = username;
-        mContext = activity.getGlobalStatus();
-        this.cookie = mContext.getCookie();
+        this.status = new WeakReference<>(activity.getGlobalStatus());
+        this.cookie = activity.getGlobalStatus().getCookie();
+        this.activity = new WeakReference<>(activity);
     }
 
-    private static final String TAG = "UPLOAD-RATING-TASK";
 
     @Override
     protected Empty doInBackground(Double... doubles) {
@@ -62,12 +66,22 @@ public class UploadRatingTask extends BaseAsyncTask<Double, Integer, Empty, Food
 
     @Override
     public void onPostExecute(Empty result) {
-        if (result != null) {
-            mContext.setRated(menuId, (float) rating);
-            getActivity().launchUpdateMenuTask();
-        } else {
-            getActivity().showToast(getActivity().getString(R.string.rate_menu_test));
+        GlobalStatus stats = status.get();
+        if (stats == null) {
+            return;
         }
+        if (result != null) {
+            stats.setRated(menuId, (float) rating);
+        }
+        FoodMenuActivity act = activity.get();
+        if (act != null && !act.isFinishing() && !act.isDestroyed()) {
+            if (result == null) {
+                act.showToast(act.getString(R.string.rate_menu_error_string));
+                return;
+            }
+            act.showToast(act.getString(R.string.menu_rated_success_successfully));
+        }
+
         
     }
 
