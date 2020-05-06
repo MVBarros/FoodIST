@@ -2,6 +2,7 @@ package foodist.server.data;
 
 import foodist.server.data.exception.ServiceException;
 import foodist.server.data.queue.Mean;
+import foodist.server.data.queue.Point;
 import foodist.server.data.queue.QueuePosition;
 import foodist.server.grpc.contract.Contract;
 import org.junit.After;
@@ -191,7 +192,7 @@ public class ServiceTest {
     public void removeFromQueueDoesNotExist() {
         service.addToQueue("1");
         service.removeFromQueue("2");
-        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        List<Point> positions = service.getQueueWaitTimes();
         assertEquals(positions.size(), 0);
     }
 
@@ -200,10 +201,9 @@ public class ServiceTest {
         service.addToQueue("1");
         Thread.sleep(1000);
         service.removeFromQueue("1");
-        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        List<Point> positions = service.getQueueWaitTimes();
         assertEquals(positions.size(), 1);
-        assertTrue(positions.containsKey(0));
-        assertEquals(positions.get(0).getCurrValue(), 1, 0.0001);
+        assertEquals(positions.get(0).getY(), 1, 0.0001);
         Map<String, QueuePosition> queue = service.getQueue();
         assertEquals(queue.size(), 0);
     }
@@ -213,10 +213,10 @@ public class ServiceTest {
         service.addToQueue("1");
         Thread.sleep(200);
         service.removeFromQueue("1");
-        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        
+        List<Point> positions = service.getQueueWaitTimes();
         assertEquals(positions.size(), 1);
-        assertTrue(positions.containsKey(0));
-        assertEquals(positions.get(0).getCurrValue(), 0, 0.0001);
+        assertEquals(positions.get(0).getY(), 0, 0.0001);
         Map<String, QueuePosition> queue = service.getQueue();
         assertEquals(queue.size(), 0);
     }
@@ -232,11 +232,10 @@ public class ServiceTest {
             service.removeFromQueue(String.valueOf(i));
         }
 
-        Map<Integer, Mean> positions = service.getQueueWaitTimes();
+        List<Point> positions = service.getQueueWaitTimes();
         assertEquals(positions.size(), 4);
         for(int i = 0; i < 4; i++) {
-            assertTrue(positions.containsKey(i));
-            assertEquals(positions.get(i).getCurrValue(), i + 1 , 0.0001);
+            assertEquals(positions.get(i).getY(), i + 1 , 0.0001);
         }
         Map<String, QueuePosition> queue = service.getQueue();
         assertEquals(queue.size(), 0);
@@ -262,11 +261,13 @@ public class ServiceTest {
             service.removeFromQueue(String.valueOf(i));
         }
 
-        Map<Integer, Mean> positions = service.getQueueWaitTimes();
-        assertEquals(positions.size(), 4);
+        List<Point> positions = service.getQueueWaitTimes();
+        assertEquals(positions.size(), 8);
         for(int i = 0; i < 4; i++) {
-            assertTrue(positions.containsKey(i));
-            assertEquals(positions.get(i).getCurrValue(), (i + 1) * 1.5 , 0.0001);
+            assertEquals(positions.get(i).getY(), i + 1, 0.0001);
+        }
+        for(int i = 4; i < 8; i++) {
+            assertEquals(positions.get(i).getY(), (i - 3) * 2 , 0.0001);
         }
         Map<String, QueuePosition> queue = service.getQueue();
         assertEquals(queue.size(), 0);
@@ -279,39 +280,20 @@ public class ServiceTest {
     }
 
     @Test
-    public void knownQueueWaitTime() {
+    public void notEnoughPointsTest() {
         Service service = new Service(NAME);
-        service.getQueueWaitTimes().put(0, new Mean(1));
-        assertEquals(String.valueOf(1), service.currentQueueWaitTime());
-    }
-
-    @Test
-    public void predictInsufficientInfo() {
-        Service service = new Service(NAME);
-        service.getQueueWaitTimes().put(1, new Mean(2.4));
+        service.getQueueWaitTimes().add(new Point(0d, 1d));
         assertNull(service.currentQueueWaitTime());
     }
 
     @Test
-    public void predictQueueWaitTime() {
+    public void predictQueueWaitTimeIsConstant() {
         Service service = new Service(NAME);
-        service.getQueueWaitTimes().put(1, new Mean(2.4));
-        service.getQueueWaitTimes().put(2, new Mean(3.4));
-        service.getQueueWaitTimes().put(3, new Mean(4.4));
-        service.getQueueWaitTimes().put(4, new Mean(5.4));
-
-        assertEquals(String.valueOf(1), service.currentQueueWaitTime());
-    }
-
-    @Test
-    public void predictQueueWaitTimeConstant() {
-        Service service = new Service(NAME);
-        service.getQueueWaitTimes().put(7, new Mean(6));
-        service.getQueueWaitTimes().put(8, new Mean(6));
-        service.getQueueWaitTimes().put(9, new Mean(6));
-        service.getQueueWaitTimes().put(10, new Mean(6));
-
-        assertEquals(String.valueOf(6), service.currentQueueWaitTime());
+        service.getQueueWaitTimes().add(new Point(1d, 2.4d));
+        service.getQueueWaitTimes().add(new Point(2d, 2.4d));
+        service.getQueueWaitTimes().add(new Point(3d, 2.4d));
+        service.getQueueWaitTimes().add(new Point(4d, 2.4d));
+        assertEquals(String.valueOf(2), service.currentQueueWaitTime());
     }
 
 }

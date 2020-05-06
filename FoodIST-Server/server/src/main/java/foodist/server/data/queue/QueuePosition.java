@@ -19,5 +19,4 @@ public class QueuePosition {
     public int getNumberOfPeople() {
         return numberOfPeople;
     }
-
 }

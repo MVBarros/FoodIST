@@ -1,7 +1,7 @@
 package foodist.server.service;
 
 import foodist.server.data.Menu;
-import foodist.server.data.queue.Mean;
+import foodist.server.data.queue.Point;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -111,7 +111,7 @@ public class GetQueueTimeTest {
 
     @Test
     public void insuficientInfoGetQueueTime() {
-        impl.getService(SERVICE).getQueueWaitTimes().put(1, new Mean(0));
+        impl.getService(SERVICE).getQueueWaitTimes().add(new Point(1d, 0d));
         Contract.QueueTimeRequest request = Contract.QueueTimeRequest.newBuilder().addFoodService(SERVICE).addFoodService(SERVICE2).build();
         Contract.QueueTimeResponse response = stub.getQueueTime(request);
         assertEquals(response.getQueueTimeCount(), 0);
@@ -119,18 +119,9 @@ public class GetQueueTimeTest {
 
 
     @Test
-    public void partialValidGetQueueTime() {
-        impl.getService(SERVICE).getQueueWaitTimes().put(0, new Mean(0));
-        Contract.QueueTimeRequest request = Contract.QueueTimeRequest.newBuilder().addFoodService(SERVICE).addFoodService(SERVICE2).build();
-        Contract.QueueTimeResponse response = stub.getQueueTime(request);
-        assertEquals(response.getQueueTimeCount(), 1);
-        assertEquals(response.getQueueTimeMap().get(SERVICE), String.valueOf(0));
-    }
-
-    @Test
     public void partialPredictGetQueueTime() {
-        impl.getService(SERVICE).getQueueWaitTimes().put(1, new Mean(4));
-        impl.getService(SERVICE).getQueueWaitTimes().put(2, new Mean(6));
+        impl.getService(SERVICE).getQueueWaitTimes().add(new Point(1d, 4d));
+        impl.getService(SERVICE).getQueueWaitTimes().add(new Point(2d, 6d));
 
         Contract.QueueTimeRequest request = Contract.QueueTimeRequest.newBuilder().addFoodService(SERVICE).addFoodService(SERVICE2).build();
         Contract.QueueTimeResponse response = stub.getQueueTime(request);
@@ -140,18 +131,19 @@ public class GetQueueTimeTest {
 
     @Test
     public void multipleValidGetQueueTime() {
-        impl.getService(SERVICE).getQueueWaitTimes().put(1, new Mean(4));
-        impl.getService(SERVICE).getQueueWaitTimes().put(2, new Mean(6));
+        impl.getService(SERVICE).getQueueWaitTimes().add(new Point(1d, 4d));
+        impl.getService(SERVICE).getQueueWaitTimes().add(new Point(2d, 6d));
 
-        impl.getService(SERVICE2).getQueueWaitTimes().put(1, new Mean(7));
-        impl.getService(SERVICE2).getQueueWaitTimes().put(5, new Mean(11));
-        impl.getService(SERVICE2).getQueueWaitTimes().put(10, new Mean(16));
+        impl.getService(SERVICE2).getQueueWaitTimes().add(new Point(1d, 5d));
+        impl.getService(SERVICE2).getQueueWaitTimes().add(new Point(5d, 11d));
+        impl.getService(SERVICE2).getQueueWaitTimes().add(new Point(10d, 16d));
+
 
         Contract.QueueTimeRequest request = Contract.QueueTimeRequest.newBuilder().addFoodService(SERVICE).addFoodService(SERVICE2).build();
         Contract.QueueTimeResponse response = stub.getQueueTime(request);
         assertEquals(response.getQueueTimeCount(), 2);
         assertEquals(response.getQueueTimeMap().get(SERVICE), String.valueOf(2));
-        assertEquals(response.getQueueTimeMap().get(SERVICE2), String.valueOf(6));
+        assertEquals(response.getQueueTimeMap().get(SERVICE2), String.valueOf(4));
 
     }
 }

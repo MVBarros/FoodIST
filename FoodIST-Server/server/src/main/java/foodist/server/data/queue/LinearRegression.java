@@ -18,6 +18,12 @@ import java.util.Arrays;
  */
 public class LinearRegression {
     private final double intercept, slope;
+    
+    public LinearRegression(Point[] points) {
+    	this(Arrays.stream(points).mapToDouble(Point::getX).toArray(),
+    			Arrays.stream(points).mapToDouble(Point::getY).toArray());
+    }
+    
 
     /**
      * Performs a linear regression on the data points {@code (y[i], x[i])}.
@@ -51,6 +57,7 @@ public class LinearRegression {
         intercept = ybar - slope * xbar;
 
     }
+   
 
     /**
      * Returns the <em>y</em>-intercept &alpha; of the best of the best-fit line <em>y</em> = &alpha; + &beta; <em>x</em>.
