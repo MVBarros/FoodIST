@@ -1,7 +1,14 @@
 package pt.ulisboa.tecnico.cmov.foodist.status;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.util.Log;
 
 import org.conscrypt.Conscrypt;
@@ -33,7 +40,11 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.okhttp.OkHttpChannelBuilder;
+import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
@@ -44,14 +55,43 @@ public class GlobalStatus extends Application {
     public static final String VEGAN_KEY = Contract.FoodType.Vegan.name();
     public static final String FISH_KEY = Contract.FoodType.Fish.name();
     public static final String VEGETARIAN_KEY = Contract.FoodType.Vegetarian.name();
-
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private Map<String, FoodService> services = new ConcurrentHashMap<>();
-
     private String campus;
+
+    /**Termite*/
+    private SimWifiP2pBroadcastReceiver mReceiver;
+    private SimWifiP2pManager mManager = null;
+    private SimWifiP2pManager.Channel mChannel = null;
+    private static Messenger mService = null;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = new Messenger(service);
+            mManager = new SimWifiP2pManager(mService);
+            mChannel = mManager.initialize(GlobalStatus.this, getMainLooper(), null);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mService = null;
+            mManager = null;
+            mChannel = null;
+        }
+    };
+
+    public void setBroadcastReceiver(List<String> foodServices) {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mReceiver = new SimWifiP2pBroadcastReceiver(this, foodServices);
+        registerReceiver(mReceiver, filter);
+        Intent intent = new Intent(this, SimWifiP2pService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
 
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         try {

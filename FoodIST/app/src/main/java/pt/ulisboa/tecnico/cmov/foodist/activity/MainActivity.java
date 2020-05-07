@@ -37,9 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager;
-import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.activity.boot.ChooseLanguageActivity;
@@ -69,6 +66,8 @@ import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_N
 public class MainActivity extends BaseActivity implements LocationListener {
     public enum LocationRequestContext {CAMPUS, DISTANCE}
 
+    private static boolean hasTermiteServiceStarted = false;
+
     private LocationManager mLocationManager;
 
     private static final int PHONE_LOCATION_REQUEST_CODE = 1;
@@ -84,29 +83,6 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private String campus;
 
-    private SimWifiP2pBroadcastReceiver mReceiver;
-    private SimWifiP2pManager mManager = null;
-    private SimWifiP2pManager.Channel mChannel = null;
-    private Messenger mService = null;
-    //Dont think we need Bound but oh well
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        // callbacks for service binding, passed to bindService()
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = new Messenger(service);
-            mManager = new SimWifiP2pManager(mService);
-            mChannel = mManager.initialize(getApplication(), getMainLooper(), null);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mService = null;
-            mManager = null;
-            mChannel = null;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,18 +97,15 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     public void setWifiDirectListener(List<FoodService> services) {
-        List<String> foodServiceName = services.stream()
-                .map(FoodService::getName)
-                .collect(Collectors.toList());
+        if (!hasTermiteServiceStarted) {
+            List<String> foodServiceNames = services.stream()
+                    .map(FoodService::getName)
+                    .collect(Collectors.toList());
 
-        Log.d("TAG", "NumberFoodService: " + foodServiceName.size());
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mReceiver = new SimWifiP2pBroadcastReceiver(this, foodServiceName);
-        registerReceiver(mReceiver, filter);
-
-        Intent intent = new Intent(this, SimWifiP2pService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            Log.d("TAG", "NumberFoodService: " + foodServiceNames.size());
+            getGlobalStatus().setBroadcastReceiver(foodServiceNames);
+            hasTermiteServiceStarted = true;
+        }
     }
 
     @Override

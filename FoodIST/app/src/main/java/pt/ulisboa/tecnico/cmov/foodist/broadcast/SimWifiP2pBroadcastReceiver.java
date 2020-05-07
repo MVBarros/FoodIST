@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.CancelJoinTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.JoinQueueTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.LeaveQueueTask;
+import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
 
@@ -30,10 +31,10 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
     private List<String> foodServiceNames;
     private String currentFoodService;
 
-    public SimWifiP2pBroadcastReceiver(BaseActivity activity, List<String> foodServiceNames) {
+    public SimWifiP2pBroadcastReceiver(GlobalStatus status, List<String> foodServiceNames) {
         super();
-        this.uuid = activity.getGlobalStatus().getUUID();
-        this.stub = activity.getGlobalStatus().getStub();
+        this.uuid = status.getUUID();
+        this.stub = status.getStub();
         this.foodServiceNames = foodServiceNames;
     }
 
