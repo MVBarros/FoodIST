@@ -14,7 +14,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import foodist.server.grpc.contract.Contract;
@@ -37,6 +39,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
     private GlobalStatus mContext;
     private String cookie;
     private String photoId;
+    private List<String> menuPhotos = new ArrayList<>();
     private byte[] bitmap;
 
     private static final String TAG = "UPLOADPHOTO-TASK";
@@ -72,6 +75,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
             @Override
             public void onNext(Contract.UploadPhotoReply reply) {
                 photoId = reply.getPhotoID();
+                menuPhotos.addAll(reply.getMenuPhotosList());
             }
 
             @Override
@@ -138,7 +142,7 @@ public class UploadPhotoTask extends AsyncTask<Photo, Integer, Boolean> {
         }
         FoodMenuActivity foodMenuAct = foodMenuActivity.get();
         if (foodMenuAct != null && !foodMenuAct.isFinishing() && !foodMenuAct.isDestroyed()) {
-            foodMenuAct.updatePhoto(photoId);
+            foodMenuAct.setPhotoIds(menuPhotos); //Reorder photo Ids
             foodMenuAct.launchGetCachePhotosTask();
             foodMenuAct.showToast(foodMenuAct.getString(R.string.upload_photo_task_complete_message));
             return;

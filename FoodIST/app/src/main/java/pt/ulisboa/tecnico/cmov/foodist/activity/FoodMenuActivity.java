@@ -140,6 +140,7 @@ public class FoodMenuActivity extends BaseActivity {
         addReceiver(new MenuNetworkReceiver(this), ConnectivityManager.CONNECTIVITY_ACTION, WifiManager.NETWORK_STATE_CHANGED_ACTION);
     }
 
+
     public boolean launchGetCachePhotosTask() {
         Photo[] photos = photosNotDownloaded.stream()
                 .filter(photo -> PhotoCache.getInstance().containsPhoto(photo))
@@ -254,14 +255,20 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     public void updatePhotos(Collection<String> photos) {
-        boolean shouldDownload = photosNotDownloaded.size() == 0;
         photos.removeAll(photosDownloaded);
         photosNotDownloaded.addAll(photos);
-        shouldDownload = shouldDownload && photosNotDownloaded.size() != 0;
-        if (shouldDownload) {
-            //If there were no previous photos displayed and there are some now download some
-            launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
-        }
+        launchDownloadPhotosTask(PHOTO_DOWNLOAD_LIMIT);
+
+    }
+
+
+    public void setPhotoIds(Collection<String> photos) {
+        photosDownloaded.clear();
+        photosNotDownloaded.clear();
+        photosNotDownloaded.addAll(photos);
+        LinearLayout layout = findViewById(R.id.food_menu_photo_layout);
+        layout.removeAllViews();
+
     }
 
     public void updatePhoto(String photoId) {
