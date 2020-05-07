@@ -96,7 +96,6 @@ public class GlobalStatus extends Application {
     public FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub getStub() {
         try {
             if (stub == null) {
-
                 Provider provider = Conscrypt.newProvider();
                 Security.insertProviderAt(provider, 1);
                 SSLSocketFactory factory = newSslSocketFactoryForCa(provider);
