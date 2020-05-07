@@ -84,9 +84,9 @@ public class ServiceImplementation extends FoodISTServerServiceImplBase {
 			return;
 		}
 
-		UpdateMenuReply reply = UpdateMenuReply.newBuilder().setRating(menu.averageRating())
-				.addAllPhotoID(menu.getPhotos()).build();
-
+		UpdateMenuReply reply = UpdateMenuReply.newBuilder().setAverageRating(menu.averageRating())
+				.addAllPhotoID(menu.getPhotos()).addAllRatings(menu.getRatings()).build();
+		
 		responseObserver.onNext(reply);
 		responseObserver.onCompleted();
 	}

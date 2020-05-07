@@ -28,13 +28,17 @@
             android:textAlignment="center"
             android:textSize="30sp" />
 
-
-        <Button
-            android:id="@+id/btnBarChart"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Bar Chart Demo" />
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/histogram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
 
         <HorizontalScrollView

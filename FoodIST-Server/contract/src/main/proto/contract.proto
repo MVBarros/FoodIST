@@ -126,7 +126,8 @@ message RatingRequest {
 
 message UpdateMenuReply {
     repeated string photoID = 1;
-    double rating = 2;
+    double averageRating = 2;
+    repeated double ratings = 3;
 }
 
 service FoodISTServerService {

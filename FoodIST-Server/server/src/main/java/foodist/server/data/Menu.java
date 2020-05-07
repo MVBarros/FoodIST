@@ -167,5 +167,9 @@ public class Menu {
     	}
     	return average;
     }
+    
+    public Collection<Double> getRatings() {
+    	return userRatings.values();
+    }
 
 }

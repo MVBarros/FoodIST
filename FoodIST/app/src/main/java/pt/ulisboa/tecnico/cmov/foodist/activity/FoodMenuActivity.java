@@ -8,20 +8,16 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -33,26 +29,28 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.activity.chart.Histogram;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
@@ -70,7 +68,6 @@ import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_N
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PHOTO_IDS;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
-import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_RATING;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
 public class FoodMenuActivity extends BaseActivity {
@@ -113,6 +110,48 @@ public class FoodMenuActivity extends BaseActivity {
         setButtons();
 
         isOnCreate = true;
+    }
+
+    public void createHistogram(Collection<Double> ratings) {
+        BarChart chart = findViewById(R.id.histogram);
+        ArrayList displayRatings = new ArrayList();
+
+        Iterator<Double> iterator = ratings.iterator();
+        int one_stars = 0, two_stars = 0, three_stars = 0, four_stars = 0, five_stars = 0;
+        while(iterator.hasNext()) {
+            int current = iterator.next().intValue();
+            switch(current) {
+                case 1:
+                    one_stars++;
+                    break;
+                case 2:
+                    two_stars++;
+                    break;
+                case 3:
+                    three_stars++;
+                    break;
+                case 4:
+                    four_stars++;
+                    break;
+                case 5:
+                    five_stars++;
+                    break;
+                default:
+                    // This will not ever happen
+                    break;
+            }
+        }
+        displayRatings.add(new BarEntry(1, one_stars));
+        displayRatings.add(new BarEntry(2, two_stars));
+        displayRatings.add(new BarEntry(3, three_stars));
+        displayRatings.add(new BarEntry(4, four_stars));
+        displayRatings.add(new BarEntry(5, five_stars));
+
+        BarDataSet bardataset = new BarDataSet(displayRatings, "User ratings");
+        chart.animateY(500);
+        BarData data = new BarData(bardataset);
+        bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        chart.setData(data);
     }
 
     public void setScroll() {
@@ -170,7 +209,6 @@ public class FoodMenuActivity extends BaseActivity {
         if (launchGetCachePhotosTask()) {
             return;
         }
-
 
         Photo[] photos = photosNotDownloaded.stream()
                 .limit(limit)
@@ -247,17 +285,6 @@ public class FoodMenuActivity extends BaseActivity {
                     launchAddRatingTask(rating);
                 }
 
-            }
-        });
-
-        BarChart barChart = (BarChart) findViewById(R.id.histogram);
-
-        Button btnBarChart = findViewById(R.id.btnBarChart);
-        btnBarChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent I = new Intent(FoodMenuActivity.this, Histogram.class);
-                startActivity(I);
             }
         });
     }
@@ -533,4 +560,5 @@ public class FoodMenuActivity extends BaseActivity {
     public String getMenuId() {
         return this.menuId;
     }
+
 }

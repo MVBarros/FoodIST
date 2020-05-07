@@ -36,7 +36,6 @@
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.ChooseCampusActivity" />
         <activity android:name=".activity.boot.ChooseLanguageActivity" />
-        <activity android:name=".activity.chart.Histogram" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
