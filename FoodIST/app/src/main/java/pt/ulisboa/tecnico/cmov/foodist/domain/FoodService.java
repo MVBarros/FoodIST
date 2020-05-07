@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+
+import foodist.server.grpc.contract.Contract;
 
 public class FoodService {
 
@@ -20,15 +23,17 @@ public class FoodService {
     private double latitude;
     private double longitude;
     private Map<String, Map<String, List<String>>> hours;
+    private Set<String> constraints;
 
     public FoodService(Map<String, String> names, String distance, String time, double latitude,
-                       double longitude, Map<String, Map<String, List<String>>> hours) {
+                       double longitude, Map<String, Map<String, List<String>>> hours, Set<String> constraints) {
         this.names = names;
         this.distance = distance;
         this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
         this.hours = hours;
+        this.constraints = constraints;
     }
 
     public String getName() {
@@ -67,6 +72,11 @@ public class FoodService {
         return this.hoursToString(hours.get(role).get(weekdayIntToString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))));
     }
 
+    public Set<String> getConstraints() {
+        return constraints;
+    }
+
+
     public boolean isFoodServiceAvailable(String role) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
 
@@ -85,6 +95,13 @@ public class FoodService {
         }
         return functioningHours.stream()
                 .anyMatch(hour -> this.isTimeInRange(currentHours, hour));
+    }
+
+    public boolean isFoodServiceConstrained(Map<Contract.FoodType, Boolean> constraints) {
+        return constraints.entrySet().stream().filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .map(Contract.FoodType::name)
+                .anyMatch(this.constraints::contains);
     }
 
     private String weekdayIntToString(int weekday) {
@@ -124,4 +141,5 @@ public class FoodService {
         hours.forEach(hour -> builder.append(hour).append(" "));
         return builder.toString();
     }
+
 }

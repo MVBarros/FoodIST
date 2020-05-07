@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final LatLng LOCATION_CTN = new LatLng(38.811936, -9.094336);
 
     private boolean isOnCreate;
+    private boolean useConstraints = true;
 
     private LocationRequestContext reqContext;
 
@@ -330,6 +332,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
         ViewGroup foodServiceList = findViewById(R.id.foodServices);
         foodServiceList.removeAllViews();
         getAvailableServices().forEach(this::drawService);
+        setFilterBox();
     }
 
     public void askCampus() {
@@ -356,11 +359,35 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     public List<FoodService> getAvailableServices() {
+        return useConstraints ? getAvailableServicesWithConstraints() : getAvailableServicesNoConstraints();
+    }
+
+    public void switchConstraints() {
+        useConstraints = !useConstraints;
+        drawServices();
+    }
+
+    public void setFilterBox() {
+        CheckBox box = findViewById(R.id.show_all_services_button);
+        box.setEnabled(true);
+        box.setOnClickListener(v -> this.switchConstraints());
+    }
+
+    public List<FoodService> getAvailableServicesWithConstraints() {
+
+        return getGlobalStatus().getServices().stream()
+                .filter(service -> service.isFoodServiceAvailable(getGlobalStatus().getUserRole()))
+                .filter(service -> service.isFoodServiceConstrained(getGlobalStatus().getUserConstraints()))
+                .collect(Collectors.toList());
+    }
+
+    public List<FoodService> getAvailableServicesNoConstraints() {
 
         return getGlobalStatus().getServices().stream()
                 .filter(service -> service.isFoodServiceAvailable(getGlobalStatus().getUserRole()))
                 .collect(Collectors.toList());
     }
+
 
     private void distanceLocationCallback(Location location) {
         if (location != null) {

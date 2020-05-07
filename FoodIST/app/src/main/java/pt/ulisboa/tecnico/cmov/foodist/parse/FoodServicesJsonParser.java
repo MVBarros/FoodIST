@@ -11,9 +11,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.async.data.FoodServiceData;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
@@ -59,8 +61,8 @@ public class FoodServicesJsonParser {
         double latitude = object.getDouble("latitude");
         double longitude = object.getDouble("longitude");
         Map<String, Map<String, List<String>>> hours = parseHours(object);
-
-        return new FoodService(names, distance, time, latitude, longitude, hours);
+        Set<String> constrains = parseConstrains(object);
+        return new FoodService(names, distance, time, latitude, longitude, hours, constrains);
     }
 
     private static Map<String, Map<String, List<String>>> parseHours(JSONObject object) throws JSONException {
@@ -81,5 +83,14 @@ public class FoodServicesJsonParser {
             hours.put(key, hourMap);
         }
         return hours;
+    }
+
+    private static  Set<String> parseConstrains(JSONObject object) throws JSONException {
+        Set<String> constrains = new HashSet<>();
+        JSONArray array = object.getJSONArray("constraints");
+        for (int i = 0; i < array.length(); i++) {
+            constrains.add(array.getString(i));
+        }
+        return constrains;
     }
 }

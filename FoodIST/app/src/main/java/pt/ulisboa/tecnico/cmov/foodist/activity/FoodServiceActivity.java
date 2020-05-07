@@ -265,7 +265,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         if(i!=0) {
             average = average / i;
             RatingBar foodServiceRating = findViewById(R.id.averageFoodServiceRating);
-            foodServiceRating.setRating(Float.valueOf(getGlobalStatus().formatRating(average)));
+            foodServiceRating.setRating(Float.parseFloat(getGlobalStatus().formatRating(average)));
         }
 
     }
