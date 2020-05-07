@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.Executor;
 
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -25,6 +26,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
     private final String cookie;
     private final boolean hasPhotoTaken;
     private static final String TAG = "UPLOADMENU-TASK";
+    private Executor executor;
 
 
     public UploadMenuTask(AddMenuActivity activity, UploadPhotoTask task, boolean hasPhotoTaken, String taskPhoto, String cookie) {
@@ -34,6 +36,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
         this.taskPhoto = taskPhoto;
         this.cookie = cookie;
         this.activity = new WeakReference<>(activity);
+        this.executor = activity.getGlobalStatus().getExecutor();
     }
 
 
@@ -64,7 +67,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
     protected void onPostExecute(Contract.AddMenuReply result) {
         if (hasPhotoTaken && taskPhoto != null) {
             if (result != null) {
-                task.execute(new Photo(String.valueOf(result.getMenuId()), taskPhoto));
+                task.executeOnExecutor(executor, new Photo(String.valueOf(result.getMenuId()), taskPhoto));
                 return;
             }
         }

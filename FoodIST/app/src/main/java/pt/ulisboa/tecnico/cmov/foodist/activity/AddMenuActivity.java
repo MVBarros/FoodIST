@@ -118,7 +118,7 @@ public class AddMenuActivity extends BaseActivity {
         }
 
         UploadPhotoTask task = new UploadPhotoTask(this);
-        new UploadMenuTask(this, task, hasPhotoTaken, imageFilePath, getGlobalStatus().getCookie()).execute(menu);
+        new UploadMenuTask(this, task, hasPhotoTaken, imageFilePath, getGlobalStatus().getCookie()).executeOnExecutor(getGlobalStatus().getExecutor(), menu);
         Button b = findViewById(R.id.add_new_menu_done_button);
         //Do not allow another menu to be enabled
         b.setEnabled(false);

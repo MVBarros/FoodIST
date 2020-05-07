@@ -155,7 +155,7 @@ public class FoodMenuActivity extends BaseActivity {
                 .map(Photo::getPhotoID)
                 .forEach(this::acceptDownload);
 
-        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(getGlobalStatus().getExecutor(), photos);
         return true;
     }
 
@@ -186,7 +186,7 @@ public class FoodMenuActivity extends BaseActivity {
                 .map(Photo::getPhotoID)
                 .forEach(this::acceptDownload);
 
-        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photos);
+        new CancelableTask<>(new SafePostTask<>(new DownloadPhotosTask(this))).executeOnExecutor(getGlobalStatus().getExecutor(), photos);
     }
 
     public void addPhoto(Bitmap bitmap, String photoId) {
@@ -232,7 +232,7 @@ public class FoodMenuActivity extends BaseActivity {
                 showToast(getString(R.string.flag_menu_no_conn_erro_message));
                 return;
             }
-            new FlagMenuTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
+            new FlagMenuTask(this).executeOnExecutor(getGlobalStatus().getExecutor(), menuId);
         });
 
         RatingBar ratingBar = findViewById(R.id.userStarRating);
@@ -327,7 +327,7 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_update_menu_failure_toast));
             return;
         }
-        new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, menuId);
+        new CancelableTask<>(new SafePostTask<>(new UpdateMenuInfoTask(this))).executeOnExecutor(getGlobalStatus().getExecutor(), menuId);
     }
 
     private void launchUploadPhotoTask(Photo photo) {
@@ -335,7 +335,7 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_photo_upload_no_internet_failure_toast));
             return;
         }
-        new UploadPhotoTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photo);
+        new UploadPhotoTask(this).executeOnExecutor(getGlobalStatus().getExecutor(), photo);
     }
 
 
@@ -353,7 +353,7 @@ public class FoodMenuActivity extends BaseActivity {
             showToast(getString(R.string.food_menu_rating_upload_no_internet_failure_toast));
             return;
         }
-       new UploadRatingTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rating);
+       new UploadRatingTask(this).executeOnExecutor(getGlobalStatus().getExecutor(), rating);
     }
 
     private void choiceReturn(SharedPreferences.Editor editor, Intent data) {

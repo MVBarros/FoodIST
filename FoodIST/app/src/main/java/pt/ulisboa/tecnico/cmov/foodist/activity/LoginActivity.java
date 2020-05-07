@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity {
                 .setPassword(password)
                 .build();
 
-        new LoginAsyncTask(this).execute(request);
+        new LoginAsyncTask(this).executeOnExecutor(getGlobalStatus().getExecutor(), request);
     }
 
     public void doLogout() {
@@ -96,7 +96,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        new LogoutAsyncTask(this).execute(getGlobalStatus().getCookie());
+        new LogoutAsyncTask(this).executeOnExecutor(getGlobalStatus().getExecutor(), getGlobalStatus().getCookie());
     }
 
     public void doRegister() {
@@ -124,7 +124,7 @@ public class LoginActivity extends BaseActivity {
                 .setPassword(password)
                 .build();
 
-        new RegisterAsyncTask(this).execute(request);
+        new RegisterAsyncTask(this).executeOnExecutor(getGlobalStatus().getExecutor(), request);
     }
 
     protected void setCampus() {

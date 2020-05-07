@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -34,6 +37,8 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 
 public class GlobalStatus extends Application {
+
+    private Executor executor;
 
     public static final String MEAT_KEY = Contract.FoodType.Meat.name();
     public static final String VEGAN_KEY = Contract.FoodType.Vegan.name();
@@ -296,5 +301,12 @@ public class GlobalStatus extends Application {
 
     public String formatRating(double rating) {
         return DECIMAL_FORMAT.format(rating);
+    }
+
+    public Executor getExecutor() {
+        if (executor == null) {
+            executor = Executors.newCachedThreadPool();
+        }
+        return executor;
     }
 }

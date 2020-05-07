@@ -13,7 +13,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
@@ -75,7 +74,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     private static final long MAX_TIME = 1000 * 60; // 1 Minute in milliseconds
     private static final LatLng LOCATION_TAGUS = new LatLng(38.737050, -9.302734);
     private static final LatLng LOCATION_ALAMEDA = new LatLng(38.736819, -9.138769);
-    private static final LatLng LOCATION_CTN = new LatLng( 38.811936, -9.094336 );
+    private static final LatLng LOCATION_CTN = new LatLng(38.811936, -9.094336);
 
     private boolean isOnCreate;
 
@@ -119,10 +118,10 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     }
 
-    public void setWifiDirectListener(List<FoodService> services){
+    public void setWifiDirectListener(List<FoodService> services) {
         List<String> foodServiceName = services.stream()
-                                        .map(FoodService::getName)
-                                        .collect(Collectors.toList());
+                .map(FoodService::getName)
+                .collect(Collectors.toList());
 
         Log.d("TAG", "NumberFoodService: " + foodServiceName.size());
         IntentFilter filter = new IntentFilter();
@@ -234,9 +233,8 @@ public class MainActivity extends BaseActivity implements LocationListener {
             String[] foodServiceNames = getGlobalStatus().getServices().stream()
                     .map(FoodService::getName)
                     .toArray(String[]::new);
-            new CancelableTask<>(new SafePostTask<>(new ServiceQueueTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, foodServiceNames);
-        }
-        else {
+            new CancelableTask<>(new SafePostTask<>(new ServiceQueueTimeTask(this))).executeOnExecutor(getGlobalStatus().getExecutor(), foodServiceNames);
+        } else {
             showToast(getString(R.string.no_network_avaliable_queue_time_message));
         }
     }
@@ -251,11 +249,11 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
 
     private void launchWalkingTimeTask(WalkingTimeData data) {
-        new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
+        new CancelableTask<>(new SafePostTask<>(new ServiceWalkingTimeTask(this))).executeOnExecutor(getGlobalStatus().getExecutor(), data);
     }
 
     private void launchGuessCampusTask(LatLng curr) {
-        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, MainActivity.LOCATION_ALAMEDA, MainActivity.LOCATION_TAGUS, MainActivity.LOCATION_CTN);
+        new CancelableTask<>(new SafePostTask<>(new GuessCampusTask(this, curr))).executeOnExecutor(getGlobalStatus().getExecutor(), MainActivity.LOCATION_ALAMEDA, MainActivity.LOCATION_TAGUS, MainActivity.LOCATION_CTN);
     }
 
     private void updateCampusFromLocation(Location location) {
@@ -354,7 +352,7 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     private void launchFoodServiceParseTask(FoodServiceData resource) {
-        new CancelableTask<>((new SafePostTask<>(new ServiceParsingTask(this)))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, resource);
+        new CancelableTask<>((new SafePostTask<>(new ServiceParsingTask(this)))).executeOnExecutor(getGlobalStatus().getExecutor(), resource);
     }
 
     public List<FoodService> getAvailableServices() {
