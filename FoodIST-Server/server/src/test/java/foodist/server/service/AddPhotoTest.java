@@ -1,12 +1,10 @@
 package foodist.server.service;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Empty;
 import foodist.server.data.Menu;
 import foodist.server.data.Photo;
 import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
-import foodist.server.service.ServiceImplementation;
 import io.grpc.ManagedChannel;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
