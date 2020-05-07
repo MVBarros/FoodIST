@@ -218,4 +218,8 @@
     <string name="rate_menu_error_string">Error rating menu</string>
     <string name="menu_rated_success_successfully">Menu rated successfully</string>
     <string name="filter_services_i_m_not_interested_in">Filter services I\'m not interested in</string>
+    <string name="could_not_get_walking_distance_message">Could not get services walking distance</string>
+    <string name="could_not_inter_campus_message">Could not infer campus from location</string>
+    <string name="invalid_image_provided_message">Invalid Image Provided</string>
+    <string name="extra_title_message">Select from:</string>
 </resources>

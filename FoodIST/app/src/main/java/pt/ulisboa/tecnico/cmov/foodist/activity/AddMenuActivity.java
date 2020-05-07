@@ -172,7 +172,7 @@ public class AddMenuActivity extends BaseActivity {
 
                 Intent chooser = new Intent(Intent.ACTION_CHOOSER);
                 chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
-                chooser.putExtra(Intent.EXTRA_TITLE, "Select from:");
+                chooser.putExtra(Intent.EXTRA_TITLE, getString(R.string.extra_title_message));
 
                 Intent[] intentArray = {createCameraIntent()};
                 chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);

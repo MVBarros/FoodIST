@@ -219,4 +219,8 @@
     <string name="rate_menu_error_string">Erro a classificar menu</string>
     <string name="menu_rated_success_successfully">Menu classificado com sucesso</string>
     <string name="filter_services_i_m_not_interested_in">Filtrar serviços que não me interessam</string>
+    <string name="could_not_get_walking_distance_message">Impossivel determinar a pé da localização atual</string>
+    <string name="could_not_inter_campus_message">Impossivel inferir campus da localização atual</string>
+    <string name="invalid_image_provided_message">Mensagem Invalida Fornecida</string>
+    <string name="extra_title_message">Escolha entre:</string>
 </resources>

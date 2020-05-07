@@ -391,19 +391,17 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     private void distanceLocationCallback(Location location) {
         if (location != null) {
-            Log.v("Location Result for Distance", location.getLatitude() + " and " + location.getLongitude());
             updateServicesFromLocation(location);
         } else {
-            showToast("Could not get services walking distance");
+            showToast(getString(R.string.could_not_get_walking_distance_message));
         }
     }
 
     private void campusLocationCallback(Location location) {
         if (location != null) {
-            Log.v("Location Result for Campus", location.getLatitude() + " and " + location.getLongitude());
             updateCampusFromLocation(location);
         } else {
-            showToast("Could not infer campus from location");
+            showToast(getString(R.string.could_not_inter_campus_message));
             askCampus();
         }
     }
