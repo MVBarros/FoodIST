@@ -47,6 +47,6 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
             return;
         }
         getActivity().setPhotoIds(new ArrayList<>(reply.getPhotoIDList())); //Reorder photo Ids
-        getActivity().launchGetCachePhotosTask();
+        getActivity().launchGetCachePhotosTask(); //Redraw photos (by getting them from the cache)
     }
 }
