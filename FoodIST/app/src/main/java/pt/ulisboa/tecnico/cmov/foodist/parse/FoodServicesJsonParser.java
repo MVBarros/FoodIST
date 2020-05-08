@@ -58,11 +58,12 @@ public class FoodServicesJsonParser {
         names.put("pt", object.getString("pt"));
         String distance = object.getString("distance");
         String time = object.getString("time");
+        String beacon = object.getString("beacon");
         double latitude = object.getDouble("latitude");
         double longitude = object.getDouble("longitude");
         Map<String, Map<String, List<String>>> hours = parseHours(object);
         Set<String> constrains = parseConstrains(object);
-        return new FoodService(names, distance, time, latitude, longitude, hours, constrains);
+        return new FoodService(names, distance, time, latitude, longitude, hours, constrains, beacon);
     }
 
     private static Map<String, Map<String, List<String>>> parseHours(JSONObject object) throws JSONException {

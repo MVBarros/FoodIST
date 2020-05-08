@@ -9,8 +9,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc;
@@ -20,6 +22,7 @@ import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.CancelJoinTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.JoinQueueTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.queue.LeaveQueueTask;
+import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
 public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
@@ -28,14 +31,15 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
     private final FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub;
     private final static String TAG = "WIFI-DIRECT-RECEIVER";
     private boolean isInQueue = false;
-    private List<String> foodServiceNames;
+    private Map<String, String> foodServices = new ConcurrentHashMap<>();
     private String currentFoodService;
 
-    public SimWifiP2pBroadcastReceiver(GlobalStatus status, List<String> foodServiceNames) {
+    public SimWifiP2pBroadcastReceiver(GlobalStatus status, List<FoodService> foodServiceNames) {
         super();
         this.uuid = status.getUUID();
         this.stub = status.getStub();
-        this.foodServiceNames = foodServiceNames;
+        foodServiceNames.forEach(service -> this.foodServices.put(service.getBeacon(), service.getName()));
+
     }
 
     //Network is always available for this broadcast receiver
@@ -48,11 +52,11 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
             Log.d(TAG, "Device info was null");
             return;
         }
-        Set<String> foodServiceBeacons = deviceInfo.getDeviceList()
-                .stream()
+        Set<String> foodServiceBeacons = deviceInfo.getDeviceList().stream()
                 .filter(Objects::nonNull)
-                .map(device -> device.deviceName.replaceAll("_", " "))
-                .filter(deviceName -> foodServiceNames.contains(deviceName))
+                .map(device -> device.deviceName)
+                .filter(deviceName -> foodServices.containsKey(deviceName))
+                .map(foodServices::get)
                 .collect(Collectors.toSet());
 
         if (foodServiceBeacons.isEmpty()) {
@@ -76,12 +80,5 @@ public class SimWifiP2pBroadcastReceiver extends BroadcastReceiver {
                 new JoinQueueTask(uuid, stub).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, currentFoodService);
             }
         }
-    }
-
-    public boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

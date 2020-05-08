@@ -98,12 +98,8 @@ public class MainActivity extends BaseActivity implements LocationListener {
 
     public void setWifiDirectListener(List<FoodService> services) {
         if (!hasTermiteServiceStarted) {
-            List<String> foodServiceNames = services.stream()
-                    .map(FoodService::getName)
-                    .collect(Collectors.toList());
-
-            Log.d("TAG", "NumberFoodService: " + foodServiceNames.size());
-            getGlobalStatus().setBroadcastReceiver(foodServiceNames);
+            Log.d("TAG", "NumberFoodService: " + services.size());
+            getGlobalStatus().setBroadcastReceiver(services);
             hasTermiteServiceStarted = true;
         }
     }

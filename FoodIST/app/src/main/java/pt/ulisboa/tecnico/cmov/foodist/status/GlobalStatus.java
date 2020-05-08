@@ -84,7 +84,7 @@ public class GlobalStatus extends Application {
         }
     };
 
-    public void setBroadcastReceiver(List<String> foodServices) {
+    public void setBroadcastReceiver(List<FoodService> foodServices) {
         IntentFilter filter = new IntentFilter();
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
         mReceiver = new SimWifiP2pBroadcastReceiver(this, foodServices);

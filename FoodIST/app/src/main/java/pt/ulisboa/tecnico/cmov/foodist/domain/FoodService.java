@@ -24,9 +24,10 @@ public class FoodService {
     private double longitude;
     private Map<String, Map<String, List<String>>> hours;
     private Set<String> constraints;
+    private String beacon;
 
     public FoodService(Map<String, String> names, String distance, String time, double latitude,
-                       double longitude, Map<String, Map<String, List<String>>> hours, Set<String> constraints) {
+                       double longitude, Map<String, Map<String, List<String>>> hours, Set<String> constraints, String beacon) {
         this.names = names;
         this.distance = distance;
         this.time = time;
@@ -34,6 +35,7 @@ public class FoodService {
         this.longitude = longitude;
         this.hours = hours;
         this.constraints = constraints;
+        this.beacon = beacon;
     }
 
     public String getName() {
@@ -76,6 +78,9 @@ public class FoodService {
         return constraints;
     }
 
+    public String getBeacon() {
+        return beacon;
+    }
 
     public boolean isFoodServiceAvailable(String role) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
