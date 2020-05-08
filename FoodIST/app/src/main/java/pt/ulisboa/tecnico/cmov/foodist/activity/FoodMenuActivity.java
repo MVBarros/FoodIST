@@ -120,7 +120,7 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     public void setHistogram(Collection<Double> ratings) {
-        HorizontalBarChart chart = findViewById(R.id.histogram);
+        HorizontalBarChart chart = findViewById(R.id.food_menu_histogram);
         ArrayList displayRatings = new ArrayList();
 
         Iterator<Double> iterator = ratings.iterator();
@@ -165,14 +165,16 @@ public class FoodMenuActivity extends BaseActivity {
         // Time to display bars
         chart.animateY(500);
 
+        // Disables the Right Y axis
+        chart.getAxisRight().setDrawLabels(false);
+        chart.getAxisRight().setEnabled(false);
+
         // Operations regarding the Left Y axis
         chart.getAxisLeft().setValueFormatter(new IntegerFormater());
         chart.getAxisLeft().setGranularity(1);
         chart.getAxisLeft().setGranularityEnabled(true);
 
-        // Disables the Right Y axis
-        chart.getAxisRight().setDrawLabels(false);
-        chart.getAxisRight().setEnabled(false);
+        ViewPortHandler handler = chart.getViewPortHandler();
 
         // Operations regarding the X axis
         chart.getXAxis().setGranularity(1);
