@@ -7,11 +7,11 @@ import java.util.Iterator;
 
 abstract class BarEntries {
 
-    private int one_stars;
-    private int two_stars;
-    private int three_stars;
-    private int four_stars;
-    private int five_stars;
+    private int one_stars = 0;
+    private int two_stars = 0;
+    private int three_stars = 0;
+    private int four_stars = 0;
+    private int five_stars = 0;
 
     private ArrayList<BarEntry> barEntries = new ArrayList();
 
@@ -34,21 +34,11 @@ abstract class BarEntries {
     }
 
     ArrayList<BarEntry> assemble() {
-        if(one_stars!=0) {
-            this.barEntries.add(new BarEntry(1, one_stars));
-        }
-        if(two_stars!=0) {
-            this.barEntries.add(new BarEntry(2, two_stars));
-        }
-        if(three_stars!=0) {
-            this.barEntries.add(new BarEntry(3, three_stars));
-        }
-        if(four_stars!=0) {
-            this.barEntries.add(new BarEntry(4, four_stars));
-        }
-        if(five_stars!=0) {
-            this.barEntries.add(new BarEntry(5, five_stars));
-        }
+        this.barEntries.add(new BarEntry(1, one_stars));
+        this.barEntries.add(new BarEntry(2, two_stars));
+        this.barEntries.add(new BarEntry(3, three_stars));
+        this.barEntries.add(new BarEntry(4, four_stars));
+        this.barEntries.add(new BarEntry(5, five_stars));
 
         return this.barEntries;
     }

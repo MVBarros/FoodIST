@@ -36,38 +36,36 @@ public class Histogram extends BaseActivity {
     }
 
     private void displayGraph(HorizontalBarChart horizontalBarChart, ArrayList<BarEntry> barEntries) {
-        if(barEntries!=null || !barEntries.isEmpty()) {
-            // Picks the chart type
-            BarDataSet barDataSet = new BarDataSet(barEntries, "Star ratings");
-            barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        // Picks the chart type
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Star ratings");
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
-            // Set histogram bars
-            BarData barData = new BarData(barDataSet);
-            barData.setValueFormatter(new IntegerFormater());
+        // Set histogram bars
+        BarData barData = new BarData(barDataSet);
+        barData.setValueFormatter(new IntegerFormater());
 
-            // Time to display bars
-            horizontalBarChart.animateY(500);
+        // Time to display bars
+        horizontalBarChart.animateY(500);
 
-            // Disables the Right Y axis
-            horizontalBarChart.getAxisRight().setDrawLabels(false);
-            horizontalBarChart.getAxisRight().setEnabled(false);
+        // Disables the Right Y axis
+        horizontalBarChart.getAxisRight().setDrawLabels(false);
+        horizontalBarChart.getAxisRight().setEnabled(false);
 
-            // Operations regarding the Left Y axis
-            horizontalBarChart.getAxisLeft().setValueFormatter(new IntegerFormater());
-            horizontalBarChart.getAxisLeft().setGranularity(1);
-            horizontalBarChart.getAxisLeft().setGranularityEnabled(true);
+        // Operations regarding the Left Y axis
+        horizontalBarChart.getAxisLeft().setValueFormatter(new IntegerFormater());
+        horizontalBarChart.getAxisLeft().setGranularity(1);
+        horizontalBarChart.getAxisLeft().setGranularityEnabled(true);
 
-            // Operations regarding the X axis
-            horizontalBarChart.getXAxis().setGranularity(1);
-            horizontalBarChart.getXAxis().setGranularityEnabled(true);
-            horizontalBarChart.setVisibleXRange(1, 5);
+        // Operations regarding the X axis
+        horizontalBarChart.getXAxis().setGranularity(1);
+        horizontalBarChart.getXAxis().setGranularityEnabled(true);
+        horizontalBarChart.setVisibleXRange(1, 5);
 
-            // Turns the default description label off
-            horizontalBarChart.getDescription().setEnabled(false);
+        // Turns the default description label off
+        horizontalBarChart.getDescription().setEnabled(false);
 
-            // Sets the data onto the histogram
-            horizontalBarChart.setData(barData);
-        }
+        // Sets the data onto the histogram
+        horizontalBarChart.setData(barData);
     }
 
     private HorizontalBarChart getChart(FoodMenuActivity foodMenuActivity) {
