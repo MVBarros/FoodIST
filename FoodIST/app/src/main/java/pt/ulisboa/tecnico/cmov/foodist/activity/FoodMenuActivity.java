@@ -29,10 +29,15 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +56,7 @@ import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.IntegerFormater;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
@@ -113,7 +119,7 @@ public class FoodMenuActivity extends BaseActivity {
     }
 
     public void createHistogram(Collection<Double> ratings) {
-        BarChart chart = findViewById(R.id.histogram);
+        HorizontalBarChart chart = findViewById(R.id.histogram);
         ArrayList displayRatings = new ArrayList();
 
         Iterator<Double> iterator = ratings.iterator();
@@ -147,11 +153,33 @@ public class FoodMenuActivity extends BaseActivity {
         displayRatings.add(new BarEntry(4, four_stars));
         displayRatings.add(new BarEntry(5, five_stars));
 
-        BarDataSet bardataset = new BarDataSet(displayRatings, "User ratings");
+        // Picks the chart type
+        BarDataSet barDataSet = new BarDataSet(displayRatings, "Star ratings");
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        // Set histogram bars
+        BarData barData = new BarData(barDataSet);
+        barData.setValueFormatter(new IntegerFormater());
+
+        // Time to display bars
         chart.animateY(500);
-        BarData data = new BarData(bardataset);
-        bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        chart.setData(data);
+
+        // Operations regarding the Left Y axis
+        chart.getAxisLeft().setValueFormatter(new IntegerFormater());
+        chart.getAxisLeft().setGranularity(1);
+        chart.getAxisLeft().setGranularityEnabled(true);
+
+        // Disables the Right Y axis
+        chart.getAxisRight().setDrawLabels(false);
+        chart.getAxisRight().setEnabled(false);
+
+        // Operations regarding the X axis
+        chart.getXAxis().setGranularity(1);
+        chart.getXAxis().setGranularityEnabled(true);
+        chart.setVisibleXRange(1, 5);
+
+        // Sets the data onto the histogram
+        chart.setData(barData);
     }
 
     public void setScroll() {
