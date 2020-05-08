@@ -38,20 +38,10 @@
             android:scaleY="0.8"
             android:stepSize="0.5"
             android:isIndicator="true"/>
-
-        <LinearLayout
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/food_menu_histogram"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/food_menu_histogram"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"/>
-
-        </LinearLayout>
-
-
+            android:layout_height="80dp" />
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"

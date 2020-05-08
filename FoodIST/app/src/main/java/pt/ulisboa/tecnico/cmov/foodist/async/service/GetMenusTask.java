@@ -12,6 +12,7 @@ import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServic
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodServiceActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.Histogram;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
@@ -67,7 +68,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Menu>, Foo
         getActivity().setMenus(new ArrayList<>(result));
         getActivity().drawServices();
         getActivity().setRating(new ArrayList<>(result));
-        getActivity().setHistogram(new ArrayList<>(result));
+        new Histogram().draw(new ArrayList<>(result), getActivity());
         Log.d(TAG, "Menus obtained successfully");
 
     }
