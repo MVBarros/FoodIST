@@ -134,7 +134,8 @@ public class Menu {
         builder.addAllPhotoId(getPhotos());
         builder.setPrice(this.price);
         builder.setType(this.type);
-        builder.setRating(averageRating());
+        builder.setAverageRating(averageRating());
+        builder.addAllRatings(getRatings());
 
         return builder.build();
     }

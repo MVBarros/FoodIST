@@ -266,8 +266,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         double average = 0;
         int i = 0;
         for(Menu menu : menus) {
-            if(menu.getRating()!=-1.0) {
-                average+=menu.getRating();
+            if(menu.getAverageRating()!=-1.0) {
+                average+=menu.getAverageRating();
                 i++;
             }
         }
@@ -283,30 +283,34 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         HorizontalBarChart chart = findViewById(R.id.food_service_histogram);
         ArrayList displayRatings = new ArrayList();
 
-        Iterator<Menu> iterator = menus.iterator();
+        Iterator<Menu> menuIterator = menus.iterator();
         int one_stars = 0, two_stars = 0, three_stars = 0, four_stars = 0, five_stars = 0;
-        while(iterator.hasNext()) {
-            int current = (int) iterator.next().getRating();
-            switch(current) {
-                case 1:
-                    one_stars++;
-                    break;
-                case 2:
-                    two_stars++;
-                    break;
-                case 3:
-                    three_stars++;
-                    break;
-                case 4:
-                    four_stars++;
-                    break;
-                case 5:
-                    five_stars++;
-                    break;
-                default:
-                    // This will not ever happen
-                    break;
+        while(menuIterator.hasNext()) {
+            Iterator<Double> ratingsIterator = menuIterator.next().getRatings().iterator();
+            while(ratingsIterator.hasNext()) {
+                int current = ratingsIterator.next().intValue();
+                switch(current) {
+                    case 1:
+                        one_stars++;
+                        break;
+                    case 2:
+                        two_stars++;
+                        break;
+                    case 3:
+                        three_stars++;
+                        break;
+                    case 4:
+                        four_stars++;
+                        break;
+                    case 5:
+                        five_stars++;
+                        break;
+                    default:
+                        // This will not ever happen
+                        break;
+                }
             }
+
         }
         displayRatings.add(new BarEntry(1, one_stars));
         displayRatings.add(new BarEntry(2, two_stars));
