@@ -48,6 +48,8 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
         }
         getActivity().setPhotoIds(new ArrayList<>(reply.getPhotoIDList())); //Reorder photo Ids
         getActivity().launchGetCachePhotosTask(); //Redraw photos (by getting them from the cache)
-        getActivity().createHistogram(new ArrayList<>(reply.getRatingsList()));
+
+        getActivity().setRating(reply.getAverageRating()); //Resets menu average rating
+        getActivity().setHistogram(new ArrayList<>(reply.getRatingsList())); //Resets the histogram
     }
 }

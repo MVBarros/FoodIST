@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -118,7 +119,7 @@ public class FoodMenuActivity extends BaseActivity {
         isOnCreate = true;
     }
 
-    public void createHistogram(Collection<Double> ratings) {
+    public void setHistogram(Collection<Double> ratings) {
         HorizontalBarChart chart = findViewById(R.id.histogram);
         ArrayList displayRatings = new ArrayList();
 
@@ -177,6 +178,9 @@ public class FoodMenuActivity extends BaseActivity {
         chart.getXAxis().setGranularity(1);
         chart.getXAxis().setGranularityEnabled(true);
         chart.setVisibleXRange(1, 5);
+
+        // Turns the default description label off
+        chart.getDescription().setEnabled(false);
 
         // Sets the data onto the histogram
         chart.setData(barData);
@@ -587,6 +591,13 @@ public class FoodMenuActivity extends BaseActivity {
 
     public String getMenuId() {
         return this.menuId;
+    }
+
+    public synchronized void setRating(double menuRating) {
+        if(menuRating!=-1.0) {
+            RatingBar ratingBar = findViewById(R.id.menuStarRating);
+            ratingBar.setRating((float) menuRating);
+        }
     }
 
 }

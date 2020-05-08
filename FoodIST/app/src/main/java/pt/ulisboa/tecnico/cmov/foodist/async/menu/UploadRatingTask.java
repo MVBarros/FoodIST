@@ -78,7 +78,7 @@ public class UploadRatingTask extends AsyncTask<Double, Integer, Empty> {
                 return;
             }
             act.showToast(act.getString(R.string.menu_rated_success_successfully));
+            act.launchUpdateMenuTask();
         }
     }
-
 }
