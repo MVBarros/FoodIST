@@ -15,7 +15,8 @@ public class Menu {
     private String translatedName;
     private String menuId;
     private ArrayList<String> photoIds;
-    private double rating;
+    private double averageRating;
+    private ArrayList<Double> ratings;
 
     //To send menus to the server
     public Menu(String foodServiceName, String menuName, double price, Contract.FoodType type, String language, String translatedName) {
@@ -37,7 +38,7 @@ public class Menu {
     }
 
     //To receive menus from the server
-    public Menu(String originalName, double price, Contract.FoodType type, String language, String translatedName, String menuId, List<String> photoIds, double rating) {
+    public Menu(String originalName, double price, Contract.FoodType type, String language, String translatedName, String menuId, List<String> photoIds, double averageRating, List<Double> ratings) {
         this.price = price;
         this.type = type;
         this.language = language;
@@ -45,7 +46,8 @@ public class Menu {
         this.menuName = originalName;
         this.menuId = menuId;
         this.photoIds = new ArrayList<>(photoIds);
-        this.rating = rating;
+        this.averageRating = averageRating;
+        this.ratings = new ArrayList<>(ratings);
     }
 
     public String getFoodServiceName() {
@@ -61,7 +63,7 @@ public class Menu {
     }
 
     public static Menu parseContractMenu(Contract.Menu menu) {
-        return new Menu(menu.getOriginalName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName(), String.valueOf(menu.getMenuId()), menu.getPhotoIdList(), menu.getRating());
+        return new Menu(menu.getOriginalName(), menu.getPrice(), menu.getType(), menu.getLanguage(), menu.getTranslatedName(), String.valueOf(menu.getMenuId()), menu.getPhotoIdList(), menu.getAverageRating(), menu.getRatingsList());
     }
 
     public Contract.FoodType getType() {
@@ -91,5 +93,7 @@ public class Menu {
     public ArrayList<String> getPhotoIds() {
         return photoIds;
     }
-    public double getRating() { return rating; }
+    public double getAverageRating() { return averageRating; }
+
+    public ArrayList<Double> getRatings() { return ratings; }
 }

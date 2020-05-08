@@ -11,6 +11,12 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -19,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,6 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.IntegerFormater;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapterNoTranslation;
@@ -257,8 +266,8 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         double average = 0;
         int i = 0;
         for(Menu menu : menus) {
-            if(menu.getRating()!=-1.0) {
-                average+=menu.getRating();
+            if(menu.getAverageRating()!=-1.0) {
+                average+=menu.getAverageRating();
                 i++;
             }
         }

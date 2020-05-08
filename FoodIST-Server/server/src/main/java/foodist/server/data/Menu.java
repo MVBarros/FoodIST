@@ -134,7 +134,8 @@ public class Menu {
         builder.addAllPhotoId(getPhotos());
         builder.setPrice(this.price);
         builder.setType(this.type);
-        builder.setRating(averageRating());
+        builder.setAverageRating(averageRating());
+        builder.addAllRatings(getRatings());
 
         return builder.build();
     }
@@ -166,6 +167,10 @@ public class Menu {
     		average = userRatings.entrySet().stream().mapToDouble(Map.Entry::getValue).average().orElse(Double.NaN); 
     	}
     	return average;
+    }
+    
+    public Collection<Double> getRatings() {
+    	return userRatings.values();
     }
 
 }

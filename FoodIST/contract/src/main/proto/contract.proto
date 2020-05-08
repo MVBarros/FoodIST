@@ -44,14 +44,15 @@ message ListMenuReply {
 }
 
 message Menu {
-    string originalName = 2;
-    double price = 3;
-    repeated string photoId = 4;
-    FoodType type = 5;
-    string language = 6;
-    string translatedName = 7;
-    int64 menuId = 8;
-    double rating = 9;
+    string originalName = 1;
+    double price = 2;
+    repeated string photoId = 3;
+    FoodType type = 4;
+    string language = 5;
+    string translatedName = 6;
+    int64 menuId = 7;
+    double averageRating = 8;
+    repeated double ratings = 9;
 }
 
 message UpdateMenuRequest {
@@ -126,7 +127,8 @@ message RatingRequest {
 
 message UpdateMenuReply {
     repeated string photoID = 1;
-    double rating = 2;
+    double averageRating = 2;
+    repeated double ratings = 3;
 }
 
 service FoodISTServerService {

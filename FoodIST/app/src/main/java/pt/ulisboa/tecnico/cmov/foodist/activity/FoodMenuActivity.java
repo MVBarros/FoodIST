@@ -12,15 +12,13 @@ import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -31,24 +29,35 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.IntegerFormater;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.SafePostTask;
@@ -66,7 +75,6 @@ import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.DISPLAY_N
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_ID;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PHOTO_IDS;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_PRICE;
-import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.MENU_RATING;
 import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.PHOTO_ID;
 
 public class FoodMenuActivity extends BaseActivity {
@@ -166,7 +174,6 @@ public class FoodMenuActivity extends BaseActivity {
         if (launchGetCachePhotosTask()) {
             return;
         }
-
 
         Photo[] photos = photosNotDownloaded.stream()
                 .limit(limit)
@@ -518,4 +525,12 @@ public class FoodMenuActivity extends BaseActivity {
     public String getMenuId() {
         return this.menuId;
     }
+
+    public synchronized void setRating(double menuRating) {
+        if(menuRating!=-1.0) {
+            RatingBar ratingBar = findViewById(R.id.menuStarRating);
+            ratingBar.setRating((float) menuRating);
+        }
+    }
+
 }

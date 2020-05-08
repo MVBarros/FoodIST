@@ -8,6 +8,7 @@ import foodist.server.grpc.contract.Contract;
 import foodist.server.grpc.contract.FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub;
 import io.grpc.StatusRuntimeException;
 import pt.ulisboa.tecnico.cmov.foodist.activity.FoodMenuActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.Histogram;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 
 public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.UpdateMenuReply, FoodMenuActivity> {
@@ -48,5 +49,8 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
         }
         getActivity().setPhotoIds(new ArrayList<>(reply.getPhotoIDList())); //Reorder photo Ids
         getActivity().launchGetCachePhotosTask(); //Redraw photos (by getting them from the cache)
+
+        getActivity().setRating(reply.getAverageRating()); //Resets menu average rating
+        new Histogram().draw(new ArrayList<>(reply.getRatingsList()), getActivity()); //Resets the histogram
     }
 }

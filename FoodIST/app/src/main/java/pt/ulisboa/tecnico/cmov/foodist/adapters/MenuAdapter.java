@@ -48,7 +48,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
 
         menuFood.setText(menu.getTranslatedName());
         menuCost.setText(String.format(Locale.US, "%.2f", menu.getPrice()));
-        ratingBar.setRating((float)menu.getRating());
+        ratingBar.setRating((float)menu.getAverageRating());
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), FoodMenuActivity.class);
@@ -56,7 +56,7 @@ public class MenuAdapter extends ArrayAdapter<Menu> {
             intent.putExtra(MENU_PRICE, menu.getPrice());
             intent.putExtra(MENU_SERVICE, menu.getFoodServiceName());
             intent.putExtra(MENU_ID, menu.getMenuId());
-            intent.putExtra(MENU_RATING, menu.getRating());
+            intent.putExtra(MENU_RATING, menu.getAverageRating());
             intent.putExtra(DISPLAY_NAME, menuFood.getText());
             intent.putStringArrayListExtra(MENU_PHOTO_IDS, menu.getPhotoIds());
             getContext().startActivity(intent);

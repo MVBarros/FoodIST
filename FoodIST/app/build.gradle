@@ -57,4 +57,5 @@ dependencies {
 
     implementation 'org.conscrypt:conscrypt-android:2.4.0'
     implementation project(path: ':Termite-WifiP2P-API')
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
