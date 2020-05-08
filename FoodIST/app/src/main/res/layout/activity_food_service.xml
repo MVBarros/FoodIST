@@ -1,101 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/foodServiceName"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:text="@string/food_service_name"
-        android:textAlignment="center"
-        android:textSize="25sp" />
-    <RatingBar
-        android:id="@+id/averageFoodServiceRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:numStars="5"
-        android:stepSize="0.5"
-        android:isIndicator="true" />
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/food_service_histogram"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"/>
-    <fragment xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_weight="8"
-        android:layout_height="0dp"
-        tools:context=".activity.FoodServiceActivity" />
-    <!--<com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8" />-->
+        android:layout_weight="20">
 
-    <TextView
-        android:id="@+id/openingTimes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/food_service_working_hours"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/walkingDistance"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/food_service_walking_distance"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+            <TextView
+                android:id="@+id/foodServiceName"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="@string/food_service_name"
+                android:textAlignment="center"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/queueTime"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/food_service_queue_time"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+            <RatingBar
+                android:id="@+id/averageFoodServiceRating"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:scaleX=".5"
+                android:scaleY=".5"
+                android:layout_gravity="center"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.5" />
+
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/food_service_histogram"
+                android:layout_width="match_parent"
+                android:layout_height="130dp" />
+
+            <fragment xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                tools:context=".activity.FoodServiceActivity" />
+
+            <TextView
+                android:id="@+id/openingTimes"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/food_service_working_hours"
+                android:textAlignment="center"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/walkingDistance"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/food_service_walking_distance"
+                android:textAlignment="center"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/queueTime"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/food_service_queue_time"
+                android:textAlignment="center"
+                android:textSize="15sp" />
 
 
-    <ListView
-        android:id="@+id/menus"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="12" />
+            <ListView
+                android:id="@+id/menus"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+    </ScrollView>
 
 
     <CheckBox
         android:id="@+id/switch_translation"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:text="@string/translate_menu_names"
-        android:checked="true" />
+        android:layout_weight="1.5"
+        android:checked="true"
+        android:text="@string/translate_menu_names" />
 
 
     <CheckBox
         android:id="@+id/show_all_menus_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:text="@string/food_service_show_all_menus"
+        android:layout_weight="1.5"
         android:checked="true"
-        />
+        android:text="@string/food_service_show_all_menus" />
 
     <Button
         android:id="@+id/add_menu_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1.5"
         android:text="@string/food_service_add_menu" />
-
-
 </LinearLayout>
+
