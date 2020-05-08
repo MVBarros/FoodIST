@@ -7,12 +7,10 @@ import java.util.Iterator;
 
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
-public class FoodServiceBarEntries implements BarEntriesInterface {
+public class FoodServiceBarEntries extends BarEntries {
 
     public ArrayList<BarEntry> calculate(Iterator menuIterator) {
-        ArrayList<BarEntry> barEntries = new ArrayList();
 
-        int one_stars = 0, two_stars = 0, three_stars = 0, four_stars = 0, five_stars = 0;
         while(menuIterator.hasNext()) {
             Menu menu = (Menu) menuIterator.next();
             Iterator<Double> ratingsIterator = menu.getRatings().iterator();
@@ -21,19 +19,19 @@ public class FoodServiceBarEntries implements BarEntriesInterface {
                 int current = ratingsIterator.next().intValue();
                 switch(current) {
                     case 1:
-                        one_stars++;
+                        incrementOneStars();
                         break;
                     case 2:
-                        two_stars++;
+                        incrementTwoStars();
                         break;
                     case 3:
-                        three_stars++;
+                        incrementThreeStars();
                         break;
                     case 4:
-                        four_stars++;
+                        incrementFourStars();
                         break;
                     case 5:
-                        five_stars++;
+                        incrementFiveStars();
                         break;
                     default:
                         // This will not ever happen
@@ -41,12 +39,7 @@ public class FoodServiceBarEntries implements BarEntriesInterface {
                 }
             }
         }
-        barEntries.add(new BarEntry(1, one_stars));
-        barEntries.add(new BarEntry(2, two_stars));
-        barEntries.add(new BarEntry(3, three_stars));
-        barEntries.add(new BarEntry(4, four_stars));
-        barEntries.add(new BarEntry(5, five_stars));
 
-        return barEntries;
+        return this.assemble();
     }
 }
