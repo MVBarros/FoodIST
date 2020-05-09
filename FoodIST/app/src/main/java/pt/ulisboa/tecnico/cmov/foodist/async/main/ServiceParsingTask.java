@@ -45,11 +45,10 @@ public class ServiceParsingTask extends BaseAsyncTask<FoodServiceData, Integer, 
     @Override
     public void onPostExecute(Map<String, List<FoodService>> services) {
         if (services != null) {
+            MainActivity.setHaveServicesBeenParsed();
+            getActivity().getGlobalStatus().setServicesPerCampus(services);
             getActivity().getGlobalStatus().setServices(services.get(campus));
-            getActivity().drawServices();
-            //After it is done try to update walking distance
-            getActivity().updateServicesQueueTime();
-            getActivity().updateServicesWalkingDistance();
+            getActivity().updateServices();
 
             List<FoodService> allServices = services.values().stream()
                     .flatMap(List::stream)

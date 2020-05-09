@@ -22,6 +22,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private Map<String, FoodService> services = new ConcurrentHashMap<>();
+    private Map<String, List<FoodService>> servicesPerCampus = new ConcurrentHashMap<>();
     private Map<String, ArrayList<Menu>> menus = new ConcurrentHashMap<>(); //Previously seen menus are cached in case the internet goes out
     private String campus;
 
@@ -357,5 +359,13 @@ public class GlobalStatus extends Application {
 
     public void setMenus(String service, ArrayList<Menu> menus) {
         this.menus.put(service, menus);
+    }
+
+    public List<FoodService> getServicesForCampus(String campus) {
+        return servicesPerCampus.get(campus);
+    }
+
+    public void setServicesPerCampus(Map<String, List<FoodService>> servicesPerCampus) {
+        this.servicesPerCampus = Collections.synchronizedMap(servicesPerCampus);
     }
 }

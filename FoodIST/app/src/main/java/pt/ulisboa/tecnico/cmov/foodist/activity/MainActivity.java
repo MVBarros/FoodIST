@@ -2,11 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,8 +11,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +44,6 @@ import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceParsingTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceQueueTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.async.main.ServiceWalkingTimeTask;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.MainNetworkReceiver;
-import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
 import pt.ulisboa.tecnico.cmov.foodist.status.GlobalStatus;
 
@@ -64,9 +58,11 @@ import static pt.ulisboa.tecnico.cmov.foodist.activity.data.IntentKeys.SERVICE_N
 
 
 public class MainActivity extends BaseActivity implements LocationListener {
+
     public enum LocationRequestContext {CAMPUS, DISTANCE}
 
     private static boolean hasTermiteServiceStarted = false;
+    private static boolean haveServicesBeenParsed = false;
 
     private LocationManager mLocationManager;
 
@@ -318,9 +314,20 @@ public class MainActivity extends BaseActivity implements LocationListener {
     }
 
     private void loadServices(String campus) {
-        InputStream is = getResources().openRawResource(R.raw.services);
-        FoodServiceData resource = new FoodServiceData(is, campus);
-        launchFoodServiceParseTask(resource);
+        if (haveServicesBeenParsed) {
+            getGlobalStatus().setServices(getGlobalStatus().getServicesForCampus(campus));
+            updateServices();
+        } else {
+            InputStream is = getResources().openRawResource(R.raw.services);
+            FoodServiceData resource = new FoodServiceData(is, campus);
+            launchFoodServiceParseTask(resource);
+        }
+    }
+
+    public void updateServices() {
+        drawServices();
+        updateServicesQueueTime();
+        updateServicesWalkingDistance();
     }
 
     private void launchFoodServiceParseTask(FoodServiceData resource) {
@@ -355,6 +362,10 @@ public class MainActivity extends BaseActivity implements LocationListener {
         return getGlobalStatus().getServices().stream()
                 .filter(service -> service.isFoodServiceAvailable(getGlobalStatus().getUserRole()))
                 .collect(Collectors.toList());
+    }
+
+    public static void setHaveServicesBeenParsed() {
+        MainActivity.haveServicesBeenParsed = true;
     }
 
 
