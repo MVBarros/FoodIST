@@ -75,7 +75,7 @@
     <!-- Activity -->
     <string name="main_no_selected_campus_failure_toast">Não foi possível obter localização, seleciona um Campus</string>
     <string name="main_infering_location_failure_toast">Não foi possível inferir localização, seleciona um Campus</string>
-    <string name="main_update_walking_distance_failure_toast">Não foi possível obter tempo de distancia, sem permissões e/ou sem internet</string>
+    <string name="main_update_walking_distance_failure_toast">Não foi possível obter tempo a pé, sem permissões e/ou sem internet</string>
     <string name="main_walking_time">Tempo a pé</string>
     <string name="main_queue_time">Tempo de espera</string>
     <!-- activity profile -->

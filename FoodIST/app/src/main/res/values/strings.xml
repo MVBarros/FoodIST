@@ -76,7 +76,7 @@
     <!-- Activity -->
     <string name="main_no_selected_campus_failure_toast">Could not get location, please select campus</string>
     <string name="main_infering_location_failure_toast">Could not infer campus as no network and/or location is avaliable, please insert it manually</string>
-    <string name="main_update_walking_distance_failure_toast">Could not get services walking distance as there is no location permission and/or no Internet</string>
+    <string name="main_update_walking_distance_failure_toast">Could not get services walking time as there is no location permission and/or no Internet</string>
     <string name="main_walking_time">Walking Time</string>
     <string name="main_queue_time">Queue Time</string>
 

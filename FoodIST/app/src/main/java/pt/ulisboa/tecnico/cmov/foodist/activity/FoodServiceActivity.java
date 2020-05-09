@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmov.foodist.activity;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,12 +10,6 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,16 +18,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
-import pt.ulisboa.tecnico.cmov.foodist.activity.chart.IntegerFormater;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapterNoTranslation;
@@ -85,6 +74,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         setTranslateBox();
         doShowAllButton();
         setButtons();
+        initializeMenus();
     }
 
     @Override
@@ -181,7 +171,12 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         foodServiceHours.setText(String.format("%s %s", getString(R.string.food_service_working_hours), this.hours));
     }
 
-    public void drawFoodServices() {
+    private void initializeMenus() {
+        this.menus = getGlobalStatus().getMenus(this.foodServiceId);
+        drawServices();
+    }
+
+    public void drawFoodServicesTranslated() {
         ArrayList<Menu> drawableMenus = new ArrayList<>(menus);
 
         filterMenus(drawableMenus, getGlobalStatus().getUserConstraints());
@@ -194,7 +189,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
 
     public void drawServices() {
         if (translation) {
-            drawFoodServices();
+            drawFoodServicesTranslated();
         } else {
             drawFoodServicesNotTranslated();
         }

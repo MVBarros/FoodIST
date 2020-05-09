@@ -17,10 +17,10 @@ import pt.ulisboa.tecnico.cmov.foodist.async.base.BaseAsyncTask;
 import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 
-public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Menu>, FoodServiceActivity> {
+public class GetMenusTask extends BaseAsyncTask<String, Integer, ArrayList<Menu>, FoodServiceActivity> {
 
     private final FoodISTServerServiceBlockingStub stub;
-
+    private String service;
     public GetMenusTask(FoodServiceActivity activity) {
         super(activity);
         this.stub = activity.getGlobalStatus().getStub();
@@ -29,16 +29,16 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Menu>, Foo
     private static final String TAG = "GET-MENU-TASK";
 
     @Override
-    protected List<Menu> doInBackground(String... foodServices) {
+    protected ArrayList<Menu> doInBackground(String... foodServices) {
         if (foodServices.length != 1) {
             return null;
         }
-        String foodService = foodServices[0];
+        this.service = foodServices[0];
         SharedPreferences pref = getActivity().getSharedPreferences(getActivity().getString(R.string.profile_file), 0);
 
         Contract.ListMenuRequest.Builder listMenuBuilder = Contract.ListMenuRequest.newBuilder();
 
-        listMenuBuilder.setFoodService(foodService);
+        listMenuBuilder.setFoodService(this.service);
         listMenuBuilder.setLanguage(pref.getString(getActivity().getString(R.string.shared_prefs_profile_language), "en"));
 
         Contract.ListMenuRequest request = listMenuBuilder.build();
@@ -46,15 +46,14 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Menu>, Foo
         try {
             Contract.ListMenuReply reply = this.stub.listMenu(request);
             return reply.getMenusList().stream()
-                    .map(Menu::parseContractMenu)
-                    .collect(Collectors.toList());
+                    .map(Menu::parseContractMenu).collect(Collectors.toCollection(ArrayList::new));
         } catch (StatusRuntimeException e) {
             return null;
         }
     }
 
     @Override
-    public void onPostExecute(List<Menu> result) {
+    public void onPostExecute(ArrayList<Menu> result) {
         if (result == null) {
             menuError(getActivity(), getActivity().getString(R.string.get_menu_task_error_getting_menus_message));
             return;
@@ -64,10 +63,10 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, List<Menu>, Foo
             getActivity().showToast(getActivity().getString(R.string.get_menu_task_no_menus_available_message));
             return;
         }
-
-        getActivity().setMenus(new ArrayList<>(result));
+        getActivity().getGlobalStatus().setMenus(service, result); //Cache the menus
+        getActivity().setMenus(result);
         getActivity().drawServices();
-        getActivity().setRating(new ArrayList<>(result));
+        getActivity().setRating(result);
         new Histogram().draw(new ArrayList<>(result), getActivity());
         Log.d(TAG, "Menus obtained successfully");
 

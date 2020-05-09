@@ -46,6 +46,7 @@ import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.broadcast.SimWifiP2pBroadcastReceiver;
 import pt.ulisboa.tecnico.cmov.foodist.domain.FoodService;
+import pt.ulisboa.tecnico.cmov.foodist.domain.Menu;
 
 public class GlobalStatus extends Application {
 
@@ -60,6 +61,7 @@ public class GlobalStatus extends Application {
     private FoodISTServerServiceGrpc.FoodISTServerServiceBlockingStub stub = null;
     private FoodISTServerServiceGrpc.FoodISTServerServiceStub asyncStub = null;
     private Map<String, FoodService> services = new ConcurrentHashMap<>();
+    private Map<String, ArrayList<Menu>> menus = new ConcurrentHashMap<>(); //Previously seen menus are cached in case the internet goes out
     private String campus;
 
     /**Termite*/
@@ -347,5 +349,13 @@ public class GlobalStatus extends Application {
             executor = Executors.newCachedThreadPool();
         }
         return executor;
+    }
+
+    public ArrayList<Menu> getMenus(String service) {
+        return menus.computeIfAbsent(service, key -> new ArrayList<>());
+    }
+
+    public void setMenus(String service, ArrayList<Menu> menus) {
+        this.menus.put(service, menus);
     }
 }
