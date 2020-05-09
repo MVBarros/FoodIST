@@ -67,7 +67,7 @@ public class GetMenusTask extends BaseAsyncTask<String, Integer, ArrayList<Menu>
         getActivity().setMenus(result);
         getActivity().drawServices();
         getActivity().setRating(result);
-        new Histogram().draw(new ArrayList<>(result), getActivity());
+        new Histogram(getActivity()).draw(new ArrayList<>(result));
         Log.d(TAG, "Menus obtained successfully");
 
     }
