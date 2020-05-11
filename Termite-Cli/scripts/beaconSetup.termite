@@ -1,10 +1,17 @@
 # Beacon setup
-newdevice Bar_Vermelho
-newdevice Bar_Verde
-newdevice Cantina_Taguspark
-newdevice Máquinas_de_Venda_Automática
-newdevice Cantina_de_Civil
-newdevice Bar_de_Civil
-newdevice Cantina_Alameda
-newdevice Maquina_de_Venda_Automática
-newdevice Cafe_do_Pavilhão_Central
+newdevice CentralBar
+newdevice CivilBar
+newdevice CivilCafeteria
+newdevice Sena
+newdevice MechyBar
+newdevice AEISTBar
+newdevice AEISTEsplanade
+newdevice ChemyBar
+newdevice SASCafeteria
+newdevice MathCafeteria
+newdevice ComplexBar
+newdevice TagusCafeteria
+newdevice RedBar
+newdevice GreenBar
+newdevice CTNCafeteria
+newdevice CTNBar
