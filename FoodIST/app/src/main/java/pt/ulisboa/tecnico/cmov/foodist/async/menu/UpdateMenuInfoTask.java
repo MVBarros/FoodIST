@@ -51,6 +51,6 @@ public class UpdateMenuInfoTask extends BaseAsyncTask<String, Integer, Contract.
         getActivity().launchGetCachePhotosTask(); //Redraw photos (by getting them from the cache)
 
         getActivity().setRating(reply.getAverageRating()); //Resets menu average rating
-        new Histogram().draw(new ArrayList<>(reply.getRatingsList()), getActivity()); //Resets the histogram
+        new Histogram(getActivity()).draw(new ArrayList<>(reply.getRatingsList())); //Resets the histogram
     }
 }

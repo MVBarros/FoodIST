@@ -69,6 +69,10 @@
     <string name="food_service_show_all_menus">Filter menus i\'m not interested in</string>
     <string name="food_service_filter_menus">Filter menus</string>
 
+    <!-- activity histogram-->
+    <!-- Activity -->
+    <string name="histogram_user_ratings">"User ratings</string>
+
     <!-- activity main -->
     <!-- Layout -->
     <string name="main_user_profile">User Profile</string>

@@ -1,0 +1,112 @@
+# Termite supports scripts
+move Client1 (CentralBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (CivilBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (CivilCafeteria)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (Sena)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (MechyBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (AEISTBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (AEISTEsplanade)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (ChemyBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (SASCafeteria)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (MathCafeteria)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (ComplexBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (TagusCafeteria)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (RedBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (GreenBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (CTNCafeteria)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
+
+move Client1 (CTNBar)
+commit
+wait 5
+move Client1 ()
+commit
+wait 5
