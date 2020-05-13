@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import foodist.server.grpc.contract.Contract;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.Histogram;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenMapActivity;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.adapters.MenuAdapterNoTranslation;
@@ -75,6 +76,7 @@ public class FoodServiceActivity extends BaseActivity implements OnMapReadyCallb
         doShowAllButton();
         setButtons();
         initializeMenus();
+        new Histogram(this).draw(new ArrayList<>());
     }
 
     @Override
