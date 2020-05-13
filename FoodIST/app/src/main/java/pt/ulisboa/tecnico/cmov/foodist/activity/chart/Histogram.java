@@ -74,6 +74,12 @@ public class Histogram extends BaseActivity {
             // Sets the data onto the histogram
             horizontalBarChart.setData(barData);
         }
+        else {
+            // Sets the display message whenever there is no data
+            horizontalBarChart.setNoDataText(this.baseActivity.getString(R.string.histogram_no_data));
+            horizontalBarChart.setNoDataTextColor(this.baseActivity.getColor(R.color.colorBlack));
+            horizontalBarChart.invalidate();
+        }
     }
 
     private HorizontalBarChart getChart(FoodMenuActivity foodMenuActivity) {

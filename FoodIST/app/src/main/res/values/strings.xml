@@ -72,6 +72,7 @@
     <!-- activity histogram-->
     <!-- Activity -->
     <string name="histogram_user_ratings">"User ratings</string>
+    <string name="histogram_no_data">No histogram data available</string>
 
     <!-- activity main -->
     <!-- Layout -->

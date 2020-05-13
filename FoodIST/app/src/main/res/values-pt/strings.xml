@@ -71,6 +71,7 @@
     <!-- activity histogram-->
     <!-- Activity -->
     <string name="histogram_user_ratings">"Pontuações de utilizadores</string>
+    <string name="histogram_no_data">Não existem dados para disponibilizar no histograma</string>
 
     <!-- activity main -->
     <!-- Layout -->
