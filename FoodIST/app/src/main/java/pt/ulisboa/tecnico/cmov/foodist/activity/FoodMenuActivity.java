@@ -57,6 +57,7 @@ import java.util.Set;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.activity.base.BaseActivity;
+import pt.ulisboa.tecnico.cmov.foodist.activity.chart.Histogram;
 import pt.ulisboa.tecnico.cmov.foodist.activity.chart.IntegerFormater;
 import pt.ulisboa.tecnico.cmov.foodist.activity.fullscreen.FullscreenPhotoActivity;
 import pt.ulisboa.tecnico.cmov.foodist.async.base.CancelableTask;
@@ -115,7 +116,7 @@ public class FoodMenuActivity extends BaseActivity {
         setScroll();
         intentInitialization(getIntent());
         setButtons();
-
+        new Histogram(this).draw(new ArrayList<>());
         isOnCreate = true;
     }
 

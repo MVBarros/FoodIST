@@ -142,7 +142,7 @@ public class AddMenuActivity extends BaseActivity {
         if (button.isChecked()) {
             return Contract.FoodType.Vegan;
         }
-        return Contract.FoodType.Meat;
+        return null;
     }
 
     private void askGalleryPermission() {
