@@ -166,6 +166,10 @@ public class ProfileActivity extends BaseActivity {
         button = findViewById(R.id.languagePortuguese);
         button.setClickable(editable);
         button.setEnabled(editable);
+
+        Button loginButton = findViewById(R.id.profile_login_button);
+        loginButton.setClickable(!editable);
+        loginButton.setEnabled(!editable);
     }
 
     public void saveProfile() {
