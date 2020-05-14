@@ -204,7 +204,7 @@
     <string name="login_dialog_positive_message">login</string>
     <string name="login_dialog_negative_message">No thanks</string>
     <string name="Menu_uploaded_successfully_message">Menu uploaded successfully</string>
-    <string name="menu_upload_error_message">Menu unable to be uploaded</string>
+    <string name="menu_upload_error_message">Menu unable to be uploaded (does it already exist?)</string>
     <string name="flag_photo_button_text">Flag Photo</string>
     <string name="flag_photo_error_message">Unable to flag menu</string>
     <string name="no_internet_conn_flag_photo_error">Need network connection to flag photo</string>

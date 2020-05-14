@@ -68,6 +68,7 @@ public class ProfileActivity extends BaseActivity {
         setEditButton();
         setLoginButton();
         setPreferenceButtons();
+        drawScreen();
 
         ImageView profilePicture = findViewById(R.id.profilePicture);
         profilePicture.setOnClickListener(v -> askGalleryPermission());
@@ -76,7 +77,6 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        drawScreen();
     }
 
     protected void setCampus() {
