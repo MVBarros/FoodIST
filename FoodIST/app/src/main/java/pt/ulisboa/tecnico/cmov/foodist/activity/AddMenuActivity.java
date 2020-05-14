@@ -124,6 +124,11 @@ public class AddMenuActivity extends BaseActivity {
         b.setEnabled(false);
     }
 
+    public void enableUpload() {
+        Button b = findViewById(R.id.add_new_menu_done_button);
+        b.setEnabled(true);
+    }
+
 
     private Contract.FoodType getFoodType() {
         RadioButton button = findViewById(R.id.add_menu_vegetarian);

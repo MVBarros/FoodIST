@@ -75,6 +75,7 @@ public class UploadMenuTask extends AsyncTask<Menu, Integer, Contract.AddMenuRep
         if (act != null && !act.isFinishing() && !act.isDestroyed()) {
             if (result == null) {
                act.showToast(act.getString(R.string.menu_upload_error_message));
+               act.enableUpload();
                return;
             }
             act.showToast(act.getString(R.string.Menu_uploaded_successfully_message));
